@@ -51,4 +51,7 @@ assembleDebug:
   artifacts:
     paths:
       - app/build/outputs/apk/
- 
+  tags:
+    - docker
+    - android
+    - hk
