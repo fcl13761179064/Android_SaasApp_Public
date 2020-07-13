@@ -1,4 +1,4 @@
-image: ayalcn/android-build:29-jdk8
+image: aylacn/android-build:28-jdk8
 
 before_script:
   - export GRADLE_USER_HOME=$(pwd)/.gradle
@@ -45,10 +45,12 @@ assembleDebug:
   only:
     - master
   script:
+    - echo "开始打包"
     - gradle assembleDebug
+    - echo "打包结束"
   artifacts:
     paths:
-      - app/build/outputs/apk/debug
+      - app/build/outputs/apk/
   tags:
     - docker
     - android
