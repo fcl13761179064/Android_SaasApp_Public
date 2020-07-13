@@ -18,6 +18,7 @@ public class MainActivity extends BasicActivity {
 
     @Override
     protected void initView() {
+        //测试下gitlab—ci
 
     }
 
