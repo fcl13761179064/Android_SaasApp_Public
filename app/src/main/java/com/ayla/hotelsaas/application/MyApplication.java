@@ -6,6 +6,9 @@ import android.content.res.Resources;
 
 import com.ayla.hotelsaas.bean.User;
 
+import me.jessyan.autosize.AutoSizeConfig;
+import me.jessyan.autosize.unit.Subunits;
+
 
 /**
  * Created by fcl13761179064 on 2020/6/3.
@@ -33,7 +36,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-
+        initAutoSize();
     }
 
     public User getUserEntity() {
@@ -49,4 +52,12 @@ public class MyApplication extends Application {
         this.userEntity = userEntity;
     }
 
+    private void initAutoSize() {
+        AutoSizeConfig.getInstance()
+                .setBaseOnWidth(true)
+                .getUnitsManager()
+                .setSupportDP(false)
+                .setSupportSP(false)
+                .setSupportSubunits(Subunits.MM);
+    }
 }

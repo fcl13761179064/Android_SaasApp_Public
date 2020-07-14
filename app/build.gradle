@@ -80,4 +80,5 @@ dependencies {
     implementation rootProject.libraries.converter_scalars
     implementation rootProject.libraries.adapter_rxjava
     implementation rootProject.libraries.systembartint
+    implementation rootProject.libraries.autosize
 }
