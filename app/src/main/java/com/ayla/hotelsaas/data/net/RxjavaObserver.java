@@ -11,7 +11,7 @@ import io.reactivex.Observer;
 
 /**
  * @description 自定义Rxjava2_Observer    Observable处理使用
- * @user dingjunwei
+ * @user fanchunlei
  * @date 2017/7/2
  */
 public abstract class RxjavaObserver<T> implements Observer<BaseResult<T>> {

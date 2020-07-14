@@ -14,7 +14,7 @@ import io.reactivex.Observer;
 
 /**
  * @description 自定义Rxjava2_Observer    返回JSONObject
- * @user dingjunwei
+ * @user fanchunlei
  * @date 2017/7/2
  */
 public abstract class RxjavaJsonObserver implements Observer<String> {
