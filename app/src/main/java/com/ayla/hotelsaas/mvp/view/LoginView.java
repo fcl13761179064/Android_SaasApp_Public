@@ -5,7 +5,7 @@ import com.ayla.hotelsaas.bean.User;
 
 /**
  * @描述
- * @作者 丁军伟
+ * @作者 fanchunlei
  * @时间 2017/8/2
  */
 public interface LoginView extends BaseView {

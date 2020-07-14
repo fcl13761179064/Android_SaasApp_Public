@@ -9,7 +9,7 @@ import retrofit2.http.POST;
 
 /**
  * @描述 Retrofit 需要的
- * @作者 丁军伟
+ * @作者 fanchunlei
  * @时间 2017/8/2
  */
 public interface ApiService {

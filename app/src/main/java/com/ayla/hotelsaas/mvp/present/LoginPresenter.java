@@ -30,7 +30,7 @@ import io.reactivex.functions.Function;
 
 /**
  * @描述
- * @作者 丁军伟
+ * @作者 fanchunlei
  * @时间 2017/8/2
  */
 public class LoginPresenter extends BasePresenter<LoginView> {
@@ -49,34 +49,8 @@ public class LoginPresenter extends BasePresenter<LoginView> {
             return;
         }
         login(account, password);
-        init();
     }
 
-    private void init() {
-      Observable.create(new ObservableOnSubscribe<String>() {
-
-          @Override
-          public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-
-          }
-      }).flatMap(new Function<String, ObservableSource<?>>() {
-          @Override
-          public ObservableSource<?> apply(String o) throws Exception {
-
-              return null;
-          }
-      }).debounce(3,TimeUnit.SECONDS).subscribe(new Consumer<Object>() {
-          @Override
-          public void accept(Object o) throws Exception {
-
-          }
-      }, new Consumer<Throwable>() {
-          @Override
-          public void accept(Throwable throwable) throws Exception {
-
-          }
-      });
-    }
 
     private void login(final String account, String password) {
         RequestModel.getInstance().login(account, password)
