@@ -41,6 +41,16 @@ captures/
 .idea/dictionaries
 .idea/libraries
 .idea/caches
+.idea/.name
+.idea/encodings.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
+
+
 
 # 密钥储存库文件
 # 如果您不想检查密钥库文件，请取消注释以下行
