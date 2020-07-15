@@ -59,7 +59,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     @Override
     protected void initView() {
         initToolbarTitle(R.string.main_todo);
-        //initToolbar(R.layout.);
+        initToolbar(0,getString(R.string.account_error));
         //是否在刷新的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenRefresh(true);
         //是否在加载的时候禁止列表的操作
@@ -75,6 +75,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
 
 
     }
+
 
     @Override
     protected void initListener() {
