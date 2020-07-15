@@ -16,8 +16,8 @@
     <color name="textDarkColor">#333333</color>
     <color name="textGaryColor">#666666</color>
     <color name="textLightColor">#999999</color>
-    <color name="textBlueColor">#1E62D7</color>
-    <color name="loginLogoColor">#6E85A1</color>
+    <color name="loginLogoColor">#648C1A</color>
+    <color name="login_error_show">#D73B4B</color>
 
 
     <!--登录的颜色值-->
