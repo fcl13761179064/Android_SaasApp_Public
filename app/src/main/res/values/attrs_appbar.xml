@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ create by cairurui on 2/26/19 9:57 AM.
+  ~ Copyright (c) 2019 SunseaIoT. All rights reserved.
+  -->
+
+<resources>
+    <declare-styleable name="AppBar">
+        <attr name="left_iv" format="reference" /><!-- 左侧图标 -->
+        <attr name="left_tv" format="string" /><!-- 左侧文字 -->
+        <attr name="right_iv" format="reference" /><!-- 右侧图标 -->
+        <attr name="right_tv" format="string" /><!-- 右侧文字 -->
+        <attr name="center_tv" format="string" /><!-- 中间文字 -->
+        <attr name="right_tv_color" format="color" /><!--左侧文字字体颜色 -->
+        <attr name="appbar_bottom_line" format="boolean" /><!--底部线条可见-->
+    </declare-styleable>
+</resources>

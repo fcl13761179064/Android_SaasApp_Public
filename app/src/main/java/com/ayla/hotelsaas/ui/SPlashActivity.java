@@ -19,6 +19,7 @@ public class SPlashActivity extends BasicActivity {
         StatusBarUtil.setTransparent(this);
     }
 
+
     @Override
     protected void initView() {
 

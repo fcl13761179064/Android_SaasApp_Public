@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
+import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,6 +21,8 @@ import butterknife.Unbinder;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.utils.AppManager;
+import com.ayla.hotelsaas.utils.ClickUtils;
+import com.ayla.hotelsaas.widget.AppBar;
 
 /**
  * author fancunlei
@@ -29,8 +32,7 @@ import com.ayla.hotelsaas.utils.AppManager;
 public abstract class BasicActivity extends AppCompatActivity {
 
     private Unbinder unbinder;
-    private TextView mToolbarTitle;
-    private Toolbar toolbar;
+    private AppBar mToolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public abstract class BasicActivity extends AppCompatActivity {
         initSaveInstace(savedInstanceState);
         setStatusBar();
         initView();
+        refreshUI();
         initListener();
         AppManager.getAppManager().addActivity(this);
     }
@@ -112,66 +115,69 @@ public abstract class BasicActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
-
-    /**
-     * 初始化Toolbar
-     */
-    public void initToolbar(@DrawableRes int res,String desc) {
-        initToolbar(res,desc, null);
-    }
-
-
-    /**
-     * 初始化Toolbar
-     */
-    public void initToolbar(int res,String desc, View.OnClickListener listener) {
-        //初始化toolbar
-        if (toolbar == null) {
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
+    public void refreshUI() {
+        final View appbarRoot = findViewById(R.id.appbar_root_rl_ff91090);
+        if (appbarRoot != null) {
+            View leftIV = appbarRoot.findViewById(R.id.iv_left);
+            if (leftIV != null && !leftIV.hasOnClickListeners()) {
+                ClickUtils.applySingleDebouncing(leftIV, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        appBarLeftIvClicked();
+                    }
+                });
+            }
+            View leftTV = appbarRoot.findViewById(R.id.tv_left);
+            if (leftTV != null && !leftTV.hasOnClickListeners()) {
+                ClickUtils.applySingleDebouncing(leftTV, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        appBarLeftTvClicked();
+                    }
+                });
+            }
+            View rightIV = appbarRoot.findViewById(R.id.iv_right);
+            if (rightIV != null && !rightIV.hasOnClickListeners()) {
+                ClickUtils.applySingleDebouncing(rightIV, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        appBarRightIvClicked();
+                    }
+                });
+            }
+            View rightTv = appbarRoot.findViewById(R.id.tv_right);
+            if (rightTv != null && !rightTv.hasOnClickListeners()) {
+                ClickUtils.applySingleDebouncing(rightTv, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        appBarRightTvClicked();
+                    }
+                });
+            }
         }
-        if (toolbar == null)
-            return;
-
-        //toolbar左边图标大于0为图标，等于0为文字
-        if (TextUtils.isEmpty(desc)&& res>0) {
-            toolbar.setNavigationIcon(res);
-        } else {
-            toolbar.setTitle(desc);
-        }
-
-        //toolbar左边图标点击事件 必须在setSupportActionBar后设置 否则无效
-        if (null != listener)
-            toolbar.setNavigationOnClickListener(listener);
-        else
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-    }
-
-
-    /**
-     * 设置标题
-     */
-    public void initToolbarTitle(@StringRes int res) {
-        initToolbarTitle(getString(res));
     }
 
     /**
-     * 设置标题
+     * appbar左侧图标点击事件
      */
-    public void initToolbarTitle(String title) {
-        if (mToolbarTitle == null) {
-            mToolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-        }
-        if (mToolbarTitle != null) {
-            mToolbarTitle.setText(title);
-        }
+    protected void appBarLeftIvClicked() {
+        onBackPressed();
+    }
+
+    protected void appBarRightIvClicked() {
+
+    }
+
+    protected void appBarLeftTvClicked() {
+        mExitApp();
+    }
+
+    protected void appBarRightTvClicked() {
+
+    }
+
+    protected  void mExitApp(){
+
     }
 
     @Override
