@@ -178,8 +178,8 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     @Override
     public void errorShake(int type, int CycleTimes) {
         tv_error_show.setVisibility(View.VISIBLE);
-      /* Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
-        startActivity(mainActivity);*/
+        Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
+        startActivity(mainActivity);
         // CycleTimes动画重复的次数
         if (null == mShakeAnimation) {
             mShakeAnimation = new TranslateAnimation(0, 10, 0, 0);
