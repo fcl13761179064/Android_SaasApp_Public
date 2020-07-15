@@ -7,10 +7,10 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/white"
         android:elevation="3dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:background="@color/colorPrimary"
+        app:background="@color/white"
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp"
         app:title=" ">

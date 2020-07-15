@@ -70,7 +70,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     testImplementation 'junit:junit:4.12'
     testImplementation "au.com.dius:pact-jvm-consumer-junit_2.11:3.3.6"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -89,9 +88,11 @@ dependencies {
     implementation rootProject.libraries.adapter_rxjava
     implementation rootProject.libraries.systembartint
     implementation rootProject.libraries.autosize
-    implementation rootProject.libraries.smartrefresh
-    implementation rootProject.libraries.recyclerview
+    implementation rootProject.libraries.SmartRefreshLayout
+    implementation rootProject.libraries.SmartRefreshHeader
     implementation rootProject.libraries.BaseRyViewAdapHelper
+
+
 }
 
 pact {

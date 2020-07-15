@@ -1,20 +1,22 @@
 package com.ayla.hotelsaas.base;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-
+import android.view.View;
+import android.widget.TextView;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.utils.AppManager;
-import com.ayla.hotelsaas.utils.StatusBarToolUlti;
-import com.ayla.hotelsaas.utils.StatusBarUtil;
 
 /**
  * author fancunlei
@@ -24,6 +26,8 @@ import com.ayla.hotelsaas.utils.StatusBarUtil;
 public abstract class BasicActivity extends AppCompatActivity {
 
     private Unbinder unbinder;
+    private TextView mToolbarTitle;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +107,55 @@ public abstract class BasicActivity extends AppCompatActivity {
     public void hideProgress() {
         if (null != progressDialog) {
             progressDialog.dismiss();
+        }
+    }
+    /**
+     * 初始化Toolbar
+     */
+    public void initToolbar(int res, View.OnClickListener listener) {
+        //初始化toolbar
+        if (toolbar == null) {
+             toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+        if (toolbar == null)
+            return;
+
+        //toolbar左边图标
+        if (res > 0)
+            toolbar.setNavigationIcon(res);
+        //toolbar左边图标点击事件 必须在setSupportActionBar后设置 否则无效
+        if (null != listener)
+            toolbar.setNavigationOnClickListener(listener);
+        else
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+    }
+
+
+
+    /**
+     * 设置标题
+     */
+    public void initToolbarTitle(@StringRes int res) {
+        initToolbarTitle(getString(res));
+    }
+
+    /**
+     * 设置标题
+     */
+    public void initToolbarTitle(String title) {
+        if (mToolbarTitle == null){
+            mToolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        }
+        if (mToolbarTitle != null){
+            mToolbarTitle.setText(title);
         }
     }
 
