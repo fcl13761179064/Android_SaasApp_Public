@@ -42,6 +42,7 @@ import okio.Buffer;
 import okio.BufferedSource;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
@@ -91,7 +92,7 @@ public class RetrofitHelper {
     private RetrofitHelper() {
         retrofit = new Retrofit.Builder()
                 .client(getOkHttpClient())
-                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(CustomGsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(apiBaseUrl)
                 .build();
