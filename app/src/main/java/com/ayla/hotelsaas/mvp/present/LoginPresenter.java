@@ -60,8 +60,6 @@ public class LoginPresenter extends BasePresenter<LoginView> {
         } else {
             ToastUtil.show(MyApplication.getContext(), R.string.account_error);
         }
-
-
     }
 
 
@@ -73,27 +71,52 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                         mView.showProgress("登录中...");
                     }
                 })
-                .subscribe(new RxjavaObserver<User>() {
-
+                .subscribe(new Observer<User>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         addSubscrebe(d);
                     }
 
                     @Override
-                    public void _onNext(User data) {
+                    public void onNext(User user) {
                         mView.hideProgress();
-                        MyApplication.getInstance().setUserEntity(data);
-                        mView.loginSuccess(data);
-
+                        MyApplication.getInstance().setUserEntity(user);
+                        mView.loginSuccess(user);
                     }
 
                     @Override
-                    public void _onError(String code, String msg) {
-                        ToastUtils.showShortToast(msg);
+                    public void onError(Throwable e) {
+                        ToastUtils.showShortToast(e.getMessage());
                         mView.errorShake(0, 2);
                         mView.hideProgress();
                     }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
+//                .subscribe(new RxjavaObserver<User>() {
+//
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//                        addSubscrebe(d);
+//                    }
+//
+//                    @Override
+//                    public void _onNext(User data) {
+//                        mView.hideProgress();
+//                        MyApplication.getInstance().setUserEntity(data);
+//                        mView.loginSuccess(data);
+//
+//                    }
+//
+//                    @Override
+//                    public void _onError(String code, String msg) {
+//                        ToastUtils.showShortToast(msg);
+//                        mView.errorShake(0, 2);
+//                        mView.hideProgress();
+//                    }
+//                });
     }
 }

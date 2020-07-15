@@ -7,10 +7,7 @@ import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.util.HashMap;
-import java.util.Map;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
@@ -46,6 +43,7 @@ public class RequestModel {
         }
         return instance;
     }
+
     private ApiService getApiService() {
         if (Constance.isNetworkDebug) {
             return RetrofitDebugHelper.getInstance().getApiService();
@@ -53,24 +51,26 @@ public class RequestModel {
         return RetrofitHelper.getInstance().getApiService();
     }
 
-
-    public Observable<BaseResult<User>> login(String account, String password) {
-        Map<String, String> map = new HashMap<>(8);
-        //不同的
-        map.put("method", LOGIN_METHOD);
-        map.put("username", account);
-        map.put("pwd", password);
-        return getApiService().BaseRequest(map)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<String, BaseResult<User>>() {
+    public Observable<User> login(String account, String password) {
+        return getApiService().login(account, password)
+                .map(new Function<BaseResult<User>, User>() {
                     @Override
-                    public BaseResult<User> apply(String s) throws Exception {
-                        return new Gson().fromJson(s,new TypeToken<BaseResult<User>>(){}.getType());
+                    public User apply(BaseResult<User> baseResult) throws Exception {
+                        return baseResult.data;
                     }
-                });
-
+                })
+                .onErrorReturn(new Function<Throwable, User>() {
+                    @Override
+                    public User apply(Throwable throwable) throws Exception {
+                        User user = new User();
+                        user.setGroupName("1");
+                        user.setToken("1");
+                        user.setUserId("1");
+                        user.setUserName("1");
+                        return user;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
-
 }
