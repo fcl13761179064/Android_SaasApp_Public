@@ -1,10 +1,13 @@
 package com.ayla.hotelsaas.ui;
 
 
+import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,8 +16,6 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListLeftAdapter;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListRightAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddCategoryPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
@@ -29,7 +30,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  * @描述 添加设备入口页面，展示产品分类二级列表
  * @作者 吴友金
  */
-public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView,DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
+public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView, DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
 
     @BindView(R.id.rv_left)
     RecyclerView leftRecyclerView;
@@ -50,15 +51,22 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     protected void initView() {
         leftRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mLeftAdapter = new DeviceCategoryListLeftAdapter(R.layout.item_device_add_category);
-        leftRecyclerView.setAdapter(mLeftAdapter);
         mLeftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 adjustData(position);
             }
         });
+        leftRecyclerView.setAdapter(mLeftAdapter);
 
         mRightAdapter = new DeviceCategoryListRightAdapter(R.layout.item_device_add);
+        mRightAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                DeviceCategoryBean.SubBean bean = (DeviceCategoryBean.SubBean) adapter.getItem(position);
+                handleAddJump(bean.mode);
+            }
+        });
         rightRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         rightRecyclerView.setAdapter(mRightAdapter);
         rightRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -85,8 +93,8 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mPresenter.loadCategory();
     }
 
@@ -101,10 +109,35 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         adjustData(0);
     }
 
+    /**
+     * 点击一级菜单后，调整二级菜单显示
+     *
+     * @param categoryIndex
+     */
     private void adjustData(int categoryIndex) {
         if (mLeftAdapter.getData().size() > 0) {
             mLeftAdapter.setSelectedPosition(categoryIndex);
             mRightAdapter.setNewData(mLeftAdapter.getData().get(categoryIndex).subBeans);
+        }
+    }
+
+    /**
+     * 处理点击二级菜单item后的配网页面跳转逻辑
+     *
+     * @param mode
+     */
+    private void handleAddJump(int mode) {
+        if (1 == mode) {
+            Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
+            startActivityForResult(mainActivity, 0);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            finish();
         }
     }
 }
