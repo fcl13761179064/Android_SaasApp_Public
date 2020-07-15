@@ -40,6 +40,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     private DeviceCategoryListLeftAdapter mLeftAdapter;
     private DeviceCategoryListRightAdapter mRightAdapter;
 
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_device_add_category_list;

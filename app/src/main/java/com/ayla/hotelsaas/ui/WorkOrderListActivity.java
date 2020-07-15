@@ -8,16 +8,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.WorkOrderAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.WorkOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.StatusBarUtil;
+import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -32,9 +32,12 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
+    @BindView(R.id.appBar)
+    AppBar appBar;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout mRefreshLayout;
     private WorkOrderAdapter mAdapter;
+
 
 
     @Override
@@ -45,6 +48,14 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         //StatusBarToolUlti.setStatusBarDarkTheme(this, true);
         StatusBarUtil.setTransparent(this);
     }
+
+    @Override
+    public void refreshUI() {
+        appBar.setLeftText("退出");
+        appBar.setCenterText("我的工单");
+        super.refreshUI();
+    }
+
 
     @Override
     protected WorkOrderPresenter initPresenter() {
@@ -58,8 +69,17 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
 
     @Override
     protected void initView() {
-        initToolbarTitle(R.string.main_todo);
-        initToolbar(0,getString(R.string.account_error));
+
+      /*  initToolbar(0, getString(R.string.exit), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyApplication.getInstance().setUserEntity(null);
+                Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });*/
         //是否在刷新的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenRefresh(true);
         //是否在加载的时候禁止列表的操作
@@ -113,6 +133,15 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         });
         mRefreshLayout.autoRefresh();//自动刷新
 
+    }
+
+    @Override
+    protected void mExitApp() {
+        finish();
+        MyApplication.getInstance().setUserEntity(null);
+        Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.ayla.hotelsaas.base.BasicActivity;
  */
 public class MainActivity extends BasicActivity {
 
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -26,4 +27,5 @@ public class MainActivity extends BasicActivity {
     protected void initListener() {
 
     }
+
 }
