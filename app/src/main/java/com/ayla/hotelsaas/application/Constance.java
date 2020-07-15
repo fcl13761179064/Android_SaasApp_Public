@@ -25,7 +25,7 @@ public class Constance {
     /**
      * 正式环境地址
      */
-    public static final String BASE_URL = "https://openapi2.gewara.com/router/";
+    public static String BASE_URL = "https://openapi2.gewara.com/router/";
 
     //用户是否登录
     public static boolean UserIsLogin = false;
