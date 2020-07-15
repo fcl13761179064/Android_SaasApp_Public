@@ -9,7 +9,7 @@ public class DeviceCategoryBean {
     public String name;
     public List<SubBean> subBeans;
 
-    public class SubBean {
+    public static class SubBean {
         public String name;
         public String icon;
         public int mode;

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
@@ -15,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -112,4 +114,20 @@ public class RequestModel {
                 });
     }
 
+    public Observable<List<DeviceCategoryBean>> getDeviceCategory() {
+        List<DeviceCategoryBean> result = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            DeviceCategoryBean deviceCategoryBean = new DeviceCategoryBean();
+            result.add(deviceCategoryBean);
+            deviceCategoryBean.name = "一级列表" + i;
+            deviceCategoryBean.subBeans = new ArrayList<>();
+            for (int j = 0; j < 20; j++) {
+                DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
+                subBean.name = "二级列表" + i + "_" + j;
+                subBean.mode = 1;
+                deviceCategoryBean.subBeans.add(subBean);
+            }
+        }
+        return Observable.just(result);
+    }
 }
