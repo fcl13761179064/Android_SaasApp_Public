@@ -1,5 +1,8 @@
 package com.ayla.hotelsaas.data.net;
 
+import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.User;
+
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -21,6 +24,6 @@ public interface ApiService {
     @POST("rest")
     Observable<String> BaseRequest(@FieldMap Map<String, String> params);
 
-    @GET("provider.json")
-    Observable<String> loadProviderJson(@Query("valid_date") String validDate);
+    @GET("login")
+    Observable<BaseResult<User>> login(@Query("username") String username, @Query("password") String password);
 }

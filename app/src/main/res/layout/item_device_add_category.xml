@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ create by cairurui on 9/9/19 3:00 PM.
+  ~ Copyright (c) 2019 SunseaIoT. All rights reserved.
+  -->
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:foreground="?android:selectableItemBackground"
+    android:gravity="center"
+    android:minHeight="58dp"
+    android:padding="20dp"
+    android:text="AA"
+    android:textSize="13sp" />

@@ -24,4 +24,9 @@
     <color name="gray">#6e6e6e</color>
     <color name="login_text_percent">#666666</color>
     <color name="login_deviding_line">#EEEEEE</color>
+
+    <!-- 固定色号 -->
+    <color name="color_333333">#333333</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_ffffff">#ffffff</color>
 </resources>
