@@ -41,6 +41,9 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     TextView tvSwitch;
     @BindView(R.id.submitBtn)
     Button submitBtn;
+    @BindView(R.id.tv_error_show)
+    TextView tv_error_show;
+
     private TranslateAnimation mShakeAnimation;
 
 
@@ -72,7 +75,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                 edit_password.setText("Wy.123456");
             }
         } else {
-            edite_count.setText("cswangyue");
+            edite_count.setText("19983527951");
             edit_password.setText("Wy.123456");
         }
 
@@ -92,12 +95,12 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                     public void run() {
                         if (Constance.isNetworkDebug) {
                             tvSwitch.setText("测");
-                            edite_count.setText("Qis");
+                            edite_count.setText("19983527951");
                             edit_password.setText("Css+123456");
                             ToastUtils.showShortToast("切换到测试网络");
                         } else {
                             tvSwitch.setText("正");
-                            edite_count.setText("cswangyue");
+                            edite_count.setText("19983527951");
                             edit_password.setText("Wy.123456");
                             ToastUtils.showShortToast("切换到正式网络环境");
                         }
@@ -140,6 +143,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
         @Override
         public void afterTextChanged(Editable s) {
+            tv_error_show.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(getAccount()) && !TextUtils.isEmpty(getPassword())) {
                 submitBtn.setEnabled(true);
             } else {
@@ -173,8 +177,9 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     public void errorShake(int type, int CycleTimes) {
-       Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
-        startActivity(mainActivity);
+        tv_error_show.setVisibility(View.VISIBLE);
+      /* Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
+        startActivity(mainActivity);*/
         // CycleTimes动画重复的次数
         if (null == mShakeAnimation) {
             mShakeAnimation = new TranslateAnimation(0, 10, 0, 0);
