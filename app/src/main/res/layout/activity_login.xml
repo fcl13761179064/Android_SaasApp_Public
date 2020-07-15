@@ -59,7 +59,7 @@
                     android:layout_marginLeft="38dp"
                     android:layout_marginRight="38dp"
                     android:background="@null"
-                    android:hint="@string/login"
+                    android:hint="@string/phone_or_email"
                     android:inputType="textVisiblePassword"
                     android:maxLength="20"
                     android:singleLine="true"
@@ -112,7 +112,6 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginRight="36dp"
                     android:background="@drawable/green_btn_bg"
-
                     android:text="@string/login"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp" />

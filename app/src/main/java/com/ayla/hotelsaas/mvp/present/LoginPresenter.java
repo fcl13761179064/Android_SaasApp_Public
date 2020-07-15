@@ -10,6 +10,9 @@ import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.LoginView;
+import com.ayla.hotelsaas.utils.LogUtil;
+import com.ayla.hotelsaas.utils.PregnancyUtil;
+import com.ayla.hotelsaas.utils.ToastUtil;
 import com.ayla.hotelsaas.utils.ToastUtils;
 
 import java.util.ListIterator;
@@ -38,17 +41,27 @@ public class LoginPresenter extends BasePresenter<LoginView> {
     public void login() {
         String account = mView.getAccount();
         String password = mView.getPassword();
+
         if (TextUtils.isEmpty(account)) {
             ToastUtils.showShortToast("登陆账号不能为空");
-            mView.errorShake(1, 5);
+            mView.errorShake(1, 2);
             return;
         }
         if (TextUtils.isEmpty(password)) {
             ToastUtils.showShortToast("登陆密码不能为空");
-            mView.errorShake(2, 5);
+            mView.errorShake(2, 2);
             return;
         }
-        login(account, password);
+
+        if (PregnancyUtil.checkEmail(account)) {
+            login(account, password);
+        } else if (PregnancyUtil.checkPhoneNum(account)) {
+            login(account, password);
+        } else {
+            ToastUtil.show(MyApplication.getContext(), R.string.account_error);
+        }
+
+
     }
 
 
@@ -60,12 +73,11 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                         mView.showProgress("登录中...");
                     }
                 })
-                .subscribe(new RxjavaObserver<User>(){
-
+                .subscribe(new RxjavaObserver<User>() {
 
                     @Override
                     public void onSubscribe(Disposable d) {
-                      addSubscrebe(d);
+                        addSubscrebe(d);
                     }
 
                     @Override
@@ -79,7 +91,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                     @Override
                     public void _onError(String code, String msg) {
                         ToastUtils.showShortToast(msg);
-                        mView.errorShake(0, 5);
+                        mView.errorShake(0, 2);
                         mView.hideProgress();
                     }
                 });

@@ -22,17 +22,17 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
+import com.ayla.hotelsaas.utils.LogUtil;
+import com.ayla.hotelsaas.utils.PregnancyUtil;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.StatusBarUtil;
+import com.ayla.hotelsaas.utils.ToastUtil;
 import com.ayla.hotelsaas.utils.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
 
-public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> implements LoginView{
+public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> implements LoginView {
     @BindView(R.id.editCount)
     EditText edite_count;
     @BindView(R.id.editPass)
@@ -51,13 +51,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         //黑色字体
         //StatusBarToolUlti.setStatusBarDarkTheme(this, true);
         StatusBarUtil.setTransparent(this);
-
-        Observable.just("1","2","3").flatMap(new Function<String, ObservableSource<?>>() {
-            @Override
-            public ObservableSource<?> apply(String s) throws Exception {
-                return null;
-            }
-        });
     }
 
     @Override
@@ -69,13 +62,13 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     protected void initView() {
         if (BuildConfig.DEBUG) {
             tvSwitch.setVisibility(View.VISIBLE);
-            if(Constance.isNetworkDebug){
+            if (Constance.isNetworkDebug) {
                 tvSwitch.setText("测");
-                edite_count.setText("Qis");
+                edite_count.setText("19983527951");
                 edit_password.setText("Css+123456");
-            }else{
+            } else {
                 tvSwitch.setText("正");
-                edite_count.setText("cswangyue");
+                edite_count.setText("19983527951");
                 edit_password.setText("Wy.123456");
             }
         } else {
@@ -117,6 +110,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         }
     }
 
+
     @Override
     protected void initListener() {
         edit_password.addTextChangedListener(edtWatcher);
@@ -134,6 +128,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         });
 
     }
+
     private TextWatcher edtWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -171,19 +166,18 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     public void loginSuccess(User data) {
-        Intent mainActivity = new Intent(this, MainActivity.class);
+        Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
         startActivity(mainActivity);
         finish();
     }
 
     @Override
     public void errorShake(int type, int CycleTimes) {
-        Intent mainActivity = new Intent(this, MainActivity.class);
+       Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
         startActivity(mainActivity);
-        finish();
         // CycleTimes动画重复的次数
         if (null == mShakeAnimation) {
-            mShakeAnimation = new TranslateAnimation(0, 20, 0, 0);
+            mShakeAnimation = new TranslateAnimation(0, 10, 0, 0);
             mShakeAnimation.setInterpolator(new CycleInterpolator(CycleTimes));
             mShakeAnimation.setDuration(1000);
             mShakeAnimation.setRepeatMode(Animation.REVERSE);//设置反方向执行
