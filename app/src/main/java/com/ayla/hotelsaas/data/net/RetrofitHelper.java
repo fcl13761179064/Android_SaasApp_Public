@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.data.net;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
@@ -11,8 +12,10 @@ import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.utils.DateUtils;
 import com.ayla.hotelsaas.utils.MD5;
 import com.ayla.hotelsaas.utils.SignUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
@@ -20,9 +23,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
+
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -86,7 +91,7 @@ public class RetrofitHelper {
     private RetrofitHelper() {
         retrofit = new Retrofit.Builder()
                 .client(getOkHttpClient())
-                .addConverterFactory(CustomGsonConverterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(apiBaseUrl)
                 .build();
@@ -147,9 +152,9 @@ public class RetrofitHelper {
             builder.addInterceptor(httpLoggingInterceptor);
 
             //添加请求头
-            builder.addInterceptor(CommonParameterInterceptor);
+//            builder.addInterceptor(CommonParameterInterceptor);
             //登录失败 重新登录
-            builder.addInterceptor(ReloginInterceptor);
+//            builder.addInterceptor(ReloginInterceptor);
             builder.connectTimeout(15, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS);
@@ -164,141 +169,141 @@ public class RetrofitHelper {
      * Okhttp3 拦截器
      * 添加公共请求头参数
      */
-        private static Interceptor CommonParameterInterceptor = new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
-                //参数就要针对body做操作,我这里针对From表单做操作
-                if (request.body() instanceof FormBody) {
-                    FormBody oldFormBody = (FormBody) request.body();
-                    Map<String, String> parameterMap = getRequestCommonParameter();
-                    //登录了加上参数
-                    if (null != MyApplication.getInstance().getUserEntity()) {
-                        parameterMap.put("token", MyApplication.getInstance().getUserEntity().getToken());
-                        parameterMap.put("userId", MyApplication.getInstance().getUserEntity().getUserId());
-                    }
-                    //获取参数
-                    for (int i = 0; i < oldFormBody.size(); i++) {
-                        //参数内容不为null  URLDecoder对中文进行解码
-                        if (!TextUtils.isEmpty(oldFormBody.encodedValue(i))) {
-                            parameterMap.put(oldFormBody.encodedName(i), URLDecoder.decode(oldFormBody.encodedValue(i), "UTF-8"));
-                        }
-                    }
-                    String signMD5 = MD5.getMD5Str(SignUtils.addsignParams(parameterMap) + RequestModel.APP_SECRET).toUpperCase();
-                    parameterMap.put("signmethod", "MD5");
-                    parameterMap.put("sign", signMD5);
-                    String url = request.url().toString().endsWith("?") ? request.url().toString() : request.url().toString() + "?";
-                    Request.Builder newBuilder = request.newBuilder().url(url).post(new FormBody.Builder().build());
-                    // 构造新的请求表单
-                    FormBody.Builder newFormBody = new FormBody.Builder();
-                    for (Map.Entry<String, String> paramEntry : parameterMap.entrySet()) {
-                        newFormBody.addEncoded(paramEntry.getKey(), paramEntry.getValue());
-                    }
-                    newBuilder.post(newFormBody.build());
-                    return chain.proceed(newBuilder.build());
+    private static Interceptor CommonParameterInterceptor = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            //参数就要针对body做操作,我这里针对From表单做操作
+            if (request.body() instanceof FormBody) {
+                FormBody oldFormBody = (FormBody) request.body();
+                Map<String, String> parameterMap = getRequestCommonParameter();
+                //登录了加上参数
+                if (null != MyApplication.getInstance() && null != MyApplication.getInstance().getUserEntity()) {
+                    parameterMap.put("token", MyApplication.getInstance().getUserEntity().getToken());
+                    parameterMap.put("userId", MyApplication.getInstance().getUserEntity().getUserId());
                 }
-                return chain.proceed(request);
+                //获取参数
+                for (int i = 0; i < oldFormBody.size(); i++) {
+                    //参数内容不为null  URLDecoder对中文进行解码
+                    if (!TextUtils.isEmpty(oldFormBody.encodedValue(i))) {
+                        parameterMap.put(oldFormBody.encodedName(i), URLDecoder.decode(oldFormBody.encodedValue(i), "UTF-8"));
+                    }
+                }
+                String signMD5 = MD5.getMD5Str(SignUtils.addsignParams(parameterMap) + RequestModel.APP_SECRET).toUpperCase();
+                parameterMap.put("signmethod", "MD5");
+                parameterMap.put("sign", signMD5);
+                String url = request.url().toString().endsWith("?") ? request.url().toString() : request.url().toString() + "?";
+                Request.Builder newBuilder = request.newBuilder().url(url).post(new FormBody.Builder().build());
+                // 构造新的请求表单
+                FormBody.Builder newFormBody = new FormBody.Builder();
+                for (Map.Entry<String, String> paramEntry : parameterMap.entrySet()) {
+                    newFormBody.addEncoded(paramEntry.getKey(), paramEntry.getValue());
+                }
+                newBuilder.post(newFormBody.build());
+                return chain.proceed(newBuilder.build());
             }
-        };
+            return chain.proceed(request);
+        }
+    };
 
-        /**
-         * 重新登录拦截器
-         * 当code 为5003 或者为 5004 时重新登录
-         */
-        private static Interceptor ReloginInterceptor = new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                //原始接口请求
-                Request originalRequest = chain.request();
-                Request request = originalRequest.newBuilder()
+    /**
+     * 重新登录拦截器
+     * 当code 为5003 或者为 5004 时重新登录
+     */
+    private static Interceptor ReloginInterceptor = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            //原始接口请求
+            Request originalRequest = chain.request();
+            Request request = originalRequest.newBuilder()
 //                    .addHeader("Content-type", "application/json; charset=utf-8")
-                        .build();
-                //原始接口结果
-                Response originalResponse = chain.proceed(request);
-                //未登录直接返回
-                if (!Constance.UserIsLogin) {
-                    return originalResponse;
-                }
-                try {
-                    //获得请求body
-                    JSONObject json = getResponseBodyJson(originalResponse);
-
-                    if (null != json
-                            && (json.optString("code").equals("5003")
-                            || json.optString("code").equals("5004"))) {
-                        sendLoginReceiver();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                    .build();
+            //原始接口结果
+            Response originalResponse = chain.proceed(request);
+            //未登录直接返回
+            if (!Constance.UserIsLogin) {
                 return originalResponse;
             }
+            try {
+                //获得请求body
+                JSONObject json = getResponseBodyJson(originalResponse);
 
-            /**
-             * 登录失败跳转界面
-             * 跳转到登录界面
-             */
-            private void sendLoginReceiver() {
-                MyApplication.getInstance().setUserEntity(null);
-                //跳转到首页
-                Intent intent = new Intent(MyApplication.getContext(), LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                MyApplication.getContext().startActivity(intent);
-            }
-
-            private JSONObject getResponseBodyJson(Response response) throws IOException, JSONException {
-                if (null == response) {
-                    return null;
+                if (null != json
+                        && (json.optString("code").equals("5003")
+                        || json.optString("code").equals("5004"))) {
+                    sendLoginReceiver();
                 }
-                //获得请求body  不能直接用response.body()
-                //body() 和 peekBody() 方法返回的都是一个 ResponseBody 对象，不同的是 body() 返回的当前 response 的 body，查看源码
-                ResponseBody originalBody = response.peekBody(1024 * 1024);
-                long originalLength = originalBody.contentLength();
-                if (!HttpHeaders.hasBody(response)) {
-                    return null;
-                } else if (bodyEncoded(response.headers())) {
-                    return null;
-                } else {
-                    BufferedSource source = originalBody.source();
-                    source.request(Long.MAX_VALUE); // Buffer the entire body.
-                    Buffer buffer = source.buffer();
-
-                    Charset charset = UTF8;
-
-                    MediaType contentType = originalBody.contentType();
-                    if (contentType != null) {
-                        charset = contentType.charset(UTF8);
-                    }
-
-                    if (originalLength != 0) {
-                        String result = buffer.clone().readString(charset);
-                        return new JSONObject(result);
-                    }
-                    return null;
-                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-            private boolean bodyEncoded(Headers headers) {
-                String contentEncoding = headers.get("Content-Encoding");
-                return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
-            }
-        };
+            return originalResponse;
+        }
 
         /**
-         * 添加公共参数头
-         * appkey   OpenApi.APP_key
-         * format   json
-         * apptype   drama
-         * timestamp   yyyy-MM-dd HH:mm:ss
-         * v        1.0
+         * 登录失败跳转界面
+         * 跳转到登录界面
          */
-        private static Map<String, String> getRequestCommonParameter () {
-            Map<String, String> parameterMap = new HashMap<>();
-            parameterMap.put("appkey", RequestModel.APP_key);
-            parameterMap.put("format", "json");
-            parameterMap.put("apptype", "drama");
-            parameterMap.put("timestamp", DateUtils.DateToString(new Date(), DateUtils.DateStyle.YYYY_MM_DD_HH_MM_SS));
-            parameterMap.put("v", "1.0");
-            return parameterMap;
+        private void sendLoginReceiver() {
+            MyApplication.getInstance().setUserEntity(null);
+            //跳转到首页
+            Intent intent = new Intent(MyApplication.getContext(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            MyApplication.getContext().startActivity(intent);
         }
+
+        private JSONObject getResponseBodyJson(Response response) throws IOException, JSONException {
+            if (null == response) {
+                return null;
+            }
+            //获得请求body  不能直接用response.body()
+            //body() 和 peekBody() 方法返回的都是一个 ResponseBody 对象，不同的是 body() 返回的当前 response 的 body，查看源码
+            ResponseBody originalBody = response.peekBody(1024 * 1024);
+            long originalLength = originalBody.contentLength();
+            if (!HttpHeaders.hasBody(response)) {
+                return null;
+            } else if (bodyEncoded(response.headers())) {
+                return null;
+            } else {
+                BufferedSource source = originalBody.source();
+                source.request(Long.MAX_VALUE); // Buffer the entire body.
+                Buffer buffer = source.buffer();
+
+                Charset charset = UTF8;
+
+                MediaType contentType = originalBody.contentType();
+                if (contentType != null) {
+                    charset = contentType.charset(UTF8);
+                }
+
+                if (originalLength != 0) {
+                    String result = buffer.clone().readString(charset);
+                    return new JSONObject(result);
+                }
+                return null;
+            }
+        }
+
+        private boolean bodyEncoded(Headers headers) {
+            String contentEncoding = headers.get("Content-Encoding");
+            return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
+        }
+    };
+
+    /**
+     * 添加公共参数头
+     * appkey   OpenApi.APP_key
+     * format   json
+     * apptype   drama
+     * timestamp   yyyy-MM-dd HH:mm:ss
+     * v        1.0
+     */
+    private static Map<String, String> getRequestCommonParameter() {
+        Map<String, String> parameterMap = new HashMap<>();
+        parameterMap.put("appkey", RequestModel.APP_key);
+        parameterMap.put("format", "json");
+        parameterMap.put("apptype", "drama");
+        parameterMap.put("timestamp", DateUtils.DateToString(new Date(), DateUtils.DateStyle.YYYY_MM_DD_HH_MM_SS));
+        parameterMap.put("v", "1.0");
+        return parameterMap;
     }
+}
