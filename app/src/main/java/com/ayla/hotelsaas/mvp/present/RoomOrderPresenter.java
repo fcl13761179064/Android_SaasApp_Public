@@ -46,9 +46,9 @@ public class RoomOrderPresenter extends BasePresenter<WorkOrderView> {
      */
     public void loadData(String type) {
         RequestModel.getInstance().getWorkOrderList(type, pageNum, maxNum)
-                .subscribe(new RxjavaObserver<ArrayList<WorkOrderBean>>() {
+                .subscribe(new RxjavaObserver<ArrayList<WorkOrderBean.WorkOrder>>() {
                     @Override
-                    public void _onNext(ArrayList<WorkOrderBean> data) {
+                    public void _onNext(ArrayList<WorkOrderBean.WorkOrder> data) {
                         mView.loadDataSuccess(data);
                     }
 
