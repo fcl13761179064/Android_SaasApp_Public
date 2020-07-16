@@ -63,25 +63,8 @@ public class RequestModel {
         return RetrofitHelper.getInstance().getApiService();
     }
 
-    public Observable<User> login(String account, String password) {
+    public Observable<BaseResult<User>> login(String account, String password) {
         return getApiService().login(account, password)
-                .map(new Function<BaseResult<User>, User>() {
-                    @Override
-                    public User apply(BaseResult<User> baseResult) throws Exception {
-                        return baseResult.data;
-                    }
-                })
-                .onErrorReturn(new Function<Throwable, User>() {
-                    @Override
-                    public User apply(Throwable throwable) throws Exception {
-                        User user = new User();
-                        user.setGroupName("1");
-                        user.setToken("1");
-                        user.setUserId("1");
-                        user.setUserName("1");
-                        return user;
-                    }
-                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
