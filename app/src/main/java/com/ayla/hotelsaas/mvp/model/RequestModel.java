@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
@@ -15,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -61,25 +63,8 @@ public class RequestModel {
         return RetrofitHelper.getInstance().getApiService();
     }
 
-    public Observable<User> login(String account, String password) {
+    public Observable<BaseResult<User>> login(String account, String password) {
         return getApiService().login(account, password)
-                .map(new Function<BaseResult<User>, User>() {
-                    @Override
-                    public User apply(BaseResult<User> baseResult) throws Exception {
-                        return baseResult.data;
-                    }
-                })
-                .onErrorReturn(new Function<Throwable, User>() {
-                    @Override
-                    public User apply(Throwable throwable) throws Exception {
-                        User user = new User();
-                        user.setGroupName("1");
-                        user.setToken("1");
-                        user.setUserId("1");
-                        user.setUserName("1");
-                        return user;
-                    }
-                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -113,4 +98,23 @@ public class RequestModel {
                 });
     }
 
+    public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
+//        List<DeviceCategoryBean> result = new ArrayList<>();
+//        for (int i = 0; i < 20; i++) {
+//            DeviceCategoryBean deviceCategoryBean = new DeviceCategoryBean();
+//            result.add(deviceCategoryBean);
+//            deviceCategoryBean.name = "一级列表" + i;
+//            deviceCategoryBean.subBeans = new ArrayList<>();
+//            for (int j = 0; j < 20; j++) {
+//                DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
+//                subBean.name = "二级列表" + i + "_" + j;
+//                subBean.mode = 1;
+//                deviceCategoryBean.subBeans.add(subBean);
+//            }
+//        }
+//        return Observable.just(result);
+        return getApiService().fetchDeviceCategory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

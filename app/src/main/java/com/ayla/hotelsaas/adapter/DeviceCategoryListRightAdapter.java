@@ -18,8 +18,8 @@ public class DeviceCategoryListRightAdapter extends BaseQuickAdapter<DeviceCateg
 
     @Override
     protected void convert(BaseViewHolder helper, DeviceCategoryBean.SubBean item) {
-        helper.setText(R.id.text, item.name);
+        helper.setText(R.id.text, item.getName());
         ImageView imageView = helper.getView(R.id.image);
-        ImageLoader.loadImg(imageView,item.icon,R.drawable.ic_empty_device,R.drawable.ic_empty_device);
+        ImageLoader.loadImg(imageView,item.getIcon(),R.drawable.ic_empty_device,R.drawable.ic_empty_device);
     }
 }

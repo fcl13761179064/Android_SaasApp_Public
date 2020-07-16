@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ create by cairurui on 9/9/19 3:08 PM.
+  ~ Copyright (c) 2019 SunseaIoT. All rights reserved.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?android:selectableItemBackground"
+    android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingRight="5dp">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_empty_device" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="@color/color_666666"
+        android:textSize="12sp" />
+</LinearLayout>
