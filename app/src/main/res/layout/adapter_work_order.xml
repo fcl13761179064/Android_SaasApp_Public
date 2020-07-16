@@ -63,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/sp_12"
-                tools:text="施工状态：" />
+                android:text="施工状态：" />
 
             <TextView
                 android:id="@+id/item_work_status"
@@ -71,6 +71,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:textSize="@dimen/sp_12"
+                android:textColor="@color/loginLogoColor"
                 android:gravity="center_vertical"
                 tools:text="待施工" />
         </LinearLayout>
