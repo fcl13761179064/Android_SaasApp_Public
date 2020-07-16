@@ -64,7 +64,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 DeviceCategoryBean.SubBean bean = (DeviceCategoryBean.SubBean) adapter.getItem(position);
-                handleAddJump(bean.mode);
+                handleAddJump(bean.getCuid());
             }
         });
         rightRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
@@ -117,17 +117,17 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     private void adjustData(int categoryIndex) {
         if (mLeftAdapter.getData().size() > 0) {
             mLeftAdapter.setSelectedPosition(categoryIndex);
-            mRightAdapter.setNewData(mLeftAdapter.getData().get(categoryIndex).subBeans);
+            mRightAdapter.setNewData(mLeftAdapter.getData().get(categoryIndex).getSub());
         }
     }
 
     /**
      * 处理点击二级菜单item后的配网页面跳转逻辑
      *
-     * @param mode
+     * @param cuid
      */
-    private void handleAddJump(int mode) {
-        if (1 == mode) {
+    private void handleAddJump(int cuid) {
+        if (1 == cuid) {
             Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
             startActivityForResult(mainActivity, 0);
         }

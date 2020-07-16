@@ -6,12 +6,73 @@ import java.util.List;
  * 设备添加列表页面
  */
 public class DeviceCategoryBean {
-    public String name;
-    public List<SubBean> subBeans;
+    /**
+     * id : 1
+     * name : 电工
+     * sub : [{"name":"一路开关","connectMode":1,"icon":"http://172.31.16.100/product/typeIcon/cz.png"},{"name":"二路开关","connectMode":1,"icon":"http://172.31.16.100/product/typeIcon/cz.png"},{"name":"三路开关","connectMode":1,"icon":"http://172.31.16.100/product/typeIcon/cz.png"}]
+     */
+
+    private int id;
+    private String name;
+    private List<SubBean> sub;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<SubBean> getSub() {
+        return sub;
+    }
+
+    public void setSub(List<SubBean> sub) {
+        this.sub = sub;
+    }
 
     public static class SubBean {
-        public String name;
-        public String icon;
-        public int mode;
+        /**
+         * name : 一路开关
+         * connectMode : 1
+         * icon : http://172.31.16.100/product/typeIcon/cz.png
+         */
+
+        private String name;
+        private int cuid;
+        private String icon;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getCuid() {
+            return cuid;
+        }
+
+        public void setCuid(int cuid) {
+            this.cuid = cuid;
+        }
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
     }
 }
