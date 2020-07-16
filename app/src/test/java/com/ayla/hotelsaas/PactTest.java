@@ -41,9 +41,6 @@ public class PactTest {
 
     @Pact(provider = "construction_backend", consumer = "construction_app")
     public RequestResponsePact createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
-        BaseResult<User> result2 = new BaseResult<>();
-        result2.code = "0";
-        result2.error = "账号或密码错误";
         return builder
                 //正常用户登录
                 .given("正确的用户密码")

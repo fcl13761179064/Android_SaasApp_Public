@@ -92,7 +92,7 @@ dependencies {
     implementation rootProject.libraries.SmartRefreshLayout
     implementation rootProject.libraries.SmartRefreshHeader
     implementation rootProject.libraries.BaseRyViewAdapHelper
-
+    implementation "com.airbnb.android:lottie:3.4.0"
 
 }
 
