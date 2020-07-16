@@ -10,36 +10,104 @@ import java.util.List;
  */
 public class WorkOrderBean implements Serializable {
     /**
-     * programName : 20161206选座套票
+     * programName : saas酒店
      * voucherId : 348749
      * palyTime : 2019-12-06 17:54:00
      * status : 待施工
      */
-    private String programName;
-    private String applyTime;
-    private String status;
+    private String currentPage;
+    private String pageSize;
+    private List<WorkOrder> workOrderContent;
 
-    public String getProgramName() {
-        return programName;
+    public static class WorkOrder  implements  Serializable{
+
+        private String businessId;
+        private String projectName;
+        private String startDate;
+        private String endDate;
+        private String progressStatus;
+        private String resourceId;
+        private String resourceNum;
+
+        public String getBusinessId() {
+            return businessId;
+        }
+
+        public void setBusinessId(String businessId) {
+            this.businessId = businessId;
+        }
+
+        public String getProjectName() {
+            return projectName;
+        }
+
+        public void setProjectName(String projectName) {
+            this.projectName = projectName;
+        }
+
+        public String getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(String startDate) {
+            this.startDate = startDate;
+        }
+
+        public String getEndDate() {
+            return endDate;
+        }
+
+        public void setEndDate(String endDate) {
+            this.endDate = endDate;
+        }
+
+        public String getProgressStatus() {
+            return progressStatus;
+        }
+
+        public void setProgressStatus(String progressStatus) {
+            this.progressStatus = progressStatus;
+        }
+
+        public String getResourceId() {
+            return resourceId;
+        }
+
+        public void setResourceId(String resourceId) {
+            this.resourceId = resourceId;
+        }
+
+        public String getResourceNum() {
+            return resourceNum;
+        }
+
+        public void setResourceNum(String resourceNum) {
+            this.resourceNum = resourceNum;
+        }
     }
 
-    public void setProgramName(String programName) {
-        this.programName = programName;
+
+    public String getCurrentPage() {
+        return currentPage;
     }
 
-    public String getApplyTime() {
-        return applyTime;
+    public void setCurrentPage(String currentPage) {
+        this.currentPage = currentPage;
     }
 
-    public void setApplyTime(String applyTime) {
-        this.applyTime = applyTime;
+    public String getPageSize() {
+        return pageSize;
     }
 
-    public String getStatus() {
-        return status;
+    public void setPageSize(String pageSize) {
+        this.pageSize = pageSize;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public List<WorkOrder> getWorkOrderContent() {
+        return workOrderContent;
+    }
+
+    public void setWorkOrderContent(List<WorkOrder> workOrderContent) {
+        this.workOrderContent = workOrderContent;
     }
 }

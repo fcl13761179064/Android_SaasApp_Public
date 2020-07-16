@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.WorkOrderAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -39,7 +40,6 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     private WorkOrderAdapter mAdapter;
 
 
-
     @Override
     protected void setStatusBar() {
         //用来设置整体下移，状态栏沉浸
@@ -59,7 +59,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
 
     @Override
     protected WorkOrderPresenter initPresenter() {
-        return null;
+        return new WorkOrderPresenter();
     }
 
     @Override
@@ -70,16 +70,6 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     @Override
     protected void initView() {
 
-      /*  initToolbar(0, getString(R.string.exit), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyApplication.getInstance().setUserEntity(null);
-                Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }
-        });*/
         //是否在刷新的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenRefresh(true);
         //是否在加载的时候禁止列表的操作
@@ -128,7 +118,9 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
 
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-
+                if (mPresenter != null) {
+                    mPresenter.loadNextPage("1");
+                }
             }
         });
         mRefreshLayout.autoRefresh();//自动刷新
@@ -145,13 +137,24 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     }
 
     @Override
-    public void loadDataSuccess(ArrayList<WorkOrderBean> data) {
+    public void loadDataSuccess(ArrayList<WorkOrderBean.WorkOrder> data) {
         mAdapter.addData(data);
         loadDataFinish();
     }
 
     @Override
     public void loadDataFinish() {
+         ArrayList<WorkOrderBean.WorkOrder> workOrderBeans = new ArrayList<>();
+         WorkOrderBean.WorkOrder  workOrderBean;
+        for (int x=0;x<20;x++){
+            workOrderBean = new WorkOrderBean.WorkOrder();
+            workOrderBean.setProjectName("你好啊");
+            workOrderBean.setStartDate("2019-2-32");
+            workOrderBean.setEndDate("2019-6-32");
+            workOrderBean.setProgressStatus("带施工");
+            workOrderBeans.add(workOrderBean);
+        }
+        mAdapter.addData(workOrderBeans);
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
     }

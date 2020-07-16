@@ -85,17 +85,18 @@ public class RequestModel {
     }
 
     /**
-     * 获取待办事项列表
+     * 获取工作订单的条数
      *
      * @param pageNum 页码 从1开始
      * @param maxNum  每页加载量
      * @return
      */
-    public Observable<BaseResult<ArrayList<WorkOrderBean>>> getWorkOrderList(String type, int pageNum, String maxNum) {
+    public Observable<BaseResult<ArrayList<WorkOrderBean.WorkOrder>>> getWorkOrderList(String type, int pageNum, String maxNum) {
         Map<String, String> map = new HashMap<>(8);
         //不同的
-        map.put("from", String.valueOf(pageNum));
-        map.put("maxnum", maxNum);
+        //待办事项获取数量
+         final String TODO_ITEM_COUNT = "com.gewara.gptbs.vrm.pendingCount";
+        map.put("method", TODO_ITEM_COUNT);
         if (!TextUtils.isEmpty(type)) {
             map.put("type", type);
         }
@@ -103,9 +104,9 @@ public class RequestModel {
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<String, BaseResult<ArrayList<WorkOrderBean>>>() {
+                .map(new Function<String, BaseResult<ArrayList<WorkOrderBean.WorkOrder>>>() {
                     @Override
-                    public BaseResult<ArrayList<WorkOrderBean>> apply(@NonNull String s) throws Exception {
+                    public BaseResult<ArrayList<WorkOrderBean.WorkOrder>> apply(@NonNull String s) throws Exception {
                         return new Gson().fromJson(s, new TypeToken<BaseResult<ArrayList<WorkOrderBean>>>() {
                         }.getType());
                     }
