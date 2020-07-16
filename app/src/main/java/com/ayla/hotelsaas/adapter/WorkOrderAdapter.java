@@ -1,6 +1,7 @@
-package com.ayla.hotelsaas;
+package com.ayla.hotelsaas.adapter;
 
 
+import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -22,7 +23,7 @@ public class WorkOrderAdapter extends BaseQuickAdapter<WorkOrderBean.WorkOrder, 
     protected void convert(BaseViewHolder helper, WorkOrderBean.WorkOrder workOrder) {
         helper.setText(R.id.item_tv_name, workOrder.getProjectName())
                 .setText(R.id.item_work_date, workOrder.getStartDate())
-                .setText(R.id.item_work_status, workOrder.getStartDate());
+                .setText(R.id.item_work_status, workOrder.getProgressStatus());
 
     }
 

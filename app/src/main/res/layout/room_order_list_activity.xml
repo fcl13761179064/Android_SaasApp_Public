@@ -1,87 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv="@string/exit"
+        app:left_iv="@mipmap/icon_back_black"
+         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="105dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/item_tv_name"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textColor="@color/textDarkColor"
-            android:textSize="17sp"
-            tools:text="哥打京那巴鲁丝绸太平洋酒店" />
+        android:background="@color/white"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:orientation="horizontal"
-            >
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawablePadding="8dp"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:text="施工日期："
-                android:textSize="@dimen/sp_12"
-                android:gravity="center_vertical" />
-
-            <TextView
-                android:id="@+id/item_work_date"
+                android:id="@+id/item_tv_name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                android:textSize="@dimen/sp_12"
-                tools:text="2011-06-12" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:ellipsize="end"
+                android:gravity="bottom"
+                android:singleLine="true"
+                android:textColor="@color/textDarkColor"
+                android:textSize="17sp"
+                android:text="威尼斯特酒店(广州新白云国际机场店)" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ellipsize="end"
+                    android:gravity="bottom"
+                    android:singleLine="true"
+                    android:text="施工日期："
+                    android:textSize="@dimen/sp_12" />
+
+                <TextView
+                    android:id="@+id/item_work_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:gravity="bottom"
+                    android:textSize="@dimen/sp_12"
+                    android:text="2011-06-12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/sp_12"
+                    android:text="施工状态：" />
+
+                <TextView
+                    android:id="@+id/item_work_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/sp_12"
+                    android:textColor="@color/loginLogoColor"
+                    android:text="待施工" />
+            </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:orientation="horizontal"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                tools:text="施工状态：" />
-
-            <TextView
-                android:id="@+id/item_work_status"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:gravity="center_vertical"
-                tools:text="待施工" />
-        </LinearLayout>
-
     </LinearLayout>
 
+<View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/colorBackground"
+    />
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/room_refreshLayout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/room_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/room_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>
