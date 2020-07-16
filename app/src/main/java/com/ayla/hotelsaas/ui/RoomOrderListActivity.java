@@ -1,19 +1,11 @@
 package com.ayla.hotelsaas.ui;
 
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.bean.WorkOrderBean;
-import com.ayla.hotelsaas.mvp.present.RoomOrderPresenter;
-import com.ayla.hotelsaas.mvp.present.WorkOrderPresenter;
-import com.ayla.hotelsaas.mvp.view.RoomOrderView;
-import com.ayla.hotelsaas.mvp.view.WorkOrderView;
+import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.base.BasicActivity;
 
-import java.util.ArrayList;
 
-public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOrderPresenter>   {
-    @Override
-    protected RoomOrderPresenter initPresenter() {
-        return null;
-    }
+public class RoomOrderListActivity extends BasicActivity {
 
     @Override
     protected int getLayoutId() {
@@ -30,5 +22,5 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
 
     }
 
-    
+
 }
