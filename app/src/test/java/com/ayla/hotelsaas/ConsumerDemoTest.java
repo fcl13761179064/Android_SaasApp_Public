@@ -47,41 +47,37 @@ public class ConsumerDemoTest {
                 .given("正确的用户密码")
                 .uponReceiving("用户实例，当前简单，只包含token")
                 .path("/login")
-                .method("GET")
-                .query("username=111&password=222")
+                .method("POST")
+                .body("username=111&password=222", "application/x-www-form-urlencoded")
                 .willRespondWith()
                 .status(200)
-                .body(new PactDslJsonBody().stringType("token", "11111"))
+                .body(new PactDslJsonBody().numberValue("code", 0)
+                        .stringType("error", "")
+                        .object("data", new PactDslJsonBody().stringType("token")))
 
                 .given("错误的用户名或密码")
                 .uponReceiving("code = 1001，表示：用户名或密码错误")
                 .path("/login")
-                .method("GET")
-                .query("username=111&password=333")
+                .method("POST")
+                .body("username=111&password=333", "application/x-www-form-urlencoded")
                 .willRespondWith()
-                .status(400)
-                .body(new PactDslJsonBody().numberValue("code", 1001).stringType("message", "用户名或密码错误"))
+                .status(200)
+                .body(new PactDslJsonBody().numberValue("code", 1001)
+                        .stringType("error", "用户名或密码错误"))
                 .toPact();
     }
 
     @Test
     @PactVerification("our_provider")
     public void testLogin() {
-        loginSuccess();
-        loginFailed();
-    }
-
-    private void loginSuccess() {
         RetrofitHelper.getInstance()
                 .getApiService()
                 .login("111", "222")
-                .subscribe();
-    }
+                .test().assertNoErrors();
 
-    private void loginFailed() {
         RetrofitHelper.getInstance()
                 .getApiService()
                 .login("111", "333")
-                .subscribe();
+                .test().assertNoErrors();
     }
 }
