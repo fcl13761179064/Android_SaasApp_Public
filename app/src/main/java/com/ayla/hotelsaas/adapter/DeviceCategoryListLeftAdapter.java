@@ -22,7 +22,7 @@ public class DeviceCategoryListLeftAdapter extends BaseQuickAdapter<DeviceCatego
     @Override
     protected void convert(BaseViewHolder helper, DeviceCategoryBean item) {
         boolean selected = helper.getAdapterPosition() == selectedPosition;
-        helper.setText(R.id.text, item.name);
+        helper.setText(R.id.text, item.getName());
         helper.setTypeface(R.id.text, Typeface.defaultFromStyle(selected ? Typeface.BOLD : Typeface.NORMAL));
         helper.setTextColor(R.id.text, selected ? ContextCompat.getColor(helper.itemView.getContext(), R.color.color_333333) : ContextCompat.getColor(helper.itemView.getContext(), R.color.color_666666));
         helper.setBackgroundRes(R.id.text, selected ? R.color.color_ffffff : android.R.color.transparent);

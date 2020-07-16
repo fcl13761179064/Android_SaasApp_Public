@@ -1,14 +1,17 @@
 package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.User;
 
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -25,4 +28,7 @@ public interface ApiService {
     @POST("login")
     @FormUrlEncoded
     Observable<BaseResult<User>> login(@Field("username") String username, @Field("password") String password);
+
+    @GET("device_add_category")
+    Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 }

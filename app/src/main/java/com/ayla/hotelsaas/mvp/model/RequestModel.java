@@ -97,20 +97,23 @@ public class RequestModel {
                 });
     }
 
-    public Observable<List<DeviceCategoryBean>> getDeviceCategory() {
-        List<DeviceCategoryBean> result = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            DeviceCategoryBean deviceCategoryBean = new DeviceCategoryBean();
-            result.add(deviceCategoryBean);
-            deviceCategoryBean.name = "一级列表" + i;
-            deviceCategoryBean.subBeans = new ArrayList<>();
-            for (int j = 0; j < 20; j++) {
-                DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
-                subBean.name = "二级列表" + i + "_" + j;
-                subBean.mode = 1;
-                deviceCategoryBean.subBeans.add(subBean);
-            }
-        }
-        return Observable.just(result);
+    public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
+//        List<DeviceCategoryBean> result = new ArrayList<>();
+//        for (int i = 0; i < 20; i++) {
+//            DeviceCategoryBean deviceCategoryBean = new DeviceCategoryBean();
+//            result.add(deviceCategoryBean);
+//            deviceCategoryBean.name = "一级列表" + i;
+//            deviceCategoryBean.subBeans = new ArrayList<>();
+//            for (int j = 0; j < 20; j++) {
+//                DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
+//                subBean.name = "二级列表" + i + "_" + j;
+//                subBean.mode = 1;
+//                deviceCategoryBean.subBeans.add(subBean);
+//            }
+//        }
+//        return Observable.just(result);
+        return getApiService().fetchDeviceCategory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }
