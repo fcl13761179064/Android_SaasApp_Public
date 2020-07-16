@@ -1,8 +1,6 @@
 package com.ayla.hotelsaas;
 
 import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 
 import org.junit.Before;
@@ -20,6 +18,7 @@ import au.com.dius.pact.consumer.junit.PactProviderRule;
 import au.com.dius.pact.consumer.junit.PactVerification;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
+import okhttp3.RequestBody;
 
 public class PactTest {
 
@@ -43,8 +42,8 @@ public class PactTest {
     public RequestResponsePact createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
         return builder
                 //正常用户登录
-                .given("正确的用户密码")
-                .uponReceiving("用户实例，当前简单，只包含token")
+                .given("")
+                .uponReceiving("正确的账号密码登录")
                 .path("/login")
                 .method("POST")
                 .body("username=111&password=222", "application/x-www-form-urlencoded")
@@ -55,8 +54,8 @@ public class PactTest {
                         .stringType("error", "")
                         .object("data", new PactDslJsonBody().stringType("token")))
                 //用户密码错误
-                .given("错误的用户名或密码")
-                .uponReceiving("code = 1001，表示：用户名或密码错误")
+                .given("")
+                .uponReceiving("错误的账号密码登录")
                 .path("/login")
                 .method("POST")
                 .body("username=111&password=333", "application/x-www-form-urlencoded")
@@ -65,8 +64,8 @@ public class PactTest {
                 .body(new PactDslJsonBody().numberValue("code", 1001)
                         .stringType("error", "用户名或密码错误"))
                 //获取产品配网二级菜单列表
-                .given("获取产品配网二级菜单列表")
-                .uponReceiving("配网支持的产品列表，二级菜单")
+                .given("")
+                .uponReceiving("获取产品配网二级菜单列表")
                 .path("/device_add_category")
                 .method("GET")
                 .willRespondWith()
@@ -87,6 +86,33 @@ public class PactTest {
                                 )
                                 .closeObject()
                         ))
+                //DSN绑定设备,绑定成功
+                .given("绑定成功")
+                .uponReceiving("DSN绑定设备")
+                .path("/bind_device")
+                .method("POST")
+                .body(new PactDslJsonBody().stringType("device_id", "123")
+                        .numberType("cuid", 1)
+                        .stringType("scope_id", "123"))
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "")
+                        .booleanType("data", true))
+                //DSN解绑设备,绑定成功
+                .given("解绑成功")
+                .uponReceiving("DSN解绑设备")
+                .path("/unbind_device")
+                .method("POST")
+                .body(new PactDslJsonBody().stringType("device_id", "123")
+                        .stringType("scope_id", "123"))
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "")
+                        .booleanType("data", true))
                 .toPact();
     }
 
@@ -137,5 +163,21 @@ public class PactTest {
                 .getApiService()
                 .fetchDeviceCategory()
                 .test().assertNoErrors();
+
+        {//绑定设备
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),
+                    "{\"device_id\":\"121212\",\"cuid\":1,\"scope_id\":\"121212\"}");
+            RetrofitHelper.getInstance()
+                    .getApiService()
+                    .bindDeviceWithDSN(body).test().assertNoErrors();
+        }
+
+        {//解绑设备
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),
+                    "{\"device_id\":\"121212\",\"scope_id\":\"121212\"}");
+            RetrofitHelper.getInstance()
+                    .getApiService()
+                    .unbindDeviceWithDSN(body).test().assertNoErrors();
+        }
     }
 }

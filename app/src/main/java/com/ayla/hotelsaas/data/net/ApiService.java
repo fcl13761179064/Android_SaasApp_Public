@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 /**
  * @描述 Retrofit 需要的
@@ -31,4 +34,11 @@ public interface ApiService {
 
     @GET("device_add_category")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
+
+    @POST("bind_device")
+    Observable<BaseResult<Boolean>> bindDeviceWithDSN(@Body RequestBody body);
+
+
+    @POST("unbind_device")
+    Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
 }

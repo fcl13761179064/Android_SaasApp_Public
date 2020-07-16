@@ -19,6 +19,7 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddCategoryPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
+import com.ayla.hotelsaas.utils.StatusBarUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.List;
@@ -41,6 +42,11 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     private DeviceCategoryListLeftAdapter mLeftAdapter;
     private DeviceCategoryListRightAdapter mRightAdapter;
 
+    @Override
+    protected void setStatusBar() {
+        super.setStatusBar();
+        StatusBarUtil.setTransparent(this);
+    }
 
     @Override
     protected int getLayoutId() {
@@ -131,7 +137,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
             startActivityForResult(mainActivity, 0);
         }else if(0 == cuid){//跳转节点添加
-            Intent mainActivity = new Intent(this, ZigBeeAddActivity.class);
+            Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
             startActivityForResult(mainActivity, 0);
         }
     }
