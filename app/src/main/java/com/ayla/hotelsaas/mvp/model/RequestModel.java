@@ -76,7 +76,7 @@ public class RequestModel {
      * @param maxNum  每页加载量
      * @return
      */
-    public Observable<BaseResult<ArrayList<WorkOrderBean.WorkOrder>>> getWorkOrderList(String type, int pageNum, String maxNum) {
+    public Observable<BaseResult<ArrayList<WorkOrderBean>>> getWorkOrderList(String type, int pageNum, String maxNum) {
         Map<String, String> map = new HashMap<>(8);
         //不同的
         //待办事项获取数量
@@ -89,9 +89,9 @@ public class RequestModel {
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<String, BaseResult<ArrayList<WorkOrderBean.WorkOrder>>>() {
+                .map(new Function<String, BaseResult<ArrayList<WorkOrderBean>>>() {
                     @Override
-                    public BaseResult<ArrayList<WorkOrderBean.WorkOrder>> apply(@NonNull String s) throws Exception {
+                    public BaseResult<ArrayList<WorkOrderBean>> apply(@NonNull String s) throws Exception {
                         return new Gson().fromJson(s, new TypeToken<BaseResult<ArrayList<WorkOrderBean>>>() {
                         }.getType());
                     }

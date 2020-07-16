@@ -2,13 +2,10 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.WorkOrderAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -23,10 +20,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import butterknife.BindView;
 
 public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOrderPresenter> implements WorkOrderView {
@@ -137,8 +132,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     }
 
     @Override
-    public void loadDataSuccess(ArrayList<WorkOrderBean.WorkOrder> data) {
-        mAdapter.addData(data);
+    public void loadDataSuccess(ArrayList<WorkOrderBean> data) {
         loadDataFinish();
     }
 

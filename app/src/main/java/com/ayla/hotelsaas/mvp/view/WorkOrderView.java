@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public interface WorkOrderView extends BaseView {
 
-    void loadDataSuccess(ArrayList<WorkOrderBean.WorkOrder> data);
+    void loadDataSuccess(ArrayList<WorkOrderBean> data);
 
     void loadDataFinish();
 
