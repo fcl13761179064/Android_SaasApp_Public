@@ -4,7 +4,6 @@ import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
-import com.google.gson.Gson;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,12 +13,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import au.com.dius.pact.consumer.Pact;
-import au.com.dius.pact.consumer.PactProviderRule;
-import au.com.dius.pact.consumer.PactVerification;
+import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
-import au.com.dius.pact.model.PactFragment;
-import io.reactivex.observers.TestObserver;
+import au.com.dius.pact.consumer.junit.PactProviderRule;
+import au.com.dius.pact.consumer.junit.PactVerification;
+import au.com.dius.pact.core.model.RequestResponsePact;
+import au.com.dius.pact.core.model.annotations.Pact;
 
 public class ConsumerDemoTest {
 
@@ -40,33 +39,49 @@ public class ConsumerDemoTest {
     public PactProviderRule mockProvider = new PactProviderRule("our_provider", "localhost", 9292, this);
 
     @Pact(provider = "our_provider", consumer = "our_consumer")
-    public PactFragment createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
-        BaseResult<User> result = new BaseResult<>();
-        result.code = "200";
-        result.error = "";
-        result.data = new User();
-        result.data.setUserName("111");
-        result.data.setUserName("111");
-        result.data.setToken("111");
-        result.data.setGroupName("111");
-
+    public RequestResponsePact createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
+        BaseResult<User> result2 = new BaseResult<>();
+        result2.code = "0";
+        result2.error = "账号或密码错误";
         return builder
-                .uponReceiving("a request for json data")
+                .given("正确的用户密码")
+                .uponReceiving("用户实例，当前简单，只包含token")
                 .path("/login")
                 .method("GET")
                 .query("username=111&password=222")
                 .willRespondWith()
                 .status(200)
-                .headers(HEADERS)
-                .body(new Gson().toJson(result))
-                .toFragment();
+                .body(new PactDslJsonBody().stringType("token", "11111"))
+
+                .given("错误的用户名或密码")
+                .uponReceiving("code = 1001，表示：用户名或密码错误")
+                .path("/login")
+                .method("GET")
+                .query("username=111&password=333")
+                .willRespondWith()
+                .status(400)
+                .body(new PactDslJsonBody().numberValue("code", 1001).stringType("message", "用户名或密码错误"))
+                .toPact();
     }
 
     @Test
     @PactVerification("our_provider")
-    public void should_process_the_json_payload_from_provider() {
-        TestObserver<BaseResult<User>> test = RetrofitHelper.getInstance()
-                .getApiService().login("111", "222").test();
-        test.assertNoErrors();
+    public void testLogin() {
+        loginSuccess();
+        loginFailed();
+    }
+
+    private void loginSuccess() {
+        RetrofitHelper.getInstance()
+                .getApiService()
+                .login("111", "222")
+                .subscribe();
+    }
+
+    private void loginFailed() {
+        RetrofitHelper.getInstance()
+                .getApiService()
+                .login("111", "333")
+                .subscribe();
     }
 }
