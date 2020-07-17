@@ -16,6 +16,7 @@ import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.consumer.junit.PactProviderRule;
 import au.com.dius.pact.consumer.junit.PactVerification;
+import au.com.dius.pact.core.model.PactSpecVersion;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import okhttp3.RequestBody;
@@ -36,7 +37,7 @@ public class PactTest {
     }
 
     @Rule
-    public PactProviderRule mockProvider = new PactProviderRule("construction_backend", "localhost", 9292, this);
+    public PactProviderRule mockProvider = new PactProviderRule("construction_backend", "localhost", 9292, PactSpecVersion.V2, this);
 
     @Pact(provider = "construction_backend", consumer = "construction_app")
     public RequestResponsePact createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
@@ -156,8 +157,6 @@ public class PactTest {
                                         .stringType("startDate", "2018-2-5")
                                         .stringType("endDate", "2019-5-9")
                                         .stringType("progressStatus", "待施工")
-                                        .object("roomInfo", new PactDslJsonArray()
-                                                .object().stringType("resourceId", "101"))
                                         .closeObject()
                                 )
                                 .closeObject()
