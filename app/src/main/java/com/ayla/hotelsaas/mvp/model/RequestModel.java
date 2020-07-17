@@ -6,11 +6,13 @@ import android.text.TextUtils;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
+import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -90,20 +92,6 @@ public class RequestModel {
     }
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
-//        List<DeviceCategoryBean> result = new ArrayList<>();
-//        for (int i = 0; i < 20; i++) {
-//            DeviceCategoryBean deviceCategoryBean = new DeviceCategoryBean();
-//            result.add(deviceCategoryBean);
-//            deviceCategoryBean.name = "一级列表" + i;
-//            deviceCategoryBean.subBeans = new ArrayList<>();
-//            for (int j = 0; j < 20; j++) {
-//                DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
-//                subBean.name = "二级列表" + i + "_" + j;
-//                subBean.mode = 1;
-//                deviceCategoryBean.subBeans.add(subBean);
-//            }
-//        }
-//        return Observable.just(result);
         return getApiService().fetchDeviceCategory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -137,6 +125,32 @@ public class RequestModel {
         body.addProperty("device_id", dsn);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().notifyGatewayConfig(body111)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 通过房间号获取下属的RuleEngines。
+     *
+     * @param scopeId
+     * @return
+     */
+    public Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(String scopeId) {
+        return getApiService().fetchRuleEngines(scopeId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 保存RuleEngine
+     *
+     * @param ruleEngineBean
+     * @return
+     */
+    public Observable<BaseResult<Boolean>> saveRuleEngines(RuleEngineBean ruleEngineBean) {
+        String json = new Gson().toJson(ruleEngineBean);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
+        return getApiService().saveRuleEngines(body111)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
