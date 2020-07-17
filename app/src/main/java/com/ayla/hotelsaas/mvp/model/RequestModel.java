@@ -12,19 +12,20 @@ import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.RequestBody;
 
 /**
  * @描述 网络请求Model
@@ -100,26 +101,30 @@ public class RequestModel {
     }
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
-//        List<DeviceCategoryBean> result = new ArrayList<>();
-//        for (int i = 0; i < 20; i++) {
-//            DeviceCategoryBean deviceCategoryBean = new DeviceCategoryBean();
-//            result.add(deviceCategoryBean);
-//            deviceCategoryBean.setName("一级列表" + i);
-//            deviceCategoryBean.setSub(new ArrayList<>());
-//            for (int j = 0; j < 20; j++) {
-//                int i1 = new Random().nextInt(2);
-//                DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
-//                subBean.setName("二级列表" + i + "_" + j+" "+(i1 == 1?"网关":"节点"));
-//                subBean.setCuid(i1);
-//                deviceCategoryBean.getSub().add(subBean);
-//            }
-//        }
-//        BaseResult<List<DeviceCategoryBean>> listBaseResult = new BaseResult<>();
-//        listBaseResult.code = "0";
-//        listBaseResult.data = result;
-//        return Observable.just(listBaseResult);
-
         return getApiService().fetchDeviceCategory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<BaseResult<Boolean>> bindDeviceWithDSN(String dsn, String cuid, String scopeId, String scopeType) {
+        JsonObject body = new JsonObject();
+        body.addProperty("device_id", dsn);
+        body.addProperty("cuid", cuid);
+        body.addProperty("scope_id", scopeId);
+        body.addProperty("scope_type", scopeType);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().bindDeviceWithDSN(body111)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<BaseResult<Boolean>> unbindDeviceWithDSN(String dsn, String scopeId, String scopeType) {
+        JsonObject body = new JsonObject();
+        body.addProperty("device_id", dsn);
+        body.addProperty("scope_id", scopeId);
+        body.addProperty("scope_type", scopeType);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().unbindDeviceWithDSN(body111)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
