@@ -1,23 +1,17 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
-import com.ayla.hotelsaas.utils.ToastUtil;
 
-import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 网关添加引导页面
+ * ZigBee添加引导页面
  */
 public class ZigBeeAddGuideActivity extends BaseMvpActivity {
     @Override
@@ -43,6 +37,7 @@ public class ZigBeeAddGuideActivity extends BaseMvpActivity {
     @OnClick(R.id.bt_start_add)
     public void handleJump() {
         Intent mainActivity = new Intent(this, ZigBeeAddActivity.class);
+        mainActivity.putExtra("dsn", "121212");//传网关的dsn过去。
         startActivityForResult(mainActivity, 0);
     }
 

@@ -43,7 +43,9 @@ public interface ApiService {
     @POST("bind_device")
     Observable<BaseResult<Boolean>> bindDeviceWithDSN(@Body RequestBody body);
 
-
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
+
+    @POST("notify_gateway_config")
+    Observable<BaseResult<Boolean>> notifyGatewayConfig(@Body RequestBody body);
 }
