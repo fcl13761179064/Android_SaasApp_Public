@@ -22,7 +22,8 @@ public class WorkOrderAdapter extends BaseQuickAdapter<WorkOrderBean.WorkOrder, 
     @Override
     protected void convert(BaseViewHolder helper, WorkOrderBean.WorkOrder workOrder) {
         helper.setText(R.id.item_tv_name, workOrder.getProjectName())
-                .setText(R.id.item_work_date, workOrder.getStartDate())
+                .setText(R.id.item_work_srart_date, workOrder.getStartDate())
+                .setText(R.id.item_work_end_date, workOrder.getEndDate())
                 .setText(R.id.item_work_status, workOrder.getProgressStatus());
 
     }

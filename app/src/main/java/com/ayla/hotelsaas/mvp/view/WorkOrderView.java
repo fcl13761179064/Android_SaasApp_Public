@@ -3,8 +3,6 @@ package com.ayla.hotelsaas.mvp.view;
 
 import com.ayla.hotelsaas.base.BaseView;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-
-import java.util.ArrayList;
 import java.util.List;
 
 

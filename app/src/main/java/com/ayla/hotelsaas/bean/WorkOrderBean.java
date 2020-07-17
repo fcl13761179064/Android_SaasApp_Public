@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @描述  工作订单的bean
+ * @描述 工作订单的bean
  * @作者 fanchunlei
  * @时间 2020/7/14
  */
@@ -15,19 +15,18 @@ public class WorkOrderBean implements Serializable {
      * palyTime : 2019-12-06 17:54:00
      * status : 待施工
      */
+
+
     private String currentPage;
     private String pageSize;
     private List<WorkOrder> workOrderContent;
 
-    public static class WorkOrder  implements  Serializable{
-
+    public static class WorkOrder implements Serializable {
         private String businessId;
         private String projectName;
         private String startDate;
         private String endDate;
         private String progressStatus;
-        private String resourceId;
-        private String resourceNum;
 
         public String getBusinessId() {
             return businessId;
@@ -69,21 +68,14 @@ public class WorkOrderBean implements Serializable {
             this.progressStatus = progressStatus;
         }
 
-        public String getResourceId() {
-            return resourceId;
-        }
+    }
 
-        public void setResourceId(String resourceId) {
-            this.resourceId = resourceId;
-        }
+    public List<WorkOrder> getWorkOrderContent() {
+        return workOrderContent;
+    }
 
-        public String getResourceNum() {
-            return resourceNum;
-        }
-
-        public void setResourceNum(String resourceNum) {
-            this.resourceNum = resourceNum;
-        }
+    public void setWorkOrderContent(List<WorkOrder> workOrderContent) {
+        this.workOrderContent = workOrderContent;
     }
 
 
@@ -101,13 +93,5 @@ public class WorkOrderBean implements Serializable {
 
     public void setPageSize(String pageSize) {
         this.pageSize = pageSize;
-    }
-
-    public List<WorkOrder> getWorkOrderContent() {
-        return workOrderContent;
-    }
-
-    public void setWorkOrderContent(List<WorkOrder> workOrderContent) {
-        this.workOrderContent = workOrderContent;
     }
 }

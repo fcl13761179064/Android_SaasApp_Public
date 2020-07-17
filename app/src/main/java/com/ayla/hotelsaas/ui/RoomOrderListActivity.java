@@ -3,7 +3,6 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.view.View;
 
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +37,8 @@ public class RoomOrderListActivity extends BasicActivity {
 
     @Override
     public void refreshUI() {
-        appBar.setCenterText("我的工单");
+        WorkOrderBean.WorkOrder work_order = (WorkOrderBean.WorkOrder) getIntent().getSerializableExtra("work_order");
+        appBar.setCenterText(work_order.getProjectName());
         super.refreshUI();
     }
 
@@ -49,11 +49,11 @@ public class RoomOrderListActivity extends BasicActivity {
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        ArrayList<WorkOrderBean.WorkOrder> workOrderBeans = new ArrayList<>();
-        WorkOrderBean.WorkOrder  workOrderBean;
-        for (int x=0;x<20;x++){
-            workOrderBean = new WorkOrderBean.WorkOrder();
-            workOrderBean.setResourceNum("房间号1");
+        ArrayList<WorkOrderBean> workOrderBeans = new ArrayList<>();
+        WorkOrderBean workOrderBean;
+        for (int x = 0; x < 20; x++) {
+            workOrderBean = new WorkOrderBean();
+            //workOrderBean.setResourceNum("房间号1");
             workOrderBeans.add(workOrderBean);
         }
         mAdapter.addData(workOrderBeans);
@@ -66,7 +66,7 @@ public class RoomOrderListActivity extends BasicActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!FastClickUtils.isDoubleClick()) {
                     Intent intent = new Intent(RoomOrderListActivity.this, RoomOrderListActivity.class);
-                    intent.putExtra("voucher", (Serializable)mAdapter.getData());
+                    intent.putExtra("voucher", (Serializable) mAdapter.getData());
                     intent.putExtra("position", position);
                     startActivityForResult(intent, 0x101);
                 }
