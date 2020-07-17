@@ -100,27 +100,27 @@ public class RequestModel {
     }
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
-        List<DeviceCategoryBean> result = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            DeviceCategoryBean deviceCategoryBean = new DeviceCategoryBean();
-            result.add(deviceCategoryBean);
-            deviceCategoryBean.setName("一级列表" + i);
-            deviceCategoryBean.setSub(new ArrayList<>());
-            for (int j = 0; j < 20; j++) {
-                int i1 = new Random().nextInt(2);
-                DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
-                subBean.setName("二级列表" + i + "_" + j+" "+(i1 == 1?"网关":"节点"));
-                subBean.setCuid(i1);
-                deviceCategoryBean.getSub().add(subBean);
-            }
-        }
-        BaseResult<List<DeviceCategoryBean>> listBaseResult = new BaseResult<>();
-        listBaseResult.code = "0";
-        listBaseResult.data = result;
-        return Observable.just(listBaseResult);
+//        List<DeviceCategoryBean> result = new ArrayList<>();
+//        for (int i = 0; i < 20; i++) {
+//            DeviceCategoryBean deviceCategoryBean = new DeviceCategoryBean();
+//            result.add(deviceCategoryBean);
+//            deviceCategoryBean.setName("一级列表" + i);
+//            deviceCategoryBean.setSub(new ArrayList<>());
+//            for (int j = 0; j < 20; j++) {
+//                int i1 = new Random().nextInt(2);
+//                DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
+//                subBean.setName("二级列表" + i + "_" + j+" "+(i1 == 1?"网关":"节点"));
+//                subBean.setCuid(i1);
+//                deviceCategoryBean.getSub().add(subBean);
+//            }
+//        }
+//        BaseResult<List<DeviceCategoryBean>> listBaseResult = new BaseResult<>();
+//        listBaseResult.code = "0";
+//        listBaseResult.data = result;
+//        return Observable.just(listBaseResult);
 
-//        return getApiService().fetchDeviceCategory()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().fetchDeviceCategory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

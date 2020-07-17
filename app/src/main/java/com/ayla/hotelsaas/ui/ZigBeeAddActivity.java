@@ -66,18 +66,6 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         mPresenter.bindZigBeeNodeWithGatewayDSN(dsn);
     }
 
-    @Override
-    public void bindSuccess() {
-        bindTag = 1;
-        refreshBindShow();
-    }
-
-    @Override
-    public void bindFailed() {
-        bindTag = -1;
-        refreshBindShow();
-    }
-
     @OnClick(R.id.bt_bind)
     public void handleButton() {
         if (bindTag == 1) {
@@ -120,4 +108,33 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         }
     }
 
+    @Override
+    public void zigBeeDeviceBindFinished() {
+
+    }
+
+    @Override
+    public void zigBeeDeviceBindFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    public void zigBeeDeviceBindSuccess() {
+
+    }
+
+    @Override
+    public void zigBeeDeviceBindStart() {
+
+    }
+
+    @Override
+    public void gatewayConnectSuccess() {
+
+    }
+
+    @Override
+    public void gatewayConnectStart() {
+
+    }
 }
