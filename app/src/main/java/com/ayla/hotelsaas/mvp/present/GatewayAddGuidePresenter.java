@@ -1,14 +1,12 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.data.net.RxjavaObserver;
+import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.GatewayAddGuideView;
-import com.ayla.hotelsaas.utils.LogUtil;
 
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -20,33 +18,27 @@ public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView>
      * @param dsn
      */
     public void registerDeviceWithDSN(String dsn) {
-        int i = new Random().nextInt(2) + 3;
-        Observable.timer(i, TimeUnit.SECONDS)
+        RequestModel.getInstance().bindDeviceWithDSN(dsn, "1", "2", "3")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Long>() {
+                .subscribe(new RxjavaObserver<Boolean>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         addSubscrebe(d);
                     }
 
                     @Override
-                    public void onNext(Long aLong) {
-                        LogUtil.d(aLong.toString());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        if (i % 2 == 0) {
+                    public void _onNext(Boolean data) {
+                        if (new Random().nextBoolean()) {
                             mView.bindSuccess();
                         } else {
                             mView.bindFailed();
                         }
+                    }
+
+                    @Override
+                    public void _onError(String code, String msg) {
+
                     }
                 });
     }
