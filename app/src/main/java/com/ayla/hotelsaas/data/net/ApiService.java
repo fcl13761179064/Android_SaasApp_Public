@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.data.net;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.User;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 
 import java.util.List;
 import java.util.Map;
@@ -31,4 +32,11 @@ public interface ApiService {
 
     @GET("device_add_category")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
+
+    @POST("work_order")
+    Observable<String> getWorkOrder();
+
+    @POST("work_order")
+    Observable<BaseResult<List<WorkOrderBean>>> getWorkOrders();
+
 }

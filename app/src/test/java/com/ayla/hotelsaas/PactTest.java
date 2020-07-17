@@ -90,6 +90,28 @@ public class PactTest {
                                 )
                                 .closeObject()
                         ))
+                //项目列表的数据
+                .given("项目列表的数据")
+                .uponReceiving("获取项目的数据内容").path("/work_order")
+                .method("POST").willRespondWith().status(200).body(new PactDslJsonBody()
+                        .numberValue("code", 0).stringType("error", "")
+                        .object("data", new PactDslJsonArray()
+                                .object()
+                                .numberType("currentPage", 1)
+                                .numberType("pageSize", 10)
+                                .object("workOrderContent", new PactDslJsonArray()
+                                        .object()
+                                        .stringType("businessId", "102003213")
+                                        .stringType("projectName", "成都酒店")
+                                        .stringType("startDate", "2018-2-5")
+                                        .stringType("endDate", "2019-5-9")
+                                        .stringType("progressStatus", "待施工")
+                                        .object("roomInfo",new PactDslJsonArray()
+                                        .object().stringType("resourceId", "101"))
+                                        .closeObject()
+                                )
+                                .closeObject()
+                        ))
                 .toPact();
     }
 
@@ -139,6 +161,11 @@ public class PactTest {
         RetrofitHelper.getInstance()
                 .getApiService()
                 .fetchDeviceCategory()
+                .test().assertNoErrors();
+
+        RetrofitHelper.getInstance()
+                .getApiService()
+                .getWorkOrders()
                 .test().assertNoErrors();
     }
 }

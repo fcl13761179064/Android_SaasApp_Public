@@ -85,7 +85,7 @@ public class RequestModel {
         if (!TextUtils.isEmpty(type)) {
             map.put("type", type);
         }
-        return getApiService().BaseRequest(map)
+        return getApiService().getWorkOrder()
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
