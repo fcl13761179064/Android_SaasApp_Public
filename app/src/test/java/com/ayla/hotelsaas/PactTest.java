@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas;
 
 import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 
@@ -9,7 +10,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import au.com.dius.pact.consumer.dsl.PactDslJsonArray;
@@ -37,7 +40,7 @@ public class PactTest {
     }
 
     @Rule
-    public PactProviderRule mockProvider = new PactProviderRule("construction_backend", "localhost", 9292, PactSpecVersion.V2, this);
+    public PactProviderRule mockProvider = new PactProviderRule("construction_backend", "localhost", 9292, PactSpecVersion.V1, this);
 
     @Pact(provider = "construction_backend", consumer = "construction_app")
     public RequestResponsePact createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
@@ -183,23 +186,23 @@ public class PactTest {
                                 ).closeObject()))
 
                 //获取房间数据
-                .given("获取房间号数据")
-                .uponReceiving("获取正确的房间号数据").path("/order_order")
-                .method("POST").willRespondWith().status(200).body(new PactDslJsonBody()
-                        .numberValue("code", 0)
-                        .stringType("error", "")
-                        .object("data", new PactDslJsonArray()
-                                .object()
-                                .object("roomOrderContent", new PactDslJsonArray()
-                                        .object()
-                                        .stringType("resourceRoomId", "1")
-                                        .stringType("resourceRoomNum", "101")
-                                        .closeObject()
-                                        .object()
-                                        .stringType("resourceRoomId", "2")
-                                        .stringType("resourceRoomNum", "102")
-                                        .closeObject()
-                                ).closeObject()))
+//                .given("获取房间号数据")
+//                .uponReceiving("获取正确的房间号数据").path("/order_order")
+//                .method("POST").willRespondWith().status(200).body(new PactDslJsonBody()
+//                        .numberValue("code", 0)
+//                        .stringType("error", "")
+//                        .object("data", new PactDslJsonArray()
+//                                .object()
+//                                .object("roomOrderContent", new PactDslJsonArray()
+//                                        .object()
+//                                        .stringType("resourceRoomId", "1")
+//                                        .stringType("resourceRoomNum", "101")
+//                                        .closeObject()
+//                                        .object()
+//                                        .stringType("resourceRoomId", "2")
+//                                        .stringType("resourceRoomNum", "102")
+//                                        .closeObject()
+//                                ).closeObject()))
                 //DSN绑定设备,绑定成功
                 .given("绑定成功")
                 .uponReceiving("DSN绑定设备")
@@ -245,6 +248,67 @@ public class PactTest {
                         .numberValue("code", 0)
                         .stringType("msg", "")
                         .booleanType("data", true))
+                //获取RuleEngines
+                .given("获取成功")
+                .uponReceiving("获取RuleEngines")
+                .path("/fetch_rule_engines")
+                .matchQuery("scope_id", ".*", "123")
+                .method("GET")
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "")
+                        .object("data", new PactDslJsonArray()
+                                .object()
+                                .stringType("scopeId", "111")
+                                .stringType("ruleName", "222")
+                                .numberType("ruleType", 2)
+                                .object("action", new PactDslJsonBody()
+                                        .stringType("expression", "1111")
+                                        .array("items")
+                                        .object()
+                                        .numberValue("targetDeviceType", 2)
+                                        .stringType("targetDeviceId", "GADw3NnUI4Xa54nsr5tYz20000")
+                                        .stringType("leftValue", "StatusLightSwitch")
+                                        .stringType("operator", "==")
+                                        .numberValue("rightValue", 1)
+                                        .numberValue("rightValueType", 1)
+                                        .closeObject()
+                                        .closeArray()
+                                )
+                                .closeObject()
+                        ))
+                //保存RuleEngine
+                .given("保存成功")
+                .uponReceiving("保存RuleEngine")
+                .path("/save_rule_engine")
+                .body(new PactDslJsonBody()
+                        .stringType("scopeId", "111")
+                        .stringType("ruleName", "222")
+                        .numberType("ruleType", 2)
+                        .object("action", new PactDslJsonBody()
+                                .stringType("expression", "1111")
+                                .array("items")
+                                .object()
+                                .numberValue("targetDeviceType", 2)
+                                .stringType("targetDeviceId", "GADw3NnUI4Xa54nsr5tYz20000")
+                                .stringType("leftValue", "StatusLightSwitch")
+                                .stringType("operator", "==")
+                                .numberValue("rightValue", 1)
+                                .numberValue("rightValueType", 1)
+                                .closeObject()
+                                .closeArray()
+                        )
+                )
+                .method("POST")
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "")
+                        .booleanType("data", true))
+
                 .toPact();
     }
 
@@ -282,6 +346,34 @@ public class PactTest {
         {//通知网关进入配网模式
             RequestModel.getInstance()
                     .notifyGatewayBeginConfig("11111").test().assertNoErrors();
+        }
+        {//通过房间号获取下属的RuleEngines
+            RequestModel.getInstance()
+                    .fetchRuleEngines("11111").test().assertNoErrors();
+        }
+        {//保存RuleEngine
+            RuleEngineBean ruleEngineBean = new RuleEngineBean();
+            ruleEngineBean.setScopeId("1111");
+            ruleEngineBean.setRuleName("ruleengine");
+            ruleEngineBean.setRuleType(2);
+            RuleEngineBean.Action action = new RuleEngineBean.Action();
+            action.setExpression("11111");
+            List<RuleEngineBean.Action.ActionItem> actionItems = new ArrayList<>();
+            for (int j = 0; j < 1; j++) {
+                RuleEngineBean.Action.ActionItem actionItem = new RuleEngineBean.Action.ActionItem();
+                actionItem.setLeftValue("StatusLightSwitch");
+                actionItem.setRightValue(1);
+                actionItem.setOperator("==");
+                actionItem.setRightValueType(1);
+                actionItem.setTargetDeviceId("GADw3NnUI4Xa54nsr5tYz20000");
+                actionItem.setTargetDeviceType(2);
+                actionItems.add(actionItem);
+            }
+            action.setItems(actionItems);
+            ruleEngineBean.setAction(action);
+
+            RequestModel.getInstance()
+                    .saveRuleEngines(ruleEngineBean).test().assertNoErrors();
         }
     }
 }
