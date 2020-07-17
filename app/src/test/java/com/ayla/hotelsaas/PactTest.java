@@ -37,7 +37,7 @@ public class PactTest {
     }
 
     @Rule
-    public PactProviderRule mockProvider = new PactProviderRule("construction_backend", "localhost", 9292, PactSpecVersion.V2,this);
+    public PactProviderRule mockProvider = new PactProviderRule("construction_backend", "localhost", 9292, PactSpecVersion.V2, this);
 
     @Pact(provider = "construction_backend", consumer = "construction_app")
     public RequestResponsePact createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
@@ -192,38 +192,22 @@ public class PactTest {
                         .numberValue("code", 0)
                         .stringType("msg", "")
                         .booleanType("data", true))
+                //通知网关进入配网模式
+                .given("通知成功")
+                .uponReceiving("通知网关进入配网模式")
+                .path("/notify_gateway_config")
+                .method("POST")
+                .body(new PactDslJsonBody()
+                        .stringType("device_id", "123")
+                )
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "")
+                        .booleanType("data", true))
                 .toPact();
     }
-
-    /**
-     * {
-     * "code": 200,
-     * "data": [
-     * {
-     * "id": 1,
-     * "name": "电工",
-     * "sub": [
-     * {
-     * "name": "一路开关",
-     * "connectMode": 1,
-     * "icon": "http://172.31.16.100/product/typeIcon/cz.png"
-     * },
-     * {
-     * "name": "二路开关",
-     * "connectMode": 1,
-     * "icon": "http://172.31.16.100/product/typeIcon/cz.png"
-     * },
-     * {
-     * "name": "三路开关",
-     * "connectMode": 1,
-     * "icon": "http://172.31.16.100/product/typeIcon/cz.png"
-     * }
-     * ]
-     * }
-     * ],
-     * "error": ""
-     * }
-     */
 
     @Test
     @PactVerification("construction_backend")
@@ -255,6 +239,10 @@ public class PactTest {
         {//解绑设备
             RequestModel.getInstance()
                     .unbindDeviceWithDSN("111", "222", "333").test().assertNoErrors();
+        }
+        {//通知网关进入配网模式
+            RequestModel.getInstance()
+                    .notifyGatewayBeginConfig("11111").test().assertNoErrors();
         }
     }
 }

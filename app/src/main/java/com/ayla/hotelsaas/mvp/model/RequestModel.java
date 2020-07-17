@@ -11,19 +11,14 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.RequestBody;
 
@@ -82,7 +77,7 @@ public class RequestModel {
         Map<String, String> map = new HashMap<>(8);
         //不同的
         //待办事项获取数量
-         final String TODO_ITEM_COUNT = "com.gewara.gptbs.vrm.pendingCount";
+        final String TODO_ITEM_COUNT = "com.gewara.gptbs.vrm.pendingCount";
         map.put("method", TODO_ITEM_COUNT);
         if (!TextUtils.isEmpty(type)) {
             map.put("type", type);
@@ -133,6 +128,15 @@ public class RequestModel {
         body.addProperty("scope_type", scopeType);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().unbindDeviceWithDSN(body111)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<BaseResult<Boolean>> notifyGatewayBeginConfig(String dsn) {
+        JsonObject body = new JsonObject();
+        body.addProperty("device_id", dsn);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().notifyGatewayConfig(body111)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

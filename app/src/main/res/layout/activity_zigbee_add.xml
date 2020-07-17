@@ -39,39 +39,44 @@
             android:textColor="#ff333333"
             android:textSize="18sp" />
 
-        <LinearLayout
-            android:id="@+id/ll_bind_loading"
-            android:layout_width="match_parent"
+
+        <TextView
+            android:id="@+id/tv_progress"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_01"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="68dp"
             android:layout_marginTop="70dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="visible">
+            android:layout_marginRight="68dp"
+            android:gravity="center"
+            android:text="设备绑定失败，请确认设备状态后重试"
+            android:textColor="#ff333333"
+            android:textSize="14sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="68dp"
-                android:layout_marginRight="68dp"
-                android:gravity="center"
-                android:text="设备绑定失败，请确认设备状态后重试"
-                android:textColor="#ff333333"
-                android:textSize="14sp" />
+        <LinearLayout
+            android:id="@+id/ll_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_progress"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
+                    android:id="@+id/iv_p1"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:src="@drawable/ic_progress_dot_finish" />
 
                 <TextView
+                    android:id="@+id/tv_p1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -88,11 +93,13 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
+                    android:id="@+id/iv_p2"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:src="@drawable/ic_progress_dot_finish" />
 
                 <TextView
+                    android:id="@+id/tv_p2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -109,11 +116,13 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
-                    android:src="@drawable/ic_progress_dot_loading" />
+                    android:id="@+id/iv_p3"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_progress_dot_finish" />
 
                 <TextView
+                    android:id="@+id/tv_p3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -122,18 +131,6 @@
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_bind_success"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_01"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:text="设备绑定成功"
-            android:textColor="#ff333333"
-            android:textSize="14sp"
-            android:visibility="invisible" />
 
         <Button
             android:id="@+id/bt_bind"

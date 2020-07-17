@@ -25,8 +25,12 @@
     <color name="login_text_percent">#666666</color>
     <color name="login_deviding_line">#EEEEEE</color>
 
+    <!-- 配网过程提示loading步骤，提示文案颜色 -->
+    <color name="color_bind_logding_tips_failed">#D73B4B</color>
+
     <!-- 固定色号 -->
     <color name="color_333333">#333333</color>
+    <color name="color_999999">#999999</color>
     <color name="color_666666">#666666</color>
     <color name="color_ffffff">#ffffff</color>
 </resources>
