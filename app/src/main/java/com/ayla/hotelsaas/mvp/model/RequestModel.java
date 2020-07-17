@@ -12,6 +12,7 @@ import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.RequestBody;
 
 /**
  * @描述 网络请求Model
@@ -108,6 +110,29 @@ public class RequestModel {
 //        }
 //        return Observable.just(result);
         return getApiService().fetchDeviceCategory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<BaseResult<Boolean>> bindDeviceWithDSN(String dsn, String cuid, String scopeId, String scopeType) {
+        JsonObject body = new JsonObject();
+        body.addProperty("device_id", dsn);
+        body.addProperty("cuid", cuid);
+        body.addProperty("scope_id", scopeId);
+        body.addProperty("scope_type", scopeType);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().bindDeviceWithDSN(body111)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<BaseResult<Boolean>> unbindDeviceWithDSN(String dsn, String scopeId, String scopeType) {
+        JsonObject body = new JsonObject();
+        body.addProperty("device_id", dsn);
+        body.addProperty("scope_id", scopeId);
+        body.addProperty("scope_type", scopeType);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().unbindDeviceWithDSN(body111)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

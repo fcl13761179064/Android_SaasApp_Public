@@ -2,6 +2,7 @@ package com.ayla.hotelsaas;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
+import com.ayla.hotelsaas.mvp.model.RequestModel;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,7 +20,6 @@ import au.com.dius.pact.consumer.junit.PactVerification;
 import au.com.dius.pact.core.model.PactSpecVersion;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
-import okhttp3.RequestBody;
 
 public class PactTest {
 
@@ -37,7 +37,7 @@ public class PactTest {
     }
 
     @Rule
-    public PactProviderRule mockProvider = new PactProviderRule("construction_backend", "localhost", 9292, PactSpecVersion.V2, this);
+    public PactProviderRule mockProvider = new PactProviderRule("construction_backend", "localhost", 9292, PactSpecVersion.V2,this);
 
     @Pact(provider = "construction_backend", consumer = "construction_app")
     public RequestResponsePact createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
@@ -167,8 +167,10 @@ public class PactTest {
                 .path("/bind_device")
                 .method("POST")
                 .body(new PactDslJsonBody().stringType("device_id", "123")
-                        .numberType("cuid", 1)
-                        .stringType("scope_id", "123"))
+                        .stringType("cuid", "1111")
+                        .stringType("scope_id", "123")
+                        .stringType("scope_type", "123")
+                )
                 .willRespondWith()
                 .status(200)
                 .body(new PactDslJsonBody()
@@ -181,7 +183,9 @@ public class PactTest {
                 .path("/unbind_device")
                 .method("POST")
                 .body(new PactDslJsonBody().stringType("device_id", "123")
-                        .stringType("scope_id", "123"))
+                        .stringType("scope_id", "123")
+                        .stringType("scope_type", "123")
+                )
                 .willRespondWith()
                 .status(200)
                 .body(new PactDslJsonBody()
@@ -244,19 +248,13 @@ public class PactTest {
                 .getWorkOrders()
                 .test().assertNoErrors();
         {//绑定设备
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),
-                    "{\"device_id\":\"121212\",\"cuid\":1,\"scope_id\":\"121212\"}");
-            RetrofitHelper.getInstance()
-                    .getApiService()
-                    .bindDeviceWithDSN(body).test().assertNoErrors();
+            RequestModel.getInstance()
+                    .bindDeviceWithDSN("111", "222", "333", "444").test().assertNoErrors();
         }
 
         {//解绑设备
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),
-                    "{\"device_id\":\"121212\",\"scope_id\":\"121212\"}");
-            RetrofitHelper.getInstance()
-                    .getApiService()
-                    .unbindDeviceWithDSN(body).test().assertNoErrors();
+            RequestModel.getInstance()
+                    .unbindDeviceWithDSN("111", "222", "333").test().assertNoErrors();
         }
     }
 }
