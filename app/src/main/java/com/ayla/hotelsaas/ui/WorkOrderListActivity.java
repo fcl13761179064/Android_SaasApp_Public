@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -21,8 +22,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -67,12 +68,10 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
 
     @Override
     protected void initView() {
-
         //是否在刷新的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenRefresh(true);
         //是否在加载的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenLoading(true);
-
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         recyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         mAdapter = new WorkOrderAdapter();
@@ -91,8 +90,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!FastClickUtils.isDoubleClick()) {
                     Intent intent = new Intent(WorkOrderListActivity.this, RoomOrderListActivity.class);
-                    intent.putExtra("voucher", (Serializable)mAdapter.getData());
-                    intent.putExtra("position", position);
+                    intent.putExtra("work_order", (Serializable) mAdapter.getData().get(position));
                     startActivityForResult(intent, 0x101);
                 }
             }
@@ -108,17 +106,6 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                   /* ArrayList<WorkOrderBean.WorkOrder> workOrderBeans = new ArrayList<>();
-                    WorkOrderBean.WorkOrder  workOrderBean;
-                    for (int x=0;x<20;x++){
-                        workOrderBean = new WorkOrderBean.WorkOrder();
-                        workOrderBean.setProjectName("你好啊");
-                        workOrderBean.setStartDate("2019-2-32");
-                        workOrderBean.setEndDate("2019-6-32");
-                        workOrderBean.setProgressStatus("带施工");
-                        workOrderBeans.add(workOrderBean);
-                    }
-                    mAdapter.addData(workOrderBeans);*/
                     mPresenter.loadFistPage("1");
                 }
 
@@ -146,7 +133,8 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
 
     @Override
     public void loadDataSuccess(List<WorkOrderBean> data) {
-        mAdapter.addData(data.get(0).getWorkOrderContent());
+        final List<WorkOrderBean.WorkOrder> workOrderList = data.get(0).getWorkOrderContent();
+        mAdapter.setNewData(workOrderList);
         loadDataFinish();
     }
 
