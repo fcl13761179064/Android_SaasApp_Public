@@ -25,42 +25,6 @@
             android:layout_marginTop="60dp"
             android:src="@drawable/ic_device_add_start_1" />
 
-        <LinearLayout
-            android:id="@+id/step_2_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_01"
-            android:layout_marginTop="46dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="invisible">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="设备ID号"
-                android:textColor="#ff648c1a"
-                android:textSize="12sp" />
-
-            <EditText
-                android:id="@+id/et_dsn"
-                android:layout_width="300dp"
-                android:layout_height="46dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/transparent"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="111"
-                android:textColor="#ff333333"
-                android:textSize="14sp" />
-
-            <View
-                android:layout_width="300dp"
-                android:layout_height="2dp"
-                android:background="#DFE4EB" />
-
-        </LinearLayout>
-
         <TextView
             android:id="@+id/step_1_view"
             android:layout_width="wrap_content"

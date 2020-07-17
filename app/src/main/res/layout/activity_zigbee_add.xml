@@ -40,43 +40,88 @@
             android:textSize="18sp" />
 
         <LinearLayout
-            android:id="@+id/ll_bind_failed"
+            android:id="@+id/ll_bind_loading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_01"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="70dp"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="invisible">
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="设备绑定失败"
+                android:layout_marginLeft="68dp"
+                android:layout_marginRight="68dp"
+                android:gravity="center"
+                android:text="设备绑定失败，请确认设备状态后重试"
                 android:textColor="#ff333333"
                 android:textSize="14sp" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="请再检查设备状态与设备ID号后重试"
-                android:textColor="#ff333333"
-                android:textSize="14sp" />
+                android:layout_marginTop="30dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:src="@drawable/ic_progress_dot_finish" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="连接设备"
+                    android:textColor="#ff333333"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:src="@drawable/ic_progress_dot_finish" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="绑定设备"
+                    android:textColor="#ff333333"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:src="@drawable/ic_progress_dot_loading" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="绑定完成"
+                    android:textColor="#ff333333"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_bind_loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_01"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:text="最长可能需要1分钟，请耐心等待"
-            android:textColor="#ff333333"
-            android:textSize="14sp"
-            android:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_bind_success"
@@ -96,7 +141,7 @@
             android:layout_height="50dp"
             android:layout_below="@id/iv_01"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="160dp"
+            android:layout_marginTop="345dp"
             android:background="@drawable/bg_bt_gateway_add_start_next"
             android:text="完成"
             android:textColor="#ff648c1a"

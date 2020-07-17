@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -80,7 +81,7 @@ public class RequestModel {
         Map<String, String> map = new HashMap<>(8);
         //不同的
         //待办事项获取数量
-         final String TODO_ITEM_COUNT = "com.gewara.gptbs.vrm.pendingCount";
+        final String TODO_ITEM_COUNT = "com.gewara.gptbs.vrm.pendingCount";
         map.put("method", TODO_ITEM_COUNT);
         if (!TextUtils.isEmpty(type)) {
             map.put("type", type);
@@ -103,16 +104,21 @@ public class RequestModel {
 //        for (int i = 0; i < 20; i++) {
 //            DeviceCategoryBean deviceCategoryBean = new DeviceCategoryBean();
 //            result.add(deviceCategoryBean);
-//            deviceCategoryBean.name = "一级列表" + i;
-//            deviceCategoryBean.subBeans = new ArrayList<>();
+//            deviceCategoryBean.setName("一级列表" + i);
+//            deviceCategoryBean.setSub(new ArrayList<>());
 //            for (int j = 0; j < 20; j++) {
+//                int i1 = new Random().nextInt(2);
 //                DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
-//                subBean.name = "二级列表" + i + "_" + j;
-//                subBean.mode = 1;
-//                deviceCategoryBean.subBeans.add(subBean);
+//                subBean.setName("二级列表" + i + "_" + j+" "+(i1 == 1?"网关":"节点"));
+//                subBean.setCuid(i1);
+//                deviceCategoryBean.getSub().add(subBean);
 //            }
 //        }
-//        return Observable.just(result);
+//        BaseResult<List<DeviceCategoryBean>> listBaseResult = new BaseResult<>();
+//        listBaseResult.code = "0";
+//        listBaseResult.data = result;
+//        return Observable.just(listBaseResult);
+
         return getApiService().fetchDeviceCategory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

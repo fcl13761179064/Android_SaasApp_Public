@@ -17,7 +17,7 @@ public class BaseResult<T> implements Serializable {
     public T data;
 
     public boolean isSuccess() {
-        if (code.equals("0000")) {
+        if (code.equals("0")) {
             return true;
         } else{
             return false;
