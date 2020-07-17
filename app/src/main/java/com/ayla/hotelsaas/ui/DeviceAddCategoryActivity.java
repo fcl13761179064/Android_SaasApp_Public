@@ -136,8 +136,8 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         if (1 == cuid) {//跳转网关添加
             Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
             startActivityForResult(mainActivity, 0);
-        }else if(0 == cuid){//跳转节点添加
-            Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
+        } else if (0 == cuid) {//跳转节点添加
+            Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
             startActivityForResult(mainActivity, 0);
         }
     }
