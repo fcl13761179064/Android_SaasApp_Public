@@ -23,6 +23,8 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 
 public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOrderPresenter> implements WorkOrderView {
@@ -106,7 +108,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    ArrayList<WorkOrderBean.WorkOrder> workOrderBeans = new ArrayList<>();
+                   /* ArrayList<WorkOrderBean.WorkOrder> workOrderBeans = new ArrayList<>();
                     WorkOrderBean.WorkOrder  workOrderBean;
                     for (int x=0;x<20;x++){
                         workOrderBean = new WorkOrderBean.WorkOrder();
@@ -116,7 +118,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
                         workOrderBean.setProgressStatus("带施工");
                         workOrderBeans.add(workOrderBean);
                     }
-                    mAdapter.addData(workOrderBeans);
+                    mAdapter.addData(workOrderBeans);*/
                     mPresenter.loadFistPage("1");
                 }
 
@@ -143,7 +145,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     }
 
     @Override
-    public void loadDataSuccess(ArrayList<WorkOrderBean> data) {
+    public void loadDataSuccess(List<WorkOrderBean> data) {
         mAdapter.addData(data.get(0).getWorkOrderContent());
         loadDataFinish();
     }

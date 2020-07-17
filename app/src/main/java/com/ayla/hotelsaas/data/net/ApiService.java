@@ -36,8 +36,6 @@ public interface ApiService {
     @GET("device_add_category")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
-    @POST("work_order")
-    Observable<String> getWorkOrder();
 
     @POST("work_order")
     Observable<BaseResult<List<WorkOrderBean>>> getWorkOrders();

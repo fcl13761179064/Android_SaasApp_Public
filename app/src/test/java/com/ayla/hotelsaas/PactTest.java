@@ -157,8 +157,6 @@ public class PactTest {
                                         .stringType("startDate", "2018-2-5")
                                         .stringType("endDate", "2019-5-9")
                                         .stringType("progressStatus", "待施工")
-                                        .object("roomInfo", new PactDslJsonArray()
-                                                .object().stringType("resourceId", "101"))
                                         .closeObject()
                                 )
                                 .closeObject()

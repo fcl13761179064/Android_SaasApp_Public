@@ -78,29 +78,37 @@ public class RequestModel {
      * @param maxNum  每页加载量
      * @return
      */
-    public Observable<BaseResult<ArrayList<WorkOrderBean>>> getWorkOrderList(String type, int pageNum, String maxNum) {
+    public Observable<BaseResult<List<WorkOrderBean>>> getWorkOrderList(String type, int pageNum, String maxNum) {
         Map<String, String> map = new HashMap<>(8);
         //不同的
         //待办事项获取数量
-        final String TODO_ITEM_COUNT = "com.gewara.gptbs.vrm.pendingCount";
+         final String TODO_ITEM_COUNT = "com.gewara.gptbs.vrm.pendingCount";
         map.put("method", TODO_ITEM_COUNT);
         if (!TextUtils.isEmpty(type)) {
             map.put("type", type);
         }
-        return getApiService().getWorkOrder()
+        return getApiService().getWorkOrders()
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<String, BaseResult<ArrayList<WorkOrderBean>>>() {
-                    @Override
-                    public BaseResult<ArrayList<WorkOrderBean>> apply(@NonNull String s) throws Exception {
-                        return new Gson().fromJson(s, new TypeToken<BaseResult<ArrayList<WorkOrderBean>>>() {
-                        }.getType());
-                    }
-                });
+                .observeOn(AndroidSchedulers.mainThread());
+
     }
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
+//        List<DeviceCategoryBean> result = new ArrayList<>();
+//        for (int i = 0; i < 20; i++) {
+//            DeviceCategoryBean deviceCategoryBean = new DeviceCategoryBean();
+//            result.add(deviceCategoryBean);
+//            deviceCategoryBean.name = "一级列表" + i;
+//            deviceCategoryBean.subBeans = new ArrayList<>();
+//            for (int j = 0; j < 20; j++) {
+//                DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
+//                subBean.name = "二级列表" + i + "_" + j;
+//                subBean.mode = 1;
+//                deviceCategoryBean.subBeans.add(subBean);
+//            }
+//        }
+//        return Observable.just(result);
         return getApiService().fetchDeviceCategory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

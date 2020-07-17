@@ -5,6 +5,7 @@ import com.ayla.hotelsaas.base.BaseView;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -14,7 +15,7 @@ import java.util.ArrayList;
  */
 public interface WorkOrderView extends BaseView {
 
-    void loadDataSuccess(ArrayList<WorkOrderBean> data);
+    void loadDataSuccess(List<WorkOrderBean> data);
 
     void loadDataFinish();
 

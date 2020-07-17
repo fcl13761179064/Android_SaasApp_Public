@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
@@ -50,14 +51,15 @@ public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
      */
     public void loadData(String type) {
         RequestModel.getInstance().getWorkOrderList(type, pageNum, maxNum)
-                .subscribe(new RxjavaObserver<ArrayList<WorkOrderBean>>() {
+                .subscribe(new RxjavaObserver<List<WorkOrderBean>>() {
                     @Override
-                    public void _onNext(ArrayList<WorkOrderBean> data) {
+                    public void _onNext(List<WorkOrderBean> data) {
                         mView.loadDataSuccess(data);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
+
                         mView.loadDataFinish();
                     }
 
