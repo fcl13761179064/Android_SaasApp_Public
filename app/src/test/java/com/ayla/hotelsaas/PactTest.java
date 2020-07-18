@@ -261,6 +261,7 @@ public class PactTest {
                         .stringType("msg", "")
                         .object("data", new PactDslJsonArray()
                                 .object()
+                                .numberType("ruleId", 111)
                                 .stringType("scopeId", "111")
                                 .stringType("ruleName", "222")
                                 .numberType("ruleType", 2)
@@ -284,9 +285,16 @@ public class PactTest {
                 .uponReceiving("保存RuleEngine")
                 .path("/save_rule_engine")
                 .body(new PactDslJsonBody()
+                        .numberType("ruleId", 111)
                         .stringType("scopeId", "111")
                         .stringType("ruleName", "222")
+                        .stringType("ruleDescription", "222")
                         .numberType("ruleType", 2)
+                        .object("condition", new PactDslJsonBody()
+                                .stringType("expression", "")
+                                .array("items")
+                                .closeArray()
+                        )
                         .object("action", new PactDslJsonBody()
                                 .stringType("expression", "1111")
                                 .array("items")
@@ -353,9 +361,15 @@ public class PactTest {
         }
         {//保存RuleEngine
             RuleEngineBean ruleEngineBean = new RuleEngineBean();
+            ruleEngineBean.setRuleId(111);
             ruleEngineBean.setScopeId("1111");
             ruleEngineBean.setRuleName("ruleengine");
+            ruleEngineBean.setRuleDescription("ruleengine");
             ruleEngineBean.setRuleType(2);
+            RuleEngineBean.Condition condition = new RuleEngineBean.Condition();
+            condition.setExpression("");
+            condition.setItems(new ArrayList<>());
+            ruleEngineBean.setCondition(condition);
             RuleEngineBean.Action action = new RuleEngineBean.Action();
             action.setExpression("11111");
             List<RuleEngineBean.Action.ActionItem> actionItems = new ArrayList<>();

@@ -14,12 +14,35 @@ public class RuleEngineBean {
      * condition : {"expression":"","items":[]}
      * action : {"expression":"func.execute('2','GADw3NnUI4Xa54nsr5tYz20000','StatusLightSwitch')","items":[{"targetDeviceType":2,"targetDeviceId":"GADw3NnUI4Xa54nsr5tYz20000","leftValue":"StatusLightSwitch","operator":"==","rightValue":1,"rightValueType":1}]}
      */
+    private int ruleId;
 
     private String scopeId;
+
     private String ruleName;
+
+    private String ruleDescription;
+
     private int ruleType;
+
     private Condition condition;
+
     private Action action;
+
+    public int getRuleId() {
+        return ruleId;
+    }
+
+    public void setRuleId(int ruleId) {
+        this.ruleId = ruleId;
+    }
+
+    public String getRuleDescription() {
+        return ruleDescription;
+    }
+
+    public void setRuleDescription(String ruleDescription) {
+        this.ruleDescription = ruleDescription;
+    }
 
     public String getScopeId() {
         return scopeId;
@@ -68,6 +91,7 @@ public class RuleEngineBean {
          */
 
         private String expression;
+
         private List<?> items;
 
         public String getExpression() {
@@ -94,6 +118,7 @@ public class RuleEngineBean {
          */
 
         private String expression;
+
         private List<ActionItem> items;
 
         public String getExpression() {
@@ -123,10 +148,15 @@ public class RuleEngineBean {
              */
 
             private int targetDeviceType;
+
             private String targetDeviceId;
+
             private String leftValue;
+
             private String operator;
+
             private int rightValue;
+
             private int rightValueType;
 
             public int getTargetDeviceType() {
