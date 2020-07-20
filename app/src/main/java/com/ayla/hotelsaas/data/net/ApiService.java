@@ -4,6 +4,7 @@ import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
+import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 
@@ -19,7 +20,7 @@ import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
+import retrofit2.http.Query;
 
 /**
  * @描述 Retrofit 需要的
@@ -52,8 +53,15 @@ public interface ApiService {
     @POST("bind_device")
     Observable<BaseResult<Boolean>> bindDeviceWithDSN(@Body RequestBody body);
 
-
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
 
+    @POST("notify_gateway_config")
+    Observable<BaseResult<Boolean>> notifyGatewayConfig(@Body RequestBody body);
+
+    @GET("fetch_rule_engines")
+    Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Query("scope_id") String scopeId);
+
+    @POST("save_rule_engine")
+    Observable<BaseResult<Boolean>> saveRuleEngines(@Body RequestBody body);
 }
