@@ -35,18 +35,18 @@ public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
     /**
      * 加载第一页
      */
-    public void loadFistPage(String businessId) {
+    public void loadFistPage(String resourceRoomId) {
         pageNum = 1;
-        loadData(businessId);
+        loadData(resourceRoomId);
     }
 
     /**
      * 加载列表
      *
-     * @param businessId
+     * @param resourceRoomId
      */
-    public void loadData(String businessId) {
-        RequestModel.getInstance().getDeviceList(businessId)
+    public void loadData(String resourceRoomId) {
+        RequestModel.getInstance().getDeviceList(resourceRoomId)
                 .subscribe(new RxjavaObserver<List<DeviceListBean>>() {
                     @Override
                     public void _onNext(List<DeviceListBean> data) {

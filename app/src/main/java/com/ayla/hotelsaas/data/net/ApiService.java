@@ -7,11 +7,8 @@ import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiPredicate;
-
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -47,7 +44,7 @@ public interface ApiService {
     @POST("room_order")
     Observable<BaseResult<List<RoomOrderBean>>> getRoomOrders(@Body RequestBody body);
 
-    @POST("room_order")
+    @POST("device_list")
     Observable<BaseResult<List<DeviceListBean>>> getDeviceList(@Body RequestBody body);
 
     @POST("bind_device")

@@ -24,6 +24,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -73,6 +74,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         //是否在加载的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenLoading(true);
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
+        recyclerview.setHasFixedSize(true);
         recyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         mAdapter = new WorkOrderAdapter();
         recyclerview.setAdapter(mAdapter);
@@ -134,7 +136,17 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     @Override
     public void loadDataSuccess(List<WorkOrderBean> data) {
         final List<WorkOrderBean.WorkOrder> workOrderList = data.get(0).getWorkOrderContent();
-        mAdapter.setNewData(workOrderList);
+        final List arrayList = new ArrayList();
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+
+
+        mAdapter.setNewData(arrayList);
         loadDataFinish();
     }
 

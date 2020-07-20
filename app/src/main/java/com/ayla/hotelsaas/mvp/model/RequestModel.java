@@ -117,9 +117,9 @@ public class RequestModel {
      * @param   //每页加载量
      * @return
      */
-    public Observable<BaseResult<List<DeviceListBean>>> getDeviceList(String businessId) {
+    public Observable<BaseResult<List<DeviceListBean>>> getDeviceList(String resourceRoomId) {
         JsonObject body = new JsonObject();
-        body.addProperty("businessId" , businessId);
+        body.addProperty("resourceRoomId" , resourceRoomId);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().getDeviceList(new_body)
                 .subscribeOn(Schedulers.io())
