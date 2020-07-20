@@ -1,15 +1,11 @@
 package com.ayla.hotelsaas.base;
 
 import android.os.Bundle;
-import android.view.View;
-
-import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.utils.ClickUtils;
 
 /**
  * MVP基础Activity
  */
-public abstract class BaseMvpActivity<V extends BaseView, T extends BasePresenter<V>> extends BasicActivity {
+public abstract class BaseMvpActivity<V extends OrderListView, T extends BasePresenter<V>> extends BasicActivity {
     //业务处理层
     public T mPresenter;
     @Override

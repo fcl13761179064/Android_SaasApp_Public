@@ -29,4 +29,9 @@ public class Constance {
 
     //用户是否登录
     public static boolean UserIsLogin = false;
+
+    //状态
+    public static final String V_STATUS_online = "online";    //初始状态
+    public static final String V_STATUS_offline = "offline";    //未批准
+
 }

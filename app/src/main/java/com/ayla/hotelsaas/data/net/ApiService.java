@@ -2,11 +2,14 @@ package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
+import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
@@ -40,10 +43,17 @@ public interface ApiService {
     @POST("work_order")
     Observable<BaseResult<List<WorkOrderBean>>> getWorkOrders();
 
+    @POST("room_order")
+    Observable<BaseResult<List<RoomOrderBean>>> getRoomOrders(@Body RequestBody body);
+
+    @POST("room_order")
+    Observable<BaseResult<List<DeviceListBean>>> getDeviceList(@Body RequestBody body);
+
     @POST("bind_device")
     Observable<BaseResult<Boolean>> bindDeviceWithDSN(@Body RequestBody body);
 
 
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
+
 }
