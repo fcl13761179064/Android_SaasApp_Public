@@ -1,8 +1,8 @@
 package com.ayla.hotelsaas.mvp.view;
 
-import com.ayla.hotelsaas.base.OrderListView;
+import com.ayla.hotelsaas.base.BaseView;
 
-public interface ZigBeeAddView extends OrderListView {
+public interface ZigBeeAddView extends BaseView {
     /**
      * 节点绑定流程结束
      */

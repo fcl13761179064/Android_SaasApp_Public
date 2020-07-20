@@ -8,7 +8,7 @@ import io.reactivex.disposables.Disposable;
  * presenter层
  */
 
-public abstract class BasePresenter<T extends OrderListView> {
+public abstract class BasePresenter<T extends BaseView> {
     public T mView;
     CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 

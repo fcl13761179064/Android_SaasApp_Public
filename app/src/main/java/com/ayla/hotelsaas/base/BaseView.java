@@ -4,7 +4,7 @@ package com.ayla.hotelsaas.base;
  * MVP模式
  * View层
  */
-public interface OrderListView {
+public interface BaseView {
 
     void showProgress(String msg);
 
