@@ -46,7 +46,7 @@ public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
      * @param resourceRoomId
      */
     public void loadData(String resourceRoomId) {
-        RequestModel.getInstance().getDeviceList(resourceRoomId)
+        RequestModel.getInstance().getDeviceList(resourceRoomId,pageNum,maxNum)
                 .subscribe(new RxjavaObserver<List<DeviceListBean>>() {
                     @Override
                     public void _onNext(List<DeviceListBean> data) {

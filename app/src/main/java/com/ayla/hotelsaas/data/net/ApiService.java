@@ -30,22 +30,21 @@ public interface ApiService {
     @POST("rest")
     Observable<String> BaseRequest(@FieldMap Map<String, String> params);
 
-    @POST("login")
-    @FormUrlEncoded
-    Observable<BaseResult<User>> login(@Field("username") String username, @Field("password") String password);
+    @POST("api/v2/sso/login")
+    Observable<BaseResult<User>> login(@Body RequestBody body);
 
     @GET("device_add_category")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
 
-    @POST("work_order")
-    Observable<BaseResult<List<WorkOrderBean>>> getWorkOrders();
+    @GET("api/v1/construction/constructbill")
+    Observable<BaseResult<List<WorkOrderBean>>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") String pageSize);
 
-    @POST("room_order")
-    Observable<BaseResult<List<RoomOrderBean>>> getRoomOrders(@Body RequestBody body);
+    @GET("api/v1/construction/billrooms")
+    Observable<BaseResult<List<RoomOrderBean>>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") String pageSize, @Query("billId") String billId);
 
-    @POST("device_list")
-    Observable<BaseResult<List<DeviceListBean>>> getDeviceList(@Body RequestBody body);
+    @GET("device_list")
+    Observable<BaseResult<List<DeviceListBean>>> getDeviceList(@Query("pageNo") int pageNO, @Query("pageSize") String pageSize, @Query("roomId") String billId);
 
     @POST("bind_device")
     Observable<BaseResult<Boolean>> bindDeviceWithDSN(@Body RequestBody body);

@@ -2,10 +2,14 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.utils.AppManager;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.StatusBarUtil;
 
 public class SPlashActivity extends BasicActivity {
@@ -30,8 +34,15 @@ public class SPlashActivity extends BasicActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SPlashActivity.this, LoginActivity.class);
-                startActivity(intent);
+                final String sava_token = SharePreferenceUtils.getString(SPlashActivity.this, Constance.SP_Login_Token, null);
+                if (sava_token !=null || !TextUtils.isEmpty(sava_token)){
+                    Intent intent = new Intent(SPlashActivity.this, WorkOrderListActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(SPlashActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+
                 finish();
             }
         }, 2000L);

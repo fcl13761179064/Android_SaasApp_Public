@@ -59,7 +59,7 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        mAdapter.setEmptyView(R.layout.empty_work_order);
+        mAdapter.setEmptyView(R.layout.empty_device_order);
         mRefreshLayout.setEnableLoadMore(false);
     }
 

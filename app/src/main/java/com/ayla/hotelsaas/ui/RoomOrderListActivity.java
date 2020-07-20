@@ -3,15 +3,12 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.RoomOrderListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.RoomOrderPresenter;
@@ -22,10 +19,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
-
 import java.io.Serializable;
 import java.util.List;
-
 import butterknife.BindView;
 
 
@@ -68,6 +63,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         mAdapter.addHeaderView(view, 0);
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
+        mAdapter.setEmptyView(R.layout.empty_room_order);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
 
     }
