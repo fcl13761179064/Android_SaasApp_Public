@@ -370,6 +370,10 @@ public class PactTest {
             RequestModel.getInstance()
                     .notifyGatewayBeginConfig("11111").test().assertNoErrors();
         }
+        {//获取网关的候选节点
+            RequestModel.getInstance()
+                    .notifyGatewayBeginConfig("11111").test().assertNoErrors();
+        }
         {//通过房间号获取下属的RuleEngines
             RequestModel.getInstance()
                     .fetchRuleEngines("11111").test().assertNoErrors();

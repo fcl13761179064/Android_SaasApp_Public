@@ -167,6 +167,20 @@ public class RequestModel {
     }
 
     /**
+     * 获取候选节点
+     * @param dsn 网关dsn
+     * @return
+     */
+    public Observable<BaseResult<Boolean>> fetchCandidateNodes(String dsn) {
+        JsonObject body = new JsonObject();
+        body.addProperty("device_id", dsn);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().fetchCandidateNodes()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
      * 通过房间号获取下属的RuleEngines。
      *
      * @param scopeId

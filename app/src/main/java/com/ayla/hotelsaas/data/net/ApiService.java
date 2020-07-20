@@ -59,6 +59,9 @@ public interface ApiService {
     @POST("notify_gateway_config")
     Observable<BaseResult<Boolean>> notifyGatewayConfig(@Body RequestBody body);
 
+    @POST("notify_gateway_config")
+    Observable<BaseResult<Boolean>> fetchCandidateNodes();
+
     @GET("fetch_rule_engines")
     Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Query("scope_id") String scopeId);
 
