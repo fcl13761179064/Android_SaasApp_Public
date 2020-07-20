@@ -5,6 +5,6 @@ import com.ayla.hotelsaas.bean.Device;
 
 import java.util.List;
 
-public interface SceneSettingDeviceSelectView extends BaseView {
-    void showDevices(List<Device> devices);
+public interface SceneSettingFunctionSelectView extends BaseView {
+    void showFunctions(List<String> devices);
 }

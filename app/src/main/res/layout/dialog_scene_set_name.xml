@@ -52,6 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:id="@+id/v_cancel"
             android:gravity="center"
             android:text="取消"
             android:textColor="#ff000000"
@@ -63,6 +64,7 @@
             android:background="#DFE4EB" />
 
         <TextView
+            android:id="@+id/v_done"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
