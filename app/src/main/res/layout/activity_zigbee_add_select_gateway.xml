@@ -9,7 +9,7 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:center_tv="选择绑定网关"
+        app:center_tv="选择设备"
         app:left_iv="@mipmap/icon_back_black" />
 
     <androidx.recyclerview.widget.RecyclerView
