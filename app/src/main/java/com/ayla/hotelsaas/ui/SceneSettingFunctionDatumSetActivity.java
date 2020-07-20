@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.SceneSettingFunctionSelectAdapter;
+import com.ayla.hotelsaas.adapter.CheckableSupport;
+import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.SceneSettingFunctionSelectPresenter;
-import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionSelectView;
+import com.ayla.hotelsaas.mvp.present.SceneSettingFunctionDatumSetPresenter;
+import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionDatumSetView;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -23,18 +24,18 @@ import butterknife.BindView;
 import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
- * 场景创建，选择功能菜单的页面
+ * 场景创建，选择执行功能点的页面
  */
-public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSettingFunctionSelectView, SceneSettingFunctionSelectPresenter> implements SceneSettingFunctionSelectView {
+public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneSettingFunctionDatumSetView, SceneSettingFunctionDatumSetPresenter> implements SceneSettingFunctionDatumSetView {
     @BindView(R.id.rv)
     public RecyclerView mRecyclerView;
     @BindView(R.id.appBar)
     AppBar appBar;
-    private SceneSettingFunctionSelectAdapter mAdapter;
+    private SceneSettingFunctionDatumSetAdapter mAdapter;
 
     @Override
-    protected SceneSettingFunctionSelectPresenter initPresenter() {
-        return new SceneSettingFunctionSelectPresenter();
+    protected SceneSettingFunctionDatumSetPresenter initPresenter() {
+        return new SceneSettingFunctionDatumSetPresenter();
     }
 
     @Override
@@ -45,7 +46,8 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     @Override
     protected void initView() {
         appBar.setCenterText("选择功能");
-        mAdapter = new SceneSettingFunctionSelectAdapter(R.layout.item_scene_setting_function_select);
+        appBar.setRightText("完成");
+        mAdapter = new SceneSettingFunctionDatumSetAdapter(R.layout.item_scene_setting_function_datum_set);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .showLastDivider()
@@ -58,8 +60,11 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent mainActivity = new Intent(SceneSettingFunctionSelectActivity.this, SceneSettingFunctionDatumSetActivity.class);
-                startActivityForResult(mainActivity, 0);
+                for (int i = 0; i < adapter.getData().size(); i++) {
+                    CheckableSupport bean = (CheckableSupport) adapter.getItem(i);
+                    bean.setChecked(i == position);
+                }
+                mAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -71,7 +76,7 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     }
 
     @Override
-    public void showFunctions(List<String> data) {
+    public void showFunctions(List<CheckableSupport<String>> data) {
         mAdapter.setNewData(data);
     }
 

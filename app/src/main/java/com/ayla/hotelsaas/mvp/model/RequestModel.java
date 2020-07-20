@@ -16,9 +16,11 @@ import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -95,13 +97,13 @@ public class RequestModel {
     /**
      * 获取房间号的条数
      *
-     * @param  //页码 从1开始
-     * @param   //每页加载量
+     * @param //页码    从1开始
+     * @param //每页加载量
      * @return
      */
     public Observable<BaseResult<List<RoomOrderBean>>> getRoomOrderList(String businessId) {
         JsonObject body = new JsonObject();
-        body.addProperty("businessId" , "444444");
+        body.addProperty("businessId", "444444");
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().getRoomOrders(new_body)
                 .subscribeOn(Schedulers.io())
@@ -113,13 +115,13 @@ public class RequestModel {
     /**
      * 获取设备列表
      *
-     * @param  //页码 从1开始
-     * @param   //每页加载量
+     * @param //页码    从1开始
+     * @param //每页加载量
      * @return
      */
     public Observable<BaseResult<List<DeviceListBean>>> getDeviceList(String businessId) {
         JsonObject body = new JsonObject();
-        body.addProperty("businessId" , businessId);
+        body.addProperty("businessId", businessId);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().getDeviceList(new_body)
                 .subscribeOn(Schedulers.io())
@@ -134,23 +136,20 @@ public class RequestModel {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<BaseResult<Boolean>> bindDeviceWithDSN(String dsn, String cuid, String scopeId, String scopeType) {
+    public Observable<BaseResult<Boolean>> bindDeviceWithDSN(String dsn, String scopeId) {
         JsonObject body = new JsonObject();
         body.addProperty("device_id", dsn);
-        body.addProperty("cuid", cuid);
         body.addProperty("scope_id", scopeId);
-        body.addProperty("scope_type", scopeType);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().bindDeviceWithDSN(body111)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<BaseResult<Boolean>> unbindDeviceWithDSN(String dsn, String scopeId, String scopeType) {
+    public Observable<BaseResult<Boolean>> unbindDeviceWithDSN(String dsn, String scopeId) {
         JsonObject body = new JsonObject();
         body.addProperty("device_id", dsn);
         body.addProperty("scope_id", scopeId);
-        body.addProperty("scope_type", scopeType);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().unbindDeviceWithDSN(body111)
                 .subscribeOn(Schedulers.io())
@@ -162,6 +161,21 @@ public class RequestModel {
         body.addProperty("device_id", dsn);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().notifyGatewayConfig(body111)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 获取候选节点
+     *
+     * @param dsn 网关dsn
+     * @return
+     */
+    public Observable<BaseResult<Boolean>> fetchCandidateNodes(String dsn) {
+        JsonObject body = new JsonObject();
+        body.addProperty("device_id", dsn);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().fetchCandidateNodes()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -188,6 +202,23 @@ public class RequestModel {
         String json = new Gson().toJson(ruleEngineBean);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
         return getApiService().saveRuleEngines(body111)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+    /**
+     * 运行RuleEngine
+     *
+     * @param ruleId
+     * @return
+     */
+    public Observable<BaseResult<Boolean>> runRuleEngines(Integer ruleId) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("ruleId", ruleId);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().runRuleEngines(body111)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
