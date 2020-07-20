@@ -57,7 +57,9 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                Device item = (Device) adapter.getItem(position);
                 Intent mainActivity = new Intent(SceneSettingDeviceSelectActivity.this, SceneSettingFunctionSelectActivity.class);
+                mainActivity.putExtra("device",item);
                 startActivityForResult(mainActivity, 0);
             }
         });
@@ -78,6 +80,7 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
+            setResult(RESULT_OK,data);
             finish();
         }
     }

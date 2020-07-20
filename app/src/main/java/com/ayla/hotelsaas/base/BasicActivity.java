@@ -1,28 +1,21 @@
 package com.ayla.hotelsaas.base;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
-import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
 
-import androidx.annotation.DrawableRes;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.ClickUtils;
 import com.ayla.hotelsaas.widget.AppBar;
+import com.ayla.hotelsaas.widget.LoadingDialog;
+
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * author fancunlei
@@ -78,7 +71,7 @@ public abstract class BasicActivity extends AppCompatActivity {
     protected abstract void initListener();
 
 
-    private ProgressDialog progressDialog;
+    private LoadingDialog progressDialog;
 
     public void showProgress() {
         showProgress("加载中...");
@@ -98,23 +91,20 @@ public abstract class BasicActivity extends AppCompatActivity {
         if (isFinished() || isDestroyed()) {
             return;
         }
-        if (null == progressDialog) {
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setCancelable(false);
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        progressDialog.setMessage(msg);
-        if (progressDialog.isShowing()) {
+        if (null != progressDialog) {
             return;
         }
-        progressDialog.show();
+        progressDialog = LoadingDialog.newInstance("加载中");
+        progressDialog.show(getSupportFragmentManager(), "loading");
     }
 
     public void hideProgress() {
         if (null != progressDialog) {
-            progressDialog.dismiss();
+            progressDialog.dismissAllowingStateLoss();
         }
+        progressDialog = null;
     }
+
     public void refreshUI() {
         final View appbarRoot = findViewById(R.id.appbar_root_rl_ff91090);
         if (appbarRoot != null) {
@@ -176,7 +166,7 @@ public abstract class BasicActivity extends AppCompatActivity {
 
     }
 
-    protected  void mExitApp(){
+    protected void mExitApp() {
 
     }
 

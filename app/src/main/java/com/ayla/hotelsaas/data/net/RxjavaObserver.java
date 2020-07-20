@@ -1,6 +1,8 @@
 package com.ayla.hotelsaas.data.net;
 
 
+import android.util.Log;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.BaseResult;
@@ -27,6 +29,7 @@ public abstract class RxjavaObserver<T> implements Observer<BaseResult<T>> {
 
     @Override
     public void onError(Throwable t) {
+        Log.e("error occur", "onError: ", t);
         if (t instanceof RxjavaFlatmapThrowable) {
             RxjavaFlatmapThrowable throwable = (RxjavaFlatmapThrowable) t;
             _onFlatmap(throwable);

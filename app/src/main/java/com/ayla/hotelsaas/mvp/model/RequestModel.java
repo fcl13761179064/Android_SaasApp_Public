@@ -15,9 +15,8 @@ import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -66,6 +65,7 @@ public class RequestModel {
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().login(new_body)
+                .delay(2, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -186,10 +186,10 @@ public class RequestModel {
      * @param ruleEngineBean
      * @return
      */
-    public Observable<BaseResult<Boolean>> saveRuleEngines(RuleEngineBean ruleEngineBean) {
+    public Observable<BaseResult<Boolean>> saveRuleEngine(RuleEngineBean ruleEngineBean) {
         String json = new Gson().toJson(ruleEngineBean);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
-        return getApiService().saveRuleEngines(body111)
+        return getApiService().saveRuleEngine(body111)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -206,7 +206,7 @@ public class RequestModel {
         jsonObject.addProperty("ruleId", ruleId);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().runRuleEngines(body111)
+        return getApiService().runRuleEngine(body111)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

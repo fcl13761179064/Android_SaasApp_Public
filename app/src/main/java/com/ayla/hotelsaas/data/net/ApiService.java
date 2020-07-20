@@ -62,9 +62,9 @@ public interface ApiService {
     Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Query("scope_id") String scopeId);
 
     @POST("save_rule_engine")
-    Observable<BaseResult<Boolean>> saveRuleEngines(@Body RequestBody body);
+    Observable<BaseResult<Boolean>> saveRuleEngine(@Body RequestBody body);
 
 
     @POST("run_rule_engine")
-    Observable<BaseResult<Boolean>> runRuleEngines(@Body RequestBody body);
+    Observable<BaseResult<Boolean>> runRuleEngine(@Body RequestBody body);
 }
