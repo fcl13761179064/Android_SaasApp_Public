@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,12 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.WorkOrderAdapter;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.WorkOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.StatusBarUtil;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -24,6 +27,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -73,6 +77,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         //是否在加载的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenLoading(true);
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
+        recyclerview.setHasFixedSize(true);
         recyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         mAdapter = new WorkOrderAdapter();
         recyclerview.setAdapter(mAdapter);
@@ -106,7 +111,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    mPresenter.loadFistPage("1");
+                    mPresenter.loadFistPage();
                 }
 
             }
@@ -114,7 +119,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                    mPresenter.loadNextPage("1");
+                    mPresenter.loadNextPage();
                 }
             }
         });
@@ -125,6 +130,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     @Override
     protected void mExitApp() {
         finish();
+        SharePreferenceUtils.remove(this,Constance.SP_Login_Token);
         MyApplication.getInstance().setUserEntity(null);
         Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -134,7 +140,17 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     @Override
     public void loadDataSuccess(List<WorkOrderBean> data) {
         final List<WorkOrderBean.WorkOrder> workOrderList = data.get(0).getWorkOrderContent();
-        mAdapter.setNewData(workOrderList);
+        final List arrayList = new ArrayList();
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+        arrayList.addAll(workOrderList);
+
+
+        mAdapter.setNewData(arrayList);
         loadDataFinish();
     }
 

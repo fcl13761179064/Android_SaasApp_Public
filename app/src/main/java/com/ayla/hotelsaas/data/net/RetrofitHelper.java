@@ -181,8 +181,7 @@ public class RetrofitHelper {
                 Map<String, String> parameterMap = getRequestCommonParameter();
                 //登录了加上参数
                 if (null != MyApplication.getInstance() && null != MyApplication.getInstance().getUserEntity()) {
-                    parameterMap.put("token", MyApplication.getInstance().getUserEntity().getToken());
-                    parameterMap.put("userId", MyApplication.getInstance().getUserEntity().getUserId());
+                    parameterMap.put("token", MyApplication.getInstance().getUserEntity().getAuthToken());
                 }
                 //获取参数
                 for (int i = 0; i < oldFormBody.size(); i++) {

@@ -31,26 +31,26 @@ public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
     /**
      * 加载下一页
      */
-    public void loadNextPage(String type) {
+    public void loadNextPage() {
         pageNum++;
-        loadData(type);
+        loadData();
     }
 
     /**
      * 加载第一页
      */
-    public void loadFistPage(String type) {
+    public void loadFistPage() {
         pageNum = 1;
-        loadData(type);
+        loadData();
     }
 
     /**
      * 加载列表
      *
-     * @param type
+     * @param
      */
-    public void loadData(String type) {
-        RequestModel.getInstance().getWorkOrderList(type, pageNum, maxNum)
+    public void loadData() {
+        RequestModel.getInstance().getWorkOrderList(pageNum, maxNum)
                 .subscribe(new RxjavaObserver<List<WorkOrderBean>>() {
                     @Override
                     public void _onNext(List<WorkOrderBean> data) {
@@ -65,8 +65,8 @@ public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
 
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-                        addSubscrebe(d);
-                    }
-                });
-    }
-}
+        addSubscrebe(d);
+        }
+        });
+        }
+        }

@@ -25,10 +25,15 @@ public class Constance {
     /**
      * 正式环境地址
      */
-    public static String BASE_URL = "http://192.168.1.41:8080/";
+    public static String BASE_URL = "http://192.168.1.41:8080";
+   // public static String BASE_URL = "https://abp.ayla.com.cn/api/v2/sso/login";
+
 
     //用户是否登录
     public static boolean UserIsLogin = false;
+
+    //登录保存key
+    public static String SP_Login_Token = "login_token";
 
     //状态
     public static final String V_STATUS_online = "online";    //初始状态
