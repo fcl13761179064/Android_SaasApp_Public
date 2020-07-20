@@ -11,15 +11,12 @@ import java.util.List;
 public class DeviceListBean implements Serializable {
     /**
      * programName : saas酒店
-     * voucherId : 348749
-     * palyTime : 2019-12-06 17:54:00
-     * status : 待施工
      */
 
 
     private String currentPage;
     private String pageSize;
-    private List<DeviceListBean.RoomOrder> roomOrderContent;
+    private List<DeviceCategory> deviceListInfo;
 
     public String getCurrentPage() {
         return currentPage;
@@ -37,32 +34,41 @@ public class DeviceListBean implements Serializable {
         this.pageSize = pageSize;
     }
 
-    public List<RoomOrder> getRoomOrderContent() {
-        return roomOrderContent;
+    public List<DeviceCategory> getDeviceCategories() {
+        return deviceListInfo;
     }
 
-    public void setRoomOrderContent(List<RoomOrder> roomOrderContent) {
-        this.roomOrderContent = roomOrderContent;
+    public void setDeviceCategories(List<DeviceCategory> deviceCategories) {
+        deviceListInfo = deviceCategories;
     }
 
-    public static class RoomOrder implements Serializable {
-        private String resourceRoomNum;
-        private String resourceRoomId;
+    public class DeviceCategory implements Serializable {
+        private String deviceIconUrl;
+        private String deviceName;
+        private String deviceStatus;
 
-        public String getResourceRoomNum() {
-            return resourceRoomNum;
+        public String getDeviceIconUrl() {
+            return deviceIconUrl;
         }
 
-        public void setResourceRoomNum(String resourceRoomNum) {
-            this.resourceRoomNum = resourceRoomNum;
+        public void setDeviceIconUrl(String deviceIconUrl) {
+            this.deviceIconUrl = deviceIconUrl;
         }
 
-        public String getResourceRoomId() {
-            return resourceRoomId;
+        public String getDeviceName() {
+            return deviceName;
         }
 
-        public void setResourceRoomId(String resourceRoomId) {
-            this.resourceRoomId = resourceRoomId;
+        public void setDeviceName(String deviceName) {
+            this.deviceName = deviceName;
+        }
+
+        public String getDeviceStatus() {
+            return deviceStatus;
+        }
+
+        public void setDeviceStatus(String deviceStatus) {
+            this.deviceStatus = deviceStatus;
         }
     }
 }

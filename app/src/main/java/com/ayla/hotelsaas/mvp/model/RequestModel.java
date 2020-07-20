@@ -1,8 +1,6 @@
 package com.ayla.hotelsaas.mvp.model;
 
 
-import android.text.TextUtils;
-
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
@@ -35,8 +33,6 @@ public class RequestModel {
 
     public static final String APP_key = "vrmandroid";
     public static final String APP_SECRET = "92bAH6hNF4Q9RHymVGqYCdn58Zr3FPTU";
-    //登录参数
-    private static final String LOGIN_METHOD = "com.gewara.gptbs.vrm.vrmLogin";
 
     private volatile static RequestModel instance = null;
 
@@ -65,7 +61,11 @@ public class RequestModel {
     }
 
     public Observable<BaseResult<User>> login(String account, String password) {
-        return getApiService().login(account, password)
+        JsonObject body = new JsonObject();
+        body.addProperty("account", account);
+        body.addProperty("password", password);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().login(new_body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -77,16 +77,8 @@ public class RequestModel {
      * @param maxNum  每页加载量
      * @return
      */
-    public Observable<BaseResult<List<WorkOrderBean>>> getWorkOrderList(String type, int pageNum, String maxNum) {
-        Map<String, String> map = new HashMap<>(8);
-        //不同的
-        //待办事项获取数量
-        final String TODO_ITEM_COUNT = "com.gewara.gptbs.vrm.pendingCount";
-        map.put("method", TODO_ITEM_COUNT);
-        if (!TextUtils.isEmpty(type)) {
-            map.put("type", type);
-        }
-        return getApiService().getWorkOrders()
+    public Observable<BaseResult<List<WorkOrderBean>>> getWorkOrderList(int pageNum, String maxNum) {
+        return getApiService().getWorkOrders(pageNum, maxNum)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -101,11 +93,9 @@ public class RequestModel {
      * @param //每页加载量
      * @return
      */
-    public Observable<BaseResult<List<RoomOrderBean>>> getRoomOrderList(String businessId) {
-        JsonObject body = new JsonObject();
-        body.addProperty("businessId", "444444");
-        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().getRoomOrders(new_body)
+
+    public Observable<BaseResult<List<RoomOrderBean>>> getRoomOrderList(String billId, int pageNum, String maxNum) {
+        return getApiService().getRoomOrders(pageNum, maxNum, billId)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -119,11 +109,9 @@ public class RequestModel {
      * @param //每页加载量
      * @return
      */
-    public Observable<BaseResult<List<DeviceListBean>>> getDeviceList(String businessId) {
+    public Observable<BaseResult<List<DeviceListBean>>> getDeviceList(String roomId, int pageNum, String maxNum) {
         JsonObject body = new JsonObject();
-        body.addProperty("businessId", businessId);
-        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().getDeviceList(new_body)
+        return getApiService().getDeviceList(pageNum, maxNum, roomId)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

@@ -39,13 +39,13 @@ public class LoginPresenter extends BasePresenter<LoginView> {
             return;
         }
 
-     /*   if (PregnancyUtil.checkEmail(account)) {
+      if (PregnancyUtil.checkEmail(account)) {
             login(account, password);
         } else if (PregnancyUtil.checkPhoneNum(account)) {
             login(account, password);
         } else {
             ToastUtil.show(MyApplication.getContext(), R.string.account_error);
-        }*/
+        }
         login(account, password);
     }
 

@@ -22,11 +22,9 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
-import com.ayla.hotelsaas.utils.LogUtil;
-import com.ayla.hotelsaas.utils.PregnancyUtil;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.StatusBarUtil;
-import com.ayla.hotelsaas.utils.ToastUtil;
 import com.ayla.hotelsaas.utils.ToastUtils;
 
 import butterknife.BindView;
@@ -71,12 +69,12 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                 edit_password.setText("222");
             } else {
                 tvSwitch.setText("正");
-                edite_count.setText("111");
-                edit_password.setText("222");
+                edite_count.setText("18081799367");
+                edit_password.setText("888888");
             }
         } else {
-            edite_count.setText("111");
-            edit_password.setText("222");
+            edite_count.setText("18081799367");
+            edit_password.setText("888888");
         }
 
     }
@@ -100,8 +98,8 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                             ToastUtils.showShortToast("切换到测试网络");
                         } else {
                             tvSwitch.setText("正");
-                            edite_count.setText("111");
-                            edit_password.setText("222");
+                            edite_count.setText("18081799367");
+                            edit_password.setText("888888");
                             ToastUtils.showShortToast("切换到正式网络环境");
                         }
                         hideProgress();
@@ -170,6 +168,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     public void loginSuccess(User data) {
+        SharePreferenceUtils.saveString(LoginActivity.this,Constance.SP_Login_Token,data.getAuthToken());
         Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
         startActivity(mainActivity);
         finish();

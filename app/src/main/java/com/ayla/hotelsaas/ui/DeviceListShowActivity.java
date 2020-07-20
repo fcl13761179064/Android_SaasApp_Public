@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +13,6 @@ import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
-import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,6 +20,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 
@@ -60,22 +59,22 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        mAdapter.setEmptyView(R.layout.empty_work_order);
+        mAdapter.setEmptyView(R.layout.empty_device_order);
         mRefreshLayout.setEnableLoadMore(false);
     }
 
     @Override
     protected void initListener() {
-        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+    /*    mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!FastClickUtils.isDoubleClick()) {
-                    Intent intent = new Intent(DeviceListShowActivity.this, DeviceAddCategoryActivity.class);
+                    Intent intent = new Intent(DeviceListShowActivity.this, Devi.class);
                     intent.putExtra("device", (Serializable) mAdapter.getData().get(position));
                     startActivityForResult(intent, 0x101);
                 }
             }
-        });
+        });*/
 
         mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
 
@@ -86,7 +85,7 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    mPresenter.loadFistPage(mWork_order.getBusinessId());
+                    mPresenter.loadFistPage(mRoom_order.getResourceRoomId());
                 }
 
             }
@@ -118,8 +117,21 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
 
     @Override
     public void loadDataSuccess(List<DeviceListBean> data) {
-        final List<DeviceListBean.RoomOrder> roomOrderContent = data.get(0).getRoomOrderContent();
-        mAdapter.setNewData(roomOrderContent);
+        final List<DeviceListBean.DeviceCategory> roomOrderContent = data.get(0).getDeviceCategories();
+        final List arrayList = new ArrayList();
+        arrayList.addAll(roomOrderContent);
+        arrayList.addAll(roomOrderContent);
+        arrayList.addAll(roomOrderContent);
+        arrayList.addAll(roomOrderContent);
+        arrayList.addAll(roomOrderContent);
+        arrayList.addAll(roomOrderContent);
+        arrayList.addAll(roomOrderContent);
+        arrayList.addAll(roomOrderContent);
+        arrayList.addAll(roomOrderContent);
+        arrayList.addAll(roomOrderContent);
+        arrayList.addAll(roomOrderContent);
+        arrayList.addAll(roomOrderContent);
+        mAdapter.setNewData(arrayList);
         loadDataFinish();
     }
 

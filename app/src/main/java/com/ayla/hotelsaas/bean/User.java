@@ -6,40 +6,31 @@ package com.ayla.hotelsaas.bean;
  * @时间 2020/6/3
  */
 public class User {
-    private String userId;
-    private String token;
-    private String groupName;
-    private String userName;
+    private String authToken;
+    private String refreshToken;
+    private String expireTime;
 
-    public String getUserName() {
-        return userName;
+    public String getAuthToken() {
+        return authToken;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
-    public String getToken() {
-        return token;
+    public String getExpireTime() {
+        return expireTime;
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setExpireTime(String expireTime) {
+        this.expireTime = expireTime;
     }
 }
