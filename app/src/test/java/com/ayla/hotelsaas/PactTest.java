@@ -186,23 +186,32 @@ public class PactTest {
                                 ).closeObject()))
 
                 //获取房间数据
-//                .given("获取房间号数据")
-//                .uponReceiving("获取正确的房间号数据").path("/order_order")
-//                .method("POST").willRespondWith().status(200).body(new PactDslJsonBody()
-//                        .numberValue("code", 0)
-//                        .stringType("error", "")
-//                        .object("data", new PactDslJsonArray()
-//                                .object()
-//                                .object("roomOrderContent", new PactDslJsonArray()
-//                                        .object()
-//                                        .stringType("resourceRoomId", "1")
-//                                        .stringType("resourceRoomNum", "101")
-//                                        .closeObject()
-//                                        .object()
-//                                        .stringType("resourceRoomId", "2")
-//                                        .stringType("resourceRoomNum", "102")
-//                                        .closeObject()
-//                                ).closeObject()))
+                .given("获取房间号数据")
+                .uponReceiving("获取正确的房间号数据")
+                .path("/room_order")
+                .method("POST")
+                .body(new PactDslJsonBody()
+                        .stringType("businessId", "444444")
+                )
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("error", "1001")
+                        .stringType("currentPage", "1")
+                        .stringType("pageSize", "10")
+                        .object("data", new PactDslJsonArray()
+                                .object()
+                                .object("roomOrderContent", new PactDslJsonArray()
+                                        .object()
+                                        .stringType("resourceRoomId", "1")
+                                        .stringType("resourceRoomNum", "101")
+                                        .closeObject()
+                                        .object()
+                                        .stringType("resourceRoomId", "2")
+                                        .stringType("resourceRoomNum", "102")
+                                        .closeObject()
+                                ).closeObject()))
                 //DSN绑定设备,绑定成功
                 .given("绑定成功")
                 .uponReceiving("DSN绑定设备")
@@ -337,11 +346,17 @@ public class PactTest {
                 .getApiService()
                 .fetchDeviceCategory()
                 .test().assertNoErrors();
-
+        //获取工单集
         RetrofitHelper.getInstance()
                 .getApiService()
                 .getWorkOrders()
                 .test().assertNoErrors();
+
+        //获取房间号
+        RequestModel.getInstance()
+                .getRoomOrderList("44444444")
+                .test().assertNoErrors();
+
         {//绑定设备
             RequestModel.getInstance()
                     .bindDeviceWithDSN("111", "222", "333", "444").test().assertNoErrors();

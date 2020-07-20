@@ -1,10 +1,6 @@
 package com.ayla.hotelsaas.base;
 
 import android.os.Bundle;
-import android.view.View;
-
-import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.utils.ClickUtils;
 
 /**
  * MVP基础Activity

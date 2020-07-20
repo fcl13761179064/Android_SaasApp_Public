@@ -42,8 +42,8 @@ public abstract class BasicActivity extends AppCompatActivity {
         unbinder = ButterKnife.bind(this);
         initSaveInstace(savedInstanceState);
         setStatusBar();
-        initView();
         refreshUI();
+        initView();
         initListener();
         AppManager.getAppManager().addActivity(this);
     }

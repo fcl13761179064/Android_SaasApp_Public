@@ -2,52 +2,53 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.RoomOrderListAdapter;
+import com.ayla.hotelsaas.adapter.DeviceListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-import com.ayla.hotelsaas.mvp.present.RoomOrderPresenter;
-import com.ayla.hotelsaas.mvp.view.RoomOrderView;
+import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
+import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
-
 import java.io.Serializable;
 import java.util.List;
-
 import butterknife.BindView;
 
+public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, DeviceListShowPresenter> implements DeviceListView {
 
-public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOrderPresenter> implements RoomOrderView {
 
-    @BindView(R.id.room_recyclerview)
+    @BindView(R.id.device_recyclerview)
     RecyclerView recyclerview;
-    @BindView(R.id.room_refreshLayout)
+    @BindView(R.id.float_btn)
+    FloatingActionButton float_btn;
+    @BindView(R.id.device_refreshLayout)
     SmartRefreshLayout mRefreshLayout;
     @BindView(R.id.appBar)
     AppBar appBar;
-    private RoomOrderListAdapter mAdapter;
+    private DeviceListAdapter mAdapter;
+    private RoomOrderBean.RoomOrder mRoom_order;
     private WorkOrderBean.WorkOrder mWork_order;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.room_order_list_activity;
+        return R.layout.device_list_show;
     }
 
     @Override
     public void refreshUI() {
-        mWork_order = (WorkOrderBean.WorkOrder) getIntent().getSerializableExtra("work_order");
+        mRoom_order = (RoomOrderBean.RoomOrder) getIntent().getSerializableExtra("roomData");
+        mWork_order = (WorkOrderBean.WorkOrder) getIntent().getSerializableExtra("workOrderdata");
         appBar.setCenterText(mWork_order.getProjectName());
         super.refreshUI();
     }
@@ -55,21 +56,12 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     @Override
     protected void initView() {
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new RoomOrderListAdapter();
-        final View view = View.inflate(this, R.layout.room_head_view, null);
-        final TextView item_tv_name = view.findViewById(R.id.item_tv_name);
-        final TextView item_room_srart_date = view.findViewById(R.id.item_room_srart_date);
-        final TextView item_room_end_date = view.findViewById(R.id.item_room_end_date);
-        final TextView item_work_status = view.findViewById(R.id.item_work_status);
-        item_tv_name.setText(mWork_order.getProjectName());
-        item_room_srart_date.setText(mWork_order.getStartDate());
-        item_room_end_date.setText(mWork_order.getEndDate());
-        item_work_status.setText(mWork_order.getProgressStatus());
-        mAdapter.addHeaderView(view, 0);
+        mAdapter = new DeviceListAdapter();
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-
+        mAdapter.setEmptyView(R.layout.empty_work_order);
+        mRefreshLayout.setEnableLoadMore(false);
     }
 
     @Override
@@ -78,10 +70,9 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!FastClickUtils.isDoubleClick()) {
-                    Intent intent = new Intent(RoomOrderListActivity.this, DeviceListShowActivity.class);
-                    intent.putExtra("roomData", (Serializable) mAdapter.getData().get(position));
-                    intent.putExtra("workOrderdata", (Serializable) mWork_order);
-                    startActivity(intent);
+                    Intent intent = new Intent(DeviceListShowActivity.this, DeviceAddCategoryActivity.class);
+                    intent.putExtra("device", (Serializable) mAdapter.getData().get(position));
+                    startActivityForResult(intent, 0x101);
                 }
             }
         });
@@ -109,17 +100,25 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         });
         mRefreshLayout.autoRefresh();//自动刷新
 
+        float_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DeviceListShowActivity.this, DeviceAddCategoryActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
 
     @Override
-    protected RoomOrderPresenter initPresenter() {
-        return new RoomOrderPresenter();
+    protected DeviceListShowPresenter initPresenter() {
+        return new DeviceListShowPresenter();
     }
 
     @Override
-    public void loadDataSuccess(List<RoomOrderBean> data) {
-        final List<RoomOrderBean.RoomOrder> roomOrderContent = data.get(0).getRoomOrderContent();
+    public void loadDataSuccess(List<DeviceListBean> data) {
+        final List<DeviceListBean.RoomOrder> roomOrderContent = data.get(0).getRoomOrderContent();
         mAdapter.setNewData(roomOrderContent);
         loadDataFinish();
     }

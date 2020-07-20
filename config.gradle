@@ -10,7 +10,7 @@ ext {
     targetSdkVersion = 29
 
     //supprt支持版本
-    ext.support_version = '29.+'
+    ext.support_version = '25.3.1'
     //rxjava版本
     ext.rxjava_version = '2.1.0'
     //retrofit版本

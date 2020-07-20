@@ -100,6 +100,13 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
+            android:name=".ui.DeviceListShowActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
             android:name=".ui.SceneSettingActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
