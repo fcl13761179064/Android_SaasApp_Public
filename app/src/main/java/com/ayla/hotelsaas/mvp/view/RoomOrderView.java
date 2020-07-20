@@ -2,7 +2,8 @@ package com.ayla.hotelsaas.mvp.view;
 
 
 import com.ayla.hotelsaas.base.OrderListView;
-import com.ayla.hotelsaas.bean.WorkOrderBean;
+import com.ayla.hotelsaas.bean.RoomOrderBean;
+
 import java.util.List;
 
 
@@ -11,9 +12,9 @@ import java.util.List;
  * @作者 fanchunlei
  * @时间 2020/7/14
  */
-public interface WorkOrderView extends OrderListView {
+public interface RoomOrderView extends OrderListView {
 
-    void loadDataSuccess(List<WorkOrderBean> data);
+    void loadDataSuccess(List<RoomOrderBean> data);
 
     void loadDataFinish();
 

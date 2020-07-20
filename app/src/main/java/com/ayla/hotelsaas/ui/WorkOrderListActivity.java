@@ -128,8 +128,8 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         MyApplication.getInstance().setUserEntity(null);
         Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
+    startActivity(intent);
+}
 
     @Override
     public void loadDataSuccess(List<WorkOrderBean> data) {

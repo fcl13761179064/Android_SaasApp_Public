@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
+import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
@@ -14,11 +16,9 @@ import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -85,6 +85,43 @@ public class RequestModel {
             map.put("type", type);
         }
         return getApiService().getWorkOrders()
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+    }
+
+
+    /**
+     * 获取房间号的条数
+     *
+     * @param  //页码 从1开始
+     * @param   //每页加载量
+     * @return
+     */
+    public Observable<BaseResult<List<RoomOrderBean>>> getRoomOrderList(String businessId) {
+        JsonObject body = new JsonObject();
+        body.addProperty("businessId" , "444444");
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().getRoomOrders(new_body)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+    }
+
+    /**
+     * 获取设备列表
+     *
+     * @param  //页码 从1开始
+     * @param   //每页加载量
+     * @return
+     */
+    public Observable<BaseResult<List<DeviceListBean>>> getDeviceList(String businessId) {
+        JsonObject body = new JsonObject();
+        body.addProperty("businessId" , businessId);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().getDeviceList(new_body)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

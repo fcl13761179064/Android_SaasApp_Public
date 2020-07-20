@@ -19,6 +19,7 @@
         android:layout_marginLeft="@dimen/dp_16"
         android:layout_alignParentRight="true"
         android:gravity="center_vertical"
+        android:elevation="@dimen/dp_10"
         android:text="待施工"
         android:textSize="@dimen/sp_12" />
 
