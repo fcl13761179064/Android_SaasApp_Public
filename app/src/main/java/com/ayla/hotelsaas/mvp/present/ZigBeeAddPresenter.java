@@ -55,7 +55,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN("000","111","222","333")
+                                .bindDeviceWithDSN("000","111")
                                 .delay(3,TimeUnit.SECONDS)
                                 .flatMap(new Function<BaseResult<Boolean>, ObservableSource<?>>() {
                                     @Override

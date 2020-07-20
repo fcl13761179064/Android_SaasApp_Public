@@ -14,9 +14,9 @@ public class RuleEngineBean {
      * condition : {"expression":"","items":[]}
      * action : {"expression":"func.execute('2','GADw3NnUI4Xa54nsr5tYz20000','StatusLightSwitch')","items":[{"targetDeviceType":2,"targetDeviceId":"GADw3NnUI4Xa54nsr5tYz20000","leftValue":"StatusLightSwitch","operator":"==","rightValue":1,"rightValueType":1}]}
      */
-    private int ruleId;
+    private Integer ruleId;
 
-    private String scopeId;
+    private Integer scopeId;
 
     private String ruleName;
 
@@ -44,11 +44,11 @@ public class RuleEngineBean {
         this.ruleDescription = ruleDescription;
     }
 
-    public String getScopeId() {
+    public Integer getScopeId() {
         return scopeId;
     }
 
-    public void setScopeId(String scopeId) {
+    public void setScopeId(Integer scopeId) {
         this.scopeId = scopeId;
     }
 
