@@ -19,7 +19,8 @@
         android:layout_height="57dp"
         android:layout_marginTop="16dp"
         android:background="#FFFFFF"
-        android:padding="16dp">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <TextView
             android:id="@+id/tv_02"
@@ -39,8 +40,9 @@
             android:src="@drawable/ic_menu_item_arrow_right" />
 
         <TextView
+            android:id="@+id/tv_scene_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
@@ -93,9 +95,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_above="@id/tv_delete"
-            tools:itemCount="60" />
+            tools:itemCount="10" />
 
         <TextView
             android:id="@+id/tv_delete"

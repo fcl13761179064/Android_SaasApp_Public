@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,13 +11,17 @@ import com.ayla.hotelsaas.adapter.SceneSettingActionItemAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.SceneSettingPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
+import com.ayla.hotelsaas.widget.SceneNameSetDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
-public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, SceneSettingPresenter> {
+public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, SceneSettingPresenter> implements SceneSettingView {
     @BindView(R.id.rv)
     public RecyclerView mRecyclerView;
+    @BindView(R.id.tv_scene_name)
+    public TextView mSceneNameTextView;
 
     private SceneSettingActionItemAdapter mAdapter;
 
@@ -53,5 +58,10 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     @Override
     protected void initListener() {
 
+    }
+
+    @OnClick(R.id.tv_scene_name)
+    public void sceneNameClicked() {
+        new SceneNameSetDialog().show(getSupportFragmentManager(), "scene_name");
     }
 }
