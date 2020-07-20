@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +11,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.CheckableSupport;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.Device;
 import com.ayla.hotelsaas.mvp.present.SceneSettingFunctionDatumSetPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionDatumSetView;
 import com.ayla.hotelsaas.widget.AppBar;
@@ -67,24 +67,32 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneS
                 mAdapter.notifyDataSetChanged();
             }
         });
+        appBar.rightTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent data = new Intent();
+                for (CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> datum : mAdapter.getData()) {
+                    if (datum.isChecked()) {
+                        data.putExtra("result", datum.getData());
+                        break;
+                    }
+                }
+
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        });
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter.loadFunction();
+        Device device = (Device) getIntent().getSerializableExtra("device");
+        mPresenter.loadFunction(device.getId());
     }
 
     @Override
-    public void showFunctions(List<CheckableSupport<String>> data) {
+    public void showFunctions(List<CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean>> data) {
         mAdapter.setNewData(data);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == RESULT_OK) {
-            finish();
-        }
     }
 }

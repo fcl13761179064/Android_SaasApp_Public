@@ -59,6 +59,7 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent mainActivity = new Intent(SceneSettingFunctionSelectActivity.this, SceneSettingFunctionDatumSetActivity.class);
+                mainActivity.putExtras(getIntent().getExtras());
                 startActivityForResult(mainActivity, 0);
             }
         });
@@ -79,6 +80,7 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
+            setResult(RESULT_OK,data);
             finish();
         }
     }
