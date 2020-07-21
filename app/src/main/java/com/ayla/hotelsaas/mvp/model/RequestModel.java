@@ -14,7 +14,8 @@ import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -77,7 +78,7 @@ public class RequestModel {
      * @param maxNum  每页加载量
      * @return
      */
-    public Observable<BaseResult<List<WorkOrderBean>>> getWorkOrderList(int pageNum, String maxNum) {
+    public Observable<BaseResult<WorkOrderBean>> getWorkOrderList(int pageNum, String maxNum) {
         return getApiService().getWorkOrders(pageNum, maxNum)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -94,7 +95,7 @@ public class RequestModel {
      * @return
      */
 
-    public Observable<BaseResult<List<RoomOrderBean>>> getRoomOrderList(String billId, int pageNum, String maxNum) {
+    public Observable<BaseResult<RoomOrderBean>> getRoomOrderList(String billId, int pageNum, String maxNum) {
         return getApiService().getRoomOrders(pageNum, maxNum, billId)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -109,9 +110,13 @@ public class RequestModel {
      * @param //每页加载量
      * @return
      */
-    public Observable<BaseResult<List<DeviceListBean>>> getDeviceList(String roomId, int pageNum, String maxNum) {
+    public Observable<BaseResult<DeviceListBean>> getDeviceList(String roomId, int pageNum, String maxNum) {
         JsonObject body = new JsonObject();
-        return getApiService().getDeviceList(pageNum, maxNum, roomId)
+        body.addProperty("roomId", roomId);
+        body.addProperty("pageNo", pageNum);
+        body.addProperty("pageSize", maxNum);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().getDeviceList(body111)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

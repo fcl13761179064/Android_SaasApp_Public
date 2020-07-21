@@ -14,18 +14,21 @@ import java.util.List;
  * @作者 丁军伟
  * @时间 2017/8/7
  */
-public class WorkOrderAdapter extends BaseQuickAdapter<WorkOrderBean.WorkOrder, BaseViewHolder> {
+public class WorkOrderAdapter extends BaseQuickAdapter<WorkOrderBean.ResultListBean, BaseViewHolder> {
     public WorkOrderAdapter() {
         super(R.layout.adapter_work_order);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, WorkOrderBean.WorkOrder workOrder) {
-        helper.setText(R.id.item_tv_name, workOrder.getProjectName())
+    protected void convert(BaseViewHolder helper, WorkOrderBean.ResultListBean workOrder) {
+        helper.setText(R.id.item_tv_name, workOrder.getTitle())
                 .setText(R.id.item_work_srart_date, workOrder.getStartDate())
-                .setText(R.id.item_work_end_date, workOrder.getEndDate())
-                .setText(R.id.item_work_status, workOrder.getProgressStatus());
+                .setText(R.id.item_work_end_date, workOrder.getEndDate());
 
+        if (workOrder.getConstructionStatus() == 1) {
+            helper.setText(R.id.item_work_status, "待施工");
+        } else if (workOrder.getConstructionStatus() == 2) {
+            helper.setText(R.id.item_work_status, "施工");
+        }
     }
-
 }

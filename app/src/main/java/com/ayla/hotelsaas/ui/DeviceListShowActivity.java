@@ -2,11 +2,14 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceListAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
@@ -15,13 +18,15 @@ import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 
 public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, DeviceListShowPresenter> implements DeviceListView {
@@ -36,8 +41,8 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
     @BindView(R.id.appBar)
     AppBar appBar;
     private DeviceListAdapter mAdapter;
-    private RoomOrderBean.RoomOrder mRoom_order;
-    private WorkOrderBean.WorkOrder mWork_order;
+    private RoomOrderBean.ResultListBean mRoom_order;
+    private WorkOrderBean.ResultListBean mWork_order;
 
     @Override
     protected int getLayoutId() {
@@ -46,9 +51,9 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
 
     @Override
     public void refreshUI() {
-        mRoom_order = (RoomOrderBean.RoomOrder) getIntent().getSerializableExtra("roomData");
-        mWork_order = (WorkOrderBean.WorkOrder) getIntent().getSerializableExtra("workOrderdata");
-        appBar.setCenterText(mWork_order.getProjectName());
+        mRoom_order = (RoomOrderBean.ResultListBean) getIntent().getSerializableExtra("roomData");
+        mWork_order = (WorkOrderBean.ResultListBean) getIntent().getSerializableExtra("workOrderdata");
+        appBar.setCenterText(mWork_order.getTitle());
         super.refreshUI();
     }
 
@@ -85,7 +90,7 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    mPresenter.loadFistPage(mRoom_order.getResourceRoomId());
+                    mPresenter.loadFistPage(mRoom_order.getRoomId()+ "");
                 }
 
             }
@@ -93,7 +98,7 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                    mPresenter.loadNextPage(mWork_order.getBusinessId());
+                    mPresenter.loadNextPage(mRoom_order.getRoomId() + "");
                 }
             }
         });
@@ -116,22 +121,10 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
     }
 
     @Override
-    public void loadDataSuccess(List<DeviceListBean> data) {
-        final List<DeviceListBean.DeviceCategory> roomOrderContent = data.get(0).getDeviceCategories();
-        final List arrayList = new ArrayList();
-        arrayList.addAll(roomOrderContent);
-        arrayList.addAll(roomOrderContent);
-        arrayList.addAll(roomOrderContent);
-        arrayList.addAll(roomOrderContent);
-        arrayList.addAll(roomOrderContent);
-        arrayList.addAll(roomOrderContent);
-        arrayList.addAll(roomOrderContent);
-        arrayList.addAll(roomOrderContent);
-        arrayList.addAll(roomOrderContent);
-        arrayList.addAll(roomOrderContent);
-        arrayList.addAll(roomOrderContent);
-        arrayList.addAll(roomOrderContent);
-        mAdapter.setNewData(arrayList);
+    public void loadDataSuccess(DeviceListBean data) {
+        final List<DeviceListBean.DevicesBean> devices = data.getDevices();
+        mAdapter.setNewData(devices);
+        MyApplication.getInstance().setDevicesBean(devices);
         loadDataFinish();
     }
 

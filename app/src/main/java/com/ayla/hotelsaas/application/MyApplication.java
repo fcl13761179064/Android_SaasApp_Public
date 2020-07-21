@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.User;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
@@ -14,6 +15,8 @@ import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+
+import java.util.List;
 
 import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.unit.Subunits;
@@ -26,6 +29,7 @@ public class MyApplication extends Application {
 
     //用户登录成功数据
     private User userEntity;
+    private List<DeviceListBean.DevicesBean> mDevicesBean;
     private static MyApplication mInstance = null;
 
     public static MyApplication getInstance() {
@@ -78,6 +82,22 @@ public class MyApplication extends Application {
             Constance.UserIsLogin = false;
         }
         this.userEntity = userEntity;
+    }
+
+    public List<DeviceListBean.DevicesBean> getDevicesBean() {
+        return mDevicesBean;
+    }
+
+    public void setDevicesBean(List<DeviceListBean.DevicesBean> devicesBean) {
+        mDevicesBean = devicesBean;
+    }
+
+    public static MyApplication getmInstance() {
+        return mInstance;
+    }
+
+    public static void setmInstance(MyApplication mInstance) {
+        MyApplication.mInstance = mInstance;
     }
 
     private void initAutoSize() {

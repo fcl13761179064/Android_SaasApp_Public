@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface RoomOrderView extends BaseView {
 
-    void loadDataSuccess(List<RoomOrderBean> data);
+    void loadDataSuccess(RoomOrderBean data);
 
     void loadDataFinish();
 

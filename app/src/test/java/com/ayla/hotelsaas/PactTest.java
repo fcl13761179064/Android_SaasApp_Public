@@ -145,12 +145,12 @@ public class PactTest {
                 .body(new PactDslJsonBody()
                         .numberValue("code", 0)
                         .stringType("error", "")
-                        .object("data", new PactDslJsonArray()
-                                .object()
-                                .object("pageInfo", new PactDslJsonBody(
-                                ).stringType("pageNo", "1").stringType("pageSize", "10"))
+                        .object("data", new PactDslJsonBody()
+                                .object("pageInfo", new PactDslJsonBody()
+                                        .stringType("pageNo", "1")
+                                        .stringType("pageSize", "10"))
                                 .object("resultList", new PactDslJsonArray()
-                                        .object()
+                                        .minArrayLike(1)
                                         .stringType("businessId", "111111111")
                                         .stringType("title", "成都酒店111111")
                                         .stringType("startDate", "2018-2-5")
@@ -164,8 +164,8 @@ public class PactTest {
                                         .stringType("endDate", "2019-5-9")
                                         .stringType("constructionStatus", "待施工222222")
                                         .closeObject()
-                                ).closeObject()))
-
+                                ))
+                )
                 //获取房间数据
                 .given("获取工单列表下房间号列表")
                 .uponReceiving("展示施工单下的房间号列表页面")
@@ -205,23 +205,26 @@ public class PactTest {
                 .status(200)
                 .body(new PactDslJsonBody()
                         .numberValue("code", 0)
-                        .stringType("error", "1001")
-                        .object("data", new PactDslJsonArray()
-                                .object()
+                        .stringType("msg", "1001")
+                        .object("data", new PactDslJsonBody()
                                 .object("pageInfo", new PactDslJsonBody(
                                 ).stringType("pageNo", "1").stringType("pageSize", "10"))
-                                .object("resultList", new PactDslJsonArray()
+                                .object("devices", new PactDslJsonArray()
                                         .object()
+                                        .stringType("deviceId", "SC000W000194710")
                                         .stringType("deviceIconUrl", "http://192.168.0.2/icon/123.imag.png")
                                         .stringType("deviceName", "二路开关")
+                                        .stringType("nickname", "ggggg")
                                         .stringType("deviceStatus", "online")
                                         .closeObject()
                                         .object()
+                                        .stringType("deviceId", "AAAC000W000194710")
                                         .stringType("iconUrl", "http://192.168.0.2/icon/4566.imag.png")
                                         .stringType("deviceName", "三路开关")
+                                        .stringType("nickname", "ffffff")
                                         .stringType("deviceStatus", "offline")
                                         .closeObject()
-                                ).closeObject()))
+                                )))
                 //DSN绑定设备,绑定成功
                 .given("绑定成功")
                 .uponReceiving("DSN绑定设备")
@@ -368,7 +371,7 @@ public class PactTest {
 
         //获取设备列表信息
         RequestModel.getInstance()
-                .getDeviceList("444444",1,"10")
+                .getDeviceList("444444", 1, "10")
                 .test().assertNoErrors();
 
 

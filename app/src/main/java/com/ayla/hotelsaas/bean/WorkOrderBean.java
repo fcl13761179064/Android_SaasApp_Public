@@ -9,39 +9,114 @@ import java.util.List;
  * @时间 2020/7/14
  */
 public class WorkOrderBean implements Serializable {
+
     /**
-     * programName : saas酒店
-     * voucherId : 348749
-     * palyTime : 2019-12-06 17:54:00
-     * status : 待施工
+     * resultList : [{"id":1,"title":"施工单1","businessId":2,"startDate":"2020-07-20T14:10:56","endDate":"2020-07-24T14:11:00","constructionStatus":1,"createId":"","createName":"json","createTime":"2020-07-20T06:11:38","updateId":"","updateName":"","updateTime":"2020-07-20T06:11:48","isDeleted":0}]
+     * currentPage : 10
+     * pageSize : 1
+     * totalPages : 20
+     * totalCount : 10
      */
 
+    private int currentPage;
+    private int pageSize;
+    private int totalPages;
+    private int totalCount;
+    private List<ResultListBean> resultList;
 
-    private String currentPage;
-    private String pageSize;
-    private List<WorkOrder> workOrderContent;
+    public int getCurrentPage() {
+        return currentPage;
+    }
 
-    public static class WorkOrder implements Serializable {
-        private String businessId;
-        private String projectName;
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+
+    public List<ResultListBean> getResultList() {
+        return resultList;
+    }
+
+    public void setResultList(List<ResultListBean> resultList) {
+        this.resultList = resultList;
+    }
+
+    public static class ResultListBean  implements Serializable{
+        /**
+         * id : 1
+         * title : 施工单1
+         * businessId : 2
+         * startDate : 2020-07-20T14:10:56
+         * endDate : 2020-07-24T14:11:00
+         * constructionStatus : 1
+         * createId :
+         * createName : json
+         * createTime : 2020-07-20T06:11:38
+         * updateId :
+         * updateName :
+         * updateTime : 2020-07-20T06:11:48
+         * isDeleted : 0
+         */
+
+        private int id;
+        private String title;
+        private int businessId;
         private String startDate;
         private String endDate;
-        private String progressStatus;
+        private int constructionStatus;
+        private String createId;
+        private String createName;
+        private String createTime;
+        private String updateId;
+        private String updateName;
+        private String updateTime;
+        private int isDeleted;
 
-        public String getBusinessId() {
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public int getBusinessId() {
             return businessId;
         }
 
-        public void setBusinessId(String businessId) {
+        public void setBusinessId(int businessId) {
             this.businessId = businessId;
-        }
-
-        public String getProjectName() {
-            return projectName;
-        }
-
-        public void setProjectName(String projectName) {
-            this.projectName = projectName;
         }
 
         public String getStartDate() {
@@ -60,38 +135,68 @@ public class WorkOrderBean implements Serializable {
             this.endDate = endDate;
         }
 
-        public String getProgressStatus() {
-            return progressStatus;
+        public int getConstructionStatus() {
+            return constructionStatus;
         }
 
-        public void setProgressStatus(String progressStatus) {
-            this.progressStatus = progressStatus;
+        public void setConstructionStatus(int constructionStatus) {
+            this.constructionStatus = constructionStatus;
         }
 
-    }
+        public String getCreateId() {
+            return createId;
+        }
 
-    public List<WorkOrder> getWorkOrderContent() {
-        return workOrderContent;
-    }
+        public void setCreateId(String createId) {
+            this.createId = createId;
+        }
 
-    public void setWorkOrderContent(List<WorkOrder> workOrderContent) {
-        this.workOrderContent = workOrderContent;
-    }
+        public String getCreateName() {
+            return createName;
+        }
 
+        public void setCreateName(String createName) {
+            this.createName = createName;
+        }
 
-    public String getCurrentPage() {
-        return currentPage;
-    }
+        public String getCreateTime() {
+            return createTime;
+        }
 
-    public void setCurrentPage(String currentPage) {
-        this.currentPage = currentPage;
-    }
+        public void setCreateTime(String createTime) {
+            this.createTime = createTime;
+        }
 
-    public String getPageSize() {
-        return pageSize;
-    }
+        public String getUpdateId() {
+            return updateId;
+        }
 
-    public void setPageSize(String pageSize) {
-        this.pageSize = pageSize;
+        public void setUpdateId(String updateId) {
+            this.updateId = updateId;
+        }
+
+        public String getUpdateName() {
+            return updateName;
+        }
+
+        public void setUpdateName(String updateName) {
+            this.updateName = updateName;
+        }
+
+        public String getUpdateTime() {
+            return updateTime;
+        }
+
+        public void setUpdateTime(String updateTime) {
+            this.updateTime = updateTime;
+        }
+
+        public int getIsDeleted() {
+            return isDeleted;
+        }
+
+        public void setIsDeleted(int isDeleted) {
+            this.isDeleted = isDeleted;
+        }
     }
 }

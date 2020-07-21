@@ -46,9 +46,9 @@ public class RoomOrderPresenter extends BasePresenter<RoomOrderView> {
      */
     public void loadData(String businessId) {
         RequestModel.getInstance().getRoomOrderList(businessId,pageNum,maxNum)
-                .subscribe(new RxjavaObserver<List<RoomOrderBean>>() {
+                .subscribe(new RxjavaObserver<RoomOrderBean>() {
                     @Override
-                    public void _onNext(List<RoomOrderBean> data) {
+                    public void _onNext(RoomOrderBean data) {
                         mView.loadDataSuccess(data);
                     }
 
