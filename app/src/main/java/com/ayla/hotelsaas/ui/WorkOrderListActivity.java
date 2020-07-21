@@ -2,13 +2,13 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.WorkOrderAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -95,7 +95,8 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!FastClickUtils.isDoubleClick()) {
                     Intent intent = new Intent(WorkOrderListActivity.this, RoomOrderListActivity.class);
-                    intent.putExtra("work_order", (Serializable) mAdapter.getData().get(position));
+                    WorkOrderBean.ResultListBean resultListBean = mAdapter.getData().get(position);
+                    intent.putExtra("work_order", (Serializable) resultListBean);
                     startActivityForResult(intent, 0x101);
                 }
             }
@@ -130,27 +131,17 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     @Override
     protected void mExitApp() {
         finish();
-        SharePreferenceUtils.remove(this,Constance.SP_Login_Token);
+        SharePreferenceUtils.remove(this, Constance.SP_Login_Token);
         MyApplication.getInstance().setUserEntity(null);
         Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-    startActivity(intent);
-}
+        startActivity(intent);
+    }
 
     @Override
-    public void loadDataSuccess(List<WorkOrderBean> data) {
-        final List<WorkOrderBean.WorkOrder> workOrderList = data.get(0).getWorkOrderContent();
-        final List arrayList = new ArrayList();
-        arrayList.addAll(workOrderList);
-        arrayList.addAll(workOrderList);
-        arrayList.addAll(workOrderList);
-        arrayList.addAll(workOrderList);
-        arrayList.addAll(workOrderList);
-        arrayList.addAll(workOrderList);
-        arrayList.addAll(workOrderList);
-
-
-        mAdapter.setNewData(arrayList);
+    public void loadDataSuccess(WorkOrderBean data) {
+        final List<WorkOrderBean.ResultListBean> resultList = data.getResultList();
+        mAdapter.setNewData(resultList);
         loadDataFinish();
     }
 
@@ -163,5 +154,13 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (null != mAdapter.getData()) {
+            mAdapter.getData().clear();
+            mAdapter.notifyDataSetChanged();
+        }
+        if (mPresenter != null) {
+            mPresenter.loadFistPage();
+        }
     }
 }

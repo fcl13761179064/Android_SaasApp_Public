@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface WorkOrderView extends BaseView {
 
-    void loadDataSuccess(List<WorkOrderBean> data);
+    void loadDataSuccess(WorkOrderBean data);
 
     void loadDataFinish();
 

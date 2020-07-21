@@ -21,7 +21,7 @@ public abstract class RxjavaObserver<T> implements Observer<BaseResult<T>> {
         if (result.isSuccess()) {
             _onNext(result.data);
         } else {
-            _onError(result.code, result.error);
+            _onError(result.code, result.msg);
         }
     }
 
@@ -38,6 +38,7 @@ public abstract class RxjavaObserver<T> implements Observer<BaseResult<T>> {
         }
     }
 
+   // http://192.168.1.224:8080/api/v1/construction/device/list (844ms)
     @Override
     public void onComplete() {
     }

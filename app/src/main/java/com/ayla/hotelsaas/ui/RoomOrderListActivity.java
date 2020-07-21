@@ -3,9 +3,11 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.RoomOrderListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -19,8 +21,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
 import java.io.Serializable;
 import java.util.List;
+
 import butterknife.BindView;
 
 
@@ -33,7 +37,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     @BindView(R.id.appBar)
     AppBar appBar;
     private RoomOrderListAdapter mAdapter;
-    private WorkOrderBean.WorkOrder mWork_order;
+    private WorkOrderBean.ResultListBean mWork_order;
 
     @Override
     protected int getLayoutId() {
@@ -42,8 +46,8 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
 
     @Override
     public void refreshUI() {
-        mWork_order = (WorkOrderBean.WorkOrder) getIntent().getSerializableExtra("work_order");
-        appBar.setCenterText(mWork_order.getProjectName());
+        mWork_order = (WorkOrderBean.ResultListBean) getIntent().getSerializableExtra("work_order");
+        appBar.setCenterText(mWork_order.getTitle());
         super.refreshUI();
     }
 
@@ -56,10 +60,12 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         final TextView item_room_srart_date = view.findViewById(R.id.item_room_srart_date);
         final TextView item_room_end_date = view.findViewById(R.id.item_room_end_date);
         final TextView item_work_status = view.findViewById(R.id.item_work_status);
-        item_tv_name.setText(mWork_order.getProjectName());
+        item_tv_name.setText(mWork_order.getTitle());
         item_room_srart_date.setText(mWork_order.getStartDate());
         item_room_end_date.setText(mWork_order.getEndDate());
-        item_work_status.setText(mWork_order.getProgressStatus());
+        if (mWork_order.getConstructionStatus() == 1) {
+            item_work_status.setText("待施工");
+        }
         mAdapter.addHeaderView(view, 0);
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
@@ -75,7 +81,8 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!FastClickUtils.isDoubleClick()) {
                     Intent intent = new Intent(RoomOrderListActivity.this, DeviceListShowActivity.class);
-                    intent.putExtra("roomData", (Serializable) mAdapter.getData().get(position));
+                    final RoomOrderBean.ResultListBean room_result = mAdapter.getData().get(position);
+                    intent.putExtra("roomData", (Serializable)room_result);
                     intent.putExtra("workOrderdata", (Serializable) mWork_order);
                     startActivity(intent);
                 }
@@ -91,7 +98,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    mPresenter.loadFistPage(mWork_order.getBusinessId());
+                    mPresenter.loadFistPage(mWork_order.getId() + "");
                 }
 
             }
@@ -99,7 +106,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                    mPresenter.loadNextPage(mWork_order.getBusinessId());
+                    mPresenter.loadNextPage(mWork_order.getId() + "");
                 }
             }
         });
@@ -114,9 +121,9 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     }
 
     @Override
-    public void loadDataSuccess(List<RoomOrderBean> data) {
-        final List<RoomOrderBean.RoomOrder> roomOrderContent = data.get(0).getRoomOrderContent();
-        mAdapter.setNewData(roomOrderContent);
+    public void loadDataSuccess(RoomOrderBean data) {
+        final List<RoomOrderBean.ResultListBean> resultList = data.getResultList();
+        mAdapter.setNewData(resultList);
         loadDataFinish();
     }
 

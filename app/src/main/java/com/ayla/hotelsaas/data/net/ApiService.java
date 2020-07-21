@@ -12,7 +12,6 @@ import java.util.Map;
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -38,13 +37,13 @@ public interface ApiService {
 
 
     @GET("api/v1/construction/constructbill")
-    Observable<BaseResult<List<WorkOrderBean>>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") String pageSize);
+    Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") String pageSize);
 
     @GET("api/v1/construction/billrooms")
-    Observable<BaseResult<List<RoomOrderBean>>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") String pageSize, @Query("billId") String billId);
+    Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") String pageSize, @Query("billId") String billId);
 
-    @GET("device_list")
-    Observable<BaseResult<List<DeviceListBean>>> getDeviceList(@Query("pageNo") int pageNO, @Query("pageSize") String pageSize, @Query("roomId") String billId);
+    @POST("api/v1/construction/device/list")
+    Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
     @POST("bind_device")
     Observable<BaseResult<Boolean>> bindDeviceWithDSN(@Body RequestBody body);
