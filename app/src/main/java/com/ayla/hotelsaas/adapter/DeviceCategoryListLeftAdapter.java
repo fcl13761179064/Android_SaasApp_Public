@@ -29,6 +29,7 @@ public class DeviceCategoryListLeftAdapter extends BaseQuickAdapter<DeviceCatego
     }
 
     public void setSelectedPosition(int selectedPosition) {
+        notifyItemChanged(this.selectedPosition);
         this.selectedPosition = selectedPosition;
         notifyItemChanged(this.selectedPosition);
     }
