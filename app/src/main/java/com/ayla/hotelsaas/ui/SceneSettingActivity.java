@@ -63,8 +63,9 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mSceneNameTextView.setText(mRuleEngineBean.getRuleName());
         } else {
             mRuleEngineBean = new RuleEngineBean();
-            mRuleEngineBean.setScopeId(111);
+            mRuleEngineBean.setScopeId(getIntent().getIntExtra("scopeId", 0));
             mRuleEngineBean.setRuleDescription("sssss");
+            mRuleEngineBean.setRuleType(2);
         }
     }
 

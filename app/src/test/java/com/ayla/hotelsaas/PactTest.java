@@ -303,7 +303,7 @@ public class PactTest {
                 //保存RuleEngine
                 .given("保存成功")
                 .uponReceiving("保存RuleEngine")
-                .path("/save_rule_engine")
+                .path("/api/v1/construction/scene/save")
                 .body(new PactDslJsonBody()
                         .numberType("scopeId", 1111)
                         .stringType("ruleName", "222")
