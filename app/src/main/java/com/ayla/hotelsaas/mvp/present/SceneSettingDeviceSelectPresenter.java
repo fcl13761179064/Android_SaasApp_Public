@@ -14,6 +14,7 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
         for (int i = 0; i < 20; i++) {
             Device device = new Device();
             device.setName("设备" + i);
+            device.setId("dsn" + i);
             device.setOnlineStatus(i % 2 == 0 ? "online" : "offline");
             devices.add(device);
         }

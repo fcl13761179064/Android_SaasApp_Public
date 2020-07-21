@@ -71,7 +71,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:gravity="end"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:orientation="horizontal">
 
             <TextView

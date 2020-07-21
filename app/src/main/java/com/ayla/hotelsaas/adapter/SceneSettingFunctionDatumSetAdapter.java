@@ -4,10 +4,12 @@ import com.ayla.hotelsaas.R;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
+import java.io.Serializable;
+
 /**
  * 场景动作选择，单选
  */
-public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<CheckableSupport<String>, BaseViewHolder> {
+public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean>, BaseViewHolder> {
     public SceneSettingFunctionDatumSetAdapter(int layoutResId) {
         super(layoutResId);
     }
@@ -15,6 +17,90 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
     @Override
     protected void convert(BaseViewHolder helper, CheckableSupport item) {
         helper.setChecked(R.id.cb_function_checked, item.isChecked());
+    }
+
+    public static class DatumBean implements Serializable {
+
+        /**
+         * targetDeviceType : 2
+         * targetDeviceId : GADw3NnUI4Xa54nsr5tYz20000
+         * leftValue : StatusLightSwitch
+         * rightValueType : 1
+         * rightValue : 1
+         * operator : ==
+         */
+        private String functionName;
+        private String valueName;
+        private int targetDeviceType;
+        private String targetDeviceId;
+        private String leftValue;
+        private int rightValueType;
+        private int rightValue;
+        private String operator;
+
+        public String getFunctionName() {
+            return functionName;
+        }
+
+        public void setFunctionName(String functionName) {
+            this.functionName = functionName;
+        }
+
+        public String getValueName() {
+            return valueName;
+        }
+
+        public void setValueName(String valueName) {
+            this.valueName = valueName;
+        }
+
+        public int getTargetDeviceType() {
+            return targetDeviceType;
+        }
+
+        public void setTargetDeviceType(int targetDeviceType) {
+            this.targetDeviceType = targetDeviceType;
+        }
+
+        public String getTargetDeviceId() {
+            return targetDeviceId;
+        }
+
+        public void setTargetDeviceId(String targetDeviceId) {
+            this.targetDeviceId = targetDeviceId;
+        }
+
+        public String getLeftValue() {
+            return leftValue;
+        }
+
+        public void setLeftValue(String leftValue) {
+            this.leftValue = leftValue;
+        }
+
+        public int getRightValueType() {
+            return rightValueType;
+        }
+
+        public void setRightValueType(int rightValueType) {
+            this.rightValueType = rightValueType;
+        }
+
+        public int getRightValue() {
+            return rightValue;
+        }
+
+        public void setRightValue(int rightValue) {
+            this.rightValue = rightValue;
+        }
+
+        public String getOperator() {
+            return operator;
+        }
+
+        public void setOperator(String operator) {
+            this.operator = operator;
+        }
     }
 
 }

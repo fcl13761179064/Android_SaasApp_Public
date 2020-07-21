@@ -1,13 +1,27 @@
 package com.ayla.hotelsaas.bean;
 
+import java.io.Serializable;
+
 /**
  * 设备实体
  */
-public class Device {
-
+public class Device implements Serializable {
+    private String id;
     private String icon;
     private String name;
     private String onlineStatus;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
     public String getOnlineStatus() {
         return onlineStatus;
