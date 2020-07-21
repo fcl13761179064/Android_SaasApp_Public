@@ -35,7 +35,7 @@ public class SPlashActivity extends BasicActivity {
             @Override
             public void run() {
                 final String sava_token = SharePreferenceUtils.getString(SPlashActivity.this, Constance.SP_Login_Token, null);
-                if (sava_token !=null || !TextUtils.isEmpty(sava_token)){
+                if (sava_token ==null || !TextUtils.isEmpty(sava_token)){
                     Intent intent = new Intent(SPlashActivity.this, WorkOrderListActivity.class);
                     startActivity(intent);
                 }else {

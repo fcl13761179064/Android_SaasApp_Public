@@ -51,9 +51,10 @@ public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
      */
     public void loadData() {
         RequestModel.getInstance().getWorkOrderList(pageNum, maxNum)
-                .subscribe(new RxjavaObserver<List<WorkOrderBean>>() {
+                .subscribe(new RxjavaObserver<WorkOrderBean>() {
                     @Override
-                    public void _onNext(List<WorkOrderBean> data) {
+                    public void _onNext(WorkOrderBean data) {
+
                         mView.loadDataSuccess(data);
                     }
 
@@ -65,8 +66,8 @@ public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
 
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-        addSubscrebe(d);
-        }
-        });
-        }
-        }
+                        addSubscrebe(d);
+                    }
+                });
+    }
+}

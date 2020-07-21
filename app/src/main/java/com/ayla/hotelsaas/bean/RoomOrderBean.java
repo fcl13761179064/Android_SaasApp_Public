@@ -9,60 +9,84 @@ import java.util.List;
  * @时间 2020/7/14
  */
 public class RoomOrderBean implements Serializable {
+
     /**
-     * programName : saas酒店
-     * voucherId : 348749
-     * palyTime : 2019-12-06 17:54:00
-     * status : 待施工
+     * resultList : [{"roomId":1,"roomName":"房间1"}]
+     * currentPage : 10
+     * pageSize : 1
+     * totalPages : 10
+     * totalCount : 10
      */
 
+    private int currentPage;
+    private int pageSize;
+    private int totalPages;
+    private int totalCount;
+    private List<ResultListBean> resultList;
 
-    private String currentPage;
-    private String pageSize;
-    private List<RoomOrderBean.RoomOrder> roomOrderContent;
-
-    public String getCurrentPage() {
+    public int getCurrentPage() {
         return currentPage;
     }
 
-    public void setCurrentPage(String currentPage) {
+    public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
     }
 
-    public String getPageSize() {
+    public int getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(String pageSize) {
+    public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
     }
 
-    public List<RoomOrder> getRoomOrderContent() {
-        return roomOrderContent;
+    public int getTotalPages() {
+        return totalPages;
     }
 
-    public void setRoomOrderContent(List<RoomOrder> roomOrderContent) {
-        this.roomOrderContent = roomOrderContent;
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
     }
 
-    public static class RoomOrder implements Serializable {
-        private String resourceRoomNum;
-        private String resourceRoomId;
+    public int getTotalCount() {
+        return totalCount;
+    }
 
-        public String getResourceRoomNum() {
-            return resourceRoomNum;
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+
+    public List<ResultListBean> getResultList() {
+        return resultList;
+    }
+
+    public void setResultList(List<ResultListBean> resultList) {
+        this.resultList = resultList;
+    }
+
+    public static class ResultListBean implements Serializable{
+        /**
+         * roomId : 1
+         * roomName : 房间1
+         */
+
+        private int roomId;
+        private String roomName;
+
+        public int getRoomId() {
+            return roomId;
         }
 
-        public void setResourceRoomNum(String resourceRoomNum) {
-            this.resourceRoomNum = resourceRoomNum;
+        public void setRoomId(int roomId) {
+            this.roomId = roomId;
         }
 
-        public String getResourceRoomId() {
-            return resourceRoomId;
+        public String getRoomName() {
+            return roomName;
         }
 
-        public void setResourceRoomId(String resourceRoomId) {
-            this.resourceRoomId = resourceRoomId;
+        public void setRoomName(String roomName) {
+            this.roomName = roomName;
         }
     }
 }

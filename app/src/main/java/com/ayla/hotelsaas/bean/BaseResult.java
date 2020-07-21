@@ -11,8 +11,8 @@ import java.io.Serializable;
 public class BaseResult<T> implements Serializable {
     @SerializedName("code")
     public String code;
-    @SerializedName("error")
-    public String error;
+    @SerializedName("msg")
+    public String msg;
     @SerializedName("data")
     public T data;
 

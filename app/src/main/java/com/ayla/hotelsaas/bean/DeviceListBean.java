@@ -9,50 +9,91 @@ import java.util.List;
  * @时间 2020/7/14
  */
 public class DeviceListBean implements Serializable {
+
+
     /**
-     * programName : saas酒店
+     * currentPage : 1
+     * totalPages : 1
+     * pageSize : 10
+     * totalCount : 2
+     * devices : [{"cuId":null,"deviceId":"SC000W000194710","deviceName":"热水壶插座","nickname":null,"deviceStatus":"ONLINE"},{"cuId":null,"deviceId":"GADw3NnUI4Xa54nsr5tYz20000","deviceName":"chuangmi-chengdu-001","nickname":null,"deviceStatus":"ONLINE"}]
      */
 
+    private int currentPage;
+    private int totalPages;
+    private int pageSize;
+    private int totalCount;
+    private List<DevicesBean> devices;
 
-    private String currentPage;
-    private String pageSize;
-    private List<DeviceCategory> deviceListInfo;
-
-    public String getCurrentPage() {
+    public int getCurrentPage() {
         return currentPage;
     }
 
-    public void setCurrentPage(String currentPage) {
+    public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
     }
 
-    public String getPageSize() {
+    public int getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
+    }
+
+    public int getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(String pageSize) {
+    public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
     }
 
-    public List<DeviceCategory> getDeviceCategories() {
-        return deviceListInfo;
+    public int getTotalCount() {
+        return totalCount;
     }
 
-    public void setDeviceCategories(List<DeviceCategory> deviceCategories) {
-        deviceListInfo = deviceCategories;
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
     }
 
-    public class DeviceCategory implements Serializable {
-        private String deviceIconUrl;
+    public List<DevicesBean> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<DevicesBean> devices) {
+        this.devices = devices;
+    }
+
+    public static class DevicesBean {
+        /**
+         * cuId : null
+         * deviceId : SC000W000194710
+         * deviceName : 热水壶插座
+         * nickname : null
+         * deviceStatus : ONLINE
+         */
+
+        private Object cuId;
+        private String deviceId;
         private String deviceName;
+        private Object nickname;
         private String deviceStatus;
 
-        public String getDeviceIconUrl() {
-            return deviceIconUrl;
+        public Object getCuId() {
+            return cuId;
         }
 
-        public void setDeviceIconUrl(String deviceIconUrl) {
-            this.deviceIconUrl = deviceIconUrl;
+        public void setCuId(Object cuId) {
+            this.cuId = cuId;
+        }
+
+        public String getDeviceId() {
+            return deviceId;
+        }
+
+        public void setDeviceId(String deviceId) {
+            this.deviceId = deviceId;
         }
 
         public String getDeviceName() {
@@ -61,6 +102,14 @@ public class DeviceListBean implements Serializable {
 
         public void setDeviceName(String deviceName) {
             this.deviceName = deviceName;
+        }
+
+        public Object getNickname() {
+            return nickname;
+        }
+
+        public void setNickname(Object nickname) {
+            this.nickname = nickname;
         }
 
         public String getDeviceStatus() {
