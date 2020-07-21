@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.Device;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
@@ -12,11 +13,14 @@ import java.util.Map;
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 /**
@@ -52,11 +56,14 @@ public interface ApiService {
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
 
-    @POST("notify_gateway_config")
-    Observable<BaseResult<Boolean>> notifyGatewayConfig(@Body RequestBody body);
+    @POST("notify_gateway_config_enter")
+    Observable<BaseResult<Boolean>> notifyGatewayConfigEnter(@Body RequestBody body);
 
-    @POST("notify_gateway_config")
-    Observable<BaseResult<Boolean>> fetchCandidateNodes();
+    @POST("notify_gateway_config_exit")
+    Observable<BaseResult<Boolean>> notifyGatewayConfigExit(@Body RequestBody body);
+
+    @GET("fetch_gateway_candidates")
+    Observable<BaseResult<List<Device>>> fetchCandidateNodes(@Query("device_id") String deviceId, @Query("cuid") int cuid);
 
     @GET("fetch_rule_engines")
     Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Query("scope_id") String scopeId);
@@ -64,7 +71,12 @@ public interface ApiService {
     @POST("save_rule_engine")
     Observable<BaseResult<Boolean>> saveRuleEngine(@Body RequestBody body);
 
+    @PUT("update_rule_engine")
+    Observable<BaseResult<Boolean>> updateRuleEngine(@Body RequestBody body);
 
     @POST("run_rule_engine")
     Observable<BaseResult<Boolean>> runRuleEngine(@Body RequestBody body);
+
+    @HTTP(method = "DELETE",path = "delete_rule_engine",hasBody = true)
+    Observable<BaseResult<Boolean>> deleteRuleEngine(@Body RequestBody body);
 }

@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.mvp.model;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.Device;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
@@ -17,6 +18,7 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiPredicate;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -124,17 +126,18 @@ public class RequestModel {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<BaseResult<Boolean>> bindDeviceWithDSN(String dsn, String scopeId) {
+    public Observable<BaseResult<Boolean>> bindDeviceWithDSN(String dsn, int scopeId,int cuid) {
         JsonObject body = new JsonObject();
         body.addProperty("device_id", dsn);
         body.addProperty("scope_id", scopeId);
+        body.addProperty("cuid", cuid);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().bindDeviceWithDSN(body111)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<BaseResult<Boolean>> unbindDeviceWithDSN(String dsn, String scopeId) {
+    public Observable<BaseResult<Boolean>> unbindDeviceWithDSN(String dsn, int scopeId) {
         JsonObject body = new JsonObject();
         body.addProperty("device_id", dsn);
         body.addProperty("scope_id", scopeId);
@@ -144,11 +147,21 @@ public class RequestModel {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<BaseResult<Boolean>> notifyGatewayBeginConfig(String dsn) {
+    public Observable<BaseResult<Boolean>> notifyGatewayBeginConfig(String dsn, int cuid) {
         JsonObject body = new JsonObject();
         body.addProperty("device_id", dsn);
+        body.addProperty("cuid", cuid);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().notifyGatewayConfig(body111)
+        return getApiService().notifyGatewayConfigEnter(body111)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+    public Observable<BaseResult<Boolean>> notifyGatewayFinishConfig(String dsn, int cuid) {
+        JsonObject body = new JsonObject();
+        body.addProperty("device_id", dsn);
+        body.addProperty("cuid", cuid);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().notifyGatewayConfigExit(body111)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -159,11 +172,8 @@ public class RequestModel {
      * @param dsn 网关dsn
      * @return
      */
-    public Observable<BaseResult<Boolean>> fetchCandidateNodes(String dsn) {
-        JsonObject body = new JsonObject();
-        body.addProperty("device_id", dsn);
-        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().fetchCandidateNodes()
+    public Observable<BaseResult<List<Device>>> fetchCandidateNodes(String dsn, int cuid) {
+        return getApiService().fetchCandidateNodes(dsn, cuid)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -196,17 +206,42 @@ public class RequestModel {
 
 
     /**
+     * 更新RuleEngine
+     *
+     * @param ruleEngineBean
+     * @return
+     */
+    public Observable<BaseResult<Boolean>> updateRuleEngine(RuleEngineBean ruleEngineBean) {
+        String json = new Gson().toJson(ruleEngineBean);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
+        return getApiService().updateRuleEngine(body111)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+    /**
      * 运行RuleEngine
      *
      * @param ruleId
      * @return
      */
-    public Observable<BaseResult<Boolean>> runRuleEngines(Integer ruleId) {
+    public Observable<BaseResult<Boolean>> runRuleEngine(Integer ruleId) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("ruleId", ruleId);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().runRuleEngine(body111)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<BaseResult<Boolean>> deleteRuleEngine(Integer ruleId) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("ruleId", ruleId);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().deleteRuleEngine(body111)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

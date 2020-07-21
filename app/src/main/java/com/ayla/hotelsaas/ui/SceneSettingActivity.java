@@ -19,6 +19,7 @@ import com.ayla.hotelsaas.mvp.present.SceneSettingPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
 import com.ayla.hotelsaas.utils.ToastUtils;
 import com.ayla.hotelsaas.widget.AppBar;
+import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.SceneNameSetDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -189,5 +190,20 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     @Override
     public void saveFailed() {
 
+    }
+
+    @OnClick(R.id.tv_delete)
+    public void handleDelete() {
+        CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
+            @Override
+            public void onDone(CustomAlarmDialog dialog) {
+                dialog.dismissAllowingStateLoss();
+            }
+
+            @Override
+            public void onCancel(CustomAlarmDialog dialog) {
+                dialog.dismissAllowingStateLoss();
+            }
+        }, "确认是否移除", "确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
     }
 }

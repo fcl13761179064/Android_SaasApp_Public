@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,25 +17,26 @@ import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
 
-public class SceneNameSetDialog extends DialogFragment {
-    public static SceneNameSetDialog newInstance(DoneCallback doneCallback) {
+public class CustomAlarmDialog extends DialogFragment {
+    public static CustomAlarmDialog newInstance(Callback doneCallback, String title, String content) {
 
         Bundle args = new Bundle();
-
-        SceneNameSetDialog fragment = new SceneNameSetDialog();
+        args.putString("title", title);
+        args.putString("content", content);
+        CustomAlarmDialog fragment = new CustomAlarmDialog();
         fragment.setArguments(args);
         fragment.doneCallback = doneCallback;
         return fragment;
     }
 
-    private DoneCallback doneCallback;
+    private Callback doneCallback;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        return inflater.inflate(R.layout.dialog_scene_set_name, container, false);
+        return inflater.inflate(R.layout.dialog_custom_alarm, container, false);
     }
 
     @Override
@@ -44,19 +45,23 @@ public class SceneNameSetDialog extends DialogFragment {
         view.findViewById(R.id.v_done).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText editText = view.findViewById(R.id.et_dsn);
-                String msg = editText.getText().toString();
                 if (doneCallback != null) {
-                    doneCallback.onDone(SceneNameSetDialog.this, msg);
+                    doneCallback.onDone(CustomAlarmDialog.this);
                 }
             }
         });
         view.findViewById(R.id.v_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismissAllowingStateLoss();
+                if (doneCallback != null) {
+                    doneCallback.onDone(CustomAlarmDialog.this);
+                }
             }
         });
+        TextView titleTextView = view.findViewById(R.id.tv_title);
+        TextView contentTextView = view.findViewById(R.id.tv_content);
+        titleTextView.setText(getArguments().getString("title"));
+        contentTextView.setText(getArguments().getString("content"));
     }
 
     @Override
@@ -67,14 +72,16 @@ public class SceneNameSetDialog extends DialogFragment {
             Window window = dialog.getWindow();
             WindowManager.LayoutParams lp = getDialog().getWindow().getAttributes();
             lp.height = (ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.width = (ViewGroup.LayoutParams.MATCH_PARENT);
+            lp.width = (ViewGroup.LayoutParams.WRAP_CONTENT);
             if (window != null) {
                 window.setLayout(lp.width, lp.height);
             }
         }
     }
 
-    public interface DoneCallback {
-        void onDone(DialogFragment dialog, String txt);
+    public interface Callback {
+        void onDone(CustomAlarmDialog dialog);
+
+        void onCancel(CustomAlarmDialog dialog);
     }
 }
