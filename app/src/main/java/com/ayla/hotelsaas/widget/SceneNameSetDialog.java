@@ -59,21 +59,6 @@ public class SceneNameSetDialog extends DialogFragment {
         });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (null != dialog) {
-            Window window = dialog.getWindow();
-            WindowManager.LayoutParams lp = getDialog().getWindow().getAttributes();
-            lp.height = (ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.width = (ViewGroup.LayoutParams.MATCH_PARENT);
-            if (window != null) {
-                window.setLayout(lp.width, lp.height);
-            }
-        }
-    }
-
     public interface DoneCallback {
         void onDone(DialogFragment dialog, String txt);
     }

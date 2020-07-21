@@ -204,6 +204,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             public void onCancel(CustomAlarmDialog dialog) {
                 dialog.dismissAllowingStateLoss();
             }
-        }, "确认是否移除", "确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
+        }, "确认是否移除", "111").show(getSupportFragmentManager(), "delete");
     }
 }

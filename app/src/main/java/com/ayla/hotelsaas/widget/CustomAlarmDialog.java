@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.widget;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -62,21 +63,6 @@ public class CustomAlarmDialog extends DialogFragment {
         TextView contentTextView = view.findViewById(R.id.tv_content);
         titleTextView.setText(getArguments().getString("title"));
         contentTextView.setText(getArguments().getString("content"));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (null != dialog) {
-            Window window = dialog.getWindow();
-            WindowManager.LayoutParams lp = getDialog().getWindow().getAttributes();
-            lp.height = (ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.width = (ViewGroup.LayoutParams.WRAP_CONTENT);
-            if (window != null) {
-                window.setLayout(lp.width, lp.height);
-            }
-        }
     }
 
     public interface Callback {
