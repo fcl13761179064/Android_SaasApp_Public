@@ -31,16 +31,25 @@
         android:layout_weight="1" >
     </FrameLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/appBar"
+        android:elevation="1dp"
+        android:background="@color/colorBackground" />
 
     <RadioGroup
         android:id="@+id/rg_main_fragment"
         android:layout_width="fill_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="horizontal" >
 
         <RadioButton
             android:id="@+id/rb_main_fragment_device"
             style="@style/tab_style"
+            android:layout_marginTop="@dimen/dp_8"
             android:layout_gravity="center"
             android:drawableTop="@drawable/bar_bottom_device"
             android:text="设备" />
@@ -48,12 +57,14 @@
         <RadioButton
             android:id="@+id/rb_main_fragment_linkage"
             style="@style/tab_style"
-            android:drawableTop="@drawable/bar_bottom_linkage"
+            android:layout_marginTop="@dimen/dp_8"
+            android:drawableTop="@drawable/bar_bottom_test"
             android:text="联动" />
 
         <RadioButton
             android:id="@+id/rb_main_fragment_test"
             style="@style/tab_style"
+            android:layout_marginTop="@dimen/dp_8"
             android:drawableTop="@drawable/bar_bottom_test"
             android:text="测试" />
 

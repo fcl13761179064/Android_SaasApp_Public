@@ -69,8 +69,8 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                 edit_password.setText("222");
             } else {
                 tvSwitch.setText("正");
-                edite_count.setText("18081799367");
-                edit_password.setText("888888");
+                edite_count.setText("chunlei.fan@aylaasia.com");
+                edit_password.setText("123456");
             }
         } else {
             edite_count.setText("18081799367");
