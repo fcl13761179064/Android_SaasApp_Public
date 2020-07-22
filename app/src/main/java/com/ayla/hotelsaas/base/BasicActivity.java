@@ -147,7 +147,7 @@ public abstract class BasicActivity extends AppCompatActivity {
      * appbar左侧图标点击事件
      */
     protected void appBarLeftIvClicked() {
-        onBackPressed();
+        onBackPress();
     }
 
     protected void appBarRightIvClicked() {
@@ -164,6 +164,10 @@ public abstract class BasicActivity extends AppCompatActivity {
 
     protected void mExitApp() {
 
+    }
+
+    protected void onBackPress() {
+        finish();
     }
 
     @Override
