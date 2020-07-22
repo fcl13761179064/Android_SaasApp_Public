@@ -1,27 +1,24 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.base.BasicFragment;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.fragment.DeviceListFragment;
-import com.ayla.hotelsaas.fragment.LinkageFragment;
+import com.ayla.hotelsaas.fragment.SceneLikeageFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
 import com.ayla.hotelsaas.widget.AppBar;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 
 /**
@@ -69,7 +66,7 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
     protected void initView() {
         mFragments = new ArrayList<>();
         mFragments.add(new DeviceListFragment(mRoom_order));
-        mFragments.add(new LinkageFragment());
+        mFragments.add(new SceneLikeageFragment(mRoom_order));
         mFragments.add(new TestFragment());
 
     }
@@ -162,7 +159,7 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
             }
             case GO_SECOND_TYPE: {
 
-                return new LinkageFragment();
+                return new SceneLikeageFragment(mRoom_order);
             }
             case GO_THREE_TYPE: {
 
@@ -184,12 +181,12 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
 
         switch (checkedId) {
             case R.id.rb_main_fragment_device: {
-                appBar.setCenterText(mWork_order.getTitle());
+                appBar.setCenterText(mRoom_order.getRoomName());
                 changeFragment(GO_HOME_TYPE);
                 break;
             }
             case R.id.rb_main_fragment_linkage: {
-                appBar.setCenterText(mWork_order.getTitle());
+                appBar.setCenterText(mRoom_order.getRoomName());
                 changeFragment(GO_SECOND_TYPE);
                 break;
             }
@@ -200,4 +197,5 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
             }
         }
     }
+
 }
