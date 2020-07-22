@@ -65,7 +65,7 @@ public class DeviceListBean implements Serializable {
         this.devices = devices;
     }
 
-    public static class DevicesBean {
+    public static class DevicesBean implements Serializable {
         /**
          * cuId : null
          * deviceId : SC000W000194710
