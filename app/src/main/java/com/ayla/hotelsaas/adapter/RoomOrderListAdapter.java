@@ -20,7 +20,7 @@ public class RoomOrderListAdapter extends BaseQuickAdapter<RoomOrderBean.ResultL
 
     @Override
     protected void convert(BaseViewHolder helper, RoomOrderBean.ResultListBean roomOrder) {
-        helper.setText(R.id.item_work_status, roomOrder.getRoomId()+"");
+        helper.setText(R.id.item_work_status, roomOrder.getRoomName()+"");
 
     }
 

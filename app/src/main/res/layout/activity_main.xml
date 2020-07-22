@@ -59,7 +59,7 @@
             style="@style/tab_style"
             android:layout_marginTop="@dimen/dp_8"
             android:drawableTop="@drawable/bar_bottom_test"
-            android:text="联动" />
+            android:text="场景" />
 
         <RadioButton
             android:id="@+id/rb_main_fragment_test"
