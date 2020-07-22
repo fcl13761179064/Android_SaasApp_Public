@@ -18,7 +18,7 @@ public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView>
      * @param dsn
      */
     public void registerDeviceWithDSN(String dsn) {
-        RequestModel.getInstance().bindDeviceWithDSN(dsn, "1")
+        RequestModel.getInstance().bindDeviceWithDSN(dsn, 1,1,1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxjavaObserver<Boolean>() {

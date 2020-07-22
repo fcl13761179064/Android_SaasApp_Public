@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.data.net;
 
 import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.ayla.hotelsaas.application.Constance;
@@ -10,14 +9,12 @@ import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.ssl.SSLSocketClient;
 import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.utils.DateUtils;
-import com.ayla.hotelsaas.utils.MD5;
-import com.ayla.hotelsaas.utils.SignUtils;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,7 +25,6 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
-import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -42,8 +38,6 @@ import okio.Buffer;
 import okio.BufferedSource;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * @描述 Retrofit 帮助类
@@ -154,7 +148,7 @@ public class RetrofitHelper {
             builder.addInterceptor(httpLoggingInterceptor);
 
             //添加请求头
-//            builder.addInterceptor(CommonParameterInterceptor);
+            builder.addInterceptor(CommonParameterInterceptor);
             //登录失败 重新登录
 //            builder.addInterceptor(ReloginInterceptor);
             builder.connectTimeout(15, TimeUnit.SECONDS)
@@ -174,36 +168,15 @@ public class RetrofitHelper {
     private static Interceptor CommonParameterInterceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-            //参数就要针对body做操作,我这里针对From表单做操作
-            if (request.body() instanceof FormBody) {
-                FormBody oldFormBody = (FormBody) request.body();
-                Map<String, String> parameterMap = getRequestCommonParameter();
-                //登录了加上参数
-                if (null != MyApplication.getInstance() && null != MyApplication.getInstance().getUserEntity()) {
-                    parameterMap.put("token", MyApplication.getInstance().getUserEntity().getAuthToken());
+            if (MyApplication.getInstance() != null) {
+                final String sava_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
+                if (sava_token != null) {
+                    Request request = chain.request().newBuilder()
+                            .addHeader("Authorization", sava_token).build();
+                    return chain.proceed(request);
                 }
-                //获取参数
-                for (int i = 0; i < oldFormBody.size(); i++) {
-                    //参数内容不为null  URLDecoder对中文进行解码
-                    if (!TextUtils.isEmpty(oldFormBody.encodedValue(i))) {
-                        parameterMap.put(oldFormBody.encodedName(i), URLDecoder.decode(oldFormBody.encodedValue(i), "UTF-8"));
-                    }
-                }
-                String signMD5 = MD5.getMD5Str(SignUtils.addsignParams(parameterMap) + RequestModel.APP_SECRET).toUpperCase();
-                parameterMap.put("signmethod", "MD5");
-                parameterMap.put("sign", signMD5);
-                String url = request.url().toString().endsWith("?") ? request.url().toString() : request.url().toString() + "?";
-                Request.Builder newBuilder = request.newBuilder().url(url).post(new FormBody.Builder().build());
-                // 构造新的请求表单
-                FormBody.Builder newFormBody = new FormBody.Builder();
-                for (Map.Entry<String, String> paramEntry : parameterMap.entrySet()) {
-                    newFormBody.addEncoded(paramEntry.getKey(), paramEntry.getValue());
-                }
-                newBuilder.post(newFormBody.build());
-                return chain.proceed(newBuilder.build());
             }
-            return chain.proceed(request);
+            return chain.proceed(chain.request());
         }
     };
 

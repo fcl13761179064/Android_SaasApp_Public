@@ -1,12 +1,5 @@
 package com.ayla.hotelsaas.application;
 
-import android.graphics.Color;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 /**
  * @描述 常量类
  * @作者 fanchunlei
@@ -25,10 +18,7 @@ public class Constance {
     /**
      * 正式环境地址
      */
-    // public static String BASE_URL = "http://192.168.1.41:8080";设备列表
-    //public static String BASE_URL = "http://192.168.1.149:8080/";//设备列表
-    public static String BASE_URL = "http://192.168.1.149:8080/";//工单列表列表
-    // public static String BASE_URL = "https://abp.ayla.com.cn/api/v2/sso/login/";//登录
+    public static String BASE_URL = "https://abp.ayla.com.cn/";
 
 
     //用户是否登录

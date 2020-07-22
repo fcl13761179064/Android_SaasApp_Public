@@ -2,7 +2,6 @@ package com.ayla.hotelsaas;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 
 import org.junit.Before;
@@ -46,7 +45,7 @@ public class PactTest {
     public RequestResponsePact createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
         return builder
                 //正常用户登录
-                .given("")
+                .given("登录成功")
                 .uponReceiving("正确的账号密码登录")
                 .path("/api/v2/sso/login")
                 .method("POST")
@@ -80,58 +79,23 @@ public class PactTest {
                                         .object("sub", new PactDslJsonArray()
                                                 .minArrayLike(1)
                                                 .stringType("name", "网关")
+                                                .numberType("cuid", 0)
+                                                .stringType("icon", "http://172.31.16.100/product/typeIcon/cz.png")
+                                                .closeObject()
+                                        )
+                                        .closeObject()
+//                                //添加第二个
+                                        .object()
+                                        .numberType("id", 1)
+                                        .stringType("name", "照明")
+                                        .object("sub", new PactDslJsonArray()
+                                                .minArrayLike(1)
+                                                .stringType("name", "节点")
                                                 .numberType("cuid", 1)
                                                 .stringType("icon", "http://172.31.16.100/product/typeIcon/cz.png")
                                                 .closeObject()
                                         )
                                         .closeObject()
-//                                .minArrayLike(0)
-//                                //添加第二个
-                                .object()
-                                .numberType("id", 1)
-                                .stringType("name", "照明")
-                                .object("sub", new PactDslJsonArray()
-                                        .minArrayLike(1)
-                                        .stringType("name", "节点")
-                                        .numberType("cuid", 1)
-                                        .stringType("icon", "http://172.31.16.100/product/typeIcon/cz.png")
-                                        .closeObject()
-                                )
-                                .closeObject()
-                        ))
-
-
-                //获取RuleEngines
-                .given("获取成功")
-                .uponReceiving("获取RuleEngines")
-                .path("/fetch_rule_engines")
-                .matchQuery("scope_id", ".*", "123")
-                .method("GET")
-                .willRespondWith()
-                .status(200)
-                .body(new PactDslJsonBody()
-                        .numberValue("code", 0)
-                        .stringType("msg", "")
-                        .object("data", new PactDslJsonArray()
-                                .object()
-                                .numberType("ruleId", 111)
-                                .stringType("scopeId", "111")
-                                .stringType("ruleName", "222")
-                                .numberType("ruleType", 2)
-                                .object("action", new PactDslJsonBody()
-                                        .stringType("expression", "1111")
-                                        .array("items")
-                                        .object()
-                                        .numberValue("targetDeviceType", 2)
-                                        .stringType("targetDeviceId", "GADw3NnUI4Xa54nsr5tYz20000")
-                                        .stringType("leftValue", "StatusLightSwitch")
-                                        .stringType("operator", "==")
-                                        .numberValue("rightValue", 1)
-                                        .numberValue("rightValueType", 1)
-                                        .closeObject()
-                                        .closeArray()
-                                )
-                                .closeObject()
                         ))
                 //获取工单列表列表的数据
                 .given("获取工单列表的数据")
@@ -232,7 +196,8 @@ public class PactTest {
                 .method("POST")
                 .body(new PactDslJsonBody()
                         .stringType("device_id", "123")
-                        .stringType("scope_id", "123")
+                        .numberType("scope_id", 1)
+                        .numberType("cuid", 2)
                 )
                 .willRespondWith()
                 .status(200)
@@ -247,7 +212,7 @@ public class PactTest {
                 .method("POST")
                 .body(new PactDslJsonBody()
                         .stringType("device_id", "123")
-                        .stringType("scope_id", "123")
+                        .numberType("scope_id", 2)
                 )
                 .willRespondWith()
                 .status(200)
@@ -258,10 +223,11 @@ public class PactTest {
                 //通知网关进入配网模式
                 .given("通知成功")
                 .uponReceiving("通知网关进入配网模式")
-                .path("/notify_gateway_config")
+                .path("/notify_gateway_config_enter")
                 .method("POST")
                 .body(new PactDslJsonBody()
                         .stringType("device_id", "123")
+                        .numberType("cuid", 1)
                 )
                 .willRespondWith()
                 .status(200)
@@ -269,6 +235,38 @@ public class PactTest {
                         .numberValue("code", 0)
                         .stringType("msg", "")
                         .booleanType("data", true))
+                //通知网关退出配网模式
+                .given("通知成功")
+                .uponReceiving("通知网关退出配网模式")
+                .path("/notify_gateway_config_exit")
+                .method("POST")
+                .body(new PactDslJsonBody()
+                        .stringType("device_id", "123")
+                        .numberType("cuid", 1)
+                )
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "")
+                        .booleanType("data", true))
+                //获取候选节点
+                .given("获取成功")
+                .uponReceiving("获取候选节点")
+                .path("/fetch_gateway_candidates")
+                .matchQuery("device_id", ".*", "123")
+                .method("GET")
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "")
+                        .object("data", new PactDslJsonArray()
+                                .maxArrayLike(1)
+                                .stringType("id", "123")
+                                .numberType("cuid", 1)
+                                .closeObject()
+                        ))
                 //获取RuleEngines
                 .given("获取成功")
                 .uponReceiving("获取RuleEngines")
@@ -303,7 +301,7 @@ public class PactTest {
                 //保存RuleEngine
                 .given("保存成功")
                 .uponReceiving("保存RuleEngine")
-                .path("/save_rule_engine")
+                .path("/api/v1/construction/scene/save")
                 .body(new PactDslJsonBody()
                         .numberType("scopeId", 1111)
                         .stringType("ruleName", "222")
@@ -329,6 +327,36 @@ public class PactTest {
                         .numberValue("code", 0)
                         .stringType("msg", "")
                         .booleanType("data", true))
+                //更新RuleEngine
+                .given("更新成功")
+                .uponReceiving("更新RuleEngine")
+                .path("/update_rule_engine")
+                .body(new PactDslJsonBody()
+                        .numberType("ruleId", 123)
+                        .numberType("scopeId", 1111)
+                        .stringType("ruleName", "222")
+                        .stringType("ruleDescription", "222")
+                        .numberType("ruleType", 2)
+                        .object("action", new PactDslJsonBody()
+                                .stringType("expression", "1111")
+                                .minArrayLike("items", 1)
+                                .numberType("targetDeviceType", 2)
+                                .stringType("targetDeviceId", "GADw3NnUI4Xa54nsr5tYz20000")
+                                .stringType("leftValue", "StatusLightSwitch")
+                                .stringType("operator", "==")
+                                .numberType("rightValue", 1)
+                                .numberType("rightValueType", 1)
+                                .closeObject()
+                                .closeArray()
+                        )
+                )
+                .method("PUT")
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "")
+                        .booleanType("data", true))
                 //执行一个场景
                 .given("执行成功")
                 .uponReceiving("执行一个场景")
@@ -343,21 +371,37 @@ public class PactTest {
                         .numberValue("code", 0)
                         .stringType("msg", "")
                         .booleanType("data", true))
+                //删除一个场景
+                .given("删除成功")
+                .uponReceiving("删除一个场景")
+                .path("/delete_rule_engine")
+                .body(new PactDslJsonBody()
+                        .numberType("ruleId", 111)
+                )
+                .method("DELETE")
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "")
+                        .booleanType("data", true))
 
                 .toPact();
     }
 
-    @Test
+//    @Test
     @PactVerification("construction_backend")
     public void testLogin() {
-        RequestModel.getInstance()
-                .login("111", "222")
-                .test().assertNoErrors();
-
-        RetrofitHelper.getInstance()
-                .getApiService()
-                .fetchDeviceCategory()
-                .test().assertNoErrors();
+        {//登录
+            RequestModel.getInstance()
+                    .login("111", "222")
+                    .test().assertNoErrors();
+        }
+        {//获取配网二级菜单
+            RequestModel.getInstance()
+                    .getDeviceCategory()
+                    .test().assertNoErrors();
+        }
 
         //获取工单集
         RequestModel.getInstance()
@@ -377,20 +421,24 @@ public class PactTest {
 
         {//绑定设备
             RequestModel.getInstance()
-                    .bindDeviceWithDSN("111", "333").test().assertNoErrors();
+                    .bindDeviceWithDSN("111", 1, 2, 3).test().assertNoErrors();
         }
 
         {//解绑设备
             RequestModel.getInstance()
-                    .unbindDeviceWithDSN("111", "222").test().assertNoErrors();
+                    .unbindDeviceWithDSN("111", 2).test().assertNoErrors();
         }
         {//通知网关进入配网模式
             RequestModel.getInstance()
-                    .notifyGatewayBeginConfig("11111").test().assertNoErrors();
+                    .notifyGatewayBeginConfig("11111", 1).test().assertNoErrors();
+        }
+        {//通知网关退出配网模式
+            RequestModel.getInstance()
+                    .notifyGatewayFinishConfig("11111", 1).test().assertNoErrors();
         }
         {//获取网关的候选节点
             RequestModel.getInstance()
-                    .notifyGatewayBeginConfig("11111").test().assertNoErrors();
+                    .fetchCandidateNodes("11111").test().assertNoErrors();
         }
         {//通过房间号获取下属的RuleEngines
             RequestModel.getInstance()
@@ -402,10 +450,6 @@ public class PactTest {
             ruleEngineBean.setRuleType(2);
             ruleEngineBean.setRuleName("ruleengine");
             ruleEngineBean.setRuleDescription("ruleengine");
-//            RuleEngineBean.Condition condition = new RuleEngineBean.Condition();
-//            condition.setExpression("");
-//            condition.setItems(new ArrayList<>());
-//            ruleEngineBean.setCondition(condition);
             RuleEngineBean.Action action = new RuleEngineBean.Action();
             action.setExpression("11111");
             List<RuleEngineBean.Action.ActionItem> actionItems = new ArrayList<>();
@@ -425,9 +469,39 @@ public class PactTest {
             RequestModel.getInstance()
                     .saveRuleEngine(ruleEngineBean).test().assertNoErrors();
         }
+        {//更新RuleEngine
+            RuleEngineBean ruleEngineBean = new RuleEngineBean();
+            ruleEngineBean.setRuleId(123);
+            ruleEngineBean.setScopeId(1111);
+            ruleEngineBean.setRuleType(2);
+            ruleEngineBean.setRuleName("ruleengine");
+            ruleEngineBean.setRuleDescription("ruleengine");
+            RuleEngineBean.Action action = new RuleEngineBean.Action();
+            action.setExpression("11111");
+            List<RuleEngineBean.Action.ActionItem> actionItems = new ArrayList<>();
+            for (int j = 0; j < 1; j++) {
+                RuleEngineBean.Action.ActionItem actionItem = new RuleEngineBean.Action.ActionItem();
+                actionItem.setLeftValue("StatusLightSwitch");
+                actionItem.setRightValue(1);
+                actionItem.setOperator("==");
+                actionItem.setRightValueType(1);
+                actionItem.setTargetDeviceId("GADw3NnUI4Xa54nsr5tYz20000");
+                actionItem.setTargetDeviceType(2);
+                actionItems.add(actionItem);
+            }
+            action.setItems(actionItems);
+            ruleEngineBean.setAction(action);
+
+            RequestModel.getInstance()
+                    .updateRuleEngine(ruleEngineBean).test().assertNoErrors();
+        }
         {//执行一个场景
             RequestModel.getInstance()
-                    .runRuleEngines(1111).test().assertNoErrors();
+                    .runRuleEngine(1111).test().assertNoErrors();
+        }
+        {//删除一个场景
+            RequestModel.getInstance()
+                    .deleteRuleEngine(1111).test().assertNoErrors();
         }
     }
 }

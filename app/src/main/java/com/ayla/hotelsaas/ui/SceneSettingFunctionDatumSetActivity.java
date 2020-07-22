@@ -11,7 +11,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.CheckableSupport;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.bean.Device;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingFunctionDatumSetPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionDatumSetView;
 import com.ayla.hotelsaas.widget.AppBar;
@@ -87,8 +87,8 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Device device = (Device) getIntent().getSerializableExtra("device");
-        mPresenter.loadFunction(device.getId());
+        DeviceListBean.DevicesBean device = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("device");
+        mPresenter.loadFunction(device.getDeviceId());
     }
 
     @Override

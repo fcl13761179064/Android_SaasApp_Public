@@ -3,7 +3,6 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
@@ -35,14 +34,13 @@ public class SPlashActivity extends BasicActivity {
             @Override
             public void run() {
                 final String sava_token = SharePreferenceUtils.getString(SPlashActivity.this, Constance.SP_Login_Token, null);
-                if (sava_token ==null || !TextUtils.isEmpty(sava_token)){
-                    Intent intent = new Intent(SPlashActivity.this, WorkOrderListActivity.class);
-                    startActivity(intent);
-                }else {
+                if (sava_token == null || TextUtils.isEmpty(sava_token)) {
                     Intent intent = new Intent(SPlashActivity.this, LoginActivity.class);
                     startActivity(intent);
+                } else {
+                    Intent intent = new Intent(SPlashActivity.this, WorkOrderListActivity.class);
+                    startActivity(intent);
                 }
-
                 finish();
             }
         }, 2000L);

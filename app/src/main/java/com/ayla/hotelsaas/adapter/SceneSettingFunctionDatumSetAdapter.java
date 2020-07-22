@@ -15,9 +15,11 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, CheckableSupport item) {
+    protected void convert(BaseViewHolder helper, CheckableSupport<DatumBean> item) {
         helper.setChecked(R.id.cb_function_checked, item.isChecked());
+        helper.setText(R.id.tv_function_name,item.getData().getValueName());
     }
+
 
     public static class DatumBean implements Serializable {
 

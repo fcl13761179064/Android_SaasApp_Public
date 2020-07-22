@@ -13,6 +13,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -21,26 +22,17 @@
             android:textColor="#ff000000"
             android:textSize="17sp" />
 
-        <EditText
-            android:id="@+id/et_dsn"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="24dp"
-            android:background="@android:color/transparent"
-            android:gravity="center|left"
-            android:hint="请输入名称"
-            android:maxLines="1"
-            android:textColor="#ff333333"
-            android:textSize="14sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            android:background="#DFE4EB" />
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:text="1122"
+            android:textColor="#ff000000"
+            android:textSize="17sp" />
 
         <View
             android:layout_width="match_parent"

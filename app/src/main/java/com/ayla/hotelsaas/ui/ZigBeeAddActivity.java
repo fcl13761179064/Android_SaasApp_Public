@@ -83,7 +83,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
 
     private void startBind() {
         Log.d(TAG, "startBind: " + Thread.currentThread().getName());
-        mPresenter.bindZigBeeNodeWithGatewayDSN(dsn);
+        mPresenter.bindZigBeeNodeWithGatewayDSN(dsn, 1,1);
     }
 
     @OnClick(R.id.bt_bind)
@@ -138,14 +138,14 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     }
 
     @Override
-    public void zigBeeDeviceBindFinished() {
+    public void progressSuccess() {
         Log.d(TAG, "zigBeeDeviceBindFinished: ");
         bindProgress = 4;
         refreshBindShow();
     }
 
     @Override
-    public void zigBeeDeviceBindFailed(Throwable throwable) {
+    public void progressFailed(Throwable throwable) {
         Log.d(TAG, "zigBeeDeviceBindFailed: " + throwable);
         mImageView.setImageResource(R.drawable.ic_device_bind_failed);
         mLoadingTextView.setVisibility(View.INVISIBLE);
@@ -168,6 +168,16 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                 mP3TextView.setTextColor(ContextCompat.getColor(this, R.color.color_bind_logding_tips_failed));
                 break;
         }
+    }
+
+    @Override
+    public void gatewayDisconnectSuccess() {
+
+    }
+
+    @Override
+    public void gatewayDisconnectStart() {
+
     }
 
     @Override
