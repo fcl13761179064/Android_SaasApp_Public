@@ -259,7 +259,6 @@ public class PactTest {
                 .uponReceiving("获取候选节点")
                 .path("/fetch_gateway_candidates")
                 .matchQuery("device_id", ".*", "123")
-                .matchQuery("cuid", ".*", "1")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
@@ -424,7 +423,7 @@ public class PactTest {
 
         {//绑定设备
             RequestModel.getInstance()
-                    .bindDeviceWithDSN("111", 1, 2).test().assertNoErrors();
+                    .bindDeviceWithDSN("111", 1, 2, 3).test().assertNoErrors();
         }
 
         {//解绑设备
@@ -441,7 +440,7 @@ public class PactTest {
         }
         {//获取网关的候选节点
             RequestModel.getInstance()
-                    .fetchCandidateNodes("11111", 1).test().assertNoErrors();
+                    .fetchCandidateNodes("11111").test().assertNoErrors();
         }
         {//通过房间号获取下属的RuleEngines
             RequestModel.getInstance()

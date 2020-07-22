@@ -56,7 +56,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     @Override
                     public ObservableSource<List<Device>> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .fetchCandidateNodes(dsn, cuid)
+                                .fetchCandidateNodes(dsn)
                                 .delay(3, TimeUnit.SECONDS)
                                 .map(new Function<BaseResult<List<Device>>, List<Device>>() {
                                     @Override
@@ -73,7 +73,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         List<Observable<Boolean>> tasks = new ArrayList<>();
                         for (Device device : devices) {
                             Observable<Boolean> task = RequestModel.getInstance()
-                                    .bindDeviceWithDSN(device.getId(), scopeId,1)
+                                    .bindDeviceWithDSN(device.getId(), scopeId, 1, 1)
                                     .map(new Function<BaseResult<Boolean>, Boolean>() {
                                         @Override
                                         public Boolean apply(BaseResult<Boolean> booleanBaseResult) throws Exception {
