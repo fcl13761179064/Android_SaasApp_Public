@@ -39,6 +39,10 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     private WorkOrderBean.ResultListBean mWork_order;
     private RecyclerView mRecyclerview;
 
+    public DeviceListFragment(RoomOrderBean.ResultListBean room_order) {
+        this.mRoom_order=room_order;
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.device_list_show;
@@ -79,6 +83,8 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             }
         });
 
+        mRefreshLayout.autoRefresh();//自动刷新
+        mAdapter.setEmptyView(R.layout.empty_device_order);
 
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +98,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
 
     @Override
     protected void initData() {
-        mRefreshLayout.autoRefresh();//自动刷新
-        mAdapter.setEmptyView(R.layout.empty_device_order);
+
     }
 
     @Override

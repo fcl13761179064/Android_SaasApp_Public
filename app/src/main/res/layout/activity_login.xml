@@ -97,7 +97,6 @@
                     android:hint="@string/login_password"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
-                    android:maxLength="20"
                     android:singleLine="true"
                     android:text="123456"
                     android:textColor="@color/login_text_percent"
