@@ -65,18 +65,10 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             tvSwitch.setVisibility(View.VISIBLE);
             if (Constance.isNetworkDebug) {
                 tvSwitch.setText("测");
-                edite_count.setText("111");
-                edit_password.setText("222");
             } else {
                 tvSwitch.setText("正");
-                edite_count.setText("18081799367");
-                edit_password.setText("888888");
             }
-        } else {
-            edite_count.setText("18081799367");
-            edit_password.setText("888888");
         }
-
     }
 
     @OnClick({R.id.submitBtn, R.id.tv_switch})
@@ -93,13 +85,9 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                     public void run() {
                         if (Constance.isNetworkDebug) {
                             tvSwitch.setText("测");
-                            edite_count.setText("111");
-                            edit_password.setText("222");
                             ToastUtils.showShortToast("切换到测试网络");
                         } else {
                             tvSwitch.setText("正");
-                            edite_count.setText("18081799367");
-                            edit_password.setText("888888");
                             ToastUtils.showShortToast("切换到正式网络环境");
                         }
                         hideProgress();

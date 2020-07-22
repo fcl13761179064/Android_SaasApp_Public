@@ -51,7 +51,7 @@ public interface ApiService {
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
     @POST("api/v1/construction/device/bind")
-    Observable<BaseResult<Boolean>> bindDeviceWithDSN(@Body RequestBody body);
+    Observable<BaseResult> bindDeviceWithDSN(@Body RequestBody body);
 
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);

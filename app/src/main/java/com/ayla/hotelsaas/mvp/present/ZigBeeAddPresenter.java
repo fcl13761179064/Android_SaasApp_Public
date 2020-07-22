@@ -70,16 +70,11 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                 .flatMap(new Function<List<Device>, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(List<Device> devices) throws Exception {
-                        List<Observable<Boolean>> tasks = new ArrayList<>();
+                        List<Observable<?>> tasks = new ArrayList<>();
                         for (Device device : devices) {
-                            Observable<Boolean> task = RequestModel.getInstance()
-                                    .bindDeviceWithDSN(device.getId(), scopeId, 1, 1)
-                                    .map(new Function<BaseResult<Boolean>, Boolean>() {
-                                        @Override
-                                        public Boolean apply(BaseResult<Boolean> booleanBaseResult) throws Exception {
-                                            return booleanBaseResult.data;
-                                        }
-                                    });
+                            Observable<?> task = RequestModel.getInstance()
+                                    .bindDeviceWithDSN(device.getId(), scopeId, 1, 1);
+                            tasks.add(task);
                         }
                         if (tasks.size() == 0) {
                             return Observable.just(true);

@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -127,7 +128,7 @@ public class RequestModel {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<BaseResult<Boolean>> bindDeviceWithDSN(String deviceId, int cuId, int scopeId, int scopeType) {
+    public Observable<BaseResult> bindDeviceWithDSN(String deviceId, int cuId, int scopeId, int scopeType) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("scopeId", scopeId);
@@ -135,6 +136,7 @@ public class RequestModel {
         body.addProperty("scopeType", scopeType);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().bindDeviceWithDSN(body111)
+                .delay(3, TimeUnit.SECONDS)// TODO: 2020/7/22 测试代码
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

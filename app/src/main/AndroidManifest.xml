@@ -26,7 +26,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.SPlashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
