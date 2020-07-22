@@ -1,19 +1,16 @@
 package com.ayla.hotelsaas.base;
 
+
 import android.annotation.TargetApi;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.ClickUtils;
-import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.LoadingDialog;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -25,7 +22,6 @@ import butterknife.Unbinder;
 public abstract class BasicActivity extends AppCompatActivity {
 
     private Unbinder unbinder;
-    private AppBar mToolbarTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +170,13 @@ public abstract class BasicActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+    }
+
+    /**
+     * 统计提供方法监听Framgnt function
+     * @param tag
+     */
+    public void setFunctionsForFragment(String tag) {
     }
 }
 

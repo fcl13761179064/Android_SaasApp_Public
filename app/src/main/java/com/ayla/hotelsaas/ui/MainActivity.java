@@ -1,26 +1,22 @@
 package com.ayla.hotelsaas.ui;
 
-
-import android.app.Activity;
-import android.view.MenuItem;
-
-import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
+import android.widget.FrameLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
+import androidx.fragment.app.FragmentTransaction;
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.DeviceListAdapter;
 import com.ayla.hotelsaas.base.BasicActivity;
+import com.ayla.hotelsaas.base.BasicFragment;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.fragment.DeviceListFragment;
+import com.ayla.hotelsaas.fragment.LinkageFragment;
+import com.ayla.hotelsaas.fragment.TestFragment;
 import com.ayla.hotelsaas.widget.AppBar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-
+import java.util.ArrayList;
+import java.util.List;
 import butterknife.BindView;
 
 /**
@@ -28,18 +24,28 @@ import butterknife.BindView;
  * @作者 fanchunlei
  * @时间 2020/7/20
  */
-public class MainActivity extends BasicActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedChangeListener {
 
-    @BindView(R.id.float_btn)
-    FloatingActionButton float_btn;
     @BindView(R.id.appBar)
     AppBar appBar;
-    @BindView(R.id.navigation)
-    BottomNavigationView mNavigation;
-    private DeviceListAdapter mAdapter;
+    @BindView(R.id.rg_main_fragment)
+    RadioGroup rgIndicators;
+    @BindView(R.id.fl_container)
+    FrameLayout fl_container;
+    @BindView(R.id.rb_main_fragment_device)
+    RadioButton main_device;
+    @BindView(R.id.rb_main_fragment_linkage)
+    RadioButton main_likeage;
+    @BindView(R.id.rb_main_fragment_test)
+    RadioButton main_test;
+
     private RoomOrderBean.ResultListBean mRoom_order;
     private WorkOrderBean.ResultListBean mWork_order;
-
+    private List<Fragment> mFragments;
+    private BasicFragment currentFragment;
+    public final static int GO_HOME_TYPE = 0;
+    public final static int GO_THREE_TYPE = 2;
+    public final static int GO_SECOND_TYPE = 1;
 
     @Override
     protected int getLayoutId() {
@@ -48,75 +54,120 @@ public class MainActivity extends BasicActivity implements BottomNavigationView.
 
     @Override
     public void refreshUI() {
-       /* mRoom_order = (RoomOrderBean.DataBean.ResultListBean) getIntent().getSerializableExtra("roomData");
-        mWork_order = (WorkOrderBean.DataBean.ResultListBean) getIntent().getSerializableExtra("workOrderdata");
-        appBar.setCenterText(mWork_order.getTitle());*/
+        mRoom_order = (RoomOrderBean.ResultListBean) getIntent().getSerializableExtra("roomData");
+        mWork_order = (WorkOrderBean.ResultListBean) getIntent().getSerializableExtra("workOrderdata");
+        //appBar.setCenterText(mWork_order.getTitle());
         super.refreshUI();
     }
 
 
     @Override
     protected void initView() {
-        //测试下gitlab—ci
-
+        mFragments = new ArrayList<>();
+        mFragments.add(new DeviceListFragment());
+        mFragments.add(new LinkageFragment());
+        mFragments.add(new TestFragment());
+        rgIndicators.check(R.id.rb_main_fragment_device);
+        rgIndicators.setOnCheckedChangeListener(this);
+        //默认选择加载首页
+        changeFragment(GO_HOME_TYPE);
     }
 
     @Override
     protected void initListener() {
-        mNavigation.setOnNavigationItemSelectedListener(this);
+
+
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        ((ViewPager) findViewById(R.id.content)).setCurrentItem(TabFragment.from(item.getItemId()).ordinal());
-        return true;
+    private void changeFragment(int type) {
+
+        //做fragment的切换
+        try {
+            switch (type) {
+                case GO_HOME_TYPE: {
+                    changeState(main_device);
+                    showBaseFragment("main", type);
+                    break;
+                }
+                case GO_SECOND_TYPE: {
+                    changeState(main_likeage);
+                    showBaseFragment("linkage", type);
+                    break;
+                }
+                case GO_THREE_TYPE: {
+                    changeState(main_test);
+                    showBaseFragment("test", type);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
+
+    private void changeState(TextView textView) {
+        main_device.setSelected(false);
+        main_likeage.setSelected(false);
+        main_test.setSelected(false);
+        textView.setSelected(true);
+    }
+
+    private void showBaseFragment(String tag, int type) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (currentFragment != null) {
+            ft.hide(currentFragment);
+        }
+        currentFragment = (BasicFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        if (currentFragment == null) {
+            currentFragment = createBaseFragment(type);
+            ft.add(R.id.fl_container, currentFragment, tag).addToBackStack(null);
+        }
+        ft.show(currentFragment);
+        ft.commitAllowingStateLoss();
+    }
+
+    private BasicFragment createBaseFragment(int type) {
+        switch (type) {
+            case GO_HOME_TYPE: {
+
+                return new DeviceListFragment();
+
+            }
+            case GO_SECOND_TYPE: {
+
+                return new LinkageFragment();
+            }
+            case GO_THREE_TYPE: {
+
+                return new TestFragment();
+            }
+        }
+        return null;
+    }
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        TabFragment.onDestroy();
     }
 
-    private enum TabFragment {
-        practice(R.id.navigation_practice, DeviceListShowActivity.class),
-        styles(R.id.navigation_style, DeviceListShowActivity.class),
-        using(R.id.navigation_example, DeviceListShowActivity.class);
 
-        private Activity fragment;
-        private final int menuId;
-        private final Class<? extends Activity> clazz;
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-        TabFragment(@IdRes int menuId, Class<? extends Activity> clazz) {
-            this.menuId = menuId;
-            this.clazz = clazz;
-        }
-
-        @NonNull
-        public Activity fragment() {
-            if (fragment == null) {
-                try {
-                    fragment = clazz.newInstance();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    fragment = new Activity();
-                }
+        switch (checkedId) {
+            case R.id.rb_main_fragment_device: {
+                changeFragment(GO_HOME_TYPE);
+                break;
             }
-            return fragment;
-        }
-
-        public static TabFragment from(int itemId) {
-            for (TabFragment fragment : values()) {
-                if (fragment.menuId == itemId) {
-                    return fragment;
-                }
+            case R.id.rb_main_fragment_linkage: {
+                changeFragment(GO_SECOND_TYPE);
+                break;
             }
-            return styles;
-        }
-
-        public static void onDestroy() {
-            for (TabFragment fragment : values()) {
-                fragment.fragment = null;
+            case R.id.rb_main_fragment_test: {
+                changeFragment(GO_THREE_TYPE);
+                break;
             }
         }
     }

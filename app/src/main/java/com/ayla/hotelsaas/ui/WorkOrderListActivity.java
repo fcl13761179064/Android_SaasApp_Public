@@ -1,14 +1,13 @@
 package com.ayla.hotelsaas.ui;
 
+
 import android.content.Intent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.WorkOrderAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -27,7 +26,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -97,7 +95,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
                     Intent intent = new Intent(WorkOrderListActivity.this, RoomOrderListActivity.class);
                     WorkOrderBean.ResultListBean resultListBean = mAdapter.getData().get(position);
                     intent.putExtra("work_order", (Serializable) resultListBean);
-                    startActivityForResult(intent, 0x101);
+                    startActivity(intent);
                 }
             }
         });
@@ -151,16 +149,4 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         mRefreshLayout.finishLoadMore();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (null != mAdapter.getData()) {
-            mAdapter.getData().clear();
-            mAdapter.notifyDataSetChanged();
-        }
-        if (mPresenter != null) {
-            mPresenter.loadFistPage();
-        }
-    }
 }

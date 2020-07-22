@@ -1,41 +1,117 @@
 package com.ayla.hotelsaas.fragment;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
+import android.content.Intent;
+import android.view.View;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceListAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
+import com.ayla.hotelsaas.base.BaseMvpFragment;
+import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.RoomOrderBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
+import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
+import com.ayla.hotelsaas.mvp.view.DeviceListView;
+import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
+import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import java.util.List;
+import butterknife.BindView;
 
-public class DeviceListFragment extends Fragment {
+public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceListShowPresenter> implements DeviceListView{
+    @BindView(R.id.device_recyclerview)
+    RecyclerView recyclerview;
+    @BindView(R.id.float_btn)
+    FloatingActionButton float_btn;
+    @BindView(R.id.device_refreshLayout)
+    SmartRefreshLayout mRefreshLayout;
 
-    @Nullable
+
+    private DeviceListAdapter mAdapter;
+    private RoomOrderBean.ResultListBean mRoom_order;
+    private WorkOrderBean.ResultListBean mWork_order;
+    private RecyclerView mRecyclerview;
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.device_list_show, container, false);
+    protected int getLayoutId() {
+        return R.layout.device_list_show;
     }
 
+    @Override
+    protected void initView(View view) {
+        mRefreshLayout = view.findViewById(R.id.device_refreshLayout);
+        mRecyclerview = view.findViewById(R.id.device_recyclerview);
+        mRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter = new DeviceListAdapter();
+        mRecyclerview.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(mRecyclerview);
+        mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        mRefreshLayout.setEnableLoadMore(false);
+    }
 
     @Override
-    public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(root, savedInstanceState);
-        final SmartRefreshLayout mRefreshLayout = root.findViewById(R.id.device_refreshLayout);
-        final RecyclerView recyclerview = root.findViewById(R.id.device_recyclerview);
-        recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
-        DeviceListAdapter mAdapter = new DeviceListAdapter();
-        recyclerview.setAdapter(mAdapter);
-        mAdapter.bindToRecyclerView(recyclerview);
-        mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+    protected void initListener() {
+        mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                if (null != mAdapter.getData()) {
+                    mAdapter.getData().clear();
+                    mAdapter.notifyDataSetChanged();
+                }
+                if (mPresenter != null) {
+                  mPresenter.loadFistPage(mRoom_order.getRoomId() + "");
+                }
+
+            }
+
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                if (mPresenter != null) {
+                   mPresenter.loadNextPage(mRoom_order.getRoomId() + "");
+                }
+            }
+        });
+
+
+        float_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    @Override
+    protected void initData() {
+        mRefreshLayout.autoRefresh();//自动刷新
         mAdapter.setEmptyView(R.layout.empty_device_order);
-        mRefreshLayout.setEnableLoadMore(false);
+    }
+
+    @Override
+    protected DeviceListShowPresenter initPresenter() {
+        return new DeviceListShowPresenter();
+    }
+
+    @Override
+    public void loadDataSuccess(DeviceListBean data) {
+        final List<DeviceListBean.DevicesBean> devices = data.getDevices();
+        mAdapter.setNewData(devices);
+        MyApplication.getInstance().setDevicesBean(devices);
+        loadDataFinish();
+    }
+
+    @Override
+    public void loadDataFinish() {
+        mRefreshLayout.finishRefresh();
+        mRefreshLayout.finishLoadMore();
     }
 }
