@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.SceneSettingDeviceSelectAdapter;
-import com.ayla.hotelsaas.adapter.ZigBeeAddSelectGatewayAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.bean.Device;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingDeviceSelectPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -57,9 +56,9 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Device item = (Device) adapter.getItem(position);
+                DeviceListBean.DevicesBean item = (DeviceListBean.DevicesBean) adapter.getItem(position);
                 Intent mainActivity = new Intent(SceneSettingDeviceSelectActivity.this, SceneSettingFunctionSelectActivity.class);
-                mainActivity.putExtra("device",item);
+                mainActivity.putExtra("device", item);
                 startActivityForResult(mainActivity, 0);
             }
         });
@@ -72,7 +71,7 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     }
 
     @Override
-    public void showDevices(List<Device> devices) {
+    public void showDevices(List<DeviceListBean.DevicesBean> devices) {
         mAdapter.setNewData(devices);
     }
 
@@ -80,7 +79,7 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
-            setResult(RESULT_OK,data);
+            setResult(RESULT_OK, data);
             finish();
         }
     }

@@ -46,20 +46,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (mRuleEngineBean != null) {
-            List<SceneSettingFunctionDatumSetAdapter.DatumBean> datas = new ArrayList<>();
-            for (RuleEngineBean.Action.ActionItem actionItem : mRuleEngineBean.getAction().getItems()) {
-                SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
-                datumBean.setLeftValue(actionItem.getLeftValue());
-                datumBean.setFunctionName("Switch_Control".equals(actionItem.getLeftValue()) ? "功能开关" : "未知功能");
-                datumBean.setValueName(actionItem.getRightValue() == 1 ? "开启" : "关闭");
-                datumBean.setTargetDeviceId(actionItem.getTargetDeviceId());
-                datumBean.setTargetDeviceType(actionItem.getTargetDeviceType());
-                datumBean.setRightValueType(actionItem.getRightValueType());
-                datumBean.setOperator(actionItem.getOperator());
-                datumBean.setLeftValue(actionItem.getLeftValue());
-                datas.add(datumBean);
-            }
-            mAdapter.setNewData(datas);
+            syncSourceAndAdapter();
             mSceneNameTextView.setText(mRuleEngineBean.getRuleName());
         } else {
             mRuleEngineBean = new RuleEngineBean();
@@ -103,7 +90,9 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                adapter.remove(position);
+                mRuleEngineBean.getAction().getItems().remove(position);
+                mRuleEngineBean.getAction().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
+                mAdapter.remove(position);
             }
         });
         appBar.rightTextView.setOnClickListener(new View.OnClickListener() {
@@ -149,9 +138,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = (SceneSettingFunctionDatumSetAdapter.DatumBean) data.getSerializableExtra("result");
-            mAdapter.getData().add(datumBean);
-            mAdapter.notifyDataSetChanged();
-
             RuleEngineBean.Action.ActionItem actionItem = new RuleEngineBean.Action.ActionItem();
             actionItem.setTargetDeviceType(datumBean.getTargetDeviceType());
             actionItem.setTargetDeviceId(datumBean.getTargetDeviceId());
@@ -167,6 +153,9 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             }
             mRuleEngineBean.getAction().getItems().add(actionItem);
             mRuleEngineBean.getAction().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
+            mAdapter.getData().add(datumBean);
+            mAdapter.notifyDataSetChanged();
+
         }
     }
 
@@ -206,5 +195,22 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 dialog.dismissAllowingStateLoss();
             }
         }, "确认是否移除", "111").show(getSupportFragmentManager(), "delete");
+    }
+
+    private void syncSourceAndAdapter() {
+        List<SceneSettingFunctionDatumSetAdapter.DatumBean> datas = new ArrayList<>();
+        for (RuleEngineBean.Action.ActionItem actionItem : mRuleEngineBean.getAction().getItems()) {
+            SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
+            datumBean.setLeftValue(actionItem.getLeftValue());
+            datumBean.setFunctionName("Switch_Control".equals(actionItem.getLeftValue()) ? "功能开关" : "未知功能");
+            datumBean.setValueName(actionItem.getRightValue() == 1 ? "开启" : "关闭");
+            datumBean.setTargetDeviceId(actionItem.getTargetDeviceId());
+            datumBean.setTargetDeviceType(actionItem.getTargetDeviceType());
+            datumBean.setRightValueType(actionItem.getRightValueType());
+            datumBean.setOperator(actionItem.getOperator());
+            datumBean.setLeftValue(actionItem.getLeftValue());
+            datas.add(datumBean);
+        }
+        mAdapter.setNewData(datas);
     }
 }
