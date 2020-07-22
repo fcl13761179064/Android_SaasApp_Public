@@ -17,7 +17,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -66,7 +65,6 @@ public class RequestModel {
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().login(new_body)
-                .delay(2, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
