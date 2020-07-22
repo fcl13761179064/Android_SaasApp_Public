@@ -1,11 +1,14 @@
 package com.ayla.hotelsaas.ui;
 
+import android.graphics.drawable.Drawable;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.base.BasicFragment;
@@ -15,8 +18,10 @@ import com.ayla.hotelsaas.fragment.DeviceListFragment;
 import com.ayla.hotelsaas.fragment.LinkageFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
 import com.ayla.hotelsaas.widget.AppBar;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 
 /**
@@ -56,7 +61,6 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
     public void refreshUI() {
         mRoom_order = (RoomOrderBean.ResultListBean) getIntent().getSerializableExtra("roomData");
         mWork_order = (WorkOrderBean.ResultListBean) getIntent().getSerializableExtra("workOrderdata");
-        //appBar.setCenterText(mWork_order.getTitle());
         super.refreshUI();
     }
 
@@ -64,20 +68,42 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
     @Override
     protected void initView() {
         mFragments = new ArrayList<>();
-        mFragments.add(new DeviceListFragment());
+        mFragments.add(new DeviceListFragment(mRoom_order));
         mFragments.add(new LinkageFragment());
         mFragments.add(new TestFragment());
-        rgIndicators.check(R.id.rb_main_fragment_device);
-        rgIndicators.setOnCheckedChangeListener(this);
-        //默认选择加载首页
-        changeFragment(GO_HOME_TYPE);
+
     }
 
     @Override
     protected void initListener() {
+        rgIndicators.check(R.id.rb_main_fragment_device);
+        rgIndicators.setOnCheckedChangeListener(this);
+        //默认选择加载首页
+        changeFragment(GO_HOME_TYPE);
 
+        //定义底部标签图片大小和位置
+        Drawable drawable_news = getResources().getDrawable(R.drawable.bar_bottom_device);
+        //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
+        drawable_news.setBounds(0, 0, 40, 40);
+        //设置图片在文字的哪个方向
+        main_device.setCompoundDrawables(null, drawable_news, null, null);
+
+        //定义底部标签图片大小和位置
+        Drawable drawable_live = getResources().getDrawable(R.drawable.bar_bottom_linkage);
+        //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
+        drawable_live.setBounds(0, 0, 40, 40);
+        //设置图片在文字的哪个方向
+        main_likeage.setCompoundDrawables(null, drawable_live, null, null);
+
+        //定义底部标签图片大小和位置
+        Drawable drawable_tuijian = getResources().getDrawable(R.drawable.bar_bottom_test);
+        //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
+        drawable_tuijian.setBounds(0, 0, 40, 40);
+        //设置图片在文字的哪个方向
+        main_test.setCompoundDrawables(null, drawable_tuijian, null, null);
 
     }
+
 
     private void changeFragment(int type) {
 
@@ -131,7 +157,7 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
         switch (type) {
             case GO_HOME_TYPE: {
 
-                return new DeviceListFragment();
+                return new DeviceListFragment(mRoom_order);
 
             }
             case GO_SECOND_TYPE: {
@@ -158,14 +184,17 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
 
         switch (checkedId) {
             case R.id.rb_main_fragment_device: {
+                appBar.setCenterText(mWork_order.getTitle());
                 changeFragment(GO_HOME_TYPE);
                 break;
             }
             case R.id.rb_main_fragment_linkage: {
+                appBar.setCenterText(mWork_order.getTitle());
                 changeFragment(GO_SECOND_TYPE);
                 break;
             }
             case R.id.rb_main_fragment_test: {
+                appBar.setCenterText("测试");
                 changeFragment(GO_THREE_TYPE);
                 break;
             }

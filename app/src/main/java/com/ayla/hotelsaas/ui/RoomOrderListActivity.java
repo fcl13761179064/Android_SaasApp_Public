@@ -70,7 +70,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.setEmptyView(R.layout.empty_room_order);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-
+        mRefreshLayout.setEnableLoadMore(false);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!FastClickUtils.isDoubleClick()) {
-                    Intent intent = new Intent(RoomOrderListActivity.this, DeviceListShowActivity.class);
+                    Intent intent = new Intent(RoomOrderListActivity.this, MainActivity.class);
                     final RoomOrderBean.ResultListBean room_result = mAdapter.getData().get(position);
                     intent.putExtra("roomData", (Serializable)room_result);
                     intent.putExtra("workOrderdata", (Serializable) mWork_order);
@@ -122,17 +122,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     @Override
     public void loadDataSuccess(RoomOrderBean data) {
         final List<RoomOrderBean.ResultListBean> resultList = data.getResultList();
-        final List<RoomOrderBean.ResultListBean> objects = new ArrayList<>();
-        objects.addAll(resultList);
-        objects.addAll(resultList);
-        objects.addAll(resultList);
-        objects.addAll(resultList);
-        objects.addAll(resultList);
-        objects.addAll(resultList);
-        objects.addAll(resultList);
-        objects.addAll(resultList);
-        objects.addAll(resultList);
-        mAdapter.setNewData(objects);
+        mAdapter.setNewData(resultList);
         loadDataFinish();
     }
 
