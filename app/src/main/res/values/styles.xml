@@ -25,4 +25,19 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!--mian主页面的RadioButton里的style-->
+    <style name="tab_style">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">@dimen/tab_height</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:button">@null</item>
+        <item name="android:drawablePadding">@dimen/drawable_padding</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/tab_textsize</item>
+        <item name="android:textColor">@color/textLightColor</item>
+    </style>
+
+
 </resources>

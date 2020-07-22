@@ -1,12 +1,12 @@
 package com.ayla.hotelsaas.ui;
 
+
 import android.content.Intent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceListAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -18,16 +18,14 @@ import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
-
-import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
+
+import static androidx.core.content.ContextCompat.startActivity;
 
 public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, DeviceListShowPresenter> implements DeviceListView {
 
@@ -53,7 +51,7 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
     public void refreshUI() {
         mRoom_order = (RoomOrderBean.ResultListBean) getIntent().getSerializableExtra("roomData");
         mWork_order = (WorkOrderBean.ResultListBean) getIntent().getSerializableExtra("workOrderdata");
-        appBar.setCenterText(mWork_order.getTitle());
+      //  appBar.setCenterText(mWork_order.getTitle());
         super.refreshUI();
     }
 
@@ -90,7 +88,7 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    mPresenter.loadFistPage(mRoom_order.getRoomId()+ "");
+                    mPresenter.loadFistPage(1+ "");
                 }
 
             }
@@ -98,7 +96,7 @@ public class DeviceListShowActivity extends BaseMvpActivity<DeviceListView, Devi
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                    mPresenter.loadNextPage(mRoom_order.getRoomId() + "");
+                    mPresenter.loadNextPage(1 + "");
                 }
             }
         });

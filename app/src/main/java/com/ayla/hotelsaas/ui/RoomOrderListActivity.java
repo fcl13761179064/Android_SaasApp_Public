@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
@@ -21,12 +22,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
-
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
-
 
 public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOrderPresenter> implements RoomOrderView {
 
@@ -123,7 +122,17 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     @Override
     public void loadDataSuccess(RoomOrderBean data) {
         final List<RoomOrderBean.ResultListBean> resultList = data.getResultList();
-        mAdapter.setNewData(resultList);
+        final List<RoomOrderBean.ResultListBean> objects = new ArrayList<>();
+        objects.addAll(resultList);
+        objects.addAll(resultList);
+        objects.addAll(resultList);
+        objects.addAll(resultList);
+        objects.addAll(resultList);
+        objects.addAll(resultList);
+        objects.addAll(resultList);
+        objects.addAll(resultList);
+        objects.addAll(resultList);
+        mAdapter.setNewData(objects);
         loadDataFinish();
     }
 

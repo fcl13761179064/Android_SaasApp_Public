@@ -1,13 +1,9 @@
 package com.ayla.hotelsaas.adapter;
 
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-
-import java.util.List;
-
 
 /**
  * @描述 待办事项条目adapter

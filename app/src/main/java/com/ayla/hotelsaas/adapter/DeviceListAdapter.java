@@ -1,6 +1,8 @@
 package com.ayla.hotelsaas.adapter;
 
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
@@ -27,5 +29,4 @@ public class DeviceListAdapter extends BaseQuickAdapter<DeviceListBean.DevicesBe
         helper.setText(R.id.tv_device_online_status, "ONLINE".equals(deviceCategory.getDeviceStatus()) ? "在线" : "离线");
 
     }
-
 }
