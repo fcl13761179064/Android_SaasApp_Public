@@ -1,8 +1,6 @@
 package com.ayla.hotelsaas.adapter;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.bean.Device;
-import com.ayla.hotelsaas.utils.ImageLoader;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 

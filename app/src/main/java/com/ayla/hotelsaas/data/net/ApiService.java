@@ -21,6 +21,7 @@ import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -37,9 +38,8 @@ public interface ApiService {
     @POST("api/v2/sso/login")
     Observable<BaseResult<User>> login(@Body RequestBody body);
 
-    @GET("device_add_category")
+    @GET("/api/v1/construction/devicetypes")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
-
 
     @GET("api/v1/construction/constructbill")
     Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") String pageSize);
@@ -50,7 +50,7 @@ public interface ApiService {
     @POST("api/v1/construction/device/list")
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
-    @POST("bind_device")
+    @POST("api/v1/construction/device/bind")
     Observable<BaseResult<Boolean>> bindDeviceWithDSN(@Body RequestBody body);
 
     @POST("unbind_device")
@@ -62,11 +62,11 @@ public interface ApiService {
     @POST("notify_gateway_config_exit")
     Observable<BaseResult<Boolean>> notifyGatewayConfigExit(@Body RequestBody body);
 
-    @GET("fetch_gateway_candidates")
-    Observable<BaseResult<List<Device>>> fetchCandidateNodes(@Query("device_id") String deviceId, @Query("cuid") int cuid);
+    @GET("api/v1/construction/device/${deviceId}/candidates")
+    Observable<BaseResult<List<Device>>> fetchCandidateNodes(@Path("deviceId") String deviceId);
 
-    @GET("fetch_rule_engines")
-    Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Query("scope_id") String scopeId);
+    @GET("api/v1/construction/scene/list/${scopeId}")
+    Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Path("scopeId") String scopeId);
 
     @POST("api/v1/construction/scene/save")
     Observable<BaseResult<Boolean>> saveRuleEngine(@Body RequestBody body);
@@ -74,8 +74,11 @@ public interface ApiService {
     @PUT("update_rule_engine")
     Observable<BaseResult<Boolean>> updateRuleEngine(@Body RequestBody body);
 
-    @POST("run_rule_engine")
+    @POST("api/v1/construction/scene/excute")
     Observable<BaseResult<Boolean>> runRuleEngine(@Body RequestBody body);
+
+    @PUT("api/v1/construction/device/${deviceId}/property")
+    Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
 
     @HTTP(method = "DELETE", path = "delete_rule_engine", hasBody = true)
     Observable<BaseResult<Boolean>> deleteRuleEngine(@Body RequestBody body);

@@ -1,10 +1,7 @@
 package com.ayla.hotelsaas;
 
 import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.bean.User;
-import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 
 import org.junit.Before;
@@ -25,7 +22,6 @@ import au.com.dius.pact.consumer.junit.PactVerification;
 import au.com.dius.pact.core.model.PactSpecVersion;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
-import io.reactivex.Observable;
 
 public class PactTest {
 
@@ -49,7 +45,7 @@ public class PactTest {
     public RequestResponsePact createFragment(PactDslWithProvider builder) throws UnsupportedEncodingException {
         return builder
                 //正常用户登录
-                .given("")
+                .given("登录成功")
                 .uponReceiving("正确的账号密码登录")
                 .path("/api/v2/sso/login")
                 .method("POST")
@@ -259,7 +255,6 @@ public class PactTest {
                 .uponReceiving("获取候选节点")
                 .path("/fetch_gateway_candidates")
                 .matchQuery("device_id", ".*", "123")
-                .matchQuery("cuid", ".*", "1")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
@@ -394,17 +389,19 @@ public class PactTest {
                 .toPact();
     }
 
-    @Test
+//    @Test
     @PactVerification("construction_backend")
     public void testLogin() {
-        RequestModel.getInstance()
-                .login("111", "222")
-                .test().assertNoErrors();
-
-        RetrofitHelper.getInstance()
-                .getApiService()
-                .fetchDeviceCategory()
-                .test().assertNoErrors();
+        {//登录
+            RequestModel.getInstance()
+                    .login("111", "222")
+                    .test().assertNoErrors();
+        }
+        {//获取配网二级菜单
+            RequestModel.getInstance()
+                    .getDeviceCategory()
+                    .test().assertNoErrors();
+        }
 
         //获取工单集
         RequestModel.getInstance()
@@ -424,7 +421,7 @@ public class PactTest {
 
         {//绑定设备
             RequestModel.getInstance()
-                    .bindDeviceWithDSN("111", 1, 2).test().assertNoErrors();
+                    .bindDeviceWithDSN("111", 1, 2, 3).test().assertNoErrors();
         }
 
         {//解绑设备
@@ -441,7 +438,7 @@ public class PactTest {
         }
         {//获取网关的候选节点
             RequestModel.getInstance()
-                    .fetchCandidateNodes("11111", 1).test().assertNoErrors();
+                    .fetchCandidateNodes("11111").test().assertNoErrors();
         }
         {//通过房间号获取下属的RuleEngines
             RequestModel.getInstance()
