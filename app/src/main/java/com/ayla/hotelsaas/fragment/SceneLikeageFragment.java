@@ -11,10 +11,11 @@ import com.ayla.hotelsaas.adapter.SceneLikeageAdapter;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.SceneLikeagePresenter;
 import com.ayla.hotelsaas.mvp.view.SceneLikeageView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
+import com.ayla.hotelsaas.ui.SceneSettingActivity;
+import com.ayla.hotelsaas.ui.SceneSettingDeviceSelectActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -41,7 +42,7 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
 
     @Override
     protected int getLayoutId() {
-        return R.layout.device_list_show;
+        return R.layout.fragment_device_list;
     }
 
     @Override
@@ -72,7 +73,7 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    mPresenter.loadFistPage(mRoom_order.getRoomId() + "");
+                    mPresenter.loadFistPage(Long.valueOf(3));
                 }
 
             }
@@ -80,7 +81,7 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                    mPresenter.loadNextPage(mRoom_order.getRoomId() + "");
+                    mPresenter.loadNextPage(Long.valueOf(mRoom_order.getRoomId()) );
                 }
             }
         });
@@ -91,7 +92,7 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
+                Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
                 startActivity(intent);
             }
         });
