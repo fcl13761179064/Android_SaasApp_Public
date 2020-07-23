@@ -2,11 +2,12 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.Device;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +26,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
      *
      * @param dsn
      */
-    public void bindZigBeeNodeWithGatewayDSN(String dsn, int cuid, int scopeId) {
+    public void bindZigBeeNodeWithGatewayDSN(String dsn, int cuId, int scopeId) {
         Observable.just(dsn)
                 .doOnNext(new Consumer<String>() {
                     @Override
@@ -38,8 +39,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     @Override
                     public ObservableSource<?> apply(String s) throws Exception {
                         return RequestModel.getInstance()
-                                .notifyGatewayBeginConfig(dsn, cuid)
-                                .delay(3, TimeUnit.SECONDS)
+                                .updateProperty(dsn, "zb_join_enable", 100)
                                 .subscribeOn(Schedulers.io());
                     }
                 })//通知网关进入配网模式
@@ -52,32 +52,49 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     }
                 })//通知网关连接成功
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<Object, ObservableSource<List<Device>>>() {
+                .flatMap(new Function<Object, ObservableSource<List<DeviceListBean.DevicesBean>>>() {
                     @Override
-                    public ObservableSource<List<Device>> apply(Object o) throws Exception {
+                    public ObservableSource<List<DeviceListBean.DevicesBean>> apply(Object o) throws Exception {
+                        long startTime = System.currentTimeMillis();
                         return RequestModel.getInstance()
                                 .fetchCandidateNodes(dsn)
-                                .delay(3, TimeUnit.SECONDS)
-                                .map(new Function<BaseResult<List<Device>>, List<Device>>() {
+                                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                                     @Override
-                                    public List<Device> apply(BaseResult<List<Device>> listBaseResult) throws Exception {
-                                        return listBaseResult.data;
+                                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+                                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                                            @Override
+                                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                                long currentTime = System.currentTimeMillis();
+                                                long s = currentTime - startTime;
+                                                if (s > 60_000) {
+                                                    return Observable.error(throwable);
+                                                } else {
+                                                    return Observable.timer(3, TimeUnit.SECONDS);
+                                                }
+                                            }
+                                        });
+                                    }
+                                })
+                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, List<DeviceListBean.DevicesBean>>() {
+                                    @Override
+                                    public List<DeviceListBean.DevicesBean> apply(BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
+                                        return Arrays.asList(devicesBeanBaseResult.data);
                                     }
                                 });
                     }
                 })//轮询候选节点，然后绑定候选节点
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<List<Device>, ObservableSource<?>>() {
+                .flatMap(new Function<List<DeviceListBean.DevicesBean>, ObservableSource<?>>() {
                     @Override
-                    public ObservableSource<?> apply(List<Device> devices) throws Exception {
+                    public ObservableSource<?> apply(List<DeviceListBean.DevicesBean> devices) throws Exception {
                         List<Observable<?>> tasks = new ArrayList<>();
-                        for (Device device : devices) {
+                        for (DeviceListBean.DevicesBean device : devices) {
                             Observable<?> task = RequestModel.getInstance()
-                                    .bindDeviceWithDSN(device.getId(), scopeId, 1, 1);
+                                    .bindDeviceWithDSN(device.getDeviceId(), cuId, scopeId);
                             tasks.add(task);
                         }
                         if (tasks.size() == 0) {
-                            return Observable.just(true);
+                            return Observable.error(new Throwable("没有候选节点"));
                         } else {
                             return Observable.zip(tasks, new Function<Object[], Object>() {
                                 @Override
@@ -97,12 +114,24 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     }
                 })//通知子节点绑定成功
                 .observeOn(Schedulers.io())
+                .onErrorResumeNext(new Function<Throwable, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                        return RequestModel.getInstance()
+                                .updateProperty(dsn, "zb_join_enable", 0)
+                                .flatMap(new Function<BaseResult<Boolean>, ObservableSource<?>>() {
+                                    @Override
+                                    public ObservableSource<?> apply(BaseResult<Boolean> booleanBaseResult) throws Exception {
+                                        return Observable.error(throwable);
+                                    }
+                                });
+                    }
+                })
                 .flatMap(new Function<Object, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .notifyGatewayFinishConfig(dsn, cuid)
-                                .delay(3, TimeUnit.SECONDS)
+                                .updateProperty(dsn, "zb_join_enable", 0)
                                 .subscribeOn(Schedulers.io());
                     }
                 })//通知网关退出配网模式

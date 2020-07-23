@@ -3,9 +3,11 @@ package com.ayla.hotelsaas.fragment;
 
 import android.content.Intent;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceListAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -16,16 +18,17 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
-import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
 import java.util.List;
+
 import butterknife.BindView;
 
-public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceListShowPresenter> implements DeviceListView{
+public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceListShowPresenter> implements DeviceListView {
     @BindView(R.id.device_recyclerview)
     RecyclerView recyclerview;
     @BindView(R.id.float_btn)
@@ -40,7 +43,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     private RecyclerView mRecyclerview;
 
     public DeviceListFragment(RoomOrderBean.ResultListBean room_order) {
-        this.mRoom_order=room_order;
+        this.mRoom_order = room_order;
     }
 
     @Override
@@ -70,7 +73,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                  mPresenter.loadFistPage(mRoom_order.getRoomId() + "");
+                    mPresenter.loadFistPage(mRoom_order.getRoomId() + "");
                 }
 
             }
@@ -78,7 +81,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                   mPresenter.loadNextPage(mRoom_order.getRoomId() + "");
+                    mPresenter.loadNextPage(mRoom_order.getRoomId() + "");
                 }
             }
         });
@@ -90,6 +93,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
+                intent.putExtra("scopeId", mRoom_order.getRoomId());
                 startActivity(intent);
             }
         });

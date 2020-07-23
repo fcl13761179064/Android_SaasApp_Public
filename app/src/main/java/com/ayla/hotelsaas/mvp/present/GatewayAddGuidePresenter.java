@@ -19,10 +19,12 @@ public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView>
      * 通过DSN注册一个设备
      *
      * @param dsn
+     * @param cuId
+     * @param scopeId
      */
-    public void registerDeviceWithDSN(String dsn) {
+    public void registerDeviceWithDSN(String dsn, int cuId, int scopeId) {
         long startTime = System.currentTimeMillis();
-        RequestModel.getInstance().bindDeviceWithDSN(dsn, 1, 1, 1)
+        RequestModel.getInstance().bindDeviceWithDSN(dsn, cuId, scopeId)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
@@ -31,7 +33,7 @@ public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView>
                             public ObservableSource<?> apply(Throwable throwable) throws Exception {
                                 long currentTime = System.currentTimeMillis();
                                 long s = currentTime - startTime;
-                                if (s > 30_000) {
+                                if (s > 60_000) {
                                     return Observable.error(throwable);
                                 } else {
                                     return Observable.timer(3, TimeUnit.SECONDS);

@@ -56,16 +56,10 @@ public interface ApiService {
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
 
-    @POST("notify_gateway_config_enter")
-    Observable<BaseResult<Boolean>> notifyGatewayConfigEnter(@Body RequestBody body);
+    @GET("api/v1/construction/device/{deviceId}/candidates")
+    Observable<BaseResult<DeviceListBean.DevicesBean>> fetchCandidateNodes(@Path("deviceId") String deviceId);
 
-    @POST("notify_gateway_config_exit")
-    Observable<BaseResult<Boolean>> notifyGatewayConfigExit(@Body RequestBody body);
-
-    @GET("api/v1/construction/device/${deviceId}/candidates")
-    Observable<BaseResult<List<Device>>> fetchCandidateNodes(@Path("deviceId") String deviceId);
-
-    @GET("api/v1/construction/scene/list/${scopeId}")
+    @GET("api/v1/construction/scene/list/{scopeId}")
     Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Path("scopeId") String scopeId);
 
     @POST("api/v1/construction/scene/save")
@@ -77,7 +71,7 @@ public interface ApiService {
     @POST("api/v1/construction/scene/excute")
     Observable<BaseResult<Boolean>> runRuleEngine(@Body RequestBody body);
 
-    @PUT("api/v1/construction/device/${deviceId}/property")
+    @PUT("api/v1/construction/device/{deviceId}/property")
     Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
 
     @HTTP(method = "DELETE", path = "delete_rule_engine", hasBody = true)

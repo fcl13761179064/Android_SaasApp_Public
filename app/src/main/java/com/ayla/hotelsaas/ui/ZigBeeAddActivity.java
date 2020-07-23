@@ -20,6 +20,7 @@ import butterknife.OnClick;
 
 /**
  * ZigBee添加页面
+ * 进入时必须带入网关deviceId 、cuId 、scopeId
  */
 public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddPresenter> implements ZigBeeAddView {
     private static final String TAG = "ZigBeeAddActivity";
@@ -60,18 +61,15 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         return R.layout.activity_zigbee_add;
     }
 
-
     @Override
     protected void initView() {
-        dsn = getIntent().getStringExtra("dsn");
+
     }
 
     @Override
     protected void initListener() {
 
     }
-
-    private String dsn;//网关DSN
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +81,10 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
 
     private void startBind() {
         Log.d(TAG, "startBind: " + Thread.currentThread().getName());
-        mPresenter.bindZigBeeNodeWithGatewayDSN(dsn, 1,1);
+        mPresenter.bindZigBeeNodeWithGatewayDSN(
+                getIntent().getStringExtra("deviceId"),
+                getIntent().getIntExtra("cuId", 0),
+                getIntent().getIntExtra("scopeId", 0));
     }
 
     @OnClick(R.id.bt_bind)

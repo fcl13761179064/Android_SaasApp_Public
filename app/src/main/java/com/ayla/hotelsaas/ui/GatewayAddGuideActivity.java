@@ -18,6 +18,7 @@ import butterknife.OnClick;
 
 /**
  * 网关添加引导页面
+ * 进入时必须带上cuId 、scopeId。
  */
 public class GatewayAddGuideActivity extends BaseMvpActivity {
     @BindView(R.id.iv_01)
@@ -67,6 +68,7 @@ public class GatewayAddGuideActivity extends BaseMvpActivity {
             } else {
                 Intent mainActivity = new Intent(this, GatewayAddActivity.class);
                 mainActivity.putExtra("dsn", dsn);
+                mainActivity.putExtras(getIntent());
                 startActivityForResult(mainActivity, 0);
             }
         }

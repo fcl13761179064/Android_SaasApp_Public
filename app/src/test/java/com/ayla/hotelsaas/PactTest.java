@@ -389,7 +389,7 @@ public class PactTest {
                 .toPact();
     }
 
-//    @Test
+    //    @Test
     @PactVerification("construction_backend")
     public void testLogin() {
         {//登录
@@ -421,7 +421,7 @@ public class PactTest {
 
         {//绑定设备
             RequestModel.getInstance()
-                    .bindDeviceWithDSN("111", 1, 2, 3).test().assertNoErrors();
+                    .bindDeviceWithDSN("111", 1, 2).test().assertNoErrors();
         }
 
         {//解绑设备
