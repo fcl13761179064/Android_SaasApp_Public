@@ -6,6 +6,7 @@
     android:layout_marginTop="@dimen/dp_10"
     android:layout_marginRight="16dp"
     android:background="@drawable/bg_device_item"
+    android:foreground="?android:selectableItemBackground"
     android:padding="16dp">
 
 

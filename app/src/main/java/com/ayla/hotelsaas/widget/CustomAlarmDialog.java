@@ -55,7 +55,7 @@ public class CustomAlarmDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (doneCallback != null) {
-                    doneCallback.onDone(CustomAlarmDialog.this);
+                    doneCallback.onCancel(CustomAlarmDialog.this);
                 }
             }
         });

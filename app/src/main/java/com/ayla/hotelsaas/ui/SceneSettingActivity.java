@@ -17,7 +17,6 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
-import com.ayla.hotelsaas.utils.ToastUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.SceneNameSetDialog;
@@ -127,13 +126,9 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         SceneNameSetDialog.newInstance(new SceneNameSetDialog.DoneCallback() {
             @Override
             public void onDone(DialogFragment dialog, String txt) {
-                if (null == txt || txt.length() == 0) {
-                    ToastUtils.showShortToast("输入不能为空");
-                } else {
-                    mSceneNameTextView.setText(txt);
-                    mRuleEngineBean.setRuleName(txt);
-                    dialog.dismissAllowingStateLoss();
-                }
+                mSceneNameTextView.setText(txt);
+                mRuleEngineBean.setRuleName(txt);
+                dialog.dismissAllowingStateLoss();
             }
         }).show(getSupportFragmentManager(), "scene_name");
     }
@@ -165,7 +160,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             }
             mRuleEngineBean.getAction().getItems().add(actionItem);
             mRuleEngineBean.getAction().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
-            mAdapter.addData(datumBean);
+            mAdapter.getData().add(datumBean);
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -218,7 +214,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             public void onCancel(CustomAlarmDialog dialog) {
                 dialog.dismissAllowingStateLoss();
             }
-        }, "确认是否移除", "111").show(getSupportFragmentManager(), "delete");
+        }, "确认是否移除", "确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
     }
 
     private void syncSourceAndAdapter() {

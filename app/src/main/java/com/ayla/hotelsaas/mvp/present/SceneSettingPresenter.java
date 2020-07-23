@@ -15,7 +15,7 @@ import io.reactivex.functions.Consumer;
 public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
     public void saveOrUpdateRuleEngine(RuleEngineBean mRuleEngineBean) {
         Observable<BaseResult<Boolean>> observable;
-        if (mRuleEngineBean.getRuleId() == 0) {
+        if (mRuleEngineBean.getRuleId() == null) {
             observable = RequestModel.getInstance().saveRuleEngine(mRuleEngineBean);
         } else {
             observable = RequestModel.getInstance().updateRuleEngine(mRuleEngineBean);

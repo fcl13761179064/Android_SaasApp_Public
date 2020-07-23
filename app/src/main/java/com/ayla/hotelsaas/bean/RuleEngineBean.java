@@ -17,7 +17,7 @@ public class RuleEngineBean implements Serializable {
      */
     private Integer ruleId;
 
-    private Integer scopeId;
+    private int scopeId;
 
     private String ruleName;
 
@@ -29,11 +29,11 @@ public class RuleEngineBean implements Serializable {
 
     private Action action;
 
-    public int getRuleId() {
+    public Integer getRuleId() {
         return ruleId;
     }
 
-    public void setRuleId(int ruleId) {
+    public void setRuleId(Integer ruleId) {
         this.ruleId = ruleId;
     }
 
@@ -45,11 +45,11 @@ public class RuleEngineBean implements Serializable {
         this.ruleDescription = ruleDescription;
     }
 
-    public Integer getScopeId() {
+    public int getScopeId() {
         return scopeId;
     }
 
-    public void setScopeId(Integer scopeId) {
+    public void setScopeId(int scopeId) {
         this.scopeId = scopeId;
     }
 

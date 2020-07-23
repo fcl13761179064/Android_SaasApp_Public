@@ -31,7 +31,7 @@
             android:paddingLeft="24dp"
             android:paddingRight="24dp"
             android:text="1122"
-            android:textColor="#ff000000"
+            android:textColor="#91909A"
             android:textSize="17sp" />
 
         <View
