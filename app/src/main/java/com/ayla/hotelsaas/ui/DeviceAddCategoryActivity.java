@@ -74,7 +74,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 DeviceCategoryBean.SubBean bean = (DeviceCategoryBean.SubBean) adapter.getItem(position);
-                handleAddJump(bean.getCuid());
+                handleAddJump(bean);
             }
         });
         rightRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
@@ -134,15 +134,15 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     /**
      * 处理点击二级菜单item后的配网页面跳转逻辑
      *
-     * @param cuid
+     * @param subBean
      */
-    private void handleAddJump(int cuid) {
-        if (0 == cuid) {//跳转网关添加
+    private void handleAddJump(DeviceCategoryBean.SubBean subBean) {
+        if (0 == subBean.getDeviceConnectType()) {//跳转网关添加
             Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
-            mainActivity.putExtra("cuId", cuid);
+            mainActivity.putExtra("cuId", subBean.getCuId());
             mainActivity.putExtra("scopeId", getIntent().getIntExtra("scopeId", 0));
             startActivityForResult(mainActivity, 0);
-        } else if (1 == cuid) {//跳转节点添加
+        } else if (1 == subBean.getDeviceConnectType()) {//跳转节点添加
             int gatewayCount = 0;
             DeviceListBean.DevicesBean gateway = null;
             List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();

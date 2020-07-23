@@ -16,23 +16,23 @@ public interface ZigBeeAddView extends BaseView {
     void progressFailed(Throwable throwable);
 
     /**
-     * 5.通知网关退出配网模式成功
+     * 5.绑定节点成功
      */
-    void gatewayDisconnectSuccess();
+    void bindZigBeeDeviceSuccess();
 
     /**
-     * 5.开始通知网关退出配网模式
+     * 5.开始绑定节点
      */
-    void gatewayDisconnectStart();
+    void bindZigBeeDeviceStart();
     /**
-     * 4.节点绑定成功
+     * 4.候选节点查找成功
      */
-    void zigBeeDeviceBindSuccess();
+    void fetchCandidatesSuccess();
 
     /**
-     * 3.开始绑定节点
+     * 3.开始查找候选节点
      */
-    void zigBeeDeviceBindStart();
+    void fetchCandidatesStart();
 
     /**
      * 2.连接网关成功

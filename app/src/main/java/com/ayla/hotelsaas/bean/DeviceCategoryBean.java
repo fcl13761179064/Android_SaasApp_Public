@@ -48,7 +48,8 @@ public class DeviceCategoryBean {
          */
 
         private String name;
-        private int cuid;
+        private int cuId;
+        private int deviceConnectType;
         private String icon;
 
         public String getName() {
@@ -59,12 +60,20 @@ public class DeviceCategoryBean {
             this.name = name;
         }
 
-        public int getCuid() {
-            return cuid;
+        public int getCuId() {
+            return cuId;
         }
 
-        public void setCuid(int cuid) {
-            this.cuid = cuid;
+        public void setCuId(int cuId) {
+            this.cuId = cuId;
+        }
+
+        public int getDeviceConnectType() {
+            return deviceConnectType;
+        }
+
+        public void setDeviceConnectType(int deviceConnectType) {
+            this.deviceConnectType = deviceConnectType;
         }
 
         public String getIcon() {

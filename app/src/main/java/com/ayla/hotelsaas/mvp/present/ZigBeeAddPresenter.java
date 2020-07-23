@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.mvp.present;
 
+import android.util.Log;
+
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -7,7 +9,6 @@ import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -16,6 +17,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -48,7 +50,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     @Override
                     public void accept(Object o) throws Exception {
                         mView.gatewayConnectSuccess();
-                        mView.zigBeeDeviceBindStart();
+                        mView.fetchCandidatesStart();
                     }
                 })//通知网关连接成功
                 .observeOn(Schedulers.io())
@@ -75,14 +77,22 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                         });
                                     }
                                 })
-                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, List<DeviceListBean.DevicesBean>>() {
+                                .map(new Function<BaseResult<List<DeviceListBean.DevicesBean>>, List<DeviceListBean.DevicesBean>>() {
                                     @Override
-                                    public List<DeviceListBean.DevicesBean> apply(BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
-                                        return Arrays.asList(devicesBeanBaseResult.data);
+                                    public List<DeviceListBean.DevicesBean> apply(BaseResult<List<DeviceListBean.DevicesBean>> listBaseResult) throws Exception {
+                                        return listBaseResult.data;
                                     }
                                 });
                     }
                 })//轮询候选节点，然后绑定候选节点
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        mView.fetchCandidatesSuccess();
+                        mView.bindZigBeeDeviceStart();
+                    }
+                })//通知候选节点查找成功
                 .observeOn(Schedulers.io())
                 .flatMap(new Function<List<DeviceListBean.DevicesBean>, ObservableSource<?>>() {
                     @Override
@@ -90,7 +100,13 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         List<Observable<?>> tasks = new ArrayList<>();
                         for (DeviceListBean.DevicesBean device : devices) {
                             Observable<?> task = RequestModel.getInstance()
-                                    .bindDeviceWithDSN(device.getDeviceId(), cuId, scopeId);
+                                    .bindDeviceWithDSN(device.getDeviceId(), cuId, scopeId)
+                                    .doOnNext(new Consumer<BaseResult>() {
+                                        @Override
+                                        public void accept(BaseResult baseResult) throws Exception {
+                                            Log.d("候选节点绑定结果", "accept: " + baseResult.data);
+                                        }
+                                    });
                             tasks.add(task);
                         }
                         if (tasks.size() == 0) {
@@ -109,8 +125,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                 .doOnNext(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        mView.zigBeeDeviceBindSuccess();
-                        mView.gatewayDisconnectStart();
+                        mView.bindZigBeeDeviceSuccess();
                     }
                 })//通知子节点绑定成功
                 .observeOn(Schedulers.io())
@@ -126,20 +141,46 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                     }
                                 });
                     }
-                })
+                })//前面步骤遇错时，通知网关退出配网模式，然后重新抛出错误。
                 .flatMap(new Function<Object, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .updateProperty(dsn, "zb_join_enable", 0)
-                                .subscribeOn(Schedulers.io());
+                                .updateProperty(dsn, "zb_join_enable", 0);
                     }
-                })//通知网关退出配网模式
+                })//前面步骤正常时，通知网关退出配网模式。
+                .doOnDispose(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        RequestModel.getInstance()
+                                .updateProperty(dsn, "zb_join_enable", 0)
+                                .subscribe(new Observer<BaseResult<Boolean>>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+
+                                    }
+
+                                    @Override
+                                    public void onNext(BaseResult<Boolean> booleanBaseResult) {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+
+                                    }
+                                });
+                    }
+                })//当直接退出时，通知网关退出配网模式。
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        mView.gatewayDisconnectSuccess();
                         mView.progressSuccess();
                     }
                 })//通知子节点绑定成功

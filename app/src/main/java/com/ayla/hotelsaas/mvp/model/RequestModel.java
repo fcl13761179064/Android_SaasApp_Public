@@ -3,7 +3,6 @@ package com.ayla.hotelsaas.mvp.model;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.Device;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
@@ -17,7 +16,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -161,7 +159,7 @@ public class RequestModel {
      * @param dsn 网关dsn
      * @return
      */
-    public Observable<BaseResult<DeviceListBean.DevicesBean>> fetchCandidateNodes(String dsn) {
+    public Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(String dsn) {
         return getApiService().fetchCandidateNodes(dsn)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

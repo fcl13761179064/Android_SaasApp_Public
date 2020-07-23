@@ -19,6 +19,11 @@ public class TempUtils {
         return false;
     }
 
+    /**
+     * 判断是被是否在线
+     * @param devicesBean
+     * @return
+     */
     public static boolean isDeviceOnline(DeviceListBean.DevicesBean devicesBean) {
         if (devicesBean == null) {
             return false;
