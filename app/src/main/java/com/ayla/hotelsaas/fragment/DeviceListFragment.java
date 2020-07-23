@@ -48,7 +48,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
 
     @Override
     protected int getLayoutId() {
-        return R.layout.device_list_show;
+        return R.layout.fragment_device_list;
     }
 
     @Override

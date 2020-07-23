@@ -42,15 +42,6 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
 
 
     @Override
-    protected void setStatusBar() {
-        //用来设置整体下移，状态栏沉浸
-        //StatusBarToolUlti.setRootViewFitsSystemWindows(this, false);
-        //黑色字体
-        //StatusBarToolUlti.setStatusBarDarkTheme(this, true);
-        StatusBarUtil.setTransparent(this);
-    }
-
-    @Override
     public void refreshUI() {
         appBar.setLeftText("退出");
         appBar.setCenterText("我的工单");

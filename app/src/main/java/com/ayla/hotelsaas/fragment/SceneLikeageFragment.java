@@ -3,18 +3,18 @@ package com.ayla.hotelsaas.fragment;
 
 import android.content.Intent;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.SceneLikeageAdapter;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.SceneLikeagePresenter;
 import com.ayla.hotelsaas.mvp.view.SceneLikeageView;
-import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
 import com.ayla.hotelsaas.ui.SceneSettingActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,7 +26,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, SceneLikeagePresenter> implements SceneLikeageView{
+public class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, SceneLikeagePresenter> implements SceneLikeageView {
     @BindView(R.id.device_recyclerview)
     RecyclerView recyclerview;
     @BindView(R.id.float_btn)
@@ -40,12 +40,12 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
     private RecyclerView mRecyclerview;
 
     public SceneLikeageFragment(RoomOrderBean.ResultListBean room_order) {
-        this.mRoom_order=room_order;
+        this.mRoom_order = room_order;
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.device_list_show;
+        return R.layout.fragment_device_list;
     }
 
     @Override
@@ -76,7 +76,7 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    mPresenter.loadFistPage(mRoom_order.getRoomId() + "");
+                    mPresenter.loadFistPage(Long.valueOf(3));
                 }
 
             }
@@ -84,7 +84,7 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                    mPresenter.loadNextPage(mRoom_order.getRoomId() + "");
+                    mPresenter.loadNextPage(Long.valueOf(mRoom_order.getRoomId()));
                 }
             }
         });
