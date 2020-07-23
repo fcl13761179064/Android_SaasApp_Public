@@ -2,16 +2,13 @@ package com.ayla.hotelsaas.mvp.present;
 
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.mvp.view.SceneLikeageView;
 
 import java.util.List;
 
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -48,22 +45,21 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
      */
     public void loadData(String resourceRoomId) {
         RequestModel.getInstance().fetchRuleEngines(resourceRoomId)
-                .subscribe(new  RxjavaObserver<RuleEngineBean>() {
-            @Override
-            public void _onNext(RuleEngineBean data) {
+                .subscribe(new RxjavaObserver<List<RuleEngineBean>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addSubscrebe(d);
+                    }
 
-                mView.loadDataSuccess(data);
-            }
+                    @Override
+                    public void _onNext(List<RuleEngineBean> data) {
+mView.loadDataSuccess(data);
+                    }
 
-            @Override
-            public void _onError(String code, String msg) {
-                mView.loadDataFinish();
-            }
-
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                addSubscrebe(d);
-            }
-        });
+                    @Override
+                    public void _onError(String code, String msg) {
+                        mView.loadDataFinish();
+                    }
+                });
     }
 }

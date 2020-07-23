@@ -101,10 +101,16 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         for (DeviceListBean.DevicesBean device : devices) {
                             Observable<?> task = RequestModel.getInstance()
                                     .bindDeviceWithDSN(device.getDeviceId(), cuId, scopeId)
+                                    .doOnError(new Consumer<Throwable>() {
+                                        @Override
+                                        public void accept(Throwable throwable) throws Exception {
+                                            Log.d("候选节点绑定失败", "accept: " + throwable + " " + device.getDeviceId());
+                                        }
+                                    })
                                     .doOnNext(new Consumer<BaseResult>() {
                                         @Override
                                         public void accept(BaseResult baseResult) throws Exception {
-                                            Log.d("候选节点绑定结果", "accept: " + baseResult.data);
+                                            Log.d("候选节点绑定成功", "accept: " + device.getDeviceId());
                                         }
                                     });
                             tasks.add(task);
@@ -112,12 +118,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         if (tasks.size() == 0) {
                             return Observable.error(new Throwable("没有候选节点"));
                         } else {
-                            return Observable.zip(tasks, new Function<Object[], Object>() {
-                                @Override
-                                public Object apply(Object[] objects) throws Exception {
-                                    return true;
-                                }
-                            });
+                            return Observable.mergeDelayError(tasks);
                         }
                     }
                 })//绑定候选节点

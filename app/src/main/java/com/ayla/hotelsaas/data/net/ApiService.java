@@ -61,8 +61,8 @@ public interface ApiService {
     @POST("notify_gateway_config_exit")
     Observable<BaseResult<Boolean>> notifyGatewayConfigExit(@Body RequestBody body);
 
-    @GET("api/v1/construction/scene/list/${scopeId}")
-    Observable<BaseResult<RuleEngineBean>> fetchRuleEngines(@Path("scopeId") String scopeId);
+    @GET("api/v1/construction/scene/list/{scopeId}")
+    Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Path("scopeId") String scopeId);
 
     @POST("api/v1/construction/scene/save")
     Observable<BaseResult<Boolean>> saveRuleEngine(@Body RequestBody body);

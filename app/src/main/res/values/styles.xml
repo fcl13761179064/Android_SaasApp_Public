@@ -10,8 +10,7 @@
 
 
     <style name="AppTheme" parent="AppCompatTheme">
-        <item name="android:windowBackground">@null</item>
-
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
 

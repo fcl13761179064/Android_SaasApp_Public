@@ -15,11 +15,15 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.SceneLikeagePresenter;
 import com.ayla.hotelsaas.mvp.view.SceneLikeageView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
+import com.ayla.hotelsaas.ui.SceneSettingActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
+import java.util.List;
+
 import butterknife.BindView;
 
 public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, SceneLikeagePresenter> implements SceneLikeageView{
@@ -91,7 +95,8 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
+                Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
+                intent.putExtra("scopeId", mRoom_order.getRoomId());
                 startActivity(intent);
             }
         });
@@ -109,8 +114,8 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
     }
 
     @Override
-    public void loadDataSuccess(RuleEngineBean data) {
-        mAdapter.addData(data);
+    public void loadDataSuccess(List<RuleEngineBean> data) {
+        mAdapter.setNewData(data);
         loadDataFinish();
     }
 

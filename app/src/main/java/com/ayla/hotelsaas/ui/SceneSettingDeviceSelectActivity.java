@@ -43,7 +43,7 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
 
     @Override
     protected void initView() {
-        mAdapter = new SceneSettingDeviceSelectAdapter(R.layout.item_zigbee_add_select_gateway);
+        mAdapter = new SceneSettingDeviceSelectAdapter(R.layout.item_scene_action_device_select);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .showLastDivider()
