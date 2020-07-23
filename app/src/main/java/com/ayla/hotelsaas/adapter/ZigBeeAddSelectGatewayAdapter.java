@@ -19,5 +19,6 @@ public class ZigBeeAddSelectGatewayAdapter extends BaseQuickAdapter<DeviceListBe
         helper.setText(R.id.tv_name, item.getDeviceName());
         helper.setBackgroundRes(R.id.v_online_status_dot, TempUtils.isDeviceOnline(item) ? R.drawable.ic_device_online : R.drawable.ic_device_offline);
         helper.setText(R.id.tv_online_status, TempUtils.isDeviceOnline(item) ? "在线" : "离线");
+        helper.setVisible(R.id.iv_right_arrow, TempUtils.isDeviceOnline(item));
     }
 }

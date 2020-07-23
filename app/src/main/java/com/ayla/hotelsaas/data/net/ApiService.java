@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.Device;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
@@ -57,7 +56,7 @@ public interface ApiService {
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
 
     @GET("api/v1/construction/device/{deviceId}/candidates")
-    Observable<BaseResult<DeviceListBean.DevicesBean>> fetchCandidateNodes(@Path("deviceId") String deviceId);
+    Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(@Path("deviceId") String deviceId);
 
     @GET("api/v1/construction/scene/list/{scopeId}")
     Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Path("scopeId") String scopeId);
