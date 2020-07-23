@@ -3,14 +3,21 @@ package com.ayla.hotelsaas.base;
 
 import android.annotation.TargetApi;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.ClickUtils;
 import com.ayla.hotelsaas.widget.LoadingDialog;
+import com.blankj.utilcode.util.BarUtils;
+import com.blankj.utilcode.util.ScreenUtils;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -35,7 +42,15 @@ public abstract class BasicActivity extends AppCompatActivity {
         initView();
         initListener();
         AppManager.getAppManager().addActivity(this);
+        if (!ScreenUtils.isFullScreen(this)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                BarUtils.setStatusBarColor(this, Color.TRANSPARENT);
+                BarUtils.setStatusBarLightMode(this, true);
+            } else {
+                BarUtils.setStatusBarColor(this, ContextCompat.getColor(this, R.color.color_statusbar_compare_color));
+        }
     }
+}
 
 
     protected void setStatusBar() {
@@ -178,6 +193,7 @@ public abstract class BasicActivity extends AppCompatActivity {
 
     /**
      * 统计提供方法监听Framgnt function
+     *
      * @param tag
      */
     public void setFunctionsForFragment(String tag) {
