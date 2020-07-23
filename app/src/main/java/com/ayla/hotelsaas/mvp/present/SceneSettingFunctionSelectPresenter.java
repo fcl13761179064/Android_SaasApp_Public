@@ -10,9 +10,7 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
 
     public void loadFunction() {
         List<String> devices = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-           devices.add("开关"+i);
-        }
+        devices.add("开关");
         mView.showFunctions(devices);
     }
 }

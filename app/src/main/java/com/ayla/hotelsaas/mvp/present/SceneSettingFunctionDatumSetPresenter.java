@@ -14,7 +14,7 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
         List<CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean>> devices = new ArrayList<>();
         {
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
-            datumBean.setFunctionName("开关一");
+            datumBean.setFunctionName("开关");
             datumBean.setValueName("开启");
             datumBean.setLeftValue("Switch_Control");
             datumBean.setOperator("==");
@@ -28,7 +28,7 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
         }
         {
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
-            datumBean.setFunctionName("开关一");
+            datumBean.setFunctionName("开关");
             datumBean.setValueName("关闭");
             datumBean.setLeftValue("Switch_Control");
             datumBean.setOperator("==");

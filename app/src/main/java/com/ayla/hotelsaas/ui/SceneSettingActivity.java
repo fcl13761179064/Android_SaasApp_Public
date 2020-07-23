@@ -31,6 +31,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import me.jessyan.autosize.utils.AutoSizeUtils;
 
+/**
+ * 场景编辑页面
+ * 进入时必须带入scopeId
+ */
 public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, SceneSettingPresenter> implements SceneSettingView {
     @BindView(R.id.rv)
     public RecyclerView mRecyclerView;
@@ -38,6 +42,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     public TextView mSceneNameTextView;
     @BindView(R.id.appBar)
     AppBar appBar;
+    @BindView(R.id.tv_delete)
+    View mDeleteView;
 
     private RuleEngineBean mRuleEngineBean;
     private SceneSettingActionItemAdapter mAdapter;
@@ -48,11 +54,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         if (mRuleEngineBean != null) {
             syncSourceAndAdapter();
             mSceneNameTextView.setText(mRuleEngineBean.getRuleName());
+            mDeleteView.setVisibility(View.VISIBLE);
         } else {
             mRuleEngineBean = new RuleEngineBean();
             mRuleEngineBean.setScopeId(getIntent().getIntExtra("scopeId", 0));
-            mRuleEngineBean.setRuleDescription("sssss");
+            mRuleEngineBean.setRuleDescription("");
             mRuleEngineBean.setRuleType(2);
+            mDeleteView.setVisibility(View.GONE);
         }
     }
 
@@ -153,9 +161,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             }
             mRuleEngineBean.getAction().getItems().add(actionItem);
             mRuleEngineBean.getAction().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
-            mAdapter.getData().add(datumBean);
-            mAdapter.notifyDataSetChanged();
-
+            mAdapter.addData(datumBean);
         }
     }
 
@@ -203,7 +209,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
             datumBean.setLeftValue(actionItem.getLeftValue());
             datumBean.setFunctionName("Switch_Control".equals(actionItem.getLeftValue()) ? "功能开关" : "未知功能");
-            datumBean.setValueName(actionItem.getRightValue() == 1 ? "开启" : "关闭");
+            datumBean.setValueName("1".equals(actionItem.getRightValue()) ? "开启" : "关闭");
             datumBean.setTargetDeviceId(actionItem.getTargetDeviceId());
             datumBean.setTargetDeviceType(actionItem.getTargetDeviceType());
             datumBean.setRightValueType(actionItem.getRightValueType());

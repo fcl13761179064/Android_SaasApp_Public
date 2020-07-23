@@ -155,7 +155,7 @@ public class RuleEngineBean {
 
             private String operator;
 
-            private int rightValue;
+            private String rightValue;
 
             private int rightValueType;
 
@@ -191,11 +191,11 @@ public class RuleEngineBean {
                 this.operator = operator;
             }
 
-            public int getRightValue() {
+            public String getRightValue() {
                 return rightValue;
             }
 
-            public void setRightValue(int rightValue) {
+            public void setRightValue(String rightValue) {
                 this.rightValue = rightValue;
             }
 
