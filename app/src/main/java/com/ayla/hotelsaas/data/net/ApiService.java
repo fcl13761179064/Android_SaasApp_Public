@@ -58,8 +58,11 @@ public interface ApiService {
     @GET("api/v1/construction/device/{deviceId}/candidates")
     Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(@Path("deviceId") String deviceId);
 
-    @GET("api/v1/construction/scene/list/{scopeId}")
-    Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Path("scopeId") String scopeId);
+    @POST("notify_gateway_config_exit")
+    Observable<BaseResult<Boolean>> notifyGatewayConfigExit(@Body RequestBody body);
+
+    @GET("api/v1/construction/scene/list/${scopeId}")
+    Observable<BaseResult<RuleEngineBean>> fetchRuleEngines(@Path("scopeId") String scopeId);
 
     @POST("api/v1/construction/scene/save")
     Observable<BaseResult<Boolean>> saveRuleEngine(@Body RequestBody body);

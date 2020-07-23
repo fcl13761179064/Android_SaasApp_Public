@@ -7,24 +7,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.DeviceListAdapter;
-import com.ayla.hotelsaas.application.MyApplication;
+import com.ayla.hotelsaas.adapter.SceneLikeageAdapter;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
-import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
+import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.present.SceneLikeagePresenter;
-import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.mvp.view.SceneLikeageView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
-import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
-import java.util.List;
 import butterknife.BindView;
 
 public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, SceneLikeagePresenter> implements SceneLikeageView{
@@ -36,9 +31,8 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
     SmartRefreshLayout mRefreshLayout;
 
 
-    private DeviceListAdapter mAdapter;
+    private SceneLikeageAdapter mAdapter;
     private RoomOrderBean.ResultListBean mRoom_order;
-    private WorkOrderBean.ResultListBean mWork_order;
     private RecyclerView mRecyclerview;
 
     public SceneLikeageFragment(RoomOrderBean.ResultListBean room_order) {
@@ -55,7 +49,7 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
         mRefreshLayout = view.findViewById(R.id.device_refreshLayout);
         mRecyclerview = view.findViewById(R.id.device_recyclerview);
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new DeviceListAdapter();
+        mAdapter = new SceneLikeageAdapter();
         mRecyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(mRecyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
@@ -64,6 +58,12 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
 
     @Override
     protected void initListener() {
+        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+
+            }
+        });
         mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
@@ -86,7 +86,7 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
         });
 
         mRefreshLayout.autoRefresh();//自动刷新
-        mAdapter.setEmptyView(R.layout.empty_device_order);
+        mAdapter.setEmptyView(R.layout.empty_scene_page);
 
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,10 +109,8 @@ public  class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Sce
     }
 
     @Override
-    public void loadDataSuccess(DeviceListBean data) {
-        final List<DeviceListBean.DevicesBean> devices = data.getDevices();
-        mAdapter.setNewData(devices);
-        MyApplication.getInstance().setDevicesBean(devices);
+    public void loadDataSuccess(RuleEngineBean data) {
+        mAdapter.addData(data);
         loadDataFinish();
     }
 

@@ -3,10 +3,13 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.mvp.view.SceneLikeageView;
+
+import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -44,10 +47,10 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
      * @param resourceRoomId
      */
     public void loadData(String resourceRoomId) {
-        RequestModel.getInstance().getDeviceList(resourceRoomId,pageNum,maxNum)
-                .subscribe(new  RxjavaObserver<DeviceListBean>() {
+        RequestModel.getInstance().fetchRuleEngines(resourceRoomId)
+                .subscribe(new  RxjavaObserver<RuleEngineBean>() {
             @Override
-            public void _onNext(DeviceListBean data) {
+            public void _onNext(RuleEngineBean data) {
 
                 mView.loadDataSuccess(data);
             }

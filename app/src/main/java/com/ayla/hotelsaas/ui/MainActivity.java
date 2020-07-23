@@ -1,13 +1,16 @@
 package com.ayla.hotelsaas.ui;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.base.BasicFragment;
@@ -17,8 +20,10 @@ import com.ayla.hotelsaas.fragment.DeviceListFragment;
 import com.ayla.hotelsaas.fragment.SceneLikeageFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
 import com.ayla.hotelsaas.widget.AppBar;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 
 /**
@@ -175,6 +180,15 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
         super.onDestroy();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) { //按下的如果是BACK，同时没有重复
+            finish();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
