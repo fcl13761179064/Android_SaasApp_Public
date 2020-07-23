@@ -76,7 +76,7 @@ public class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Scen
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    mPresenter.loadFistPage(Long.valueOf(3));
+                    mPresenter.loadFistPage(mRoom_order.getRoomId());
                 }
 
             }
@@ -84,7 +84,7 @@ public class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Scen
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                    mPresenter.loadNextPage(Long.valueOf(mRoom_order.getRoomId()));
+                    mPresenter.loadNextPage(mRoom_order.getRoomId());
                 }
             }
         });

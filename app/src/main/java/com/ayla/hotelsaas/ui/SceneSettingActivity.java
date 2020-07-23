@@ -185,7 +185,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @Override
     public void saveFailed() {
-
+        CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming).show();
     }
 
     @OnClick(R.id.tv_delete)

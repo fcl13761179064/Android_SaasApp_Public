@@ -20,7 +20,7 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
             datumBean.setOperator("==");
             datumBean.setRightValue(1);
             datumBean.setRightValueType(1);
-            datumBean.setTargetDeviceType(2);
+            datumBean.setTargetDeviceType(1);
             datumBean.setTargetDeviceId(dsn);
             CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> bean = new CheckableSupport<>(datumBean);
             bean.setChecked(true);
@@ -34,7 +34,7 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
             datumBean.setOperator("==");
             datumBean.setRightValue(0);
             datumBean.setRightValueType(1);
-            datumBean.setTargetDeviceType(2);
+            datumBean.setTargetDeviceType(1);
             datumBean.setTargetDeviceId(dsn);
             CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> bean = new CheckableSupport<>(datumBean);
             bean.setChecked(false);
