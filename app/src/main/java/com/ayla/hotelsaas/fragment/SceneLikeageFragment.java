@@ -76,7 +76,7 @@ public class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Scen
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    mPresenter.loadFistPage(Long.valueOf(3));
+                    mPresenter.loadFistPage(Long.valueOf(123));
                 }
 
             }
