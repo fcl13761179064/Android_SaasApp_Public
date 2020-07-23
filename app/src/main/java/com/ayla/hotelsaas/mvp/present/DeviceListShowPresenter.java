@@ -2,15 +2,10 @@ package com.ayla.hotelsaas.mvp.present;
 
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -48,23 +43,22 @@ public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
      * @param resourceRoomId
      */
     public void loadData(String resourceRoomId) {
-        RequestModel.getInstance().getDeviceList(resourceRoomId,pageNum,maxNum)
-                .subscribe(new  RxjavaObserver<DeviceListBean>() {
-            @Override
-            public void _onNext(DeviceListBean data) {
+        RequestModel.getInstance().getDeviceList(resourceRoomId, pageNum, maxNum)
+                .subscribe(new RxjavaObserver<DeviceListBean>() {
+                    @Override
+                    public void _onNext(DeviceListBean data) {
+                        mView.loadDataSuccess(data);
+                    }
 
-                mView.loadDataSuccess(data);
-            }
+                    @Override
+                    public void _onError(String code, String msg) {
+                        mView.loadDataFinish();
+                    }
 
-            @Override
-            public void _onError(String code, String msg) {
-                mView.loadDataFinish();
-            }
-
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                addSubscrebe(d);
-            }
-        });
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        addSubscrebe(d);
+                    }
+                });
     }
 }

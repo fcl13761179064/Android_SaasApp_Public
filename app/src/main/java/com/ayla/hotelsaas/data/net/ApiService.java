@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.Device;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
@@ -51,19 +50,16 @@ public interface ApiService {
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
     @POST("api/v1/construction/device/bind")
-    Observable<BaseResult<Boolean>> bindDeviceWithDSN(@Body RequestBody body);
+    Observable<BaseResult> bindDeviceWithDSN(@Body RequestBody body);
 
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
 
-    @POST("notify_gateway_config_enter")
-    Observable<BaseResult<Boolean>> notifyGatewayConfigEnter(@Body RequestBody body);
+    @GET("api/v1/construction/device/{deviceId}/candidates")
+    Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(@Path("deviceId") String deviceId);
 
     @POST("notify_gateway_config_exit")
     Observable<BaseResult<Boolean>> notifyGatewayConfigExit(@Body RequestBody body);
-
-    @GET("api/v1/construction/device/${deviceId}/candidates")
-    Observable<BaseResult<List<Device>>> fetchCandidateNodes(@Path("deviceId") String deviceId);
 
     @GET("api/v1/construction/scene/list/${scopeId}")
     Observable<BaseResult<RuleEngineBean>> fetchRuleEngines(@Path("scopeId") String scopeId);
@@ -77,7 +73,7 @@ public interface ApiService {
     @POST("api/v1/construction/scene/excute")
     Observable<BaseResult<Boolean>> runRuleEngine(@Body RequestBody body);
 
-    @PUT("api/v1/construction/device/${deviceId}/property")
+    @PUT("api/v1/construction/device/{deviceId}/property")
     Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
 
     @HTTP(method = "DELETE", path = "delete_rule_engine", hasBody = true)

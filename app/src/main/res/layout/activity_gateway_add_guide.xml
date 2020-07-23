@@ -50,7 +50,7 @@
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="111"
+                android:text="AC000W011683471"
                 android:textColor="#ff333333"
                 android:textSize="14sp" />
 

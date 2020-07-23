@@ -3,7 +3,6 @@ package com.ayla.hotelsaas.ui;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -17,6 +16,7 @@ import butterknife.OnClick;
 
 /**
  * 网关添加页面
+ * 进入时必须带上dsn、cuId 、scopeId。
  */
 public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, GatewayAddGuidePresenter> implements GatewayAddGuideView {
     @BindView(R.id.iv_01)
@@ -43,10 +43,9 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
         return R.layout.activity_gateway_add;
     }
 
-
     @Override
     protected void initView() {
-        dsn = getIntent().getStringExtra("dsn");
+
     }
 
     @Override
@@ -54,7 +53,7 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
 
     }
 
-    private String dsn;
+
     private int bindTag = 0;//0:绑定中 1:绑定成功 -1:绑定失败
 
     @Override
@@ -66,7 +65,10 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
     private void startBind() {
         bindTag = 0;
         refreshBindShow();
-        mPresenter.registerDeviceWithDSN(dsn);
+        mPresenter.registerDeviceWithDSN(
+                getIntent().getStringExtra("dsn"),
+                getIntent().getIntExtra("cuId", 0),
+                getIntent().getIntExtra("scopeId", 0));
     }
 
     @Override

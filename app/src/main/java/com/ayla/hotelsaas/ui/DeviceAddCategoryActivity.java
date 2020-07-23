@@ -15,11 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListLeftAdapter;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListRightAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddCategoryPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
 import com.ayla.hotelsaas.utils.StatusBarUtil;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.List;
@@ -29,6 +32,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * @描述 添加设备入口页面，展示产品分类二级列表
+ * 进入时必须带上参数scopeId
  * @作者 吴友金
  */
 public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView, DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
@@ -70,7 +74,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 DeviceCategoryBean.SubBean bean = (DeviceCategoryBean.SubBean) adapter.getItem(position);
-                handleAddJump(bean.getCuid());
+                handleAddJump(bean);
             }
         });
         rightRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
@@ -130,15 +134,39 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     /**
      * 处理点击二级菜单item后的配网页面跳转逻辑
      *
-     * @param cuid
+     * @param subBean
      */
-    private void handleAddJump(int cuid) {
-        if (0 == cuid) {//跳转网关添加
+    private void handleAddJump(DeviceCategoryBean.SubBean subBean) {
+        if (0 == subBean.getDeviceConnectType()) {//跳转网关添加
             Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
+            mainActivity.putExtra("cuId", subBean.getCuId());
+            mainActivity.putExtra("scopeId", getIntent().getIntExtra("scopeId", 0));
             startActivityForResult(mainActivity, 0);
-        } else if (1 == cuid) {//跳转节点添加
-            Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
-            startActivityForResult(mainActivity, 0);
+        } else if (1 == subBean.getDeviceConnectType()) {//跳转节点添加
+            int gatewayCount = 0;
+            DeviceListBean.DevicesBean gateway = null;
+            List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
+            if (devicesBean != null) {
+                for (DeviceListBean.DevicesBean device : devicesBean) {
+                    if (TempUtils.isDeviceGateway(device)) {
+                        gatewayCount++;
+                        gateway = device;
+                    }
+                }
+            }
+            if (gatewayCount == 0) {//没有网关
+                CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
+            } else if (gatewayCount == 1) {//一个网关
+                Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
+                mainActivity.putExtra("deviceId", gateway.getDeviceId());
+                mainActivity.putExtra("cuId", gateway.getCuId());
+                mainActivity.putExtra("scopeId", getIntent().getIntExtra("scopeId", 0));
+                startActivityForResult(mainActivity, 0);
+            } else {//多个网关
+                Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
+                mainActivity.putExtra("scopeId", getIntent().getIntExtra("scopeId", 0));
+                startActivityForResult(mainActivity, 0);
+            }
         }
     }
 

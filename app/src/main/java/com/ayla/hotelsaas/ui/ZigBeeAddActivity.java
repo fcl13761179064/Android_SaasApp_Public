@@ -20,6 +20,7 @@ import butterknife.OnClick;
 
 /**
  * ZigBee添加页面
+ * 进入时必须带入网关deviceId 、cuId 、scopeId
  */
 public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddPresenter> implements ZigBeeAddView {
     private static final String TAG = "ZigBeeAddActivity";
@@ -60,10 +61,9 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         return R.layout.activity_zigbee_add;
     }
 
-
     @Override
     protected void initView() {
-        dsn = getIntent().getStringExtra("dsn");
+
     }
 
     @Override
@@ -71,24 +71,25 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
 
     }
 
-    private String dsn;//网关DSN
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startBind();
     }
 
-    private int bindProgress;
+    private int bindProgress;//记录进度
 
     private void startBind() {
         Log.d(TAG, "startBind: " + Thread.currentThread().getName());
-        mPresenter.bindZigBeeNodeWithGatewayDSN(dsn, 1,1);
+        mPresenter.bindZigBeeNodeWithGatewayDSN(
+                getIntent().getStringExtra("deviceId"),
+                getIntent().getIntExtra("cuId", 0),
+                getIntent().getIntExtra("scopeId", 0));
     }
 
     @OnClick(R.id.bt_bind)
     public void handleButton() {
-        if (bindProgress == 4) {
+        if (bindProgress == 6) {
             setResult(RESULT_OK);
             finish();
         } else {
@@ -128,6 +129,14 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                 mP2TextView.setTextColor(ContextCompat.getColor(this, R.color.color_333333));
                 break;
             case 4:
+                mP3View.setImageResource(R.drawable.ic_progress_dot_loading);
+                mP3TextView.setTextColor(ContextCompat.getColor(this, R.color.color_333333));
+                break;
+            case 5:
+                mP3View.setImageResource(R.drawable.ic_progress_dot_finish);
+                mP3TextView.setTextColor(ContextCompat.getColor(this, R.color.color_333333));
+                break;
+            case 6:
                 mImageView.setImageResource(R.drawable.ic_device_bind_success);
                 mLoadingTextView.setVisibility(View.INVISIBLE);
                 mProgressView.setVisibility(View.INVISIBLE);
@@ -140,7 +149,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     @Override
     public void progressSuccess() {
         Log.d(TAG, "zigBeeDeviceBindFinished: ");
-        bindProgress = 4;
+        bindProgress = 6;
         refreshBindShow();
     }
 
@@ -171,25 +180,29 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     }
 
     @Override
-    public void gatewayDisconnectSuccess() {
-
+    public void bindZigBeeDeviceSuccess() {
+        Log.d(TAG, "bindZigBeeDeviceSuccess: ");
+        bindProgress = 5;
+        refreshBindShow();
     }
 
     @Override
-    public void gatewayDisconnectStart() {
-
+    public void bindZigBeeDeviceStart() {
+        Log.d(TAG, "bindZigBeeDeviceStart: ");
+        bindProgress = 4;
+        refreshBindShow();
     }
 
     @Override
-    public void zigBeeDeviceBindSuccess() {
-        Log.d(TAG, "zigBeeDeviceBindSuccess: ");
+    public void fetchCandidatesSuccess() {
+        Log.d(TAG, "fetchCandidatesSuccess: ");
         bindProgress = 3;
         refreshBindShow();
     }
 
     @Override
-    public void zigBeeDeviceBindStart() {
-        Log.d(TAG, "zigBeeDeviceBindStart: ");
+    public void fetchCandidatesStart() {
+        Log.d(TAG, "fetchCandidatesStart: ");
         bindProgress = 2;
         refreshBindShow();
     }

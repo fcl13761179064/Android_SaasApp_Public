@@ -64,6 +64,7 @@
                     android:hint="@string/phone_or_email"
                     android:inputType="textVisiblePassword"
                     android:singleLine="true"
+                    android:text="youjin.wu@aylaasia.com"
                     android:textColor="@color/login_text_percent"
                     android:textColorHint="@color/login_text_percent"
                     android:textSize="@dimen/sp_14" />
@@ -98,6 +99,7 @@
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:singleLine="true"
+                    android:text="123456"
                     android:textColor="@color/login_text_percent"
                     android:textColorHint="@color/login_text_percent"
                     android:textSize="@dimen/sp_14" />
