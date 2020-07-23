@@ -6,11 +6,8 @@ import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.base.BasicFragment;
@@ -20,7 +17,6 @@ import com.ayla.hotelsaas.fragment.DeviceListFragment;
 import com.ayla.hotelsaas.fragment.SceneLikeageFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
 import com.ayla.hotelsaas.widget.AppBar;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -46,15 +46,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
 
     @Override
-    protected void setStatusBar() {
-        //用来设置整体下移，状态栏沉浸
-        //StatusBarToolUlti.setRootViewFitsSystemWindows(this, false);
-        //黑色字体
-        //StatusBarToolUlti.setStatusBarDarkTheme(this, true);
-      //  StatusBarUtil.setTransparent(this);
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
     }
