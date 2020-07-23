@@ -1,6 +1,6 @@
 package com.ayla.hotelsaas.data.net;
 
-import android.text.TextUtils;
+import java.io.IOException;
 
 
 /**
@@ -8,12 +8,10 @@ import android.text.TextUtils;
  * @作者 fanchunlei
  * @时间 2020/6/3
  */
-public class RxjavaFlatmapThrowable  extends Throwable{
+public class RxjavaFlatmapThrowable extends IOException {
 
-    public static final String THROW_CODE = "4096";
     private String code;
     private String msg;
-    private Throwable throwable;
 
     public RxjavaFlatmapThrowable(String code, String msg) {
         super(msg);
@@ -21,36 +19,11 @@ public class RxjavaFlatmapThrowable  extends Throwable{
         this.msg = msg;
     }
 
-    public RxjavaFlatmapThrowable(Throwable throwable) {
-        this.throwable = throwable;
-    }
-
-    public String getMsg() {
-        if (!TextUtils.isEmpty(msg)) {
-            return msg;
-        }
-        if (throwable != null) {
-            return throwable.toString();
-        }
-        return null;
-    }
-
     public String getCode() {
         return code;
     }
 
-    public Throwable getThrowable() {
-        return throwable;
-    }
-    /**
-     * 是否是成功
-     *
-     * @return
-     */
-    public boolean isSuccess() {
-        if (!TextUtils.isEmpty(code) && code.equals("0000")) {
-            return true;
-        }
-        return false;
+    public String getMsg() {
+        return msg;
     }
 }

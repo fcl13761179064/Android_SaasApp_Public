@@ -11,11 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ZigBeeAddSelectGatewayAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.bean.Device;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.ZigBeeAddSelectGatewayPresenter;
 import com.ayla.hotelsaas.mvp.view.ZigBeeAddSelectGatewayView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.List;
@@ -25,6 +24,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 添加节点，选择所属网关的页面
+ * 进入时必须带入scopeId
  */
 public class ZigBeeAddSelectGatewayActivity extends BaseMvpActivity<ZigBeeAddSelectGatewayView, ZigBeeAddSelectGatewayPresenter> implements ZigBeeAddSelectGatewayView {
     @BindView(R.id.rv)
@@ -54,6 +54,9 @@ public class ZigBeeAddSelectGatewayActivity extends BaseMvpActivity<ZigBeeAddSel
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent mainActivity = new Intent(ZigBeeAddSelectGatewayActivity.this, ZigBeeAddGuideActivity.class);
+                mainActivity.putExtra("deviceId", ((DeviceListBean.DevicesBean) adapter.getItem(position)).getDeviceId());
+                mainActivity.putExtra("cuId", ((DeviceListBean.DevicesBean) adapter.getItem(position)).getCuId());
+                mainActivity.putExtra("scopeId", getIntent().getStringExtra("scopeId"));//
                 startActivityForResult(mainActivity, 0);
             }
         });
@@ -71,7 +74,7 @@ public class ZigBeeAddSelectGatewayActivity extends BaseMvpActivity<ZigBeeAddSel
     }
 
     @Override
-    public void showGateways(List<Device> devices) {
+    public void showGateways(List<DeviceListBean.DevicesBean> devices) {
         mAdapter.setNewData(devices);
     }
 

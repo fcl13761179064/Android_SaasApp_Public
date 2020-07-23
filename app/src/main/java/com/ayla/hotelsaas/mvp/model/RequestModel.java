@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -127,12 +128,17 @@ public class RequestModel {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<BaseResult<Boolean>> bindDeviceWithDSN(String deviceId, int cuId, int scopeId, int scopeType) {
+    /**
+     * @param deviceId
+     * @param cuId
+     * @param scopeId
+     * @return
+     */
+    public Observable<BaseResult> bindDeviceWithDSN(String deviceId, int cuId, int scopeId) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("scopeId", scopeId);
         body.addProperty("cuId", cuId);
-        body.addProperty("scopeType", scopeType);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().bindDeviceWithDSN(body111)
                 .subscribeOn(Schedulers.io())
@@ -149,33 +155,13 @@ public class RequestModel {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<BaseResult<Boolean>> notifyGatewayBeginConfig(String dsn, int cuid) {
-        JsonObject body = new JsonObject();
-        body.addProperty("device_id", dsn);
-        body.addProperty("cuid", cuid);
-        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().notifyGatewayConfigEnter(body111)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Observable<BaseResult<Boolean>> notifyGatewayFinishConfig(String dsn, int cuid) {
-        JsonObject body = new JsonObject();
-        body.addProperty("device_id", dsn);
-        body.addProperty("cuid", cuid);
-        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().notifyGatewayConfigExit(body111)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
     /**
      * 获取候选节点
      *
      * @param dsn 网关dsn
      * @return
      */
-    public Observable<BaseResult<List<Device>>> fetchCandidateNodes(String dsn) {
+    public Observable<BaseResult<DeviceListBean.DevicesBean>> fetchCandidateNodes(String dsn) {
         return getApiService().fetchCandidateNodes(dsn)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

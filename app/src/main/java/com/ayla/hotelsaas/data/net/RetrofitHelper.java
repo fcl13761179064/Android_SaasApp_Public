@@ -133,19 +133,9 @@ public class RetrofitHelper {
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                 @Override
                 public void log(String message) {
-                    System.out.println(message);
                     Log.d("okhttp", message);
                 }
             });
-            //可以通过 setLevel 改变日志级别共包含四个级别：NONE、BASIC、HEADER、BODY
-            /*
-             * BASIC 请求/响应行  <-- HTTP/1.1 200 OK (22ms, 6-byte body)
-             * HEADER 请求/响应行 + 头 --> Host: example.comContent-Type: plain/textContent-Length: 3
-             * BODY 请求/响应行 + 头 + 体
-             *  可以通过实现 Logger 接口更改日志保存位置
-             * */
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            builder.addInterceptor(httpLoggingInterceptor);
 
             //添加请求头
             builder.addInterceptor(CommonParameterInterceptor);
@@ -155,6 +145,10 @@ public class RetrofitHelper {
                     .writeTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS);
             builder.retryOnConnectionFailure(true);
+
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(httpLoggingInterceptor);
+
             sOkHttpClient = builder.build();
         }
 
