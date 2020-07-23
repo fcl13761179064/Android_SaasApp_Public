@@ -18,7 +18,7 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
             datumBean.setValueName("开启");
             datumBean.setLeftValue("Switch_Control");
             datumBean.setOperator("==");
-            datumBean.setRightValue(1);
+            datumBean.setRightValue("1");
             datumBean.setRightValueType(1);
             datumBean.setTargetDeviceType(1);
             datumBean.setTargetDeviceId(dsn);
@@ -32,7 +32,7 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
             datumBean.setValueName("关闭");
             datumBean.setLeftValue("Switch_Control");
             datumBean.setOperator("==");
-            datumBean.setRightValue(0);
+            datumBean.setRightValue("0");
             datumBean.setRightValueType(1);
             datumBean.setTargetDeviceType(1);
             datumBean.setTargetDeviceId(dsn);

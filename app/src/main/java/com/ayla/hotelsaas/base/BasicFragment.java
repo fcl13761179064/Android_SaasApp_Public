@@ -1,16 +1,18 @@
 package com.ayla.hotelsaas.base;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.utils.ClickUtils;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -30,6 +32,7 @@ public abstract class BasicFragment extends Fragment {
     private boolean isPrepared;                 //标志位，View已经初始化完成。
     private boolean isFirstLoad = true;         //是否第一次加载
     private BasicActivity mBaseActivity;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -133,18 +136,11 @@ public abstract class BasicFragment extends Fragment {
 
     protected abstract void initData();
 
-    private ProgressDialog progressDialog;
-    public void showProgress(){
-        showProgress("加载中...");
-    }
-    public void showProgress(String msg){
-        if (null == progressDialog) {
-            progressDialog = new ProgressDialog(getContext());
+    public void showProgress(String msg) {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof BaseMvpActivity) {
+            ((BaseMvpActivity) activity).showProgress(msg);
         }
-        progressDialog.setMessage(msg);
-        if (progressDialog.isShowing())
-            return;
-        progressDialog.show();
     }
 
     public void refreshUI() {
@@ -189,9 +185,10 @@ public abstract class BasicFragment extends Fragment {
         }
     }
 
-    public void hideProgress(){
-        if (null != progressDialog) {
-            progressDialog.dismiss();
+    public void hideProgress() {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof BaseMvpActivity) {
+            ((BaseMvpActivity) activity).hideProgress();
         }
     }
 

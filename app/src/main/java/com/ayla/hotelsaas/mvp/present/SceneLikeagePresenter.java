@@ -6,10 +6,12 @@ import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneLikeageView;
+import com.ayla.hotelsaas.widget.LoadingDialog;
 
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 
 /**
  * @描述
@@ -53,12 +55,39 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
 
                     @Override
                     public void _onNext(List<RuleEngineBean> data) {
-mView.loadDataSuccess(data);
+                        mView.loadDataSuccess(data);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
                         mView.loadDataFinish();
+                    }
+                });
+    }
+
+    public void runRuleEngine(int ruleId) {
+        RequestModel.getInstance().runRuleEngine(ruleId)
+                .doOnComplete(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new RxjavaObserver<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addSubscrebe(d);
+                        mView.showProgress("加载中");
+                    }
+
+                    @Override
+                    public void _onNext(Boolean data) {
+                        mView.runSceneSuccess();
+                    }
+
+                    @Override
+                    public void _onError(String code, String msg) {
+                        mView.runSceneFailed();
                     }
                 });
     }

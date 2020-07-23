@@ -152,6 +152,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             actionItem.setRightValueType(datumBean.getRightValueType());
             actionItem.setOperator(datumBean.getOperator());
             actionItem.setLeftValue(datumBean.getLeftValue());
+            actionItem.setRightValue(datumBean.getRightValue());
             actionItem.setRightValueType(datumBean.getRightValueType());
             if (mRuleEngineBean.getAction() == null) {
                 mRuleEngineBean.setAction(new RuleEngineBean.Action());

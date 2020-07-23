@@ -15,6 +15,7 @@ import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.mvp.present.SceneLikeagePresenter;
 import com.ayla.hotelsaas.mvp.view.SceneLikeageView;
+import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.SceneSettingActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -62,12 +63,20 @@ public class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Scen
 
     @Override
     protected void initListener() {
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                RuleEngineBean ruleEngineBean = (RuleEngineBean) adapter.getItem(position);
+                mPresenter.runRuleEngine(ruleEngineBean.getRuleId());
+            }
+        });
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
 
             }
         });
+
         mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
@@ -123,5 +132,15 @@ public class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Scen
     public void loadDataFinish() {
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
+    }
+
+    @Override
+    public void runSceneSuccess() {
+        CustomToast.makeText(getContext(), "触发成功", R.drawable.ic_toast_success).show();
+    }
+
+    @Override
+    public void runSceneFailed() {
+        CustomToast.makeText(getContext(), "触发失败", R.drawable.ic_toast_warming).show();
     }
 }
