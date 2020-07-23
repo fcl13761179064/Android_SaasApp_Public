@@ -53,7 +53,7 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
 
                     @Override
                     public void _onNext(List<RuleEngineBean> data) {
-mView.loadDataSuccess(data);
+                        mView.loadDataSuccess(data);
                     }
 
                     @Override
