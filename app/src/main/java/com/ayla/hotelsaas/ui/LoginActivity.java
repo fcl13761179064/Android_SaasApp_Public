@@ -51,7 +51,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         //StatusBarToolUlti.setRootViewFitsSystemWindows(this, false);
         //黑色字体
         //StatusBarToolUlti.setStatusBarDarkTheme(this, true);
-        StatusBarUtil.setTransparent(this);
+      //  StatusBarUtil.setTransparent(this);
     }
 
     @Override
