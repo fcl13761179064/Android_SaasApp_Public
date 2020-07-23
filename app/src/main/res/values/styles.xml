@@ -10,8 +10,8 @@
 
 
     <style name="AppTheme" parent="AppCompatTheme">
-        <!--SplashActivityTheme 该窗口为半透明-->
-        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@null</item>
+
     </style>
 
 

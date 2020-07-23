@@ -187,7 +187,7 @@ public class RequestModel {
      * @param scopeId
      * @return
      */
-    public Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(String scopeId) {
+    public Observable<BaseResult<RuleEngineBean>> fetchRuleEngines(String scopeId) {
         return getApiService().fetchRuleEngines(scopeId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

@@ -66,7 +66,7 @@ public interface ApiService {
     Observable<BaseResult<List<Device>>> fetchCandidateNodes(@Path("deviceId") String deviceId);
 
     @GET("api/v1/construction/scene/list/${scopeId}")
-    Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Path("scopeId") String scopeId);
+    Observable<BaseResult<RuleEngineBean>> fetchRuleEngines(@Path("scopeId") String scopeId);
 
     @POST("api/v1/construction/scene/save")
     Observable<BaseResult<Boolean>> saveRuleEngine(@Body RequestBody body);
