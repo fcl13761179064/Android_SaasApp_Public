@@ -22,8 +22,8 @@ public class SceneLikeageAdapter extends BaseQuickAdapter<RuleEngineBean, BaseVi
     }
 
     @Override
-    protected void convert(BaseViewHolder helper,RuleEngineBean ruleEngineBeans) {
+    protected void convert(BaseViewHolder helper, RuleEngineBean ruleEngineBeans) {
         helper.setText(R.id.tv_device_name, ruleEngineBeans.getRuleName());
-
+        helper.addOnClickListener(R.id.rl_edit_btn);
     }
 }

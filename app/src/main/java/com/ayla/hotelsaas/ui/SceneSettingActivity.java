@@ -24,6 +24,7 @@ import com.ayla.hotelsaas.widget.SceneNameSetDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 场景编辑页面
- * 进入时必须带入scopeId
+ * 进入时必须带入scopeId 或者 sceneBean
  */
 public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, SceneSettingPresenter> implements SceneSettingView {
     @BindView(R.id.rv)
@@ -51,10 +52,12 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (mRuleEngineBean != null) {
-            syncSourceAndAdapter();
+        Serializable sceneBean = getIntent().getSerializableExtra("sceneBean");
+        if (sceneBean instanceof RuleEngineBean) {
+            mRuleEngineBean = (RuleEngineBean) sceneBean;
             mSceneNameTextView.setText(mRuleEngineBean.getRuleName());
             mDeleteView.setVisibility(View.VISIBLE);
+            syncSourceAndAdapter();
         } else {
             mRuleEngineBean = new RuleEngineBean();
             mRuleEngineBean.setScopeId(getIntent().getIntExtra("scopeId", 0));
@@ -114,7 +117,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     CustomToast.makeText(SceneSettingActivity.this, "请添加动作", R.drawable.ic_warning).show();
                     return;
                 }
-                mPresenter.saveRuleEngine(mRuleEngineBean);
+                mPresenter.saveOrUpdateRuleEngine(mRuleEngineBean);
             }
         });
     }
@@ -180,6 +183,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @Override
     public void saveSuccess() {
+        CustomToast.makeText(this, "创建成功", R.drawable.ic_toast_success).show();
         setResult(RESULT_OK);
         finish();
     }
@@ -189,12 +193,25 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming).show();
     }
 
+    @Override
+    public void deleteSuccess() {
+        CustomToast.makeText(this, "删除成功", R.drawable.ic_toast_success).show();
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public void deleteFailed() {
+        CustomToast.makeText(this, "删除失败", R.drawable.ic_toast_warming).show();
+    }
+
     @OnClick(R.id.tv_delete)
     public void handleDelete() {
         CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
             @Override
             public void onDone(CustomAlarmDialog dialog) {
                 dialog.dismissAllowingStateLoss();
+                mPresenter.deleteScene(mRuleEngineBean.getRuleId());
             }
 
             @Override
@@ -209,7 +226,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         for (RuleEngineBean.Action.ActionItem actionItem : mRuleEngineBean.getAction().getItems()) {
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
             datumBean.setLeftValue(actionItem.getLeftValue());
-            datumBean.setFunctionName("Switch_Control".equals(actionItem.getLeftValue()) ? "功能开关" : "未知功能");
+            datumBean.setFunctionName("Switch_Control".equals(actionItem.getLeftValue()) ? "开关" : "动作");
             datumBean.setValueName("1".equals(actionItem.getRightValue()) ? "开启" : "关闭");
             datumBean.setTargetDeviceId(actionItem.getTargetDeviceId());
             datumBean.setTargetDeviceType(actionItem.getTargetDeviceType());

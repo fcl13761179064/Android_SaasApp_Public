@@ -1,11 +1,12 @@
 package com.ayla.hotelsaas.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 联动实体Bean
  */
-public class RuleEngineBean {
+public class RuleEngineBean implements Serializable {
 
     /**
      * scopeId : 1280390357498073088
@@ -84,7 +85,7 @@ public class RuleEngineBean {
         this.action = action;
     }
 
-    public static class Condition {
+    public static class Condition implements Serializable{
         /**
          * expression :
          * items : []
@@ -111,7 +112,7 @@ public class RuleEngineBean {
         }
     }
 
-    public static class Action {
+    public static class Action implements Serializable{
         /**
          * expression : func.execute('2','GADw3NnUI4Xa54nsr5tYz20000','StatusLightSwitch')
          * items : [{"targetDeviceType":2,"targetDeviceId":"GADw3NnUI4Xa54nsr5tYz20000","leftValue":"StatusLightSwitch","operator":"==","rightValue":1,"rightValueType":1}]
@@ -137,7 +138,7 @@ public class RuleEngineBean {
             this.items = items;
         }
 
-        public static class ActionItem {
+        public static class ActionItem implements Serializable{
             /**
              * targetDeviceType : 2
              * targetDeviceId : GADw3NnUI4Xa54nsr5tYz20000

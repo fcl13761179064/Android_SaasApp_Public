@@ -1,10 +1,12 @@
 package com.ayla.hotelsaas.fragment;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -73,7 +75,10 @@ public class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Scen
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-
+                RuleEngineBean ruleEngineBean = (RuleEngineBean) adapter.getItem(position);
+                Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
+                intent.putExtra("sceneBean", ruleEngineBean);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -106,7 +111,7 @@ public class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Scen
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
                 intent.putExtra("scopeId", mRoom_order.getRoomId());
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -142,5 +147,13 @@ public class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Scen
     @Override
     public void runSceneFailed() {
         CustomToast.makeText(getContext(), "触发失败", R.drawable.ic_toast_warming).show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            mRefreshLayout.autoRefresh();
+        }
     }
 }
