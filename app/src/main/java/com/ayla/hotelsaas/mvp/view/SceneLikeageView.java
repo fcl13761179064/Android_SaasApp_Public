@@ -12,4 +12,7 @@ public interface SceneLikeageView extends BaseView {
 
     void loadDataFinish() ;
 
+    void runSceneSuccess();
+
+    void runSceneFailed();
 }

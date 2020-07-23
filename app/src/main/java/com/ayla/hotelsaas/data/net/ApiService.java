@@ -17,7 +17,6 @@ import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -67,15 +66,15 @@ public interface ApiService {
     @POST("api/v1/construction/scene/save")
     Observable<BaseResult<Boolean>> saveRuleEngine(@Body RequestBody body);
 
-    @PUT("update_rule_engine")
+    @POST("api/v1/construction/scene/update")
     Observable<BaseResult<Boolean>> updateRuleEngine(@Body RequestBody body);
+
+    @POST("api/v1/construction/scene/delete")
+    Observable<BaseResult<Boolean>> deleteRuleEngine(@Body RequestBody body);
 
     @POST("api/v1/construction/scene/excute")
     Observable<BaseResult<Boolean>> runRuleEngine(@Body RequestBody body);
 
     @PUT("api/v1/construction/device/{deviceId}/property")
     Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
-
-    @HTTP(method = "DELETE", path = "delete_rule_engine", hasBody = true)
-    Observable<BaseResult<Boolean>> deleteRuleEngine(@Body RequestBody body);
 }

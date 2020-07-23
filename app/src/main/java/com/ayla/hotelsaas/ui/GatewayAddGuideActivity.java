@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
-import com.ayla.hotelsaas.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -64,7 +63,7 @@ public class GatewayAddGuideActivity extends BaseMvpActivity {
         } else {
             String dsn = mDSNEditText.getText().toString();
             if (dsn.length() == 0) {
-                ToastUtil.show(this, "DSN输入不能为空");
+                CustomToast.makeText(this, "DSN输入不能为空", R.drawable.ic_toast_warming).show();
             } else {
                 Intent mainActivity = new Intent(this, GatewayAddActivity.class);
                 mainActivity.putExtra("dsn", dsn);

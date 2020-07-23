@@ -37,7 +37,7 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
         private String targetDeviceId;
         private String leftValue;
         private int rightValueType;
-        private int rightValue;
+        private String rightValue;
         private String operator;
 
         public String getFunctionName() {
@@ -88,11 +88,11 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
             this.rightValueType = rightValueType;
         }
 
-        public int getRightValue() {
+        public String getRightValue() {
             return rightValue;
         }
 
-        public void setRightValue(int rightValue) {
+        public void setRightValue(String rightValue) {
             this.rightValue = rightValue;
         }
 

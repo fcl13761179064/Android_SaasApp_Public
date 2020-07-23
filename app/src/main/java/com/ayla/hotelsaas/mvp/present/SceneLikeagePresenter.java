@@ -6,10 +6,12 @@ import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneLikeageView;
+import com.ayla.hotelsaas.widget.LoadingDialog;
 
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 
 /**
  * @描述
@@ -25,7 +27,7 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
     /**
      * 加载下一页
      */
-    public void loadNextPage(Long businessId) {
+    public void loadNextPage(int businessId) {
         pageNum++;
         loadData(businessId);
     }
@@ -33,7 +35,7 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
     /**
      * 加载第一页
      */
-    public void loadFistPage(Long resourceRoomId) {
+    public void loadFistPage(int resourceRoomId) {
         pageNum = 1;
         loadData(resourceRoomId);
     }
@@ -43,8 +45,8 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
      *
      * @param resourceRoomId
      */
-    public void loadData(Long resourceRoomId) {
-        RequestModel.getInstance().fetchRuleEngines(resourceRoomId.intValue())
+    public void loadData(int resourceRoomId) {
+        RequestModel.getInstance().fetchRuleEngines(resourceRoomId)
                 .subscribe(new RxjavaObserver<List<RuleEngineBean>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -59,6 +61,33 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
                     @Override
                     public void _onError(String code, String msg) {
                         mView.loadDataFinish();
+                    }
+                });
+    }
+
+    public void runRuleEngine(int ruleId) {
+        RequestModel.getInstance().runRuleEngine(ruleId)
+                .doOnComplete(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new RxjavaObserver<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addSubscrebe(d);
+                        mView.showProgress("加载中");
+                    }
+
+                    @Override
+                    public void _onNext(Boolean data) {
+                        mView.runSceneSuccess();
+                    }
+
+                    @Override
+                    public void _onError(String code, String msg) {
+                        mView.runSceneFailed();
                     }
                 });
     }

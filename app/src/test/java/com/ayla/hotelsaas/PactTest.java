@@ -422,21 +422,13 @@ public class PactTest {
             RequestModel.getInstance()
                     .unbindDeviceWithDSN("111", 2).test().assertNoErrors();
         }
-        {//通知网关进入配网模式
-            RequestModel.getInstance()
-                    .notifyGatewayBeginConfig("11111", 1).test().assertNoErrors();
-        }
-        {//通知网关退出配网模式
-            RequestModel.getInstance()
-                    .notifyGatewayFinishConfig("11111", 1).test().assertNoErrors();
-        }
         {//获取网关的候选节点
             RequestModel.getInstance()
                     .fetchCandidateNodes("11111").test().assertNoErrors();
         }
         {//通过房间号获取下属的RuleEngines
             RequestModel.getInstance()
-                    .fetchRuleEngines("11111").test().assertNoErrors();
+                    .fetchRuleEngines(1).test().assertNoErrors();
         }
         {//保存RuleEngine
             RuleEngineBean ruleEngineBean = new RuleEngineBean();
@@ -450,7 +442,7 @@ public class PactTest {
             for (int j = 0; j < 1; j++) {
                 RuleEngineBean.Action.ActionItem actionItem = new RuleEngineBean.Action.ActionItem();
                 actionItem.setLeftValue("StatusLightSwitch");
-                actionItem.setRightValue(1);
+                actionItem.setRightValue("1");
                 actionItem.setOperator("==");
                 actionItem.setRightValueType(1);
                 actionItem.setTargetDeviceId("GADw3NnUI4Xa54nsr5tYz20000");
@@ -476,7 +468,7 @@ public class PactTest {
             for (int j = 0; j < 1; j++) {
                 RuleEngineBean.Action.ActionItem actionItem = new RuleEngineBean.Action.ActionItem();
                 actionItem.setLeftValue("StatusLightSwitch");
-                actionItem.setRightValue(1);
+                actionItem.setRightValue("1");
                 actionItem.setOperator("==");
                 actionItem.setRightValueType(1);
                 actionItem.setTargetDeviceId("GADw3NnUI4Xa54nsr5tYz20000");
