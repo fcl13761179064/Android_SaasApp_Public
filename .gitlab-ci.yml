@@ -40,13 +40,13 @@ lintDebug:
 #    - android
 #    - hk
 
-assembleDebug:
+assembleRelease:
   stage: build
   only:
     - master
   script:
     - echo "开始打包"
-    - gradle assembleDebug
+    - gradle assembleRelease
     - echo "打包结束"
   artifacts:
     paths:
