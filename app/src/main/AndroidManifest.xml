@@ -41,7 +41,7 @@
             android:name=".ui.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            />
 
         <activity
             android:name=".ui.MainActivity"
