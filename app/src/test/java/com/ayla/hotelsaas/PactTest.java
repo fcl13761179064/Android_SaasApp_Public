@@ -110,7 +110,6 @@ public class PactTest {
                         .numberValue("code", 0)
                         .stringType("msg", "success")
                         .object("data", new PactDslJsonBody()
-                                .object()
                                 .stringType("pageNo", "1")
                                 .stringType("pageSize", "10")
                                 .object("resultList", new PactDslJsonArray()
@@ -383,7 +382,7 @@ public class PactTest {
                 .toPact();
     }
 
-    //    @Test
+    //@Test
     @PactVerification("construction_backend")
     public void testLogin() {
         {//登录
