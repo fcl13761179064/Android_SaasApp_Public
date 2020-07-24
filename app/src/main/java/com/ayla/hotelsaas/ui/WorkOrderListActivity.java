@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.WorkOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
+import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.StatusBarUtil;
@@ -138,6 +139,11 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     public void loadDataFinish() {
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AppManager.getAppManager().AppExit(this);
     }
 
 }

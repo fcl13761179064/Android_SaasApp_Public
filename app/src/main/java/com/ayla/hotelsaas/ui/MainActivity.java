@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.fragment.DeviceListFragment;
 import com.ayla.hotelsaas.fragment.SceneLikeageFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
+import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.widget.AppBar;
 import java.util.ArrayList;
 import java.util.List;
@@ -208,4 +209,9 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AppManager.getAppManager().AppExit(this);
+    }
 }
