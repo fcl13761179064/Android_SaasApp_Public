@@ -41,8 +41,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     @Override
                     public ObservableSource<?> apply(String s) throws Exception {
                         return RequestModel.getInstance()
-                                .updateProperty(dsn, "zb_join_enable", 100)
-                                .subscribeOn(Schedulers.io());
+                                .updateProperty(dsn, "zb_join_enable", "100");
                     }
                 })//通知网关进入配网模式
                 .observeOn(AndroidSchedulers.mainThread())
@@ -134,7 +133,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     @Override
                     public ObservableSource<?> apply(Throwable throwable) throws Exception {
                         return RequestModel.getInstance()
-                                .updateProperty(dsn, "zb_join_enable", 0)
+                                .updateProperty(dsn, "zb_join_enable", "0")
                                 .flatMap(new Function<BaseResult<Boolean>, ObservableSource<?>>() {
                                     @Override
                                     public ObservableSource<?> apply(BaseResult<Boolean> booleanBaseResult) throws Exception {
@@ -147,14 +146,14 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .updateProperty(dsn, "zb_join_enable", 0);
+                                .updateProperty(dsn, "zb_join_enable", "0");
                     }
                 })//前面步骤正常时，通知网关退出配网模式。
                 .doOnDispose(new Action() {
                     @Override
                     public void run() throws Exception {
                         RequestModel.getInstance()
-                                .updateProperty(dsn, "zb_join_enable", 0)
+                                .updateProperty(dsn, "zb_join_enable", "0")
                                 .subscribe(new Observer<BaseResult<Boolean>>() {
                                     @Override
                                     public void onSubscribe(Disposable d) {

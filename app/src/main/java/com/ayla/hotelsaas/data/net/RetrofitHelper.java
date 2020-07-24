@@ -119,7 +119,7 @@ public class RetrofitHelper {
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {
-                    if ("youhostname".equals(hostname)) {
+                    if ("youhostname" .equals(hostname)) {
                         return true;
                     } else {
                         HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
@@ -133,6 +133,7 @@ public class RetrofitHelper {
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                 @Override
                 public void log(String message) {
+                    System.out.println(message);
                     Log.d("okhttp", message);
                 }
             });

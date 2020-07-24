@@ -8,13 +8,17 @@ import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
 
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class DeviceAddCategoryPresenter extends BasePresenter<DeviceAddCategoryView> {
 
     public void loadCategory() {
         RequestModel.getInstance()
                 .getDeviceCategory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxjavaObserver<List<DeviceCategoryBean>>() {
                     @Override
                     public void onSubscribe(Disposable d) {

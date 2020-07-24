@@ -8,9 +8,11 @@ import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
     public void saveOrUpdateRuleEngine(RuleEngineBean mRuleEngineBean) {
@@ -21,6 +23,8 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
             observable = RequestModel.getInstance().updateRuleEngine(mRuleEngineBean);
         }
         observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
@@ -54,6 +58,8 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
     public void deleteScene(int ruleId) {
         RequestModel.getInstance()
                 .deleteRuleEngine(ruleId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
