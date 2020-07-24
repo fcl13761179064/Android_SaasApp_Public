@@ -10,8 +10,10 @@ import com.ayla.hotelsaas.widget.LoadingDialog;
 
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @描述
@@ -47,6 +49,8 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
      */
     public void loadData(int resourceRoomId) {
         RequestModel.getInstance().fetchRuleEngines(resourceRoomId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxjavaObserver<List<RuleEngineBean>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -67,6 +71,8 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
 
     public void runRuleEngine(int ruleId) {
         RequestModel.getInstance().runRuleEngine(ruleId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnComplete(new Action() {
                     @Override
                     public void run() throws Exception {

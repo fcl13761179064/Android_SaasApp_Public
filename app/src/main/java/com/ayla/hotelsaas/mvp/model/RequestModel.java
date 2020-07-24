@@ -63,9 +63,7 @@ public class RequestModel {
         body.addProperty("account", account);
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().login(new_body)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().login(new_body);
     }
 
     /**
@@ -75,12 +73,8 @@ public class RequestModel {
      * @param maxNum  每页加载量
      * @return
      */
-    public Observable<BaseResult<WorkOrderBean>> getWorkOrderList(int pageNum, String maxNum) {
-        return getApiService().getWorkOrders(pageNum, maxNum)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-
+    public Observable<BaseResult<WorkOrderBean>> getWorkOrderList(int pageNum, int maxNum) {
+        return getApiService().getWorkOrders(pageNum, maxNum);
     }
 
 
@@ -92,11 +86,8 @@ public class RequestModel {
      * @return
      */
 
-    public Observable<BaseResult<RoomOrderBean>> getRoomOrderList(String billId, int pageNum, String maxNum) {
-        return getApiService().getRoomOrders(pageNum, maxNum, billId)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+    public Observable<BaseResult<RoomOrderBean>> getRoomOrderList(String billId, int pageNum, int maxNum) {
+        return getApiService().getRoomOrders(pageNum, maxNum, billId);
 
     }
 
@@ -107,23 +98,18 @@ public class RequestModel {
      * @param //每页加载量
      * @return
      */
-    public Observable<BaseResult<DeviceListBean>> getDeviceList(String roomId, int pageNum, String maxNum) {
+    public Observable<BaseResult<DeviceListBean>> getDeviceList(String roomId, int pageNum, int maxNum) {
         JsonObject body = new JsonObject();
         body.addProperty("roomId", roomId);
         body.addProperty("pageNo", pageNum);
         body.addProperty("pageSize", maxNum);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().getDeviceList(body111)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().getDeviceList(body111);
 
     }
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
-        return getApiService().fetchDeviceCategory()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().fetchDeviceCategory();
     }
 
     /**
@@ -138,9 +124,7 @@ public class RequestModel {
         body.addProperty("scopeId", scopeId);
         body.addProperty("cuId", cuId);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().bindDeviceWithDSN(body111)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().bindDeviceWithDSN(body111);
     }
 
     public Observable<BaseResult<Boolean>> unbindDeviceWithDSN(String dsn, int scopeId) {
@@ -160,9 +144,7 @@ public class RequestModel {
      * @return
      */
     public Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(String dsn) {
-        return getApiService().fetchCandidateNodes(dsn)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().fetchCandidateNodes(dsn);
     }
 
     /**
@@ -172,9 +154,7 @@ public class RequestModel {
      * @return
      */
     public Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(int scopeId) {
-        return getApiService().fetchRuleEngines(scopeId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().fetchRuleEngines(scopeId);
     }
 
     /**
@@ -186,9 +166,7 @@ public class RequestModel {
     public Observable<BaseResult<Boolean>> saveRuleEngine(RuleEngineBean ruleEngineBean) {
         String json = new Gson().toJson(ruleEngineBean);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
-        return getApiService().saveRuleEngine(body111)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().saveRuleEngine(body111);
     }
 
 
@@ -201,9 +179,7 @@ public class RequestModel {
     public Observable<BaseResult<Boolean>> updateRuleEngine(RuleEngineBean ruleEngineBean) {
         String json = new Gson().toJson(ruleEngineBean);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
-        return getApiService().updateRuleEngine(body111)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().updateRuleEngine(body111);
     }
 
     /**
@@ -211,15 +187,13 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> updateProperty(String deviceId, String propertyName, Object propertyValue) {
+    public Observable<BaseResult<Boolean>> updateProperty(String deviceId, String propertyName, String propertyValue) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("propertyName", propertyName);
-        jsonObject.addProperty("propertyValue", propertyValue.toString());
+        jsonObject.addProperty("propertyValue", propertyValue);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().updateProperty(deviceId, body111)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().updateProperty(deviceId, body111);
     }
 
     /**
@@ -233,9 +207,7 @@ public class RequestModel {
         jsonObject.addProperty("ruleId", ruleId);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().runRuleEngine(body111)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().runRuleEngine(body111);
     }
 
     public Observable<BaseResult<Boolean>> deleteRuleEngine(Integer ruleId) {
@@ -243,8 +215,6 @@ public class RequestModel {
         jsonObject.addProperty("ruleId", ruleId);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().deleteRuleEngine(body111)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return getApiService().deleteRuleEngine(body111);
     }
 }

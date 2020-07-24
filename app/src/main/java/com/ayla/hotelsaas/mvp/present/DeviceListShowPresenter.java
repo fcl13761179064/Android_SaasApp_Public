@@ -7,8 +7,10 @@ import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @描述
@@ -19,7 +21,7 @@ public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
     //页码
     private int pageNum = 1;
     //拉取数量
-    private static String maxNum = "10";
+    private static int maxNum = 10;
 
     /**
      * 加载下一页
@@ -43,7 +45,10 @@ public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
      * @param resourceRoomId
      */
     public void loadData(String resourceRoomId) {
-        RequestModel.getInstance().getDeviceList(resourceRoomId, pageNum, maxNum)
+        RequestModel.getInstance()
+                .getDeviceList(resourceRoomId, pageNum, maxNum)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxjavaObserver<DeviceListBean>() {
                     @Override
                     public void _onNext(DeviceListBean data) {

@@ -58,7 +58,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     private TranslateAnimation mShakeAnimation;
 
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
@@ -154,7 +153,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                     // 显示键盘时
                     int srollHeight = rootInvisibleHeight - (root.getHeight() - subView.getHeight()) - SoftIntPutUtils.getNavigationBarHeight(root.getContext());
                     if (srollHeight > 0) {//当键盘高度覆盖按钮时
-                        root.scrollTo(0, srollHeight+10);
+                        root.scrollTo(0, srollHeight + 10);
                     }
                 } else {
                     // 隐藏键盘时
