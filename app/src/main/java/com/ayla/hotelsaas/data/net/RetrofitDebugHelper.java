@@ -40,8 +40,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * @描述 Retrofit 帮助类
- * @创建 丁军伟
- * @时间 2017/8/3
+ * @创建 fanchunlei
+ * @时间 2020/8/3
  */
 
 /**

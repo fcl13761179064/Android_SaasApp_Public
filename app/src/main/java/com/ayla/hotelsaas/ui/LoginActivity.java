@@ -1,19 +1,27 @@
 package com.ayla.hotelsaas.ui;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
@@ -25,6 +33,7 @@ import com.ayla.hotelsaas.mvp.view.LoginView;
 import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
+import com.ayla.hotelsaas.utils.SoftIntPutUtils;
 import com.ayla.hotelsaas.utils.StatusBarUtil;
 import com.ayla.hotelsaas.utils.ToastUtils;
 
@@ -42,9 +51,12 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     Button submitBtn;
     @BindView(R.id.tv_error_show)
     TextView tv_error_show;
+    @BindView(R.id.rl_root_view)
+    RelativeLayout rl_root_view;
+    @BindView(R.id.ll_content_view)
+    LinearLayout ll_content_view;
 
     private TranslateAnimation mShakeAnimation;
-
 
     @Override
     protected int getLayoutId() {
@@ -54,7 +66,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     @Override
     protected void initView() {
         if (BuildConfig.DEBUG) {
-            tvSwitch.setVisibility(View.VISIBLE);
+            tvSwitch.setVisibility(View.GONE);
             if (Constance.isNetworkDebug) {
                 tvSwitch.setText("测");
             } else {
@@ -62,6 +74,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             }
         }
     }
+
 
     @OnClick({R.id.submitBtn, R.id.tv_switch})
     public void onViewClicked(View v) {
@@ -94,6 +107,15 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     protected void initListener() {
+        keepLoginBtnNotOver(rl_root_view, ll_content_view);
+        //触摸外部，键盘消失
+        rl_root_view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                SoftIntPutUtils.closeKeyboard(LoginActivity.this);
+                return false;
+            }
+        });
         edit_password.addTextChangedListener(edtWatcher);
         edit_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -109,6 +131,38 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         });
 
     }
+
+
+    /**
+     * 保持登录按钮始终不会被覆盖
+     *
+     * @param root
+     * @param subView
+     */
+    private void keepLoginBtnNotOver(final View root, final View subView) {
+        root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect rect = new Rect();
+                // 获取root在窗体的可视区域
+                root.getWindowVisibleDisplayFrame(rect);
+                // 获取root在窗体的不可视区域高度(被其他View遮挡的区域高度)
+                int rootInvisibleHeight = root.getRootView().getHeight() - rect.bottom;
+                // 若不可视区域高度大于200，则键盘显示,其实相当于键盘的高度
+                if (rootInvisibleHeight > 200) {
+                    // 显示键盘时
+                    int srollHeight = rootInvisibleHeight - (root.getHeight() - subView.getHeight()) - SoftIntPutUtils.getNavigationBarHeight(root.getContext());
+                    if (srollHeight > 0) {//当键盘高度覆盖按钮时
+                        root.scrollTo(0, srollHeight + 10);
+                    }
+                } else {
+                    // 隐藏键盘时
+                    root.scrollTo(0, 0);
+                }
+            }
+        });
+    }
+
 
     private TextWatcher edtWatcher = new TextWatcher() {
         @Override
@@ -148,7 +202,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     public void loginSuccess(User data) {
-        SharePreferenceUtils.saveString(LoginActivity.this,Constance.SP_Login_Token,data.getAuthToken());
+        SharePreferenceUtils.saveString(LoginActivity.this, Constance.SP_Login_Token, data.getAuthToken());
         Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
         startActivity(mainActivity);
         finish();
@@ -173,6 +227,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             edit_password.startAnimation(mShakeAnimation);
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

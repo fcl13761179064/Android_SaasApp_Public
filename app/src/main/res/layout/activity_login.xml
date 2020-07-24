@@ -1,156 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/white"
-    android:scrollbars="none">
+    android:background="@color/white">
 
-    <!-- 设置fillViewport属性表示充满整个ScrollView -->
-
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/ll_content_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80sp"
+            android:layout_marginBottom="51dp"
+            android:text="@string/login_tv_show"
+            android:textColor="@color/loginLogoColor"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:gravity="top|center_horizontal"
+            android:orientation="vertical"
+            android:visibility="visible">
 
-            <LinearLayout
-                android:layout_width="fill_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:text="@string/login_username_show"
+                android:textColor="@color/loginLogoColor"
+                android:textSize="@dimen/sp_12" />
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="80sp"
-                    android:layout_marginBottom="51dp"
-                    android:text="@string/login_tv_show"
-                    android:textColor="@color/loginLogoColor"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
+            <com.ayla.hotelsaas.widget.BiuEditTextUtils
+                android:id="@+id/editCount"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3"
-                android:gravity="top|center_horizontal"
-                android:orientation="vertical"
-                android:visibility="visible">
+                android:layout_height="48dp"
+                android:layout_marginLeft="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_40"
+                android:background="@null"
+                android:gravity="center"
+                android:hint="@string/phone_or_email"
+                android:inputType="textVisiblePassword"
+                android:singleLine="true"
+                android:text="chunlei.fan@aylaasia.com"
+                android:textColor="@color/login_text_percent"
+                android:textColorHint="@color/login_text_percent"
+                android:textSize="@dimen/sp_14" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/login_username_show"
-                    android:textColor="@color/loginLogoColor"
-                    android:textSize="@dimen/sp_12" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/ll_account_layout"
+                android:layout_marginLeft="38dp"
+                android:layout_marginRight="38dp"
+                android:background="@color/login_deviding_line" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_18"
+                android:text="@string/login_password_show"
+                android:textColor="@color/loginLogoColor"
+                android:textSize="@dimen/sp_12" />
+
+            <com.ayla.hotelsaas.widget.BiuEditTextUtils
+                android:id="@+id/editPass"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_below="@+id/ll_account_layout"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_40"
+                android:layout_marginRight="@dimen/dp_40"
+                android:background="@null"
+                android:gravity="center"
+                android:hint="@string/login_password"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:text="123456"
+                android:textColor="@color/login_text_percent"
+                android:textColorHint="@color/login_text_percent"
+                android:textSize="@dimen/sp_14" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/ll_password_layout"
+                android:layout_marginLeft="38dp"
+                android:layout_marginRight="38dp"
+                android:background="@color/login_deviding_line" />
 
 
-                <com.ayla.hotelsaas.widget.BiuEditTextUtils
-                    android:id="@+id/editCount"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginLeft="@dimen/dp_40"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:layout_marginRight="@dimen/dp_40"
-                    android:background="@null"
-                    android:gravity="center"
-                    android:hint="@string/phone_or_email"
-                    android:inputType="textVisiblePassword"
-                    android:singleLine="true"
-                    android:textColor="@color/login_text_percent"
-                    android:textColorHint="@color/login_text_percent"
-                    android:textSize="@dimen/sp_14" />
+            <TextView
+                android:id="@+id/tv_error_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="密码或者账号错误"
+                android:textColor="@color/login_error_show"
+                android:textSize="14sp"
+                android:visibility="gone" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_below="@+id/ll_account_layout"
-                    android:layout_marginLeft="38dp"
-                    android:layout_marginRight="38dp"
-                    android:background="@color/login_deviding_line" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_18"
-                    android:text="@string/login_password_show"
-                    android:textColor="@color/loginLogoColor"
-                    android:textSize="@dimen/sp_12" />
-
-                <com.ayla.hotelsaas.widget.BiuEditTextUtils
-                    android:id="@+id/editPass"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_below="@+id/ll_account_layout"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/dp_40"
-                    android:layout_marginRight="@dimen/dp_40"
-                    android:background="@null"
-                    android:gravity="center"
-                    android:hint="@string/login_password"
-                    android:imeOptions="actionDone"
-                    android:inputType="textPassword"
-                    android:singleLine="true"
-                    android:textColor="@color/login_text_percent"
-                    android:textColorHint="@color/login_text_percent"
-                    android:textSize="@dimen/sp_14" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_below="@+id/ll_password_layout"
-                    android:layout_marginLeft="38dp"
-                    android:layout_marginRight="38dp"
-                    android:background="@color/login_deviding_line" />
-
-                <TextView
-                    android:id="@+id/tv_error_show"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:text="密码或者账号错误"
-                    android:textColor="@color/login_error_show"
-                    android:textSize="14sp"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/submitBtn"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="36dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginRight="36dp"
-                    android:background="@drawable/green_btn_bg"
-                    android:text="@string/login_btn"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp" />
-            </LinearLayout>
+            <Button
+                android:id="@+id/submitBtn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="36dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="36dp"
+                android:background="@drawable/green_btn_bg"
+                android:text="@string/login_btn"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
         </LinearLayout>
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_switch"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_gravity="right"
-            android:layout_margin="10dp"
-            android:background="@drawable/bg_circle_border_blue"
-            android:gravity="center"
-            android:text="测"
-            android:textColor="@color/loginLogoColor"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:visibility="gone" />
-    </FrameLayout>
+    <TextView
+        android:id="@+id/tv_switch"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="@dimen/dp_10"
+        android:background="@drawable/bg_circle_border_blue"
+        android:gravity="center"
+        android:text="测"
+        android:textColor="@color/loginLogoColor"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 
-</ScrollView>
+</RelativeLayout>
