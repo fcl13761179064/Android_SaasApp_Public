@@ -140,10 +140,5 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
     }
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        AppManager.getAppManager().AppExit(this);
-    }
 
 }

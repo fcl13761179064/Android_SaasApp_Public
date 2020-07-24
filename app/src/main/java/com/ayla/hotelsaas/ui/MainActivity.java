@@ -209,9 +209,4 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        AppManager.getAppManager().AppExit(this);
-    }
 }
