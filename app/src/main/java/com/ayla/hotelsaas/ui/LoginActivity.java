@@ -22,6 +22,7 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
+import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.StatusBarUtil;
@@ -171,5 +172,10 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             edite_count.startAnimation(mShakeAnimation);
             edit_password.startAnimation(mShakeAnimation);
         }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AppManager.getAppManager().AppExit(this);
     }
 }

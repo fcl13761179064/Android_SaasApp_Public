@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.RoomOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.RoomOrderView;
+import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -130,5 +131,11 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     public void loadDataFinish() {
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AppManager.getAppManager().AppExit(this);
     }
 }
