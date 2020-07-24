@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @描述
@@ -26,7 +28,7 @@ public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
     //页码
     private int pageNum = 1;
     //拉取数量
-    private static String maxNum = "10";
+    private static int maxNum = 10;
 
     /**
      * 加载下一页
@@ -51,6 +53,8 @@ public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
      */
     public void loadData() {
         RequestModel.getInstance().getWorkOrderList(pageNum, maxNum)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxjavaObserver<WorkOrderBean>() {
                     @Override
                     public void _onNext(WorkOrderBean data) {

@@ -13,9 +13,11 @@ import com.ayla.hotelsaas.utils.PregnancyUtil;
 import com.ayla.hotelsaas.utils.ToastUtil;
 import com.ayla.hotelsaas.utils.ToastUtils;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @描述
@@ -51,6 +53,8 @@ public class LoginPresenter extends BasePresenter<LoginView> {
 
     private void login(final String account, String password) {
         RequestModel.getInstance().login(account, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(@NonNull Disposable disposable) throws Exception {

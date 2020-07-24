@@ -40,10 +40,10 @@ public interface ApiService {
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
     @GET("api/v1/construction/constructbill")
-    Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") String pageSize);
+    Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
 
     @GET("api/v1/construction/billrooms")
-    Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") String pageSize, @Query("billId") String billId);
+    Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("billId") String billId);
 
     @POST("api/v1/construction/device/list")
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
