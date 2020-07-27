@@ -39,8 +39,8 @@ public class ZigBeeAddGuideActivity extends BaseMvpActivity {
     public void handleJump() {
         Intent mainActivity = new Intent(this, ZigBeeAddActivity.class);
         mainActivity.putExtra("deviceId", getIntent().getStringExtra("deviceId"));//传网关的dsn过去。
-        mainActivity.putExtra("cuId", getIntent().getIntExtra("cuId",0));//
-        mainActivity.putExtra("scopeId", getIntent().getIntExtra("scopeId",0));//
+        mainActivity.putExtra("cuId", getIntent().getLongExtra("cuId",0));//
+        mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId",0));//
         startActivityForResult(mainActivity, 0);
     }
 

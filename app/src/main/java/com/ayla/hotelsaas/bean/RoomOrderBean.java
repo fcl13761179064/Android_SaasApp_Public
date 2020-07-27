@@ -70,14 +70,14 @@ public class RoomOrderBean implements Serializable {
          * roomName : 房间1
          */
 
-        private int roomId;
+        private long roomId;
         private String roomName;
 
-        public int getRoomId() {
+        public long getRoomId() {
             return roomId;
         }
 
-        public void setRoomId(int roomId) {
+        public void setRoomId(long roomId) {
             this.roomId = roomId;
         }
 

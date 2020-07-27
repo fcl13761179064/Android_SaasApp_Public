@@ -26,7 +26,7 @@ public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
     /**
      * 加载下一页
      */
-    public void loadNextPage(String businessId) {
+    public void loadNextPage(long businessId) {
         pageNum++;
         loadData(businessId);
     }
@@ -34,7 +34,7 @@ public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
     /**
      * 加载第一页
      */
-    public void loadFistPage(String resourceRoomId) {
+    public void loadFistPage(long resourceRoomId) {
         pageNum = 1;
         loadData(resourceRoomId);
     }
@@ -44,7 +44,7 @@ public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
      *
      * @param resourceRoomId
      */
-    public void loadData(String resourceRoomId) {
+    public void loadData(long resourceRoomId) {
         RequestModel.getInstance()
                 .getDeviceList(resourceRoomId, pageNum, maxNum)
                 .subscribeOn(Schedulers.io())

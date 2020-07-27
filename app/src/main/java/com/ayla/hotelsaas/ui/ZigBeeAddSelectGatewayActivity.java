@@ -59,7 +59,7 @@ public class ZigBeeAddSelectGatewayActivity extends BaseMvpActivity<ZigBeeAddSel
                     Intent mainActivity = new Intent(ZigBeeAddSelectGatewayActivity.this, ZigBeeAddGuideActivity.class);
                     mainActivity.putExtra("deviceId", device.getDeviceId());
                     mainActivity.putExtra("cuId", device.getCuId());
-                    mainActivity.putExtra("scopeId", getIntent().getIntExtra("scopeId",0));//
+                    mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId",0));//
                     startActivityForResult(mainActivity, 0);
                 }
             }

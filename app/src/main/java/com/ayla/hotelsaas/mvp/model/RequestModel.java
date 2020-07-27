@@ -98,7 +98,7 @@ public class RequestModel {
      * @param //每页加载量
      * @return
      */
-    public Observable<BaseResult<DeviceListBean>> getDeviceList(String roomId, int pageNum, int maxNum) {
+    public Observable<BaseResult<DeviceListBean>> getDeviceList(long roomId, int pageNum, int maxNum) {
         JsonObject body = new JsonObject();
         body.addProperty("roomId", roomId);
         body.addProperty("pageNo", pageNum);
@@ -118,7 +118,7 @@ public class RequestModel {
      * @param scopeId
      * @return
      */
-    public Observable<BaseResult> bindDeviceWithDSN(String deviceId, int cuId, int scopeId) {
+    public Observable<BaseResult> bindDeviceWithDSN(String deviceId, long cuId, long scopeId) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("scopeId", scopeId);
@@ -153,7 +153,7 @@ public class RequestModel {
      * @param scopeId
      * @return
      */
-    public Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(int scopeId) {
+    public Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(long scopeId) {
         return getApiService().fetchRuleEngines(scopeId);
     }
 
