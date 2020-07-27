@@ -106,7 +106,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                 mImageView.setAnimation(R.raw.ic_device_bind_loading);
                 mImageView.playAnimation();
                 mLoadingTextView.setVisibility(View.VISIBLE);
-                mProgressTextView.setVisibility(View.VISIBLE);
+                mProgressTextView.setText("最长可能需要1分钟，请耐心等待");
                 mProgressView.setVisibility(View.VISIBLE);
                 mP1View.setImageResource(R.drawable.ic_progress_dot_loading);
                 mP1TextView.setTextColor(ContextCompat.getColor(this, R.color.color_333333));
@@ -140,6 +140,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                 mImageView.setImageResource(R.drawable.ic_device_bind_success);
                 mLoadingTextView.setVisibility(View.INVISIBLE);
                 mProgressView.setVisibility(View.INVISIBLE);
+                mProgressTextView.setText("最长可能需要1分钟，请耐心等待");
                 mFinishButton.setVisibility(View.VISIBLE);
                 mFinishButton.setText("完成");
                 break;
@@ -159,6 +160,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         mImageView.setImageResource(R.drawable.ic_device_bind_failed);
         mLoadingTextView.setVisibility(View.INVISIBLE);
         mProgressView.setVisibility(View.VISIBLE);
+        mProgressTextView.setText("设备绑定失败，请确认设备状态后重试");
         mFinishButton.setVisibility(View.VISIBLE);
         mFinishButton.setText("重试");
 
