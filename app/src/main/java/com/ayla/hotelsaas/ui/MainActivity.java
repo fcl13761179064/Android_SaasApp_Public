@@ -60,6 +60,7 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
     public void refreshUI() {
         mRoom_order = (RoomOrderBean.ResultListBean) getIntent().getSerializableExtra("roomData");
         mWork_order = (WorkOrderBean.ResultListBean) getIntent().getSerializableExtra("workOrderdata");
+        appBar.setCenterText(mRoom_order.getRoomName());
         super.refreshUI();
     }
 
