@@ -23,12 +23,8 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
     public LottieAnimationView mImageView;
     @BindView(R.id.tv_loading)
     public TextView mLoadingTextView;
-    @BindView(R.id.ll_bind_failed)
-    public View mBindFailedView;
-    @BindView(R.id.tv_bind_loading)
-    public View mBindLoadingView;
-    @BindView(R.id.tv_bind_success)
-    public View mBindSuccessView;
+    @BindView(R.id.tv_bind_progress)
+    public TextView mBindProgressTextView;
     @BindView(R.id.bt_bind)
     public Button mFinishButton;
 
@@ -101,18 +97,14 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
             case 1:
                 mImageView.setImageResource(R.drawable.ic_device_bind_success);
                 mLoadingTextView.setVisibility(View.INVISIBLE);
-                mBindLoadingView.setVisibility(View.INVISIBLE);
-                mBindSuccessView.setVisibility(View.VISIBLE);
-                mBindFailedView.setVisibility(View.INVISIBLE);
+                mBindProgressTextView.setText("设备绑定成功");
                 mFinishButton.setVisibility(View.VISIBLE);
                 mFinishButton.setText("完成");
                 break;
             case -1:
                 mImageView.setImageResource(R.drawable.ic_device_bind_failed);
                 mLoadingTextView.setVisibility(View.INVISIBLE);
-                mBindLoadingView.setVisibility(View.INVISIBLE);
-                mBindSuccessView.setVisibility(View.INVISIBLE);
-                mBindFailedView.setVisibility(View.VISIBLE);
+                mBindProgressTextView.setText("设备绑定失败\n请再检查设备状态与设备ID号后重试");
                 mFinishButton.setVisibility(View.VISIBLE);
                 mFinishButton.setText("重试");
                 break;
@@ -120,9 +112,7 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
                 mImageView.setAnimation(R.raw.ic_device_bind_loading);
                 mImageView.playAnimation();
                 mLoadingTextView.setVisibility(View.VISIBLE);
-                mBindLoadingView.setVisibility(View.VISIBLE);
-                mBindSuccessView.setVisibility(View.INVISIBLE);
-                mBindFailedView.setVisibility(View.INVISIBLE);
+                mBindProgressTextView.setText("最长可能需要1分钟，请耐心等待");
                 mFinishButton.setVisibility(View.INVISIBLE);
                 break;
         }
