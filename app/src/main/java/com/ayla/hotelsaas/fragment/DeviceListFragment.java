@@ -87,7 +87,6 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         });
 
         mRefreshLayout.autoRefresh();//自动刷新
-        mAdapter.setEmptyView(R.layout.empty_device_order);
 
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,8 +112,12 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     @Override
     public void loadDataSuccess(DeviceListBean data) {
         final List<DeviceListBean.DevicesBean> devices = data.getDevices();
-        mAdapter.setNewData(devices);
-        MyApplication.getInstance().setDevicesBean(devices);
+        if (devices.isEmpty()) {
+            mAdapter.setEmptyView(R.layout.empty_device_order);
+        } else {
+            mAdapter.setNewData(devices);
+            MyApplication.getInstance().setDevicesBean(devices);
+        }
         loadDataFinish();
     }
 

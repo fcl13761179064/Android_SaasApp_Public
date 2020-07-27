@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.SceneLikeageAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
@@ -104,7 +105,6 @@ public class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Scen
         });
 
         mRefreshLayout.autoRefresh();//自动刷新
-        mAdapter.setEmptyView(R.layout.empty_scene_page);
 
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +129,12 @@ public class SceneLikeageFragment extends BaseMvpFragment<SceneLikeageView, Scen
 
     @Override
     public void loadDataSuccess(List<RuleEngineBean> data) {
-        mAdapter.setNewData(data);
+        if (data.isEmpty()) {
+            mAdapter.setEmptyView(R.layout.empty_scene_page);
+        } else {
+            mAdapter.setNewData(data);
+        }
+
         loadDataFinish();
     }
 

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.RoomOrderListAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
@@ -69,7 +70,6 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         mAdapter.addHeaderView(view, 0);
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
-        mAdapter.setEmptyView(R.layout.empty_room_order);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         mRefreshLayout.setEnableLoadMore(false);
     }
@@ -123,7 +123,11 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     @Override
     public void loadDataSuccess(RoomOrderBean data) {
         final List<RoomOrderBean.ResultListBean> resultList = data.getResultList();
-        mAdapter.setNewData(resultList);
+        if (resultList.isEmpty()) {
+            mAdapter.setEmptyView(R.layout.empty_room_order);
+        } else {
+            mAdapter.setNewData(resultList);
+        }
         loadDataFinish();
     }
 
