@@ -133,9 +133,4 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         mRefreshLayout.finishLoadMore();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        AppManager.getAppManager().AppExit(this);
-    }
 }
