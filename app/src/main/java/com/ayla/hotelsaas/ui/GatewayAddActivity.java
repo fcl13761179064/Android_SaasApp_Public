@@ -63,8 +63,8 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
         refreshBindShow();
         mPresenter.registerDeviceWithDSN(
                 getIntent().getStringExtra("dsn"),
-                getIntent().getIntExtra("cuId", 0),
-                getIntent().getIntExtra("scopeId", 0));
+                getIntent().getLongExtra("cuId", 0),
+                getIntent().getLongExtra("scopeId", 0));
     }
 
     @Override

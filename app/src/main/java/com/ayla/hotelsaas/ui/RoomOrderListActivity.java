@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -24,9 +25,11 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 
 public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOrderPresenter> implements RoomOrderView {
@@ -39,6 +42,12 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     AppBar appBar;
     private RoomOrderListAdapter mAdapter;
     private WorkOrderBean.ResultListBean mWork_order;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mRefreshLayout.autoRefresh();//自动刷新
+    }
 
     @Override
     protected int getLayoutId() {
@@ -71,6 +80,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        mAdapter.setEmptyView(R.layout.empty_room_order);
         mRefreshLayout.setEnableLoadMore(false);
     }
 
@@ -82,7 +92,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                 if (!FastClickUtils.isDoubleClick()) {
                     Intent intent = new Intent(RoomOrderListActivity.this, MainActivity.class);
                     final RoomOrderBean.ResultListBean room_result = mAdapter.getData().get(position);
-                    intent.putExtra("roomData", (Serializable)room_result);
+                    intent.putExtra("roomData", (Serializable) room_result);
                     intent.putExtra("workOrderdata", (Serializable) mWork_order);
                     startActivity(intent);
                 }
@@ -110,8 +120,6 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                 }
             }
         });
-        mRefreshLayout.autoRefresh();//自动刷新
-
     }
 
 
@@ -123,11 +131,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     @Override
     public void loadDataSuccess(RoomOrderBean data) {
         final List<RoomOrderBean.ResultListBean> resultList = data.getResultList();
-        if (resultList.isEmpty()) {
-            mAdapter.setEmptyView(R.layout.empty_room_order);
-        } else {
-            mAdapter.setNewData(resultList);
-        }
+        mAdapter.setNewData(resultList);
         loadDataFinish();
     }
 

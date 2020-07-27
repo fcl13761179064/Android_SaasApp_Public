@@ -28,7 +28,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
      *
      * @param dsn
      */
-    public void bindZigBeeNodeWithGatewayDSN(String dsn, int cuId, int scopeId) {
+    public void bindZigBeeNodeWithGatewayDSN(String dsn, long cuId, long scopeId) {
         Observable.just(dsn)
                 .doOnNext(new Consumer<String>() {
                     @Override

@@ -74,17 +74,17 @@ public class DeviceListBean implements Serializable {
          * deviceStatus : ONLINE
          */
 
-        private int cuId;
+        private long cuId;
         private String deviceId;
         private String deviceName;
         private Object nickname;
         private String deviceStatus;
 
-        public int getCuId() {
+        public long getCuId() {
             return cuId;
         }
 
-        public void setCuId(int cuId) {
+        public void setCuId(long cuId) {
             this.cuId = cuId;
         }
 

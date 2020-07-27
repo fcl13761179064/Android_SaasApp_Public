@@ -73,7 +73,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    mPresenter.loadFistPage(mRoom_order.getRoomId() + "");
+                    mPresenter.loadFistPage(mRoom_order.getRoomId());
                 }
 
             }
@@ -81,7 +81,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                    mPresenter.loadNextPage(mRoom_order.getRoomId() + "");
+                    mPresenter.loadNextPage(mRoom_order.getRoomId());
                 }
             }
         });

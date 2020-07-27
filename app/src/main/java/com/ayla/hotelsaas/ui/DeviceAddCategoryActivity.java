@@ -140,7 +140,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         if (0 == subBean.getDeviceConnectType()) {//跳转网关添加
             Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
             mainActivity.putExtra("cuId", subBean.getCuId());
-            mainActivity.putExtra("scopeId", getIntent().getIntExtra("scopeId", 0));
+            mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
             startActivityForResult(mainActivity, 0);
         } else if (1 == subBean.getDeviceConnectType()) {//跳转节点添加
             int gatewayCount = 0;
@@ -160,11 +160,11 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
                 mainActivity.putExtra("deviceId", gateway.getDeviceId());
                 mainActivity.putExtra("cuId", gateway.getCuId());
-                mainActivity.putExtra("scopeId", getIntent().getIntExtra("scopeId", 0));
+                mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
                 startActivityForResult(mainActivity, 0);
             } else {//多个网关
                 Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
-                mainActivity.putExtra("scopeId", getIntent().getIntExtra("scopeId", 0));
+                mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
                 startActivityForResult(mainActivity, 0);
             }
         }

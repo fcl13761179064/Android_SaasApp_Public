@@ -59,7 +59,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             syncSourceAndAdapter();
         } else {
             mRuleEngineBean = new RuleEngineBean();
-            mRuleEngineBean.setScopeId(getIntent().getIntExtra("scopeId", 0));
+            mRuleEngineBean.setScopeId(getIntent().getLongExtra("scopeId", 0));
             mRuleEngineBean.setRuleDescription("");
             mRuleEngineBean.setRuleType(2);
             mDeleteView.setVisibility(View.GONE);

@@ -29,7 +29,7 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
     /**
      * 加载下一页
      */
-    public void loadNextPage(int businessId) {
+    public void loadNextPage(long businessId) {
         pageNum++;
         loadData(businessId);
     }
@@ -37,7 +37,7 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
     /**
      * 加载第一页
      */
-    public void loadFistPage(int resourceRoomId) {
+    public void loadFistPage(long resourceRoomId) {
         pageNum = 1;
         loadData(resourceRoomId);
     }
@@ -47,7 +47,7 @@ public class SceneLikeagePresenter extends BasePresenter<SceneLikeageView> {
      *
      * @param resourceRoomId
      */
-    public void loadData(int resourceRoomId) {
+    public void loadData(long resourceRoomId) {
         RequestModel.getInstance().fetchRuleEngines(resourceRoomId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
