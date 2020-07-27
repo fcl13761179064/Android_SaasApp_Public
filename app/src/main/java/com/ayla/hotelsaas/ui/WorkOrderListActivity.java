@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.WorkOrderAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -16,19 +17,15 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.WorkOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
-import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.ayla.hotelsaas.utils.StatusBarUtil;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
-
 import java.io.Serializable;
 import java.util.List;
-
 import butterknife.BindView;
 
 public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOrderPresenter> implements WorkOrderView {
@@ -73,7 +70,6 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        mAdapter.setEmptyView(R.layout.empty_work_order);
         mRefreshLayout.setEnableLoadMore(false);
     }
 
@@ -131,7 +127,11 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     @Override
     public void loadDataSuccess(WorkOrderBean data) {
         final List<WorkOrderBean.ResultListBean> resultList = data.getResultList();
-        mAdapter.setNewData(resultList);
+        if (resultList.isEmpty()) {
+            mAdapter.setEmptyView(R.layout.empty_work_order);
+        } else {
+            mAdapter.setNewData(resultList);
+        }
         loadDataFinish();
     }
 
