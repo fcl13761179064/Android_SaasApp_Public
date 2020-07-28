@@ -80,7 +80,6 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        mAdapter.setEmptyView(R.layout.empty_room_order);
         mRefreshLayout.setEnableLoadMore(false);
     }
 
@@ -131,7 +130,11 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     @Override
     public void loadDataSuccess(RoomOrderBean data) {
         final List<RoomOrderBean.ResultListBean> resultList = data.getResultList();
-        mAdapter.setNewData(resultList);
+        if (resultList.isEmpty()) {
+            mAdapter.setEmptyView(R.layout.empty_room_order);
+        } else {
+            mAdapter.setNewData(resultList);
+        }
         loadDataFinish();
     }
 
