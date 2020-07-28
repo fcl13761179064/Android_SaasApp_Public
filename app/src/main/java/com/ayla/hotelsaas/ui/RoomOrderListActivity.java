@@ -78,7 +78,6 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
             item_work_status.setText("待施工");
         }
         recyclerview.setAdapter(mAdapter);
-        mAdapter.addHeaderView(mView, 0);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         mRefreshLayout.setEnableLoadMore(false);
@@ -136,6 +135,8 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
             mAdapter.setNewData(resultList);
         } else {
             mAdapter.setNewData(resultList);
+            mAdapter.removeHeaderView(mView);
+            mAdapter.addHeaderView(mView, 0);
         }
         loadDataFinish();
     }
