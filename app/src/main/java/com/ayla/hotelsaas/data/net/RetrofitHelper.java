@@ -203,6 +203,8 @@ public class RetrofitHelper {
                 JSONObject json = getResponseBodyJson(originalResponse);
 
                 if (null != json && (json.optInt("code") == 401)) {
+                    sendRefreshToken();
+                } else if (null != json && (json.optInt("code") == 122002)) {
                     sendLoginReceiver();
                 }
             } catch (JSONException e) {
@@ -213,41 +215,14 @@ public class RetrofitHelper {
 
         /**
          *
-         * 刷新token
+         * 重新登录
          */
         private void sendLoginReceiver() {
-            String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
-            JsonObject body = new JsonObject();
-            body.addProperty("refreshToken", refresh_token);
-            RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-            getApiService().refreshToken(new_body)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(new Consumer<Disposable>() {
-                        @Override
-                        public void accept(@NonNull Disposable disposable) throws Exception {
-                        }
-                    })
-                    .subscribe(new RxjavaObserver<User>() {
-
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                            d.dispose();
-                        }
-
-                        @Override
-                        public void _onNext(User data) {
-                            SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, data.getAuthToken());
-                            SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, data.getRefreshToken());
-
-                        }
-
-                        @Override
-                        public void _onError(String code, String msg) {
-
-                        }
-                    });
-            ;
+            MyApplication.getInstance().setUserEntity(null);
+            //跳转到首页
+            Intent intent = new Intent(MyApplication.getContext(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            MyApplication.getContext().startActivity(intent);
         }
 
         private JSONObject getResponseBodyJson(Response response) throws IOException, JSONException {
@@ -287,6 +262,40 @@ public class RetrofitHelper {
             return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
         }
     };
+
+    private void sendRefreshToken() {
+        String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
+        JsonObject body = new JsonObject();
+        body.addProperty("refreshToken", refresh_token);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        getApiService().refreshToken(new_body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(@NonNull Disposable disposable) throws Exception {
+                    }
+                })
+                .subscribe(new RxjavaObserver<User>() {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        d.dispose();
+                    }
+
+                    @Override
+                    public void _onNext(User data) {
+                        MyApplication.getInstance().setUserEntity(data);
+                        SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, data.getAuthToken());
+                        SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, data.getRefreshToken());
+                    }
+
+                    @Override
+                    public void _onError(String code, String msg) {
+
+                    }
+                });
+    }
 
     /**
      * 添加公共参数头
