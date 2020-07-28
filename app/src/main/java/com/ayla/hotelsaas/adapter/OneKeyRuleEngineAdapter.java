@@ -12,12 +12,12 @@ import java.util.List;
 
 
 /**
- * @描述 roomOrderAdapter
+ * @描述 一键联动 的 adapter
  * @作者 fanchunlei
  * @时间 2017/8/7
  */
-public class SceneLikeageAdapter extends BaseQuickAdapter<RuleEngineBean, BaseViewHolder> {
-    public SceneLikeageAdapter() {
+public class OneKeyRuleEngineAdapter extends BaseQuickAdapter<RuleEngineBean, BaseViewHolder> {
+    public OneKeyRuleEngineAdapter() {
         super(R.layout.adapter_scene_first);
     }
 
