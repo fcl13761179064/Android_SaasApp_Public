@@ -5,11 +5,14 @@ import android.util.Log;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
+import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.ssl.SSLSocketClient;
 import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.utils.DateUtils;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
+import com.ayla.hotelsaas.utils.ToastUtils;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,11 +28,17 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.internal.http.HttpHeaders;
@@ -179,7 +188,7 @@ public class RetrofitHelper {
      * 重新登录拦截器
      * 当code 为5003 或者为 5004 时重新登录
      */
-    private static Interceptor ReloginInterceptor = new Interceptor() {
+    private Interceptor ReloginInterceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
             //原始接口请求
@@ -193,7 +202,7 @@ public class RetrofitHelper {
                 //获得请求body
                 JSONObject json = getResponseBodyJson(originalResponse);
 
-                if (null != json && (json.optInt("code")==401)) {
+                if (null != json && (json.optInt("code") == 401)) {
                     sendLoginReceiver();
                 }
             } catch (JSONException e) {
@@ -203,15 +212,42 @@ public class RetrofitHelper {
         }
 
         /**
-         * 登录失败跳转界面
-         * 跳转到登录界面
+         *
+         * 刷新token
          */
         private void sendLoginReceiver() {
-            MyApplication.getInstance().setUserEntity(null);
-            //跳转到首页
-            Intent intent = new Intent(MyApplication.getContext(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            MyApplication.getContext().startActivity(intent);
+            String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
+            JsonObject body = new JsonObject();
+            body.addProperty("refreshToken", refresh_token);
+            RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+            getApiService().refreshToken(new_body)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(@NonNull Disposable disposable) throws Exception {
+                        }
+                    })
+                    .subscribe(new RxjavaObserver<User>() {
+
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            d.dispose();
+                        }
+
+                        @Override
+                        public void _onNext(User data) {
+                            SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, data.getAuthToken());
+                            SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, data.getRefreshToken());
+
+                        }
+
+                        @Override
+                        public void _onError(String code, String msg) {
+
+                        }
+                    });
+            ;
         }
 
         private JSONObject getResponseBodyJson(Response response) throws IOException, JSONException {
