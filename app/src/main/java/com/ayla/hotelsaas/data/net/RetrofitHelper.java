@@ -119,7 +119,7 @@ public class RetrofitHelper {
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {
-                    if ("youhostname" .equals(hostname)) {
+                    if ("youhostname".equals(hostname)) {
                         return true;
                     } else {
                         HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
@@ -141,7 +141,7 @@ public class RetrofitHelper {
             //添加请求头
             builder.addInterceptor(CommonParameterInterceptor);
             //登录失败 重新登录
-//            builder.addInterceptor(ReloginInterceptor);
+            builder.addInterceptor(ReloginInterceptor);
             builder.connectTimeout(15, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS);
@@ -189,17 +189,11 @@ public class RetrofitHelper {
                     .build();
             //原始接口结果
             Response originalResponse = chain.proceed(request);
-            //未登录直接返回
-            if (!Constance.UserIsLogin) {
-                return originalResponse;
-            }
             try {
                 //获得请求body
                 JSONObject json = getResponseBodyJson(originalResponse);
 
-                if (null != json
-                        && (json.optString("code").equals("5003")
-                        || json.optString("code").equals("5004"))) {
+                if (null != json && (json.optInt("code")==401)) {
                     sendLoginReceiver();
                 }
             } catch (JSONException e) {
