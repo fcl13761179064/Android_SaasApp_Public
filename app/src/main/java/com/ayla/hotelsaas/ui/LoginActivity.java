@@ -203,6 +203,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     @Override
     public void loginSuccess(User data) {
         SharePreferenceUtils.saveString(LoginActivity.this, Constance.SP_Login_Token, data.getAuthToken());
+        SharePreferenceUtils.saveString(LoginActivity.this, Constance.SP_Refresh_Token, data.getRefreshToken());
         Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
         startActivity(mainActivity);
         finish();

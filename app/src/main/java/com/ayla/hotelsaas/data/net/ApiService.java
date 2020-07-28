@@ -36,6 +36,9 @@ public interface ApiService {
     @POST("api/v2/sso/login")
     Observable<BaseResult<User>> login(@Body RequestBody body);
 
+    @POST("api/v2/sso")
+    Observable<BaseResult<User>> refreshToken(@Body RequestBody body);
+
     @GET("/api/v1/construction/devicetypes")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 

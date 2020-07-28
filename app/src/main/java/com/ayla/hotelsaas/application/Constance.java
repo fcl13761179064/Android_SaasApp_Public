@@ -27,6 +27,9 @@ public class Constance {
     //登录保存key
     public static String SP_Login_Token = "login_token";
 
+    //refresh token
+    public static String SP_Refresh_Token = "refresh_token";
+
     //状态
     public static final String V_STATUS_online = "online";    //初始状态
     public static final String V_STATUS_offline = "offline";    //未批准

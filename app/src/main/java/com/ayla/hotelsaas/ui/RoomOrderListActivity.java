@@ -42,6 +42,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     AppBar appBar;
     private RoomOrderListAdapter mAdapter;
     private WorkOrderBean.ResultListBean mWork_order;
+    private View mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,19 +66,19 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     protected void initView() {
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new RoomOrderListAdapter();
-        final View view = View.inflate(this, R.layout.room_head_view, null);
-        final TextView item_tv_name = view.findViewById(R.id.item_tv_name);
-        final TextView item_room_srart_date = view.findViewById(R.id.item_room_srart_date);
-        final TextView item_room_end_date = view.findViewById(R.id.item_room_end_date);
-        final TextView item_work_status = view.findViewById(R.id.item_work_status);
+        mView = View.inflate(this, R.layout.room_head_view, null);
+        final TextView item_tv_name = mView.findViewById(R.id.item_tv_name);
+        final TextView item_room_srart_date = mView.findViewById(R.id.item_room_srart_date);
+        final TextView item_room_end_date = mView.findViewById(R.id.item_room_end_date);
+        final TextView item_work_status = mView.findViewById(R.id.item_work_status);
         item_tv_name.setText(mWork_order.getTitle());
         item_room_srart_date.setText(mWork_order.getStartDate());
         item_room_end_date.setText(mWork_order.getEndDate());
         if (mWork_order.getConstructionStatus() == 1) {
             item_work_status.setText("待施工");
         }
-        mAdapter.addHeaderView(view, 0);
         recyclerview.setAdapter(mAdapter);
+        mAdapter.addHeaderView(mView, 0);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         mRefreshLayout.setEnableLoadMore(false);
@@ -132,6 +133,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         final List<RoomOrderBean.ResultListBean> resultList = data.getResultList();
         if (resultList.isEmpty()) {
             mAdapter.setEmptyView(R.layout.empty_room_order);
+            mAdapter.setNewData(resultList);
         } else {
             mAdapter.setNewData(resultList);
         }
