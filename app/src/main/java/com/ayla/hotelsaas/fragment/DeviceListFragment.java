@@ -116,8 +116,8 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             mAdapter.setEmptyView(R.layout.empty_device_order);
         } else {
             mAdapter.setNewData(devices);
-            MyApplication.getInstance().setDevicesBean(devices);
         }
+        MyApplication.getInstance().setDevicesBean(devices);
         loadDataFinish();
     }
 

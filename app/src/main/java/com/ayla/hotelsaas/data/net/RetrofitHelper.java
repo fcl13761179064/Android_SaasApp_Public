@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.data.net;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.ayla.hotelsaas.application.Constance;
@@ -11,7 +12,6 @@ import com.ayla.hotelsaas.ssl.SSLSocketClient;
 import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.utils.DateUtils;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.ayla.hotelsaas.utils.ToastUtils;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
@@ -79,7 +79,7 @@ public class RetrofitHelper {
     public static final String apiBaseUrl = Constance.BASE_URL;
 
     private static Retrofit retrofit;
-//    private static Retrofit.Builder builder;
+    private Response mProceed;
 
     public static RetrofitHelper getInstance() {
         if (instance == null) {
@@ -203,7 +203,7 @@ public class RetrofitHelper {
                 JSONObject json = getResponseBodyJson(originalResponse);
 
                 if (null != json && (json.optInt("code") == 401)) {
-                    sendRefreshToken();
+                    originalResponse = sendRefreshToken(chain);
                 } else if (null != json && (json.optInt("code") == 122002)) {
                     sendLoginReceiver();
                 }
@@ -263,7 +263,7 @@ public class RetrofitHelper {
         }
     };
 
-    private void sendRefreshToken() {
+    private Response sendRefreshToken(Interceptor.Chain chain) {
         String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
         JsonObject body = new JsonObject();
         body.addProperty("refreshToken", refresh_token);
@@ -288,6 +288,21 @@ public class RetrofitHelper {
                         MyApplication.getInstance().setUserEntity(data);
                         SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, data.getAuthToken());
                         SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, data.getRefreshToken());
+                        if (!TextUtils.isEmpty(data.getAuthToken())) {
+                            // 创建新的请求，并增加header
+                            Request retryRequest = chain.request()
+                                    .newBuilder()
+                                    .header("Authorization", data.getAuthToken())
+                                    .build();
+
+                            // 再次发起请求
+                            try {
+                                mProceed = chain.proceed(retryRequest);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                     }
 
                     @Override
@@ -295,6 +310,8 @@ public class RetrofitHelper {
 
                     }
                 });
+
+        return mProceed;
     }
 
     /**
