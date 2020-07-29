@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,14 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.RoomOrderListAdapter;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.RoomOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.RoomOrderView;
-import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.FastClickUtils;
+import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -27,7 +27,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -43,6 +42,8 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     private RoomOrderListAdapter mAdapter;
     private WorkOrderBean.ResultListBean mWork_order;
     private View mView;
+    private View mFoot_view;
+    private boolean is_first = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,13 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
 
     @Override
     protected void initView() {
+        //是否在刷新的时候禁止列表的操作
+        mRefreshLayout.setDisableContentWhenRefresh(true);
+        //是否在加载的时候禁止列表的操作
+        mRefreshLayout.setDisableContentWhenLoading(true);
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
+        recyclerview.setHasFixedSize(true);
+        recyclerview.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL));
         mAdapter = new RoomOrderListAdapter();
         mView = View.inflate(this, R.layout.room_head_view, null);
         final TextView item_tv_name = mView.findViewById(R.id.item_tv_name);
@@ -77,10 +84,10 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         if (mWork_order.getConstructionStatus() == 1) {
             item_work_status.setText("待施工");
         }
-        recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        mRefreshLayout.setEnableLoadMore(false);
+        mFoot_view = LayoutInflater.from(this).inflate(R.layout.room_root_view, null);
+        recyclerview.setAdapter(mAdapter);
     }
 
     @Override
@@ -109,6 +116,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                 if (mPresenter != null) {
                     mPresenter.loadFistPage(mWork_order.getId() + "");
                 }
+                mRefreshLayout.setEnableLoadMore(true);
 
             }
 
@@ -130,19 +138,27 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     @Override
     public void loadDataSuccess(RoomOrderBean data) {
         final List<RoomOrderBean.ResultListBean> resultList = data.getResultList();
+        mAdapter.removeFooterView(mFoot_view);
         if (resultList.isEmpty()) {
-            mAdapter.setEmptyView(R.layout.empty_room_order);
-            mAdapter.setNewData(resultList);
+            mAdapter.addData(resultList);
+            if (mAdapter.getData().isEmpty()) {
+                mAdapter.setEmptyView(R.layout.empty_room_order);
+            }
+            mAdapter.addFooterView(mFoot_view);
+            mRefreshLayout.setEnableLoadMore(false);
+
         } else {
-            mAdapter.setNewData(resultList);
-            mAdapter.removeHeaderView(mView);
-            mAdapter.addHeaderView(mView, 0);
+            if (is_first) {
+                mAdapter.addHeaderView(mView);
+            }
+            mAdapter.addData(resultList);
         }
         loadDataFinish();
     }
 
     @Override
     public void loadDataFinish() {
+        is_first=false;
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
     }

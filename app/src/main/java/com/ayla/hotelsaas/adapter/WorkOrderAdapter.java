@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.adapter;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
+import com.ayla.hotelsaas.utils.TimeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -18,8 +19,8 @@ public class WorkOrderAdapter extends BaseQuickAdapter<WorkOrderBean.ResultListB
     @Override
     protected void convert(BaseViewHolder helper, WorkOrderBean.ResultListBean workOrder) {
         helper.setText(R.id.item_tv_name, workOrder.getTitle())
-                .setText(R.id.item_work_srart_date, workOrder.getStartDate())
-                .setText(R.id.item_work_end_date, workOrder.getEndDate());
+                .setText(R.id.item_work_srart_date, TimeUtils.getYestoday(workOrder.getStartDate()))
+                .setText(R.id.item_work_end_date, TimeUtils.getYestoday(workOrder.getEndDate()));
 
         if (workOrder.getConstructionStatus() == 1) {
             helper.setText(R.id.item_work_status, "待施工");
