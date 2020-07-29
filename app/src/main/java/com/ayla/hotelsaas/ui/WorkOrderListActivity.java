@@ -25,8 +25,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
 import java.io.Serializable;
 import java.util.List;
+
 import butterknife.BindView;
 
 public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOrderPresenter> implements WorkOrderView {
@@ -130,7 +132,9 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     public void loadDataSuccess(WorkOrderBean data) {
         final List<WorkOrderBean.ResultListBean> resultList = data.getResultList();
         if (resultList.isEmpty()) {
-            mAdapter.setEmptyView(R.layout.empty_work_order);
+            if (mAdapter.getData().isEmpty()) {
+                mAdapter.setEmptyView(R.layout.empty_work_order);
+            }
             final View inflate = LayoutInflater.from(this).inflate(R.layout.room_root_view, null);
             mAdapter.setFooterView(inflate);
             mRefreshLayout.setEnableLoadMore(false);
