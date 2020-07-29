@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -70,7 +71,6 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        mRefreshLayout.setEnableLoadMore(false);
     }
 
 
@@ -94,12 +94,14 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 if (null != mAdapter.getData()) {
+                    mAdapter.removeAllFooterView();
                     mAdapter.getData().clear();
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
                     mPresenter.loadFistPage();
                 }
+                mRefreshLayout.setEnableLoadMore(true);
 
             }
 
@@ -129,8 +131,11 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         final List<WorkOrderBean.ResultListBean> resultList = data.getResultList();
         if (resultList.isEmpty()) {
             mAdapter.setEmptyView(R.layout.empty_work_order);
+            final View inflate = LayoutInflater.from(this).inflate(R.layout.room_root_view, null);
+            mAdapter.setFooterView(inflate);
+            mRefreshLayout.setEnableLoadMore(false);
         } else {
-            mAdapter.setNewData(resultList);
+            mAdapter.addData(resultList);
         }
         loadDataFinish();
     }
