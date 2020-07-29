@@ -12,6 +12,8 @@ import com.ayla.hotelsaas.ssl.SSLSocketClient;
 import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.utils.DateUtils;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
+import com.ayla.hotelsaas.utils.ToastUtil;
+import com.ayla.hotelsaas.utils.ToastUtils;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
@@ -30,6 +32,7 @@ import javax.net.ssl.SSLSession;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -280,7 +283,8 @@ public class RetrofitHelper {
 
                     @Override
                     public void onSubscribe(Disposable d) {
-                        d.dispose();
+                        CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+                        mCompositeDisposable.add(d);
                     }
 
                     @Override
@@ -307,7 +311,6 @@ public class RetrofitHelper {
 
                     @Override
                     public void _onError(String code, String msg) {
-
                     }
                 });
 
