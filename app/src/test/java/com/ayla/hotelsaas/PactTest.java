@@ -361,7 +361,7 @@ public class PactTest {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .login("111", "222");
+                                . login("111", "222");
                     }
                 })//登录
                 .concatMap(new Function<Object, ObservableSource<?>>() {
@@ -389,7 +389,7 @@ public class PactTest {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .getDeviceList("444444", 1, 10);
+                                .getDeviceList(444444, 1, 10);
                     }
                 })//获取设备列表信息
                 .concatMap(new Function<Object, ObservableSource<?>>() {

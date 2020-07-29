@@ -36,7 +36,7 @@ public interface ApiService {
     @POST("api/v2/sso/login")
     Observable<BaseResult<User>> login(@Body RequestBody body);
 
-    @POST("api/v2/sso")
+    @POST("api/v2/sso/refresh")
     Observable<BaseResult<User>> refreshToken(@Body RequestBody body);
 
     @GET("/api/v1/construction/devicetypes")
