@@ -445,7 +445,7 @@ public class PactTest {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         RuleEngineBean ruleEngineBean = new RuleEngineBean();
-                        ruleEngineBean.setRuleId(123);
+                        ruleEngineBean.setRuleId(123L);
                         ruleEngineBean.setScopeId(1111);
                         ruleEngineBean.setRuleType(2);
                         ruleEngineBean.setRuleName("ruleengine");
