@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.SceneSettingActionItemAdapter;
+import com.ayla.hotelsaas.adapter.SceneSettingConditionItemAdapter;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
@@ -33,20 +35,31 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 场景编辑页面
- * 进入时必须带入scopeId 或者 sceneBean
+ * 进入时必须带入scopeId、siteType 或者 sceneBean
  */
 public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, SceneSettingPresenter> implements SceneSettingView {
-    @BindView(R.id.rv)
-    public RecyclerView mRecyclerView;
+    @BindView(R.id.rv_condition)
+    public RecyclerView mConditionRecyclerView;
+    @BindView(R.id.rv_action)
+    public RecyclerView mActionRecyclerView;
     @BindView(R.id.tv_scene_name)
     public TextView mSceneNameTextView;
     @BindView(R.id.appBar)
     AppBar appBar;
     @BindView(R.id.tv_delete)
     View mDeleteView;
+    @BindView(R.id.v_add_action)
+    ImageView mAddActionImageView;
+    @BindView(R.id.v_add_condition)
+    ImageView mAddConditionImageView;
+    @BindView(R.id.tv_scene_site)
+    TextView mSiteTextView;
 
     private RuleEngineBean mRuleEngineBean;
-    private SceneSettingActionItemAdapter mAdapter;
+    private SceneSettingConditionItemAdapter mConditionAdapter;
+    private SceneSettingActionItemAdapter mActionAdapter;
+
+    private List<SceneSettingConditionItemAdapter.ConditionItem> conditionItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +73,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         } else {
             mRuleEngineBean = new RuleEngineBean();
             mRuleEngineBean.setScopeId(getIntent().getLongExtra("scopeId", 0));
+            mRuleEngineBean.setSiteType(getIntent().getIntExtra("siteType", 0));
             mRuleEngineBean.setRuleDescription("");
-            mRuleEngineBean.setRuleType(2);
             mDeleteView.setVisibility(View.GONE);
         }
+        mSiteTextView.setText(mRuleEngineBean.getSiteType() == 1 ? "网关本地" : "云端");
     }
 
     @Override
@@ -78,31 +92,58 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @Override
     protected void initView() {
-        mAdapter = new SceneSettingActionItemAdapter(R.layout.item_scene_setting_action_device);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
+        mConditionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mConditionRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .color(android.R.color.transparent)
-                .size(AutoSizeUtils.dp2px(this, 10)).build());
-        mAdapter.bindToRecyclerView(mRecyclerView);
-        mAdapter.setEmptyView(R.layout.item_scene_setting_action_empty);
+                .size(AutoSizeUtils.dp2px(this, 16)).build());
+        mConditionAdapter = new SceneSettingConditionItemAdapter(conditionItems);
+        mConditionAdapter.bindToRecyclerView(mConditionRecyclerView);
+        mConditionAdapter.setEmptyView(R.layout.item_scene_setting_condition_empty);
+
+        mActionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mActionRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
+                .color(android.R.color.transparent)
+                .size(AutoSizeUtils.dp2px(this, 16)).build());
+        mActionAdapter = new SceneSettingActionItemAdapter(R.layout.item_scene_setting_action_device);
+        mActionAdapter.bindToRecyclerView(mActionRecyclerView);
+        mActionAdapter.setEmptyView(R.layout.item_scene_setting_action_empty);
     }
 
     @Override
     protected void initListener() {
-        if (mAdapter.getEmptyView() != null) {
-            mAdapter.getEmptyView().findViewById(R.id.tv_add_action).setOnClickListener(new View.OnClickListener() {
+        {
+            TextView textView = mConditionAdapter.getEmptyView().findViewById(R.id.tv_add);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    jumpAddConditions();
+                }
+            });
+        }
+        {
+            TextView textView = mActionAdapter.getEmptyView().findViewById(R.id.tv_add);
+            textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     jumpAddActions();
                 }
             });
         }
-        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+        mConditionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+//                mRuleEngineBean.getCondition().getItems().remove(position);
+//                mRuleEngineBean.getCondition().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
+                mConditionAdapter.remove(position);
+                mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_enable);
+            }
+        });
+        mActionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 mRuleEngineBean.getAction().getItems().remove(position);
                 mRuleEngineBean.getAction().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
-                mAdapter.remove(position);
+                mActionAdapter.remove(position);
             }
         });
         appBar.rightTextView.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +153,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     CustomToast.makeText(SceneSettingActivity.this, "名称不能为空", R.drawable.ic_warning).show();
                     return;
                 }
-                if (null == mRuleEngineBean.getAction() || mRuleEngineBean.getAction().getItems().size() == 0) {
+                if (mConditionAdapter.getData().size() == 0) {
+                    CustomToast.makeText(SceneSettingActivity.this, "请添加条件", R.drawable.ic_warning).show();
+                    return;
+                }
+                if (mActionAdapter.getData().size() == 0) {
                     CustomToast.makeText(SceneSettingActivity.this, "请添加动作", R.drawable.ic_warning).show();
                     return;
                 }
@@ -133,16 +178,51 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         }).show(getSupportFragmentManager(), "scene_name");
     }
 
-    @OnClick(R.id.v_add_ic)
+    @OnClick(R.id.v_add_condition)
+    public void jumpAddConditions() {
+        if (mConditionAdapter.getData().size() == 1 && mConditionAdapter.getData().get(0) instanceof SceneSettingConditionItemAdapter.OneKeyConditionItem) {
+            return;
+        }
+        if (mConditionAdapter.getData().size() == 0) {
+            Intent mainActivity = new Intent(this, RuleEngineConditionTypeGuideActivity.class);
+            startActivityForResult(mainActivity, 0);
+        } else {
+            Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
+            startActivityForResult(mainActivity, 0);
+        }
+    }
+
+    @OnClick(R.id.v_add_action)
     public void jumpAddActions() {
         Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
-        startActivityForResult(mainActivity, 0);
+        startActivityForResult(mainActivity, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == RESULT_OK) {
+        if (requestCode == 0 && resultCode == RESULT_OK) {//选择条件返回结果
+            if (data == null) {//选择的条件是 一键执行
+                mRuleEngineBean.setRuleType(2);
+                mConditionAdapter.addData(new SceneSettingConditionItemAdapter.OneKeyConditionItem());
+                mConditionAdapter.notifyDataSetChanged();
+                mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
+            } else {
+                SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = (SceneSettingFunctionDatumSetAdapter.DatumBean) data.getSerializableExtra("result");
+                mRuleEngineBean.setRuleType(1);
+                if (mRuleEngineBean.getCondition() == null) {
+                    mRuleEngineBean.setCondition(new RuleEngineBean.Condition());
+                }
+                if (mRuleEngineBean.getCondition().getItems() == null) {
+                    mRuleEngineBean.getCondition().setItems(new ArrayList<>());
+                }
+//            mRuleEngineBean.getCondition().getItems().add(actionItem);
+//            mRuleEngineBean.getCondition().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
+                mConditionAdapter.getData().add(new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean));
+                mConditionAdapter.notifyDataSetChanged();
+            }
+        }
+        if (requestCode == 1 && resultCode == RESULT_OK) {//选择动作返回结果
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = (SceneSettingFunctionDatumSetAdapter.DatumBean) data.getSerializableExtra("result");
             RuleEngineBean.Action.ActionItem actionItem = new RuleEngineBean.Action.ActionItem();
             actionItem.setTargetDeviceType(datumBean.getTargetDeviceType());
@@ -160,8 +240,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             }
             mRuleEngineBean.getAction().getItems().add(actionItem);
             mRuleEngineBean.getAction().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
-            mAdapter.getData().add(datumBean);
-            mAdapter.notifyDataSetChanged();
+            mActionAdapter.getData().add(datumBean);
+            mActionAdapter.notifyDataSetChanged();
         }
     }
 
@@ -231,6 +311,10 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             datumBean.setLeftValue(actionItem.getLeftValue());
             datas.add(datumBean);
         }
-        mAdapter.setNewData(datas);
+        mActionAdapter.setNewData(datas);
+        if (mRuleEngineBean.getRuleType() == 2) {//一键执行
+            mConditionAdapter.addData(new SceneSettingConditionItemAdapter.OneKeyConditionItem());
+            mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
+        }
     }
 }

@@ -55,7 +55,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                 });
     }
 
-    public void deleteScene(int ruleId) {
+    public void deleteScene(long ruleId) {
         RequestModel.getInstance()
                 .deleteRuleEngine(ruleId)
                 .subscribeOn(Schedulers.io())
