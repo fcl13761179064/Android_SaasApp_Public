@@ -20,13 +20,19 @@
         app:fabSize="mini"
         app:maxImageSize="@dimen/dp_16" />
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/device_refreshLayout"
         android:layout_width="match_parent"
+        android:layout_below="@id/tl_tabs"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/device_recyclerview"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
