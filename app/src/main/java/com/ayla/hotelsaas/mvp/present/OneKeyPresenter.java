@@ -12,7 +12,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class OneKeyPresenter extends BasePresenter<OneKeyView> {
 
-    public void runRuleEngine(int ruleId) {
+    public void runRuleEngine(long ruleId) {
         RequestModel.getInstance().runRuleEngine(ruleId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

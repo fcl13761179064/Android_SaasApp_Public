@@ -5,6 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:gravity="center"
-    android:text="添加动作"
+    android:text="添加条件"
     android:textColor="#ff999999"
     android:textSize="14sp" />

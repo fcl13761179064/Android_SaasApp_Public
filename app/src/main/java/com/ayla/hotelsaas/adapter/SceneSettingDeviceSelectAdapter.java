@@ -7,6 +7,9 @@ import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
+/**
+ * 场景设备选择
+ */
 public class SceneSettingDeviceSelectAdapter extends BaseQuickAdapter<DeviceListBean.DevicesBean, BaseViewHolder> {
 
     public SceneSettingDeviceSelectAdapter(int layoutResId) {

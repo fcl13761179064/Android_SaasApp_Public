@@ -10,7 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import java.util.List;
 
 /**
- *
+ * 场景动作项目
  */
 public class SceneSettingActionItemAdapter extends BaseQuickAdapter<SceneSettingFunctionDatumSetAdapter.DatumBean, BaseViewHolder> {
 

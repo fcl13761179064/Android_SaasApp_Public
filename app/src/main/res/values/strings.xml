@@ -24,4 +24,6 @@
     <string name="title_example">Example</string>
     <string name="title_practice">Practice</string>
 
+    <string name="cancel">取消</string>
+
 </resources>
