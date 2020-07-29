@@ -15,7 +15,7 @@ public class RuleEngineBean implements Serializable {
      * condition : {"expression":"","items":[]}
      * action : {"expression":"func.execute('2','GADw3NnUI4Xa54nsr5tYz20000','StatusLightSwitch')","items":[{"targetDeviceType":2,"targetDeviceId":"GADw3NnUI4Xa54nsr5tYz20000","leftValue":"StatusLightSwitch","operator":"==","rightValue":1,"rightValueType":1}]}
      */
-    private Integer ruleId;
+    private Long ruleId;
 
     private long scopeId;
 
@@ -25,15 +25,27 @@ public class RuleEngineBean implements Serializable {
 
     private int ruleType;
 
+    private int siteType;//1:本地 2:云端
+
+    private int status;//1:本地 2:云端
+
     private Condition condition;
 
     private Action action;
 
-    public Integer getRuleId() {
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public Long getRuleId() {
         return ruleId;
     }
 
-    public void setRuleId(Integer ruleId) {
+    public void setRuleId(Long ruleId) {
         this.ruleId = ruleId;
     }
 
@@ -83,6 +95,14 @@ public class RuleEngineBean implements Serializable {
 
     public void setAction(Action action) {
         this.action = action;
+    }
+
+    public int getSiteType() {
+        return siteType;
+    }
+
+    public void setSiteType(int siteType) {
+        this.siteType = siteType;
     }
 
     public static class Condition implements Serializable{

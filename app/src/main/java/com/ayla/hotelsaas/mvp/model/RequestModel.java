@@ -202,7 +202,7 @@ public class RequestModel {
      * @param ruleId
      * @return
      */
-    public Observable<BaseResult<Boolean>> runRuleEngine(Integer ruleId) {
+    public Observable<BaseResult<Boolean>> runRuleEngine(long ruleId) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("ruleId", ruleId);
 
@@ -210,7 +210,7 @@ public class RequestModel {
         return getApiService().runRuleEngine(body111);
     }
 
-    public Observable<BaseResult<Boolean>> deleteRuleEngine(Integer ruleId) {
+    public Observable<BaseResult<Boolean>> deleteRuleEngine(long ruleId) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("ruleId", ruleId);
 

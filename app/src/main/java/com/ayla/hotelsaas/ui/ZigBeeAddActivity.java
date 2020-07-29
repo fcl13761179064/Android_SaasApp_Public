@@ -140,7 +140,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                 mImageView.setImageResource(R.drawable.ic_device_bind_success);
                 mLoadingTextView.setVisibility(View.INVISIBLE);
                 mProgressView.setVisibility(View.INVISIBLE);
-                mProgressTextView.setText("最长可能需要1分钟，请耐心等待");
+                mProgressTextView.setText("设备绑定成功");
                 mFinishButton.setVisibility(View.VISIBLE);
                 mFinishButton.setText("完成");
                 break;

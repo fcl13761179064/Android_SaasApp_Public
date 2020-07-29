@@ -13,14 +13,12 @@ public class TempUtils {
         if (devicesBean == null) {
             return false;
         }
-        if (devicesBean.getDeviceId().startsWith("AC")) {
-            return true;
-        }
-        return false;
+        return devicesBean.getConnectTypeId() == 1;
     }
 
     /**
      * 判断是被是否在线
+     *
      * @param devicesBean
      * @return
      */

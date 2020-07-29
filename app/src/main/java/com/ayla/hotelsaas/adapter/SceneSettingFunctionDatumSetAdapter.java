@@ -7,7 +7,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import java.io.Serializable;
 
 /**
- * 场景动作选择，单选
+ * 场景功能动作选择，单选
  */
 public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean>, BaseViewHolder> {
     public SceneSettingFunctionDatumSetAdapter(int layoutResId) {
