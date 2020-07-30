@@ -23,11 +23,11 @@ public class RuleEngineBean implements Serializable {
 
     private String ruleDescription;
 
-    private int ruleType;
+    private int ruleType;//1:自动化 2:一键执行
 
     private int siteType;//1:本地 2:云端
 
-    private int status;//1:本地 2:云端
+    private int status;//0:不可用 1：可用
 
     private Condition condition;
 
