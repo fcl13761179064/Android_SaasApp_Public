@@ -159,6 +159,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void run() throws Exception {
                         RequestModel.getInstance()
                                 .updateProperty(dsn, "zb_join_enable", "0")
+                                .subscribeOn(Schedulers.io())
                                 .subscribe(new Observer<BaseResult<Boolean>>() {
                                     @Override
                                     public void onSubscribe(Disposable d) {
