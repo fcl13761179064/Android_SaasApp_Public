@@ -23,22 +23,15 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
 
     public static class DatumBean implements Serializable {
 
-        /**
-         * targetDeviceType : 2
-         * targetDeviceId : GADw3NnUI4Xa54nsr5tYz20000
-         * leftValue : StatusLightSwitch
-         * rightValueType : 1
-         * rightValue : 1
-         * operator : ==
-         */
         private String functionName;
         private String valueName;
-        private int targetDeviceType;
-        private String targetDeviceId;
+
+        private int deviceType;
+        private String deviceId;
         private String leftValue;
-        private int rightValueType;
         private String rightValue;
         private String operator;
+        private int rightValueType;
 
         public String getFunctionName() {
             return functionName;
@@ -56,20 +49,20 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
             this.valueName = valueName;
         }
 
-        public int getTargetDeviceType() {
-            return targetDeviceType;
+        public int getDeviceType() {
+            return deviceType;
         }
 
-        public void setTargetDeviceType(int targetDeviceType) {
-            this.targetDeviceType = targetDeviceType;
+        public void setDeviceType(int deviceType) {
+            this.deviceType = deviceType;
         }
 
-        public String getTargetDeviceId() {
-            return targetDeviceId;
+        public String getDeviceId() {
+            return deviceId;
         }
 
-        public void setTargetDeviceId(String targetDeviceId) {
-            this.targetDeviceId = targetDeviceId;
+        public void setDeviceId(String deviceId) {
+            this.deviceId = deviceId;
         }
 
         public String getLeftValue() {

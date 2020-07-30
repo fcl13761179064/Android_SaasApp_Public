@@ -13,7 +13,8 @@ public class TempUtils {
         if (devicesBean == null) {
             return false;
         }
-        return devicesBean.getConnectTypeId() == 1;
+//        return devicesBean.getConnectTypeId() == 1;
+        return devicesBean.getDeviceId().startsWith("AC");
     }
 
     /**

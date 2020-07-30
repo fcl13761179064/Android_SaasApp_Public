@@ -20,7 +20,7 @@ public class SceneSettingActionItemAdapter extends BaseQuickAdapter<SceneSetting
 
     @Override
     protected void convert(BaseViewHolder helper, SceneSettingFunctionDatumSetAdapter.DatumBean item) {
-        String dsn = item.getTargetDeviceId();
+        String dsn = item.getDeviceId();
         ImageLoader.loadImg(helper.getView(R.id.left_iv), "", R.drawable.ic_empty_device, R.drawable.ic_empty_device);
         helper.setText(R.id.tv_function_name, String.format("%s:%s", item.getFunctionName(), item.getValueName()));
         List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
