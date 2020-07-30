@@ -76,7 +76,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mRuleEngineBean = new RuleEngineBean();
             mRuleEngineBean.setScopeId(getIntent().getLongExtra("scopeId", 0));
             mRuleEngineBean.setSiteType(getIntent().getIntExtra("siteType", 0));
-            mRuleEngineBean.setRuleDescription("");
+            mRuleEngineBean.setRuleDescription("ayla");
             mRuleEngineBean.setStatus(1);
             mDeleteView.setVisibility(View.GONE);
         }

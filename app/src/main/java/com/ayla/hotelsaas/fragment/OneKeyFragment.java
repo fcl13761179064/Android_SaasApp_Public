@@ -62,7 +62,9 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
                 RuleEngineBean ruleEngineBean = (RuleEngineBean) adapter.getItem(position);
                 Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
                 intent.putExtra("sceneBean", ruleEngineBean);
-                startActivityForResult(intent, 0);
+                if (getParentFragment() != null) {
+                    getParentFragment().startActivityForResult(intent, 0);
+                }
             }
         });
     }
@@ -85,5 +87,4 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
     public void runSceneFailed() {
         CustomToast.makeText(getContext(), "触发失败", R.drawable.ic_toast_warming).show();
     }
-
 }
