@@ -137,23 +137,28 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
      * @param subBean
      */
     private void handleAddJump(DeviceCategoryBean.SubBean subBean) {
-        if (0 == subBean.getDeviceConnectType()) {//跳转网关添加
-            Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
-            mainActivity.putExtra("cuId", subBean.getCuId());
-            mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
-            startActivityForResult(mainActivity, 0);
-        } else if (1 == subBean.getDeviceConnectType()) {//跳转节点添加
-            int gatewayCount = 0;
-            DeviceListBean.DevicesBean gateway = null;
-            List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
-            if (devicesBean != null) {
-                for (DeviceListBean.DevicesBean device : devicesBean) {
-                    if (TempUtils.isDeviceGateway(device)) {
-                        gatewayCount++;
-                        gateway = device;
-                    }
+        int gatewayCount = 0;
+        DeviceListBean.DevicesBean gateway = null;
+        List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
+        if (devicesBean != null) {
+            for (DeviceListBean.DevicesBean device : devicesBean) {
+                if (TempUtils.isDeviceGateway(device)) {
+                    gatewayCount++;
+                    gateway = device;
                 }
             }
+        }
+        if (0 == subBean.getDeviceConnectType()) {//跳转网关添加
+            if (gatewayCount == 0) {//没有网关
+                Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
+                mainActivity.putExtra("cuId", subBean.getCuId());
+                mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+                startActivityForResult(mainActivity, 0);
+            }else{
+                CustomToast.makeText(this, "只能绑定一个网关", R.drawable.ic_toast_warming).show();
+            }
+        } else if (1 == subBean.getDeviceConnectType()) {//跳转节点添加
+
             if (gatewayCount == 0) {//没有网关
                 CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
             } else if (gatewayCount == 1) {//一个网关
