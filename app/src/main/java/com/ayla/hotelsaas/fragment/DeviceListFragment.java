@@ -1,10 +1,12 @@
 package com.ayla.hotelsaas.fragment;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -101,7 +103,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
                 intent.putExtra("scopeId", mRoom_order.getRoomId());
-                startActivity(intent);
+                startActivityForResult(intent,0);
             }
         });
 
@@ -133,5 +135,13 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     public void loadDataFinish() {
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0 && resultCode == Activity.RESULT_OK){
+            mRefreshLayout.autoRefresh();
+        }
     }
 }

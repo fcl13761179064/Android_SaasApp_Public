@@ -27,6 +27,8 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -74,7 +76,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mRuleEngineBean = new RuleEngineBean();
             mRuleEngineBean.setScopeId(getIntent().getLongExtra("scopeId", 0));
             mRuleEngineBean.setSiteType(getIntent().getIntExtra("siteType", 0));
-            mRuleEngineBean.setRuleDescription("");
+            mRuleEngineBean.setRuleDescription("ayla");
+            mRuleEngineBean.setStatus(1);
             mDeleteView.setVisibility(View.GONE);
         }
         mSiteTextView.setText(mRuleEngineBean.getSiteType() == 1 ? "网关本地" : "云端");
@@ -132,8 +135,10 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         mConditionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-//                mRuleEngineBean.getCondition().getItems().remove(position);
-//                mRuleEngineBean.getCondition().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
+                if (mRuleEngineBean.getCondition() != null && mRuleEngineBean.getCondition().getItems() != null) {
+                    mRuleEngineBean.getCondition().getItems().remove(position);
+                    mRuleEngineBean.getCondition().setExpression(calculateConditionExpression(mRuleEngineBean.getCondition().getItems()));
+                }
                 mConditionAdapter.remove(position);
                 mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_enable);
             }
@@ -209,6 +214,12 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
             } else {
                 SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = (SceneSettingFunctionDatumSetAdapter.DatumBean) data.getSerializableExtra("result");
+                RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
+                conditionItem.setSourceDeviceId(datumBean.getDeviceId());
+                conditionItem.setSourceDeviceType(datumBean.getDeviceType());
+                conditionItem.setRightValue(datumBean.getRightValue());
+                conditionItem.setLeftValue(datumBean.getLeftValue());
+                conditionItem.setOperator(datumBean.getOperator());
                 mRuleEngineBean.setRuleType(1);
                 if (mRuleEngineBean.getCondition() == null) {
                     mRuleEngineBean.setCondition(new RuleEngineBean.Condition());
@@ -216,8 +227,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 if (mRuleEngineBean.getCondition().getItems() == null) {
                     mRuleEngineBean.getCondition().setItems(new ArrayList<>());
                 }
-//            mRuleEngineBean.getCondition().getItems().add(actionItem);
-//            mRuleEngineBean.getCondition().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
+                mRuleEngineBean.getCondition().getItems().add(conditionItem);
+                mRuleEngineBean.getCondition().setExpression(calculateConditionExpression(mRuleEngineBean.getCondition().getItems()));
                 mConditionAdapter.getData().add(new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean));
                 mConditionAdapter.notifyDataSetChanged();
             }
@@ -225,8 +236,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         if (requestCode == 1 && resultCode == RESULT_OK) {//选择动作返回结果
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = (SceneSettingFunctionDatumSetAdapter.DatumBean) data.getSerializableExtra("result");
             RuleEngineBean.Action.ActionItem actionItem = new RuleEngineBean.Action.ActionItem();
-            actionItem.setTargetDeviceType(datumBean.getTargetDeviceType());
-            actionItem.setTargetDeviceId(datumBean.getTargetDeviceId());
+            actionItem.setTargetDeviceType(datumBean.getDeviceType());
+            actionItem.setTargetDeviceId(datumBean.getDeviceId());
             actionItem.setRightValueType(datumBean.getRightValueType());
             actionItem.setOperator(datumBean.getOperator());
             actionItem.setLeftValue(datumBean.getLeftValue());
@@ -243,6 +254,29 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mActionAdapter.getData().add(datumBean);
             mActionAdapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * 计算condition表达式 ，并且修改了每个condition's item 的joinType。
+     *
+     * @param conditionItems
+     * @return
+     */
+    private String calculateConditionExpression(List<RuleEngineBean.Condition.ConditionItem> conditionItems) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < conditionItems.size(); i++) {
+            RuleEngineBean.Condition.ConditionItem conditionItem = conditionItems.get(i);
+            result.append(String.format("func.get('%s','%s','%s') == %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getRightValue()));
+            if (i < conditionItems.size() - 1) {
+                result.append(" && ");
+            }
+            if (i == 0) {
+                conditionItem.setJoinType(0);
+            } else {
+                conditionItem.setJoinType(1);
+            }
+        }
+        return result.toString();
     }
 
     private String calculateActionExpression(List<RuleEngineBean.Action.ActionItem> actionItems) {
@@ -298,23 +332,38 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     }
 
     private void syncSourceAndAdapter() {
-        List<SceneSettingFunctionDatumSetAdapter.DatumBean> datas = new ArrayList<>();
+        List<SceneSettingFunctionDatumSetAdapter.DatumBean> actions = new ArrayList<>();
         for (RuleEngineBean.Action.ActionItem actionItem : mRuleEngineBean.getAction().getItems()) {
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
             datumBean.setLeftValue(actionItem.getLeftValue());
-            datumBean.setFunctionName("Switch_Control".equals(actionItem.getLeftValue()) ? "开关" : "动作");
+            datumBean.setFunctionName("1:0x0006:Onoff".equals(actionItem.getLeftValue()) ? "开关" : "动作");
             datumBean.setValueName("1".equals(actionItem.getRightValue()) ? "开启" : "关闭");
-            datumBean.setTargetDeviceId(actionItem.getTargetDeviceId());
-            datumBean.setTargetDeviceType(actionItem.getTargetDeviceType());
+            datumBean.setDeviceId(actionItem.getTargetDeviceId());
+            datumBean.setDeviceType(actionItem.getTargetDeviceType());
             datumBean.setRightValueType(actionItem.getRightValueType());
             datumBean.setOperator(actionItem.getOperator());
             datumBean.setLeftValue(actionItem.getLeftValue());
-            datas.add(datumBean);
+            actions.add(datumBean);
         }
-        mActionAdapter.setNewData(datas);
+        mActionAdapter.setNewData(actions);
         if (mRuleEngineBean.getRuleType() == 2) {//一键执行
-            mConditionAdapter.addData(new SceneSettingConditionItemAdapter.OneKeyConditionItem());
+            mConditionAdapter.setNewData(Collections.singletonList(new SceneSettingConditionItemAdapter.OneKeyConditionItem()));
             mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
+        } else if (mRuleEngineBean.getRuleType() == 1) {//自动化
+            List<SceneSettingConditionItemAdapter.ConditionItem> conditions = new ArrayList<>();
+            for (RuleEngineBean.Condition.ConditionItem conditionItem : mRuleEngineBean.getCondition().getItems()) {
+                SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
+                datumBean.setLeftValue(conditionItem.getLeftValue());
+                datumBean.setFunctionName("1:0x0006:Onoff".equals(conditionItem.getLeftValue()) ? "开关" : "动作");
+                datumBean.setValueName("1".equals(conditionItem.getRightValue()) ? "开启" : "关闭");
+                datumBean.setDeviceId(conditionItem.getSourceDeviceId());
+                datumBean.setDeviceType(conditionItem.getSourceDeviceType());
+                datumBean.setOperator(conditionItem.getOperator());
+                datumBean.setLeftValue(conditionItem.getLeftValue());
+                SceneSettingConditionItemAdapter.ConditionItem bean = new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean);
+                conditions.add(bean);
+            }
+            mConditionAdapter.setNewData(conditions);
         }
     }
 }

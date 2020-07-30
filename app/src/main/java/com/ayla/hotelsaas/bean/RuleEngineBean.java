@@ -23,11 +23,11 @@ public class RuleEngineBean implements Serializable {
 
     private String ruleDescription;
 
-    private int ruleType;
+    private int ruleType;//1:自动化 2:一键执行
 
     private int siteType;//1:本地 2:云端
 
-    private int status;//1:本地 2:云端
+    private int status;//0:不可用 1：可用
 
     private Condition condition;
 
@@ -113,7 +113,7 @@ public class RuleEngineBean implements Serializable {
 
         private String expression;
 
-        private List<?> items;
+        private List<ConditionItem> items;
 
         public String getExpression() {
             return expression;
@@ -123,12 +123,79 @@ public class RuleEngineBean implements Serializable {
             this.expression = expression;
         }
 
-        public List<?> getItems() {
+        public List<ConditionItem> getItems() {
             return items;
         }
 
-        public void setItems(List<?> items) {
+        public void setItems(List<ConditionItem> items) {
             this.items = items;
+        }
+
+        public static class ConditionItem implements Serializable{
+
+            /**
+             * joinType : 0
+             * operator : ==
+             * leftValue : PowerSwitch_1
+             * rightValue : 0
+             * sourceDeviceId : YY7MbSa6SPU09qumPGxb000000
+             * sourceDeviceType : 2
+             */
+
+            private int joinType;//0:无逻辑运算连接符 1:并且  2:或者
+            private String operator;
+            private String leftValue;
+            private String rightValue;
+            private String sourceDeviceId;
+            private int sourceDeviceType;//1:艾拉 2：阿里
+
+            public int getJoinType() {
+                return joinType;
+            }
+
+            public void setJoinType(int joinType) {
+                this.joinType = joinType;
+            }
+
+            public String getOperator() {
+                return operator;
+            }
+
+            public void setOperator(String operator) {
+                this.operator = operator;
+            }
+
+            public String getLeftValue() {
+                return leftValue;
+            }
+
+            public void setLeftValue(String leftValue) {
+                this.leftValue = leftValue;
+            }
+
+            public String getRightValue() {
+                return rightValue;
+            }
+
+            public void setRightValue(String rightValue) {
+                this.rightValue = rightValue;
+            }
+
+            public String getSourceDeviceId() {
+                return sourceDeviceId;
+            }
+
+            public void setSourceDeviceId(String sourceDeviceId) {
+                this.sourceDeviceId = sourceDeviceId;
+            }
+
+            public int getSourceDeviceType() {
+                return sourceDeviceType;
+            }
+
+            public void setSourceDeviceType(int sourceDeviceType) {
+                this.sourceDeviceType = sourceDeviceType;
+            }
         }
     }
 
@@ -178,7 +245,7 @@ public class RuleEngineBean implements Serializable {
 
             private String rightValue;
 
-            private int rightValueType;
+            private int rightValueType;//1:数值类型 2:action类型  3:文本类型  4:场景类型
 
             public int getTargetDeviceType() {
                 return targetDeviceType;

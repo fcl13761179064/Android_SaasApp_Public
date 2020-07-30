@@ -117,7 +117,12 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         if (tasks.size() == 0) {
                             return Observable.error(new Throwable("没有候选节点"));
                         } else {
-                            return Observable.mergeDelayError(tasks);
+                            return Observable.zip(tasks, new Function<Object[], Object>() {
+                                @Override
+                                public Object apply(Object[] objects) throws Exception {
+                                    return objects;
+                                }
+                            });
                         }
                     }
                 })//绑定候选节点
@@ -154,6 +159,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void run() throws Exception {
                         RequestModel.getInstance()
                                 .updateProperty(dsn, "zb_join_enable", "0")
+                                .subscribeOn(Schedulers.io())
                                 .subscribe(new Observer<BaseResult<Boolean>>() {
                                     @Override
                                     public void onSubscribe(Disposable d) {
