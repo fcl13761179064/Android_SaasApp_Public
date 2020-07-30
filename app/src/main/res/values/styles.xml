@@ -1,18 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppCompatTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/all_bg_color</item>
     </style>
-
-
-    <style name="AppTheme" parent="AppCompatTheme">
-        <item name="android:windowBackground">@android:color/white</item>
-    </style>
-
 
     <style name="SplashActivityTheme" parent="AppTheme">
         <!--消除启动时白屏问题   windowDisablePreview 禁用窗口的预览动画 -->

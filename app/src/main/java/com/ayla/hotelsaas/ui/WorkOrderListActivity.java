@@ -4,12 +4,9 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
-
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.WorkOrderAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -19,16 +16,15 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.WorkOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
+import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
-
 import java.io.Serializable;
 import java.util.List;
-
 import butterknife.BindView;
 
 public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOrderPresenter> implements WorkOrderView {
@@ -68,7 +64,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         mRefreshLayout.setDisableContentWhenLoading(true);
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         recyclerview.setHasFixedSize(true);
-        recyclerview.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recyclerview.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL,3,R.color.all_bg_color));
         mAdapter = new WorkOrderAdapter();
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
