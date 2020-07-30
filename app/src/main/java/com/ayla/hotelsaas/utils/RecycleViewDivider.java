@@ -82,7 +82,7 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
         this(context, orientation);
         mDividerHeight = dividerHeight;
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setColor(dividerColor);
+        mPaint.setColor(context.getResources().getColor(dividerColor));
         mPaint.setStyle(Paint.Style.FILL);
     }
 
@@ -106,7 +106,7 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
     }
 
     //绘制横向 item 分割线
-    private void drawHorizontal(Canvas canvas, RecyclerView parent) {
+    private void drawVertical(Canvas canvas, RecyclerView parent) {
         final int left = parent.getPaddingLeft();
         final int right = parent.getMeasuredWidth() - parent.getPaddingRight();
         final int childSize = parent.getChildCount();
@@ -126,7 +126,7 @@ public class RecycleViewDivider extends RecyclerView.ItemDecoration {
     }
 
     //绘制纵向 item 分割线
-    private void drawVertical(Canvas canvas, RecyclerView parent) {
+    private void drawHorizontal(Canvas canvas, RecyclerView parent) {
         final int top = parent.getPaddingTop();
         final int bottom = parent.getMeasuredHeight() - parent.getPaddingBottom();
         final int childSize = parent.getChildCount();

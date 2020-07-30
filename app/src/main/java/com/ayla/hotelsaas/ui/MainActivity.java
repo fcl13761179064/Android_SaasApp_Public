@@ -86,21 +86,21 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
         //定义底部标签图片大小和位置
         Drawable drawable_news = getResources().getDrawable(R.drawable.bar_bottom_device);
         //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
-        drawable_news.setBounds(0, 0, 40, 40);
+        drawable_news.setBounds(0, 0, 48, 48);
         //设置图片在文字的哪个方向
         main_device.setCompoundDrawables(null, drawable_news, null, null);
 
         //定义底部标签图片大小和位置
         Drawable drawable_live = getResources().getDrawable(R.drawable.bar_bottom_linkage);
         //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
-        drawable_live.setBounds(0, 0, 40, 40);
+        drawable_live.setBounds(0, 0, 48, 48);
         //设置图片在文字的哪个方向
         main_likeage.setCompoundDrawables(null, drawable_live, null, null);
 
         //定义底部标签图片大小和位置
         Drawable drawable_tuijian = getResources().getDrawable(R.drawable.bar_bottom_test);
         //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
-        drawable_tuijian.setBounds(0, 0, 40, 40);
+        drawable_tuijian.setBounds(0, 0, 48, 48);
         //设置图片在文字的哪个方向
         main_test.setCompoundDrawables(null, drawable_tuijian, null, null);
 

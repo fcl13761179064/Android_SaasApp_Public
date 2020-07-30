@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.RoomOrderListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -71,7 +69,6 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         mRefreshLayout.setDisableContentWhenLoading(true);
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         recyclerview.setHasFixedSize(true);
-        recyclerview.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL));
         mAdapter = new RoomOrderListAdapter();
         mView = View.inflate(this, R.layout.room_head_view, null);
         final TextView item_tv_name = mView.findViewById(R.id.item_tv_name);
