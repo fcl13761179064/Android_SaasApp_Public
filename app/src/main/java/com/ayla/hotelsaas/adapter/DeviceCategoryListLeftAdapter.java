@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.adapter;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 
 import androidx.core.content.ContextCompat;
@@ -25,7 +26,7 @@ public class DeviceCategoryListLeftAdapter extends BaseQuickAdapter<DeviceCatego
         helper.setText(R.id.text, item.getName());
         helper.setTypeface(R.id.text, Typeface.defaultFromStyle(selected ? Typeface.BOLD : Typeface.NORMAL));
         helper.setTextColor(R.id.text, selected ? ContextCompat.getColor(helper.itemView.getContext(), R.color.color_333333) : ContextCompat.getColor(helper.itemView.getContext(), R.color.color_666666));
-        helper.setBackgroundRes(R.id.text, selected ? R.color.color_ffffff : android.R.color.transparent);
+        helper.setBackgroundColor(R.id.text, selected ? Color.parseColor("#EFF3E8") : Color.TRANSPARENT);
     }
 
     public void setSelectedPosition(int selectedPosition) {
