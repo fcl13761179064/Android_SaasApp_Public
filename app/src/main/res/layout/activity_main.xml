@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical">
 
     <com.ayla.hotelsaas.widget.AppBar
@@ -35,7 +34,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/appBar"
-        android:elevation="1dp"
         android:background="@color/colorBackground" />
 
     <RadioGroup
@@ -44,6 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
+        android:background="@color/white"
         android:orientation="horizontal" >
 
         <RadioButton

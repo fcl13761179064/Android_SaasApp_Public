@@ -4,16 +4,18 @@
     <color name="colorPrimaryDark">#ffffff</color>
     <color name="colorAccent">#648C1A</color>
     <color name="bg_top_color">#1F62D8</color>
+    <color name="all_bg_color">#F5F6F9</color>
 
     <color name="color_default">#4DC1AD</color>
     <!--CustomProcessDialogxml文件的颜色值-->
-    <color name="white">#ffffff</color>
+    <color name="white">#ffffffff</color>
+    <color name="remove_device_color">#D73B4B</color>
     <!-- 背景颜色 -->
     <color name="colorBackground">#F6F6F6</color>
     <!-- 间隔线颜色 -->
     <color name="colorDividerLine">#DFDFDF</color>
     <!-- 字体颜色 -->
-    <color name="textDarkColor">#333333</color>
+    <color name="textDarkColor">#ff333333</color>
     <color name="textGaryColor">#666666</color>
     <color name="textLightColor">#999999</color>
     <color name="loginLogoColor">#648C1A</color>

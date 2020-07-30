@@ -25,6 +25,7 @@
         android:singleLine="true"
         android:textColor="@color/textDarkColor"
         android:textSize="17sp"
+        android:textStyle="bold"
         tools:text="威尼斯特酒店(广州新白云国际机场店)" />
 
     <LinearLayout
@@ -40,6 +41,7 @@
             android:gravity="bottom"
             android:singleLine="true"
             android:text="施工日期："
+            android:textColor="@color/color_999999"
             android:textSize="@dimen/sp_12" />
 
         <TextView
@@ -49,6 +51,7 @@
             android:layout_alignParentRight="true"
             android:gravity="bottom"
             android:textSize="@dimen/sp_12"
+            android:textColor="@color/color_999999"
             android:text="2011-06-12" />
 
         <TextView
@@ -57,6 +60,7 @@
             android:layout_alignParentRight="true"
             android:gravity="bottom"
             android:textSize="@dimen/sp_12"
+            android:textColor="@color/color_999999"
             android:text=" - " />
 
         <TextView
@@ -66,6 +70,7 @@
             android:layout_alignParentRight="true"
             android:gravity="bottom"
             android:textSize="@dimen/sp_12"
+            android:textColor="@color/color_999999"
             tools:text="2011-06-12" />
     </LinearLayout>
 
@@ -80,6 +85,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textSize="@dimen/sp_12"
+            android:textColor="@color/color_999999"
             android:text="施工状态：" />
 
         <TextView
@@ -88,7 +94,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:textSize="@dimen/sp_12"
-            android:textColor="@color/loginLogoColor"
+            android:textColor="@color/color_999999"
             android:gravity="center_vertical"
             tools:text="待施工" />
     </LinearLayout>
