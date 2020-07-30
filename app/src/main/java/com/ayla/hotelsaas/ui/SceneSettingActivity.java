@@ -336,7 +336,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         for (RuleEngineBean.Action.ActionItem actionItem : mRuleEngineBean.getAction().getItems()) {
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
             datumBean.setLeftValue(actionItem.getLeftValue());
-            datumBean.setFunctionName("Switch_Control".equals(actionItem.getLeftValue()) ? "开关" : "动作");
+            datumBean.setFunctionName("1:0x0006:Onoff".equals(actionItem.getLeftValue()) ? "开关" : "动作");
             datumBean.setValueName("1".equals(actionItem.getRightValue()) ? "开启" : "关闭");
             datumBean.setDeviceId(actionItem.getTargetDeviceId());
             datumBean.setDeviceType(actionItem.getTargetDeviceType());
@@ -354,7 +354,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             for (RuleEngineBean.Condition.ConditionItem conditionItem : mRuleEngineBean.getCondition().getItems()) {
                 SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
                 datumBean.setLeftValue(conditionItem.getLeftValue());
-                datumBean.setFunctionName("Switch_Control".equals(conditionItem.getLeftValue()) ? "开关" : "动作");
+                datumBean.setFunctionName("1:0x0006:Onoff".equals(conditionItem.getLeftValue()) ? "开关" : "动作");
                 datumBean.setValueName("1".equals(conditionItem.getRightValue()) ? "开启" : "关闭");
                 datumBean.setDeviceId(conditionItem.getSourceDeviceId());
                 datumBean.setDeviceType(conditionItem.getSourceDeviceType());
