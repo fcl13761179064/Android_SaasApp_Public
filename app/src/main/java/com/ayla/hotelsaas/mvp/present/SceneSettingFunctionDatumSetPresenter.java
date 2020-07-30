@@ -16,7 +16,7 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
             datumBean.setFunctionName("开关");
             datumBean.setValueName("开启");
-            datumBean.setLeftValue("Switch_Control");
+            datumBean.setLeftValue("1:0x0006:Onoff");
             datumBean.setOperator("==");
             datumBean.setRightValue("1");
             datumBean.setRightValueType(1);
@@ -30,7 +30,7 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
             datumBean.setFunctionName("开关");
             datumBean.setValueName("关闭");
-            datumBean.setLeftValue("Switch_Control");
+            datumBean.setLeftValue("1:0x0006:Onoff");
             datumBean.setOperator("==");
             datumBean.setRightValue("0");
             datumBean.setRightValueType(1);
