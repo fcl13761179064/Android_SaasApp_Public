@@ -23,6 +23,8 @@ public class RuleEngineBean implements Serializable {
 
     private String ruleDescription;
 
+    private String iconPath;
+
     private int ruleType;//1:自动化 2:一键执行
 
     private int siteType;//1:本地 2:云端
@@ -55,6 +57,14 @@ public class RuleEngineBean implements Serializable {
 
     public void setRuleDescription(String ruleDescription) {
         this.ruleDescription = ruleDescription;
+    }
+
+    public String getIconPath() {
+        return iconPath;
+    }
+
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
     }
 
     public long getScopeId() {
