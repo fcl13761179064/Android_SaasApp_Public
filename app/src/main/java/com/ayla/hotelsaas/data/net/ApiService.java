@@ -80,4 +80,8 @@ public interface ApiService {
 
     @PUT("api/v1/construction/device/{deviceId}/property")
     Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
+
+
+    @PUT("api/v1/device/{deviceId}/info")
+    Observable<BaseResult<Boolean>> deviceRename(@Path("deviceId") String deviceId, @Body RequestBody body);
 }

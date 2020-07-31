@@ -9,8 +9,8 @@ import java.util.List;
 public interface DeviceMoreView extends BaseView {
 
     //错误提示
-    void errorShark(int type, int CycleTimes);
+    void operateError(String msg);
 
     //操作成功
-    void operateSuccess(User data);
+    void operateSuccess(Boolean is_rename);
 }

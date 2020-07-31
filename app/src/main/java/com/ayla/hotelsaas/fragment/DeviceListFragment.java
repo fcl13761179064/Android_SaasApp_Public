@@ -72,6 +72,8 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 final Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
+                final String deviceId = mAdapter.getData().get(position).getDeviceId();
+                intent.putExtra("deviceId", deviceId);
                 startActivity(intent);
             }
         });
@@ -103,7 +105,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
                 intent.putExtra("scopeId", mRoom_order.getRoomId());
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -140,7 +142,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0 && resultCode == Activity.RESULT_OK){
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             mRefreshLayout.autoRefresh();
         }
     }
