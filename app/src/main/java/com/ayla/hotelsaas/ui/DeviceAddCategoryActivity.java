@@ -47,12 +47,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     private DeviceCategoryListRightAdapter mRightAdapter;
 
     @Override
-    protected void setStatusBar() {
-        super.setStatusBar();
-        StatusBarUtil.setTransparent(this);
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.activity_device_add_category_list;
     }
