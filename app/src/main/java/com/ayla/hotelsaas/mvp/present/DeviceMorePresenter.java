@@ -49,11 +49,13 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
 
                     @Override
                     public void _onNext(Boolean data) {
+                        mView.hideProgress();
                         mView.operateSuccess(data);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
+                        mView.hideProgress();
                         mView.operateError(msg);
                     }
                 });

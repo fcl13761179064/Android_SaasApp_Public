@@ -77,7 +77,7 @@ public class DeviceListBean implements Serializable {
         private long cuId;
         private String deviceId;
         private String deviceName;
-        private Object nickname;
+        private String nickname;
         private String deviceStatus;
         private int connectTypeId;//1-网关设备、2-节点设备
 
@@ -113,11 +113,11 @@ public class DeviceListBean implements Serializable {
             this.deviceName = deviceName;
         }
 
-        public Object getNickname() {
+        public String getNickname() {
             return nickname;
         }
 
-        public void setNickname(Object nickname) {
+        public void setNickname(String nickname) {
             this.nickname = nickname;
         }
 

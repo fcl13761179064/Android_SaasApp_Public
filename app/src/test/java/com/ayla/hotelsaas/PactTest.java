@@ -172,12 +172,23 @@ public class PactTest {
                                 .stringType("deviceName", "二路开关")
                                 .stringType("nickname", "ggggg")
                                 .stringType("deviceStatus", "online")
-                                .numberType("connectTypeId",1)
+                                .numberType("connectTypeId", 1)
                                 .closeObject()
                                 .closeArray()
                         )
-                )
-                //DSN绑定设备,绑定成功
+                ).given("修改设备名称")
+                .uponReceiving("")
+                .matchPath("/api/v1/device/.*/info", "/api/v1/device/12345/info")
+                .method("PUT")
+                .body(new PactDslJsonBody()
+                        .stringType("nickName", "开关")
+                ).willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "success")
+                        .stringType("data", "true")
+                )//DSN绑定设备,绑定成功
                 .given("绑定成功")
                 .uponReceiving("DSN绑定设备")
                 .path("/api/v1/construction/device/bind")
@@ -368,7 +379,7 @@ public class PactTest {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                . login("111", "222");
+                                .login("111", "222");
                     }
                 })//登录
                 .concatMap(new Function<Object, ObservableSource<?>>() {
@@ -404,6 +415,13 @@ public class PactTest {
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
                                 .bindDeviceWithDSN("111", 1, 2);
+                    }
+                })//修改设备名称
+                .concatMap(new Function<Object, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Object o) throws Exception {
+                        return RequestModel.getInstance()
+                                .deviceRename("232332323223", "开关");
                     }
                 })//绑定设备
                 .concatMap(new Function<Object, ObservableSource<?>>() {

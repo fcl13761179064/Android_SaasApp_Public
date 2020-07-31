@@ -45,6 +45,7 @@
                 android:layout_marginRight="9dp"
                 android:gravity="center"
                 android:text="调光开关"
+                android:maxLength="40"
                 android:textColor="#999999"
                 android:textSize="17sp" />
 
