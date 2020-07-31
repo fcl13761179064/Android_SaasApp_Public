@@ -14,6 +14,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/rl_device_rename"
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:layout_marginTop="@dimen/dp_16"
@@ -44,6 +45,7 @@
                 android:layout_marginRight="9dp"
                 android:gravity="center"
                 android:text="调光开关"
+                android:maxLength="40"
                 android:textColor="#999999"
                 android:textSize="17sp" />
 

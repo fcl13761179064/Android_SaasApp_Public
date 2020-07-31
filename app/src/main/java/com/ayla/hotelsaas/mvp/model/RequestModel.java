@@ -217,4 +217,18 @@ public class RequestModel {
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().deleteRuleEngine(body111);
     }
+
+
+    /**
+     * 设置重新命名
+     *
+     * @return
+     */
+    public Observable<BaseResult<Boolean>> deviceRename(String deviceId, String nickName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("nickName", nickName);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().deviceRename(deviceId, body111);
+    }
+
 }
