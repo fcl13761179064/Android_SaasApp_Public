@@ -44,6 +44,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     private RoomOrderBean.ResultListBean mRoom_order;
     private WorkOrderBean.ResultListBean mWork_order;
     private RecyclerView mRecyclerview;
+    private int Result_OK=1001;
 
     public DeviceListFragment(RoomOrderBean.ResultListBean room_order) {
         this.mRoom_order = room_order;
@@ -72,7 +73,9 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 final Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
-                startActivity(intent);
+                final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
+                intent.putExtra("devicesBean", devicesBean);
+                startActivityForResult(intent,Result_OK);
             }
         });
         mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
@@ -103,7 +106,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
                 intent.putExtra("scopeId", mRoom_order.getRoomId());
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -140,7 +143,9 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 0 && resultCode == Activity.RESULT_OK){
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            mRefreshLayout.autoRefresh();
+        }else if (requestCode == Result_OK && resultCode == Activity.RESULT_OK){
             mRefreshLayout.autoRefresh();
         }
     }

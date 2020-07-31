@@ -204,7 +204,6 @@ public class RetrofitHelper {
             try {
                 //获得请求body
                 JSONObject json = getResponseBodyJson(originalResponse);
-
                 if (null != json && (json.optInt("code") == 401)) {
                     originalResponse = sendRefreshToken(chain);
                 } else if (null != json && (json.optInt("code") == 122002)) {
