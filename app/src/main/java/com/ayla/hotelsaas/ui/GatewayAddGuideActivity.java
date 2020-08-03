@@ -17,7 +17,7 @@ import butterknife.OnClick;
 
 /**
  * 网关添加引导页面
- * 进入时必须带上cuId 、scopeId。
+ * 进入时必须带上cuId 、scopeId 、deviceName。
  */
 public class GatewayAddGuideActivity extends BaseMvpActivity {
     @BindView(R.id.iv_01)

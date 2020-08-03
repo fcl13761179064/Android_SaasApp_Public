@@ -12,7 +12,7 @@ import butterknife.OnClick;
 
 /**
  * ZigBee添加引导页面
- * 进入时必须带入网关deviceId 、cuId 、scopeId
+ * 进入时必须带入网关deviceId 、cuId 、scopeId 、deviceName
  */
 public class ZigBeeAddGuideActivity extends BaseMvpActivity {
     @Override
@@ -38,9 +38,7 @@ public class ZigBeeAddGuideActivity extends BaseMvpActivity {
     @OnClick(R.id.bt_start_add)
     public void handleJump() {
         Intent mainActivity = new Intent(this, ZigBeeAddActivity.class);
-        mainActivity.putExtra("deviceId", getIntent().getStringExtra("deviceId"));//传网关的dsn过去。
-        mainActivity.putExtra("cuId", getIntent().getLongExtra("cuId",0));//
-        mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId",0));//
+        mainActivity.putExtras(getIntent());
         startActivityForResult(mainActivity, 0);
     }
 

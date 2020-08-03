@@ -84,7 +84,8 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         mPresenter.bindZigBeeNodeWithGatewayDSN(
                 getIntent().getStringExtra("deviceId"),
                 getIntent().getLongExtra("cuId", 0),
-                getIntent().getLongExtra("scopeId", 0));
+                getIntent().getLongExtra("scopeId", 0),
+                getIntent().getStringExtra("deviceName"));
     }
 
     @OnClick(R.id.bt_bind)

@@ -49,7 +49,8 @@ public class DeviceCategoryBean {
 
         private String name;
         private int cuId;
-        private int networkType;
+        private int deviceConnectType;//1、网关设备 2、节点设备
+        private int networkType;//1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉zigbee配网
         private String icon;
 
         public String getName() {
@@ -82,6 +83,14 @@ public class DeviceCategoryBean {
 
         public void setIcon(String icon) {
             this.icon = icon;
+        }
+
+        public int getDeviceConnectType() {
+            return deviceConnectType;
+        }
+
+        public void setDeviceConnectType(int deviceConnectType) {
+            this.deviceConnectType = deviceConnectType;
         }
     }
 }

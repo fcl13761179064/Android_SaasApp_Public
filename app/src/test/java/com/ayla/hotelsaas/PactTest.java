@@ -197,6 +197,9 @@ public class PactTest {
                         .stringType("deviceId", "123")
                         .numberType("scopeId", 1)
                         .numberType("cuId", 2)
+                        .numberType("scopeType", 2)
+                        .stringType("deviceName", "abc")
+                        .stringType("nickName", "abc")
                 )
                 .willRespondWith()
                 .status(200)
@@ -414,7 +417,7 @@ public class PactTest {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN("111", 1, 2);
+                                .bindDeviceWithDSN("111", 1, 2, 2, "abc", "abc");
                     }
                 })//修改设备名称
                 .concatMap(new Function<Object, ObservableSource<?>>() {
