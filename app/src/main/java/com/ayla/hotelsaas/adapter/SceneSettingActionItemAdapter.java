@@ -28,7 +28,7 @@ public class SceneSettingActionItemAdapter extends BaseQuickAdapter<SceneSetting
         if (devicesBean != null) {
             for (DeviceListBean.DevicesBean bean : devicesBean) {
                 if (bean.getDeviceId().equals(dsn)) {
-                    helper.setText(R.id.tv_name, bean.getDeviceName());
+                    helper.setText(R.id.tv_name, bean.getNickname());
                     break;
                 }
             }

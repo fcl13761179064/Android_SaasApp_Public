@@ -118,11 +118,15 @@ public class RequestModel {
      * @param scopeId
      * @return
      */
-    public Observable<BaseResult> bindDeviceWithDSN(String deviceId, long cuId, long scopeId) {
+    public Observable<BaseResult> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
+                                                    int scopeType, String deviceName, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("scopeId", scopeId);
         body.addProperty("cuId", cuId);
+        body.addProperty("scopeType", scopeType);
+        body.addProperty("deviceName", deviceName);
+        body.addProperty("nickName", nickName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().bindDeviceWithDSN(body111);
     }

@@ -147,6 +147,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
                 mainActivity.putExtra("cuId", subBean.getCuId());
                 mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+                mainActivity.putExtra("deviceName", subBean.getName());
                 startActivityForResult(mainActivity, 0);
             }else{
                 CustomToast.makeText(this, "只能绑定一个网关", R.drawable.ic_toast_warming).show();
@@ -159,10 +160,12 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 mainActivity.putExtra("deviceId", gateway.getDeviceId());
                 mainActivity.putExtra("cuId", gateway.getCuId());
                 mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+                mainActivity.putExtra("deviceName", subBean.getName());
                 startActivityForResult(mainActivity, 0);
             } else {//多个网关
                 Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
                 mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+                mainActivity.putExtra("deviceName", subBean.getName());
                 startActivityForResult(mainActivity, 0);
             }
         }else{
