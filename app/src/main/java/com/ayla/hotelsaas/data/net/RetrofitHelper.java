@@ -82,7 +82,6 @@ public class RetrofitHelper {
     public static final String apiBaseUrl = Constance.BASE_URL;
 
     private static Retrofit retrofit;
-    private Response mProceed;
 
     public static RetrofitHelper getInstance() {
         if (instance == null) {
@@ -205,7 +204,7 @@ public class RetrofitHelper {
                 //获得请求body
                 JSONObject json = getResponseBodyJson(originalResponse);
                 if (null != json && (json.optInt("code") == 401)) {
-                    originalResponse = sendRefreshToken(chain);
+                    sendRefreshToken(chain);
                 } else if (null != json && (json.optInt("code") == 122002)) {
                     sendLoginReceiver();
                 }
@@ -265,7 +264,7 @@ public class RetrofitHelper {
         }
     };
 
-    private Response sendRefreshToken(Interceptor.Chain chain) {
+    private void sendRefreshToken(Interceptor.Chain chain) {
         String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
         JsonObject body = new JsonObject();
         body.addProperty("refreshToken", refresh_token);
@@ -291,29 +290,12 @@ public class RetrofitHelper {
                         MyApplication.getInstance().setUserEntity(data);
                         SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, data.getAuthToken());
                         SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, data.getRefreshToken());
-                        if (!TextUtils.isEmpty(data.getAuthToken())) {
-                            // 创建新的请求，并增加header
-                            Request retryRequest = chain.request()
-                                    .newBuilder()
-                                    .header("Authorization", data.getAuthToken())
-                                    .build();
-
-                            // 再次发起请求
-                            try {
-                                mProceed = chain.proceed(retryRequest);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
                     }
                 });
-
-        return mProceed;
     }
 
     /**
