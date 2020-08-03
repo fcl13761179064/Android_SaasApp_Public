@@ -409,17 +409,19 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
         } else if (mRuleEngineBean.getRuleType() == 1) {//自动化
             List<SceneSettingConditionItemAdapter.ConditionItem> conditions = new ArrayList<>();
-            for (RuleEngineBean.Condition.ConditionItem conditionItem : mRuleEngineBean.getCondition().getItems()) {
-                SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
-                datumBean.setLeftValue(conditionItem.getLeftValue());
-                datumBean.setFunctionName("1:0x0006:Onoff".equals(conditionItem.getLeftValue()) ? "开关" : "动作");
-                datumBean.setValueName("1".equals(conditionItem.getRightValue()) ? "开启" : "关闭");
-                datumBean.setDeviceId(conditionItem.getSourceDeviceId());
-                datumBean.setDeviceType(conditionItem.getSourceDeviceType());
-                datumBean.setOperator(conditionItem.getOperator());
-                datumBean.setLeftValue(conditionItem.getLeftValue());
-                SceneSettingConditionItemAdapter.ConditionItem bean = new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean);
-                conditions.add(bean);
+            if (mRuleEngineBean.getCondition() != null && mRuleEngineBean.getCondition().getItems() !=null) {
+                for (RuleEngineBean.Condition.ConditionItem conditionItem : mRuleEngineBean.getCondition().getItems()) {
+                    SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
+                    datumBean.setLeftValue(conditionItem.getLeftValue());
+                    datumBean.setFunctionName("1:0x0006:Onoff".equals(conditionItem.getLeftValue()) ? "开关" : "动作");
+                    datumBean.setValueName("1".equals(conditionItem.getRightValue()) ? "开启" : "关闭");
+                    datumBean.setDeviceId(conditionItem.getSourceDeviceId());
+                    datumBean.setDeviceType(conditionItem.getSourceDeviceType());
+                    datumBean.setOperator(conditionItem.getOperator());
+                    datumBean.setLeftValue(conditionItem.getLeftValue());
+                    SceneSettingConditionItemAdapter.ConditionItem bean = new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean);
+                    conditions.add(bean);
+                }
             }
             mConditionAdapter.setNewData(conditions);
         }
