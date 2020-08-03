@@ -287,16 +287,9 @@ public class RetrofitHelper {
 
                     @Override
                     public void _onNext(User data) {
-                        // Android 4.0 之后不能在主线程中请求HTTP请求
-                        new Thread(new Runnable(){
-                            @Override
-                            public void run() {
-                                MyApplication.getInstance().setUserEntity(data);
-                                SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, data.getAuthToken());
-                                SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, data.getRefreshToken());
-                            }
-                        }).start();
-
+                        MyApplication.getInstance().setUserEntity(data);
+                        SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, data.getAuthToken());
+                        SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, data.getRefreshToken());
                     }
 
                     @Override
