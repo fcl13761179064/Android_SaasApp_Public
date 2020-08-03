@@ -49,7 +49,7 @@ public class DeviceCategoryBean {
 
         private String name;
         private int cuId;
-        private int deviceConnectType;
+        private int networkType;
         private String icon;
 
         public String getName() {
@@ -68,12 +68,12 @@ public class DeviceCategoryBean {
             this.cuId = cuId;
         }
 
-        public int getDeviceConnectType() {
-            return deviceConnectType;
+        public int getNetworkType() {
+            return networkType;
         }
 
-        public void setDeviceConnectType(int deviceConnectType) {
-            this.deviceConnectType = deviceConnectType;
+        public void setNetworkType(int networkType) {
+            this.networkType = networkType;
         }
 
         public String getIcon() {

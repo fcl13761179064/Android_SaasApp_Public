@@ -47,12 +47,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     private DeviceCategoryListRightAdapter mRightAdapter;
 
     @Override
-    protected void setStatusBar() {
-        super.setStatusBar();
-        StatusBarUtil.setTransparent(this);
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.activity_device_add_category_list;
     }
@@ -148,7 +142,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 }
             }
         }
-        if (0 == subBean.getDeviceConnectType()) {//跳转网关添加
+        if (2 == subBean.getNetworkType()) {//跳转艾拉网关添加
             if (gatewayCount == 0) {//没有网关
                 Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
                 mainActivity.putExtra("cuId", subBean.getCuId());
@@ -157,8 +151,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             }else{
                 CustomToast.makeText(this, "只能绑定一个网关", R.drawable.ic_toast_warming).show();
             }
-        } else if (1 == subBean.getDeviceConnectType()) {//跳转节点添加
-
+        } else if (3 == subBean.getNetworkType()) {//跳转艾拉节点添加
             if (gatewayCount == 0) {//没有网关
                 CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
             } else if (gatewayCount == 1) {//一个网关
@@ -172,6 +165,8 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
                 startActivityForResult(mainActivity, 0);
             }
+        }else{
+            CustomToast.makeText(this, "暂不支持该设备", R.drawable.ic_toast_warming).show();
         }
     }
 
