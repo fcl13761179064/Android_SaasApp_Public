@@ -61,4 +61,38 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                 });
     }
 
+
+    public void deviceRemove(String deviceId, String scopeId,String scopeType) {
+        RequestModel.getInstance().deviceRemove(deviceId, scopeId,scopeType)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress("移除中...");
+                    }
+                })
+                .subscribe(new RxjavaObserver<Boolean>() {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addSubscrebe(d);
+
+                    }
+
+                    @Override
+                    public void _onNext(Boolean data) {
+                        mView.hideProgress();
+                        mView.operateSuccess(data);
+                    }
+
+                    @Override
+                    public void _onError(String code, String msg) {
+                        mView.hideProgress();
+                        mView.operateError(msg);
+                    }
+                });
+    }
+
+
 }

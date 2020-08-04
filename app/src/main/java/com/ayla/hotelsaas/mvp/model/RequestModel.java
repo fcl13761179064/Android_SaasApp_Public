@@ -235,4 +235,18 @@ public class RequestModel {
         return getApiService().deviceRename(deviceId, body111);
     }
 
+
+    /**
+     * 移除设备
+     *
+     * @return
+     */
+    public Observable<BaseResult<Boolean>> deviceRemove(String deviceId, String scopeId, String scopeType) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("deviceId", deviceId);
+        jsonObject.addProperty("scopeId", scopeId);
+        jsonObject.addProperty("scopeType", scopeType);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().removeDevice(body111);
+    }
 }
