@@ -48,7 +48,8 @@ public class DeviceCategoryBean {
          */
 
         private String name;
-        private int cuId;
+        private String deviceName;
+        private long cuId;
         private int deviceConnectType;//1、网关设备 2、节点设备
         private int networkType;//1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉zigbee配网
         private String icon;
@@ -61,11 +62,19 @@ public class DeviceCategoryBean {
             this.name = name;
         }
 
-        public int getCuId() {
+        public String getDeviceName() {
+            return deviceName;
+        }
+
+        public void setDeviceName(String deviceName) {
+            this.deviceName = deviceName;
+        }
+
+        public long getCuId() {
             return cuId;
         }
 
-        public void setCuId(int cuId) {
+        public void setCuId(long cuId) {
             this.cuId = cuId;
         }
 

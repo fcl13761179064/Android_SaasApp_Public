@@ -16,6 +16,7 @@ import java.util.Map;
 
 import au.com.dius.pact.consumer.dsl.PactDslJsonArray;
 import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
+import au.com.dius.pact.consumer.dsl.PactDslJsonRootValue;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.consumer.junit.PactProviderRule;
 import au.com.dius.pact.consumer.junit.PactVerification;
@@ -85,6 +86,7 @@ public class PactTest {
                                 .object("sub", new PactDslJsonArray()
                                         .minArrayLike(1)
                                         .stringType("name", "网关")
+                                        .stringType("deviceName", "网关")
                                         .numberType("cuId", 0)
                                         .numberType("deviceConnectType", 1)
                                         .stringType("icon", "http://172.31.16.100/product/typeIcon/cz.png")
@@ -410,6 +412,37 @@ public class PactTest {
                         .stringType("msg", "")
                         .nullValue("data")
                 )
+                //查询品类功能
+                .given("查询成功")
+                .uponReceiving("查询品类功能")
+                .path("/api/v1/construction/devicetypes/list")
+                .method("GET")
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "")
+                        .object("data", new PactDslJsonArray()
+                                .minArrayLike(1, 2)
+                                .stringType("deviceName", "1111")
+                                .numberType("cuId", 0)
+                                .stringType("oemModel", "1111")
+                                .minArrayLike("conditionProperties", 1, PactDslJsonRootValue.stringType("11111"), 2)
+                                .closeObject()
+                        )
+                )
+                //查询物模板
+                .given("查询成功")
+                .uponReceiving("查询物模板")
+                .matchPath("/api/v1/construction/device/queryModelTemplate/.*", "/api/v1/construction/device/queryModelTemplate/ZB-NODE-SW0-001")
+                .method("GET")
+                .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                        .numberValue("code", 0)
+                        .stringType("msg", "")
+                        .nullValue("data")
+                )
 
                 .toPact();
     }
@@ -432,6 +465,13 @@ public class PactTest {
                                 .getDeviceCategory();
                     }
                 })//获取产品配网二级菜单列表
+                .concatMap(new Function<Object, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Object o) throws Exception {
+                        return RequestModel.getInstance()
+                                .getDeviceCategoryDetail();
+                    }
+                })//获取品类详细描述
                 .concatMap(new Function<Object, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
@@ -489,6 +529,8 @@ public class PactTest {
                         ruleEngineBean.setRuleType(2);
                         ruleEngineBean.setRuleName("ruleengine");
                         ruleEngineBean.setRuleDescription("ruleengine");
+                        ruleEngineBean.setIconPath("1111");
+
                         RuleEngineBean.Action action = new RuleEngineBean.Action();
                         action.setExpression("11111");
                         List<RuleEngineBean.Action.ActionItem> actionItems = new ArrayList<>();
@@ -505,6 +547,22 @@ public class PactTest {
                         action.setItems(actionItems);
                         ruleEngineBean.setAction(action);
 
+                        RuleEngineBean.Condition condition = new RuleEngineBean.Condition();
+                        condition.setExpression("1111");
+                        List<RuleEngineBean.Condition.ConditionItem> conditionItems = new ArrayList<>();
+                        for (int i = 0; i < 1; i++) {
+                            RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
+                            conditionItem.setJoinType(1);
+                            conditionItem.setOperator("==");
+                            conditionItem.setLeftValue("1");
+                            conditionItem.setRightValue("1");
+                            conditionItem.setSourceDeviceId("GADw3NnUI4Xa54nsr5tYz20000");
+                            conditionItem.setSourceDeviceType(1);
+                            conditionItems.add(conditionItem);
+                        }
+                        condition.setItems(conditionItems);
+                        ruleEngineBean.setCondition(condition);
+
                         return RequestModel.getInstance()
                                 .saveRuleEngine(ruleEngineBean);
                     }
@@ -518,6 +576,8 @@ public class PactTest {
                         ruleEngineBean.setRuleType(2);
                         ruleEngineBean.setRuleName("ruleengine");
                         ruleEngineBean.setRuleDescription("ruleengine");
+                        ruleEngineBean.setIconPath("1111");
+
                         RuleEngineBean.Action action = new RuleEngineBean.Action();
                         action.setExpression("11111");
                         List<RuleEngineBean.Action.ActionItem> actionItems = new ArrayList<>();
@@ -533,6 +593,22 @@ public class PactTest {
                         }
                         action.setItems(actionItems);
                         ruleEngineBean.setAction(action);
+
+                        RuleEngineBean.Condition condition = new RuleEngineBean.Condition();
+                        condition.setExpression("1111");
+                        List<RuleEngineBean.Condition.ConditionItem> conditionItems = new ArrayList<>();
+                        for (int i = 0; i < 1; i++) {
+                            RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
+                            conditionItem.setJoinType(1);
+                            conditionItem.setOperator("==");
+                            conditionItem.setLeftValue("1");
+                            conditionItem.setRightValue("1");
+                            conditionItem.setSourceDeviceId("GADw3NnUI4Xa54nsr5tYz20000");
+                            conditionItem.setSourceDeviceType(1);
+                            conditionItems.add(conditionItem);
+                        }
+                        condition.setItems(conditionItems);
+                        ruleEngineBean.setCondition(condition);
 
                         return RequestModel.getInstance()
                                 .updateRuleEngine(ruleEngineBean);
@@ -559,6 +635,13 @@ public class PactTest {
                                 .updateProperty("123", "322", "1");
                     }
                 })//更新属性
+                .concatMap(new Function<Object, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Object o) throws Exception {
+                        return RequestModel.getInstance()
+                                .fetchDeviceTemplate("123");
+                    }
+                })//查询物模板信息
                 .test().assertNoErrors();
     }
 }
