@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
+import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
@@ -42,6 +43,9 @@ public interface ApiService {
     @GET("/api/v1/construction/devicetypes")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
+    @GET("/api/v1/construction/devicetypes/list")
+    Observable<BaseResult<List<DeviceCategoryDetailBean>>> fetchDeviceCategoryDetail();
+
     @GET("api/v1/construction/constructbill")
     Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
 
@@ -81,6 +85,8 @@ public interface ApiService {
     @PUT("api/v1/construction/device/{deviceId}/property")
     Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
 
+    @GET("api/v1/construction/device/queryModelTemplate/{oemModel}")
+    Observable<BaseResult> fetchDeviceTemplate(@Path("oemModel") String oemModel);
 
     @PUT("api/v1/device/{deviceId}/info")
     Observable<BaseResult<Boolean>> deviceRename(@Path("deviceId") String deviceId, @Body RequestBody body);

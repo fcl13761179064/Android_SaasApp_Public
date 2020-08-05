@@ -4,6 +4,7 @@ package com.ayla.hotelsaas.mvp.model;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
+import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
@@ -77,7 +78,6 @@ public class RequestModel {
         return getApiService().getWorkOrders(pageNum, maxNum);
     }
 
-
     /**
      * 获取房间号的条数
      *
@@ -85,7 +85,6 @@ public class RequestModel {
      * @param //每页加载量
      * @return
      */
-
     public Observable<BaseResult<RoomOrderBean>> getRoomOrderList(String billId, int pageNum, int maxNum) {
         return getApiService().getRoomOrders(pageNum, maxNum, billId);
 
@@ -110,6 +109,10 @@ public class RequestModel {
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
         return getApiService().fetchDeviceCategory();
+    }
+
+    public Observable<BaseResult<List<DeviceCategoryDetailBean>>> getDeviceCategoryDetail() {
+        return getApiService().fetchDeviceCategoryDetail();
     }
 
     /**
@@ -220,6 +223,16 @@ public class RequestModel {
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().deleteRuleEngine(body111);
+    }
+
+    /**
+     * 查询设备物模板信息
+     *
+     * @param oemModel
+     * @return
+     */
+    public Observable<BaseResult> fetchDeviceTemplate(String oemModel) {
+        return getApiService().fetchDeviceTemplate(oemModel);
     }
 
 
