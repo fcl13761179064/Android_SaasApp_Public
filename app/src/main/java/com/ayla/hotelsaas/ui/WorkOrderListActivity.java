@@ -1,12 +1,15 @@
 package com.ayla.hotelsaas.ui;
 
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.WorkOrderAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -18,13 +21,16 @@ import com.ayla.hotelsaas.mvp.view.WorkOrderView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
+import com.ayla.hotelsaas.widget.AllCustomeDialog;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
 import java.io.Serializable;
 import java.util.List;
+
 import butterknife.BindView;
 
 public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOrderPresenter> implements WorkOrderView {
@@ -36,7 +42,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout mRefreshLayout;
     private WorkOrderAdapter mAdapter;
-
+    private AllCustomeDialog allCustomeDialog;
 
     @Override
     public void refreshUI() {
@@ -64,7 +70,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         mRefreshLayout.setDisableContentWhenLoading(true);
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         recyclerview.setHasFixedSize(true);
-        recyclerview.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL,3,R.color.all_bg_color));
+        recyclerview.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL, 3, R.color.all_bg_color));
         mAdapter = new WorkOrderAdapter();
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
@@ -116,12 +122,27 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
 
     @Override
     protected void mExitApp() {
-        finish();
-        SharePreferenceUtils.remove(this, Constance.SP_Login_Token);
-        MyApplication.getInstance().setUserEntity(null);
-        Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        allCustomeDialog = new AllCustomeDialog(WorkOrderListActivity.this, getResources().getString(R.string.sing_out), "");
+        allCustomeDialog.setOnSureClick("退出", new AllCustomeDialog.OnSureClick() {
+            @Override
+            public void click(Dialog dialog) {
+                finish();
+                SharePreferenceUtils.remove(WorkOrderListActivity.this, Constance.SP_Login_Token);
+                MyApplication.getInstance().setUserEntity(null);
+                Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+        allCustomeDialog.setOnCancelClick("取消", new AllCustomeDialog.OnCancelClick() {
+            @Override
+            public void click(Dialog dialog) {
+                allCustomeDialog.dismiss();
+            }
+        });
+        allCustomeDialog.setCanceledOnTouchOutside(false);
+        allCustomeDialog.show();
+
     }
 
     @Override

@@ -107,6 +107,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 if (null != mAdapter.getData()) {
+                    mAdapter.removeFooterView(mFoot_view);
                     mAdapter.getData().clear();
                     mAdapter.notifyDataSetChanged();
                 }
@@ -135,13 +136,12 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     @Override
     public void loadDataSuccess(RoomOrderBean data) {
         final List<RoomOrderBean.ResultListBean> resultList = data.getResultList();
-        mAdapter.removeFooterView(mFoot_view);
         if (resultList.isEmpty()) {
             mAdapter.addData(resultList);
             if (mAdapter.getData().isEmpty()) {
                 mAdapter.setEmptyView(R.layout.empty_room_order);
             }
-            mAdapter.addFooterView(mFoot_view);
+            mAdapter.setFooterView(mFoot_view);
             mRefreshLayout.setEnableLoadMore(false);
 
         } else {

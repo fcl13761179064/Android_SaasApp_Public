@@ -26,5 +26,8 @@
     <string name="title_practice">Practice</string>
 
     <string name="cancel">取消</string>
+    <string name="sing_out">确定退出当前账号</string>
+    <string name="remove_device_title">确定是否移除</string>
+    <string name="remove_device_content">移除设备后将不可恢复，您是否移除该设备</string>
 
 </resources>

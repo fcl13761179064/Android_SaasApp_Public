@@ -25,7 +25,7 @@ public class CommonDialog extends DialogFragment {
         CommonDialog fragment = new CommonDialog();
         fragment.setArguments(args);
         fragment.doneCallback = doneCallback;
-        mTitle =title;
+        mTitle = title;
         return fragment;
     }
 
@@ -55,7 +55,12 @@ public class CommonDialog extends DialogFragment {
         view.findViewById(R.id.v_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 dismissAllowingStateLoss();
+                if (doneCallback != null) {
+                    doneCallback.onCancle(CommonDialog.this);
+                }
+
             }
         });
 
@@ -65,5 +70,7 @@ public class CommonDialog extends DialogFragment {
 
     public interface DoneCallback {
         void onDone(DialogFragment dialog, String txt);
+
+        void onCancle(DialogFragment dialog);
     }
 }

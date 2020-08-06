@@ -75,6 +75,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                 final Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
                 intent.putExtra("devicesBean", devicesBean);
+                intent.putExtra("scopeId", mRoom_order.getRoomId());
                 startActivityForResult(intent,Result_OK);
             }
         });

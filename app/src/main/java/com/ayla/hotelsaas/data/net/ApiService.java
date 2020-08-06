@@ -91,4 +91,7 @@ public interface ApiService {
 
     @PUT("api/v1/device/{deviceId}/info")
     Observable<BaseResult<Boolean>> deviceRename(@Path("deviceId") String deviceId, @Body RequestBody body);
+
+    @POST("api/v1/device/unregister")
+    Observable<BaseResult<Boolean>> removeDevice(@Body RequestBody body);
 }
