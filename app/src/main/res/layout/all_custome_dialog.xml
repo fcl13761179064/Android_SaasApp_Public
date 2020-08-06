@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:background="@drawable/dialog_shape"
+    android:layout_gravity="center"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/tv_Custome_Title"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/custome_dialog"
+            android:textSize="16dp" />
+
+
+       <!-- <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#f1f1f1"-->
+
+            />
+
+        <TextView
+            android:id="@+id/tv_custome_message"
+            android:layout_width="match_parent"
+            android:layout_height="102dp"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:gravity="center"
+            android:text="网络连接失败eeeeeeeeeeweeeeeeeeeeeeeee2"
+            android:textColor="@color/custome_dialog"
+            android:textSize="@dimen/sp_16" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#f1f1f1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+
+            >
+
+            <TextView
+                android:id="@+id/tv_custome_cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="取消"
+                android:textColor="@color/custome_dialog"
+                android:textSize="@dimen/sp_16" />
+
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="55dp"
+                android:background="#f1f1f1" />
+
+            <TextView
+                android:id="@+id/tv_custome_ensure"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="移除"
+                android:textColor="@color/remove_device_color"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

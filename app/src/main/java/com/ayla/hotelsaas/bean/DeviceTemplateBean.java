@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class DeviceTemplateBean {
@@ -14,8 +15,8 @@ public class DeviceTemplateBean {
 
     private String version;
     private String deviceCategory;
-    private int deviceType;//    AYLA(0,"艾拉设备"),    ALI(1,"阿里设备");
-    private int deviceNodeType;//    NODE(0,"节点设备"),    GATEWAY(1,"网关设备");
+    private long deviceType;//    AYLA(0,"艾拉设备"),    ALI(1,"阿里设备");
+    private long deviceNodeType;//    NODE(0,"节点设备"),    GATEWAY(1,"网关设备");
     private List<AttributesBean> attributes;
 
     public String getVersion() {
@@ -34,19 +35,19 @@ public class DeviceTemplateBean {
         this.deviceCategory = deviceCategory;
     }
 
-    public int getDeviceType() {
+    public long getDeviceType() {
         return deviceType;
     }
 
-    public void setDeviceType(int deviceType) {
+    public void setDeviceType(long deviceType) {
         this.deviceType = deviceType;
     }
 
-    public int getDeviceNodeType() {
+    public long getDeviceNodeType() {
         return deviceNodeType;
     }
 
-    public void setDeviceNodeType(int deviceNodeType) {
+    public void setDeviceNodeType(long deviceNodeType) {
         this.deviceNodeType = deviceNodeType;
     }
 
@@ -58,7 +59,7 @@ public class DeviceTemplateBean {
         this.attributes = attributes;
     }
 
-    public static class AttributesBean {
+    public static class AttributesBean implements Serializable {
         /**
          * code : roomText
          * displayName : 卧室文本
@@ -143,7 +144,7 @@ public class DeviceTemplateBean {
             this.value = value;
         }
 
-        public static class ValueBean {
+        public static class ValueBean implements Serializable {
             /**
              * dataType : 6
              * displayName : 关闭

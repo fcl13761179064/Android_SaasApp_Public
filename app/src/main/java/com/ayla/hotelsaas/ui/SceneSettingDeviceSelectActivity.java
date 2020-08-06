@@ -17,6 +17,7 @@ import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,6 +25,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 场景创建，选择设备的页面
+ * 进入时必须带入参数int type  ，0：condition  1：action
  */
 public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSettingDeviceSelectView, SceneSettingDeviceSelectPresenter> implements SceneSettingDeviceSelectView {
     @BindView(R.id.rv)
@@ -57,9 +59,11 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                DeviceListBean.DevicesBean item = (DeviceListBean.DevicesBean) adapter.getItem(position);
+                DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) adapter.getItem(position);
                 Intent mainActivity = new Intent(SceneSettingDeviceSelectActivity.this, SceneSettingFunctionSelectActivity.class);
-                mainActivity.putExtra("device", item);
+                mainActivity.putExtra("deviceBean", deviceBean);
+                mainActivity.putExtra("oemModel", oemModels.get(position));
+                mainActivity.putStringArrayListExtra("properties", new ArrayList<>(properties.get(position)));
                 startActivityForResult(mainActivity, 0);
             }
         });
@@ -68,12 +72,18 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter.loadDevice();
+        int type = getIntent().getIntExtra("type", 0);
+        mPresenter.loadDevice(type == 0);
     }
 
+    private List<List<String>> properties;//支持的条件后者动作的描述信息
+    private List<String> oemModels;
+
     @Override
-    public void showDevices(List<DeviceListBean.DevicesBean> devices) {
+    public void showDevices(List<DeviceListBean.DevicesBean> devices, List<List<String>> properties, List<String> oemModels) {
         mAdapter.setNewData(devices);
+        this.properties = properties;
+        this.oemModels = oemModels;
     }
 
     @Override

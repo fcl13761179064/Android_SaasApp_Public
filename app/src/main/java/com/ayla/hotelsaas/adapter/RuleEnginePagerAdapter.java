@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.ayla.hotelsaas.fragment.AutoRunFragment;
 import com.ayla.hotelsaas.fragment.OneKeyFragment;
 
 /**
@@ -16,7 +17,7 @@ public class RuleEnginePagerAdapter extends FragmentPagerAdapter {
 
     public RuleEnginePagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
-        fragments = new Fragment[]{new OneKeyFragment(), new OneKeyFragment()};
+        fragments = new Fragment[]{new OneKeyFragment(), new AutoRunFragment()};
     }
 
     @NonNull

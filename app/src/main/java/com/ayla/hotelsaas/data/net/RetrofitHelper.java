@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.data.net;
 
 import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.ayla.hotelsaas.application.Constance;
@@ -12,8 +11,6 @@ import com.ayla.hotelsaas.ssl.SSLSocketClient;
 import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.utils.DateUtils;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.ayla.hotelsaas.utils.ToastUtil;
-import com.ayla.hotelsaas.utils.ToastUtils;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
@@ -144,7 +141,6 @@ public class RetrofitHelper {
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                 @Override
                 public void log(String message) {
-                    System.out.println(message);
                     Log.d("okhttp", message);
                 }
             });

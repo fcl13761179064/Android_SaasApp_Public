@@ -157,7 +157,7 @@ public class RuleEngineBean implements Serializable {
             private String leftValue;
             private String rightValue;
             private String sourceDeviceId;
-            private int sourceDeviceType;//1:艾拉 2：阿里
+            private long sourceDeviceType;//0:艾拉 1：阿里
 
             public int getJoinType() {
                 return joinType;
@@ -199,11 +199,11 @@ public class RuleEngineBean implements Serializable {
                 this.sourceDeviceId = sourceDeviceId;
             }
 
-            public int getSourceDeviceType() {
+            public long getSourceDeviceType() {
                 return sourceDeviceType;
             }
 
-            public void setSourceDeviceType(int sourceDeviceType) {
+            public void setSourceDeviceType(long sourceDeviceType) {
                 this.sourceDeviceType = sourceDeviceType;
             }
         }
@@ -245,7 +245,7 @@ public class RuleEngineBean implements Serializable {
              * rightValueType : 1
              */
 
-            private int targetDeviceType;
+            private long targetDeviceType;
 
             private String targetDeviceId;
 
@@ -257,11 +257,11 @@ public class RuleEngineBean implements Serializable {
 
             private int rightValueType;//1:数值类型 2:action类型  3:文本类型  4:场景类型
 
-            public int getTargetDeviceType() {
+            public long getTargetDeviceType() {
                 return targetDeviceType;
             }
 
-            public void setTargetDeviceType(int targetDeviceType) {
+            public void setTargetDeviceType(long targetDeviceType) {
                 this.targetDeviceType = targetDeviceType;
             }
 
