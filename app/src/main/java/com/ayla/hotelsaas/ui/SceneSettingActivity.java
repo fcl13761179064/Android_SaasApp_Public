@@ -77,7 +77,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mDeleteView.setVisibility(View.VISIBLE);
             int iconIndex = getIconIndexByPath(mRuleEngineBean.getIconPath());
             mIconImageView.setImageResource(getIconResByIndex(iconIndex));
-            syncSourceAndAdapter();
+            syncSourceAndAdapter2();
         } else {
             mRuleEngineBean = new RuleEngineBean();
             mRuleEngineBean.setScopeId(getIntent().getLongExtra("scopeId", 0));
@@ -246,6 +246,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION);
         } else {
             Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
+            mainActivity.putExtra("type", 0);
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION);
         }
     }
@@ -253,6 +254,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     @OnClick(R.id.v_add_action)
     public void jumpAddActions() {
         Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
+        mainActivity.putExtra("type", 1);
         startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION);
     }
 
@@ -295,7 +297,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             actionItem.setOperator(datumBean.getOperator());
             actionItem.setLeftValue(datumBean.getLeftValue());
             actionItem.setRightValue(datumBean.getRightValue());
-            actionItem.setRightValueType(datumBean.getRightValueType());
             if (mRuleEngineBean.getAction() == null) {
                 mRuleEngineBean.setAction(new RuleEngineBean.Action());
             }
@@ -373,6 +374,19 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         CustomToast.makeText(this, "删除失败", R.drawable.ic_toast_warming).show();
     }
 
+    @Override
+    public void showData(List<SceneSettingFunctionDatumSetAdapter.DatumBean> conditions, List<SceneSettingFunctionDatumSetAdapter.DatumBean> actions) {
+        mActionAdapter.setNewData(actions);
+        if (mConditionAdapter.getData().size() == 0) {
+            List<SceneSettingConditionItemAdapter.ConditionItem> s = new ArrayList<>();
+            for (SceneSettingFunctionDatumSetAdapter.DatumBean condition : conditions) {
+                SceneSettingConditionItemAdapter.ConditionItem bean = new SceneSettingConditionItemAdapter.DeviceConditionItem(condition);
+                s.add(bean);
+            }
+            mConditionAdapter.setNewData(s);
+        }
+    }
+
     @OnClick(R.id.tv_delete)
     public void handleDelete() {
         CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
@@ -387,6 +401,23 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 dialog.dismissAllowingStateLoss();
             }
         }, "确认是否移除", "确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
+    }
+
+    private void syncSourceAndAdapter2() {
+        if (mRuleEngineBean.getRuleType() == 2) {//一键执行
+            mConditionAdapter.setNewData(Collections.singletonList(new SceneSettingConditionItemAdapter.OneKeyConditionItem()));
+            mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
+        }
+
+        List<RuleEngineBean.Condition.ConditionItem> conditionItems = new ArrayList<>();
+        List<RuleEngineBean.Action.ActionItem> actionItems = new ArrayList<>();
+        if (mRuleEngineBean.getCondition() != null) {
+            conditionItems.addAll(mRuleEngineBean.getCondition().getItems());
+        }
+        if (mRuleEngineBean.getAction() != null) {
+            actionItems.addAll(mRuleEngineBean.getAction().getItems());
+        }
+        mPresenter.loadFunctionDetail(conditionItems, actionItems);
     }
 
     private void syncSourceAndAdapter() {
@@ -409,7 +440,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
         } else if (mRuleEngineBean.getRuleType() == 1) {//自动化
             List<SceneSettingConditionItemAdapter.ConditionItem> conditions = new ArrayList<>();
-            if (mRuleEngineBean.getCondition() != null && mRuleEngineBean.getCondition().getItems() !=null) {
+            if (mRuleEngineBean.getCondition() != null && mRuleEngineBean.getCondition().getItems() != null) {
                 for (RuleEngineBean.Condition.ConditionItem conditionItem : mRuleEngineBean.getCondition().getItems()) {
                     SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
                     datumBean.setLeftValue(conditionItem.getLeftValue());

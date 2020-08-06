@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.base.BasicFragment;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
@@ -30,7 +32,7 @@ import butterknife.BindView;
  * @作者 fanchunlei
  * @时间 2020/7/20
  */
-public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedChangeListener {
+public class MainActivity extends BaseMvpActivity implements RadioGroup.OnCheckedChangeListener {
 
     @BindView(R.id.appBar)
     AppBar appBar;
@@ -173,6 +175,11 @@ public class MainActivity extends BasicActivity implements RadioGroup.OnCheckedC
         return null;
     }
 
+
+    @Override
+    protected BasePresenter initPresenter() {
+        return null;
+    }
 
     @Override
     protected void onDestroy() {

@@ -12,6 +12,7 @@ import com.ayla.hotelsaas.adapter.CheckableSupport;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingFunctionDatumSetPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionDatumSetView;
 import com.ayla.hotelsaas.widget.AppBar;
@@ -25,6 +26,9 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 场景创建，选择执行功能点的页面
+ * 进入时必须带入参数
+ * 1.{@link DeviceTemplateBean.AttributesBean} attributesBean
+ * 2.{@link DeviceListBean.DevicesBean} deviceBean
  */
 public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneSettingFunctionDatumSetView, SceneSettingFunctionDatumSetPresenter> implements SceneSettingFunctionDatumSetView {
     @BindView(R.id.rv)
@@ -87,8 +91,9 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DeviceListBean.DevicesBean device = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("device");
-        mPresenter.loadFunction(device.getDeviceId());
+        DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getIntent().getSerializableExtra("attributesBean");
+        DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("deviceBean");
+        mPresenter.loadFunction(deviceBean, attributesBean);
     }
 
     @Override

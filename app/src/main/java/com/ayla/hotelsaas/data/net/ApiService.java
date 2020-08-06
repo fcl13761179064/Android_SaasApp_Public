@@ -4,6 +4,7 @@ import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.User;
@@ -71,10 +72,10 @@ public interface ApiService {
     Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Path("scopeId") long scopeId);
 
     @POST("api/v1/construction/scene/save")
-    Observable<BaseResult<Boolean>> saveRuleEngine(@Body RequestBody body);
+    Observable<BaseResult> saveRuleEngine(@Body RequestBody body);
 
     @POST("api/v1/construction/scene/update")
-    Observable<BaseResult<Boolean>> updateRuleEngine(@Body RequestBody body);
+    Observable<BaseResult> updateRuleEngine(@Body RequestBody body);
 
     @POST("api/v1/construction/scene/delete")
     Observable<BaseResult<Boolean>> deleteRuleEngine(@Body RequestBody body);
@@ -86,7 +87,7 @@ public interface ApiService {
     Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
 
     @GET("api/v1/construction/device/queryModelTemplate/{oemModel}")
-    Observable<BaseResult> fetchDeviceTemplate(@Path("oemModel") String oemModel);
+    Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("oemModel") String oemModel);
 
     @PUT("api/v1/device/{deviceId}/info")
     Observable<BaseResult<Boolean>> deviceRename(@Path("deviceId") String deviceId, @Body RequestBody body);

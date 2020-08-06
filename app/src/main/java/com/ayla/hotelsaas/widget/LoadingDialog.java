@@ -57,6 +57,8 @@ public class LoadingDialog extends DialogFragment {
             WindowManager.LayoutParams lp = getDialog().getWindow().getAttributes();
             lp.height = (ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.width = (ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.dimAmount = 0;
+            lp.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
             if (window != null) {
                 window.setLayout(lp.width, lp.height);
             }
