@@ -83,7 +83,7 @@ public class WorkOrderBean implements Serializable {
 
         private int id;
         private String title;
-        private int businessId;
+        private long businessId;
         private String startDate;
         private String endDate;
         private int constructionStatus;
@@ -111,11 +111,11 @@ public class WorkOrderBean implements Serializable {
             this.title = title;
         }
 
-        public int getBusinessId() {
+        public long getBusinessId() {
             return businessId;
         }
 
-        public void setBusinessId(int businessId) {
+        public void setBusinessId(long businessId) {
             this.businessId = businessId;
         }
 

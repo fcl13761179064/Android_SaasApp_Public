@@ -62,7 +62,7 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
     }
 
 
-    public void deviceRemove(String deviceId, String scopeId,String scopeType) {
+    public void deviceRemove(String deviceId, long scopeId,String scopeType) {
         RequestModel.getInstance().deviceRemove(deviceId, scopeId,scopeType)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -83,13 +83,13 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                     @Override
                     public void _onNext(Boolean data) {
                         mView.hideProgress();
-                        mView.operateSuccess(data);
+                        mView.operateRemoveSuccess(data);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
                         mView.hideProgress();
-                        mView.operateError(msg);
+                        mView.operateMoveFailSuccess(code,msg);
                     }
                 });
     }

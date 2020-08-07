@@ -107,7 +107,7 @@ public abstract class BasicActivity extends AppCompatActivity {
         if (null != progressDialog) {
             return;
         }
-        progressDialog = LoadingDialog.newInstance("加载中");
+        progressDialog = LoadingDialog.newInstance(msg);
         progressDialog.show(getSupportFragmentManager(), "loading");
     }
 
