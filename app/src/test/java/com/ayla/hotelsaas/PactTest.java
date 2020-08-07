@@ -287,6 +287,8 @@ public class PactTest {
                         .numberType("ruleType", 2)
                         .numberType("siteType", 2)
                         .numberType("status", 1)
+                        .numberType("targetGatewayType", 0)
+                        .stringType("targetGateway", "11111")
                         .object("condition", new PactDslJsonBody()
                                 .stringType("expression", "1111")
                                 .minArrayLike("items", 0, 2)
@@ -333,6 +335,8 @@ public class PactTest {
                         .numberType("ruleType", 2)
                         .numberType("siteType", 2)
                         .numberType("status", 1)
+                        .numberType("targetGatewayType", 0)
+                        .stringType("targetGateway", "11111")
                         .object("condition", new PactDslJsonBody()
                                 .stringType("expression", "1111")
                                 .minArrayLike("items", 0, 2)
@@ -530,6 +534,8 @@ public class PactTest {
                         ruleEngineBean.setRuleName("ruleengine");
                         ruleEngineBean.setRuleDescription("ruleengine");
                         ruleEngineBean.setIconPath("1111");
+                        ruleEngineBean.setTargetGatewayType(0);
+                        ruleEngineBean.setTargetGateway("1111");
 
                         RuleEngineBean.Action action = new RuleEngineBean.Action();
                         action.setExpression("11111");
@@ -577,6 +583,8 @@ public class PactTest {
                         ruleEngineBean.setRuleName("ruleengine");
                         ruleEngineBean.setRuleDescription("ruleengine");
                         ruleEngineBean.setIconPath("1111");
+                        ruleEngineBean.setTargetGatewayType(0);
+                        ruleEngineBean.setTargetGateway("1111");
 
                         RuleEngineBean.Action action = new RuleEngineBean.Action();
                         action.setExpression("11111");
