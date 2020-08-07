@@ -3,6 +3,8 @@ package com.ayla.hotelsaas.mvp.present;
 import com.ayla.hotelsaas.adapter.CheckableSupport;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionDatumSetView;
 
 import java.util.ArrayList;
@@ -10,35 +12,25 @@ import java.util.List;
 
 public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSettingFunctionDatumSetView> {
 
-    public void loadFunction(String dsn) {
+    public void loadFunction(DeviceListBean.DevicesBean deviceBean, DeviceTemplateBean.AttributesBean attributesBean) {
         List<CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean>> devices = new ArrayList<>();
-        {
+        for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
+
             datumBean.setFunctionName("开关");
-            datumBean.setValueName("开启");
-            datumBean.setLeftValue("1:0x0006:Onoff");
+            datumBean.setValueName(valueBean.getDisplayName());
+            datumBean.setLeftValue(attributesBean.getCode());
             datumBean.setOperator("==");
-            datumBean.setRightValue("1");
-            datumBean.setRightValueType(1);
-            datumBean.setDeviceType(1);
-            datumBean.setDeviceId(dsn);
+            datumBean.setRightValue(valueBean.getValue());
+            datumBean.setRightValueType(valueBean.getDataType());
+            datumBean.setDeviceType(deviceBean.getCuId());
+            datumBean.setDeviceId(deviceBean.getDeviceId());
             CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> bean = new CheckableSupport<>(datumBean);
-            bean.setChecked(true);
             devices.add(bean);
         }
-        {
-            SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
-            datumBean.setFunctionName("开关");
-            datumBean.setValueName("关闭");
-            datumBean.setLeftValue("1:0x0006:Onoff");
-            datumBean.setOperator("==");
-            datumBean.setRightValue("0");
-            datumBean.setRightValueType(1);
-            datumBean.setDeviceType(1);
-            datumBean.setDeviceId(dsn);
-            CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> bean = new CheckableSupport<>(datumBean);
-            bean.setChecked(false);
-            devices.add(bean);
+        CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> bean = devices.get(0);
+        if (bean != null) {
+            bean.setChecked(true);
         }
         mView.showFunctions(devices);
     }

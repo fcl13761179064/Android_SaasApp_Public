@@ -36,6 +36,7 @@ public class RuleEngineConditionTypeGuideActivity extends BaseMvpActivity {
     @OnClick(R.id.rl_device_changed)
     public void jumpDeviceSelect() {
         Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
+        mainActivity.putExtra("type",0);
         startActivityForResult(mainActivity, 0);
     }
 

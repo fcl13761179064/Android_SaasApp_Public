@@ -154,7 +154,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
             oneKeyFragment.showData(oneKeys);
         }
         {
-            OneKeyFragment oneKeyFragment = (OneKeyFragment) mAdapter.getItem(1);
+            AutoRunFragment oneKeyFragment = (AutoRunFragment) mAdapter.getItem(1);
             oneKeyFragment.showData(autoRuns);
         }
         loadDataFinish();
@@ -172,5 +172,12 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             mRefreshLayout.autoRefresh();
         }
+    }
+
+    /**
+     * subFragment 通知刷新的入口
+     */
+    public final void notifyRefresh(){
+        mRefreshLayout.autoRefresh();//自动刷新
     }
 }

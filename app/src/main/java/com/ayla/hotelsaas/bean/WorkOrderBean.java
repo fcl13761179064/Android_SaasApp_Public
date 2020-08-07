@@ -64,7 +64,7 @@ public class WorkOrderBean implements Serializable {
         this.resultList = resultList;
     }
 
-    public static class ResultListBean  implements Serializable{
+    public static class ResultListBean implements Serializable {
         /**
          * id : 1
          * title : 施工单1
@@ -81,7 +81,7 @@ public class WorkOrderBean implements Serializable {
          * isDeleted : 0
          */
 
-        private int id;
+        private long id;
         private String title;
         private long businessId;
         private String startDate;
@@ -95,13 +95,6 @@ public class WorkOrderBean implements Serializable {
         private String updateTime;
         private int isDeleted;
 
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
 
         public String getTitle() {
             return title;
@@ -111,7 +104,16 @@ public class WorkOrderBean implements Serializable {
             this.title = title;
         }
 
-        public long getBusinessId() {
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+         public long getBusinessId() {
             return businessId;
         }
 

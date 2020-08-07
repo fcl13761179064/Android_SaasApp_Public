@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ create by cairurui on 8/15/19 7:35 PM.
+  ~ Copyright (c) 2019 SunseaIoT. All rights reserved.
+  -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:width="51dp"
+        android:height="31dp">
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="2dp"
+                android:color="#ffffff" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    <item
+        android:bottom="1.5dp"
+        android:gravity="center_vertical|left"
+        android:right="23dp"
+        android:top="1.5dp">
+        <shape android:shape="oval">
+            <stroke
+                android:width="2dp"
+                android:color="#1a000000" />
+            <solid android:color="#ffffffff" />
+            <item android:name="android:shadowColor">#d000000</item>
+            <item android:name="android:shadowDx">0</item>
+            <item android:name="android:shadowDy">3</item>
+        </shape>
+    </item>
+</layer-list>

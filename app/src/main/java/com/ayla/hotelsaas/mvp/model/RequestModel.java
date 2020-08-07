@@ -4,7 +4,9 @@ package com.ayla.hotelsaas.mvp.model;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
+import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.User;
@@ -14,6 +16,8 @@ import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
@@ -77,7 +81,6 @@ public class RequestModel {
         return getApiService().getWorkOrders(pageNum, maxNum);
     }
 
-
     /**
      * 获取房间号的条数
      *
@@ -85,7 +88,6 @@ public class RequestModel {
      * @param //每页加载量
      * @return
      */
-
     public Observable<BaseResult<RoomOrderBean>> getRoomOrderList(String billId, int pageNum, int maxNum) {
         return getApiService().getRoomOrders(pageNum, maxNum, billId);
 
@@ -110,6 +112,10 @@ public class RequestModel {
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
         return getApiService().fetchDeviceCategory();
+    }
+
+    public Observable<BaseResult<List<DeviceCategoryDetailBean>>> getDeviceCategoryDetail() {
+        return getApiService().fetchDeviceCategoryDetail();
     }
 
     /**
@@ -167,7 +173,7 @@ public class RequestModel {
      * @param ruleEngineBean
      * @return
      */
-    public Observable<BaseResult<Boolean>> saveRuleEngine(RuleEngineBean ruleEngineBean) {
+    public Observable<BaseResult> saveRuleEngine(RuleEngineBean ruleEngineBean) {
         String json = new Gson().toJson(ruleEngineBean);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
         return getApiService().saveRuleEngine(body111);
@@ -180,7 +186,7 @@ public class RequestModel {
      * @param ruleEngineBean
      * @return
      */
-    public Observable<BaseResult<Boolean>> updateRuleEngine(RuleEngineBean ruleEngineBean) {
+    public Observable<BaseResult> updateRuleEngine(RuleEngineBean ruleEngineBean) {
         String json = new Gson().toJson(ruleEngineBean);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
         return getApiService().updateRuleEngine(body111);
@@ -220,6 +226,20 @@ public class RequestModel {
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().deleteRuleEngine(body111);
+    }
+
+    /**
+     * 查询设备物模板信息
+     *
+     * @param oemModel
+     * @return
+     */
+    public Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(String oemModel) {
+//        String sss = "{\"code\":0,\"msg\":\"success\",\"data\":{\"id\":4,\"version\":\"1596617919129\",\"deviceCategory\":\"ZB-NODE-LC1-008\",\"deviceType\":0,\"deviceNodeType\":0,\"attributes\":[{\"code\":\"8:0x0000:app-version\",\"value\":null,\"custom\":2,\"dataType\":1,\"direction\":1,\"description\":\"APP版本\",\"displayName\":\"APP版本\",\"readWriteMode\":1},{\"code\":\"8:0x0000:version\",\"value\":null,\"custom\":2,\"dataType\":1,\"direction\":1,\"description\":\"版本\",\"displayName\":\"版本\",\"readWriteMode\":1},{\"code\":\"8:0x0102:Mode\",\"value\":null,\"custom\":2,\"dataType\":2,\"direction\":2,\"description\":\"Mode\",\"displayName\":\"Mode\",\"readWriteMode\":2},{\"code\":\"8:0x0102:MotorControl\",\"value\":[{\"code\":null,\"dataType\":7,\"displayName\":\"关\",\"description\":null,\"value\":0},{\"code\":null,\"dataType\":7,\"displayName\":\"开\",\"description\":null,\"value\":1},{\"code\":null,\"dataType\":7,\"displayName\":\"停止\",\"description\":null,\"value\":2},{\"code\":null,\"dataType\":7,\"displayName\":\"正转\",\"description\":null,\"value\":3},{\"code\":null,\"dataType\":7,\"displayName\":\"反转\",\"description\":null,\"value\":4}],\"custom\":2,\"dataType\":7,\"direction\":2,\"description\":\"MotorControl\",\"displayName\":\"MotorControl\",\"readWriteMode\":2},{\"code\":\"8:0x0102:OpenPercent\",\"value\":null,\"custom\":2,\"dataType\":2,\"direction\":2,\"description\":\"窗帘开的百分比\",\"displayName\":\"窗帘开的百分比\",\"readWriteMode\":2},{\"code\":\"oem_host_version\",\"value\":null,\"custom\":1,\"dataType\":1,\"direction\":1,\"description\":\"oem_host_version\",\"displayName\":\"oem_host_version\",\"readWriteMode\":1}]}}";
+//        BaseResult<DeviceTemplateBean> o = new Gson().fromJson(sss, new TypeToken<BaseResult<DeviceTemplateBean>>() {
+//        }.getType());
+//        return Observable.just(o);
+        return getApiService().fetchDeviceTemplate(oemModel);
     }
 
 
