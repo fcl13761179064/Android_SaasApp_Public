@@ -24,6 +24,7 @@
         android:persistent="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        tools:replace="android:allowBackup"
         android:theme="@style/AppTheme">
 
         <activity
