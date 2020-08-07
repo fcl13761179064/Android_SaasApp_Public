@@ -141,6 +141,9 @@ public class RetrofitHelper {
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                 @Override
                 public void log(String message) {
+                    if (MyApplication.getInstance() == null) {
+                        System.out.println(message);
+                    }
                     Log.d("okhttp", message);
                 }
             });

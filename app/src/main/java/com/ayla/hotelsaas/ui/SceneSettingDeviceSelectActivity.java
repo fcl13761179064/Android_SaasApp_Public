@@ -46,9 +46,6 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     @Override
     protected void initView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
-                .showLastDivider()
-                .color(android.R.color.transparent).size(AutoSizeUtils.dp2px(this, 10)).build());
         mAdapter = new SceneSettingDeviceSelectAdapter(R.layout.item_scene_action_device_select);
         mAdapter.bindToRecyclerView(mRecyclerView);
         mAdapter.setEmptyView(R.layout.empty_device_order);

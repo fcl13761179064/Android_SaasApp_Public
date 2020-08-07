@@ -26,7 +26,7 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
         private String functionName;
         private String valueName;
 
-        private long deviceType;
+        private int deviceType;
         private String deviceId;
         private String leftValue;
         private String rightValue;
@@ -49,11 +49,11 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
             this.valueName = valueName;
         }
 
-        public long getDeviceType() {
+        public int getDeviceType() {
             return deviceType;
         }
 
-        public void setDeviceType(long deviceType) {
+        public void setDeviceType(int deviceType) {
             this.deviceType = deviceType;
         }
 
