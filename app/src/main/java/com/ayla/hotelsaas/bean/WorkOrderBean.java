@@ -104,6 +104,7 @@ public class WorkOrderBean implements Serializable {
             this.title = title;
         }
 
+
         public long getId() {
             return id;
         }
@@ -112,7 +113,7 @@ public class WorkOrderBean implements Serializable {
             this.id = id;
         }
 
-        public long getBusinessId() {
+         public long getBusinessId() {
             return businessId;
         }
 

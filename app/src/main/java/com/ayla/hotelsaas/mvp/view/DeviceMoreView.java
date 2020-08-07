@@ -13,4 +13,10 @@ public interface DeviceMoreView extends BaseView {
 
     //操作成功
     void operateSuccess(Boolean is_rename);
+
+    //移除成功
+    void operateRemoveSuccess(Boolean is_rename);
+
+    //失败成功
+    void operateMoveFailSuccess(String code,String msg);
 }

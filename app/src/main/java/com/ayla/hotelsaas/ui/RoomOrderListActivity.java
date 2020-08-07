@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.RoomOrderListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -136,26 +138,32 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     @Override
     public void loadDataSuccess(RoomOrderBean data) {
         final List<RoomOrderBean.ResultListBean> resultList = data.getResultList();
-        if (resultList.isEmpty()) {
-            mAdapter.addData(resultList);
-            if (mAdapter.getData().isEmpty()) {
-                mAdapter.setEmptyView(R.layout.empty_room_order);
+        if (resultList != null) {
+            if (resultList.isEmpty()) {
+                mAdapter.addData(resultList);
+                if (mAdapter.getData().isEmpty()) {
+                    mAdapter.setEmptyView(R.layout.empty_room_order);
+                }
+                mAdapter.setFooterView(mFoot_view);
+                mRefreshLayout.setEnableLoadMore(false);
+
+            } else {
+                if (is_first) {
+                    mAdapter.addHeaderView(mView);
+                }
+                mAdapter.addData(resultList);
             }
+        } else {
             mAdapter.setFooterView(mFoot_view);
             mRefreshLayout.setEnableLoadMore(false);
-
-        } else {
-            if (is_first) {
-                mAdapter.addHeaderView(mView);
-            }
-            mAdapter.addData(resultList);
         }
         loadDataFinish();
     }
 
+
     @Override
     public void loadDataFinish() {
-        is_first=false;
+        is_first = false;
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
     }
