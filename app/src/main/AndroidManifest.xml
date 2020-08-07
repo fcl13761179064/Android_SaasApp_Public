@@ -118,7 +118,8 @@
         <activity
             android:name=".ui.DeviceMoreActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing|stateHidden" />
         <activity
             android:name=".ui.SceneIconSelectActivity"
             android:launchMode="singleTask"
