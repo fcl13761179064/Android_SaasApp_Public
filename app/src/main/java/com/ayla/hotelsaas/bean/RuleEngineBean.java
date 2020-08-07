@@ -31,6 +31,10 @@ public class RuleEngineBean implements Serializable {
 
     private int status;//0:不可用 1：可用
 
+    private String targetGateway;//云端联动时，网关的dsn
+
+    private int targetGatewayType;//云端联动时，网关的云平台类型 //0:艾拉 1：阿里
+
     private Condition condition;
 
     private Action action;
@@ -115,7 +119,23 @@ public class RuleEngineBean implements Serializable {
         this.siteType = siteType;
     }
 
-    public static class Condition implements Serializable{
+    public String getTargetGateway() {
+        return targetGateway;
+    }
+
+    public void setTargetGateway(String targetGateway) {
+        this.targetGateway = targetGateway;
+    }
+
+    public int getTargetGatewayType() {
+        return targetGatewayType;
+    }
+
+    public void setTargetGatewayType(int targetGatewayType) {
+        this.targetGatewayType = targetGatewayType;
+    }
+
+    public static class Condition implements Serializable {
         /**
          * expression :
          * items : []
@@ -141,7 +161,7 @@ public class RuleEngineBean implements Serializable {
             this.items = items;
         }
 
-        public static class ConditionItem implements Serializable{
+        public static class ConditionItem implements Serializable {
 
             /**
              * joinType : 0
@@ -157,7 +177,7 @@ public class RuleEngineBean implements Serializable {
             private String leftValue;
             private String rightValue;
             private String sourceDeviceId;
-            private long sourceDeviceType;//0:艾拉 1：阿里
+            private int sourceDeviceType;//0:艾拉 1：阿里
 
             public int getJoinType() {
                 return joinType;
@@ -199,17 +219,17 @@ public class RuleEngineBean implements Serializable {
                 this.sourceDeviceId = sourceDeviceId;
             }
 
-            public long getSourceDeviceType() {
+            public int getSourceDeviceType() {
                 return sourceDeviceType;
             }
 
-            public void setSourceDeviceType(long sourceDeviceType) {
+            public void setSourceDeviceType(int sourceDeviceType) {
                 this.sourceDeviceType = sourceDeviceType;
             }
         }
     }
 
-    public static class Action implements Serializable{
+    public static class Action implements Serializable {
         /**
          * expression : func.execute('2','GADw3NnUI4Xa54nsr5tYz20000','StatusLightSwitch')
          * items : [{"targetDeviceType":2,"targetDeviceId":"GADw3NnUI4Xa54nsr5tYz20000","leftValue":"StatusLightSwitch","operator":"==","rightValue":1,"rightValueType":1}]
@@ -235,7 +255,7 @@ public class RuleEngineBean implements Serializable {
             this.items = items;
         }
 
-        public static class ActionItem implements Serializable{
+        public static class ActionItem implements Serializable {
             /**
              * targetDeviceType : 2
              * targetDeviceId : GADw3NnUI4Xa54nsr5tYz20000
@@ -245,7 +265,7 @@ public class RuleEngineBean implements Serializable {
              * rightValueType : 1
              */
 
-            private long targetDeviceType;
+            private int targetDeviceType;
 
             private String targetDeviceId;
 
@@ -257,11 +277,11 @@ public class RuleEngineBean implements Serializable {
 
             private int rightValueType;//1:数值类型 2:action类型  3:文本类型  4:场景类型
 
-            public long getTargetDeviceType() {
+            public int getTargetDeviceType() {
                 return targetDeviceType;
             }
 
-            public void setTargetDeviceType(long targetDeviceType) {
+            public void setTargetDeviceType(int targetDeviceType) {
                 this.targetDeviceType = targetDeviceType;
             }
 

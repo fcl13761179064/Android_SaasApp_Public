@@ -15,7 +15,9 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.SceneSettingActionItemAdapter;
 import com.ayla.hotelsaas.adapter.SceneSettingConditionItemAdapter;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
@@ -36,7 +38,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 场景编辑页面
- * 进入时必须带入scopeId、siteType 或者 sceneBean
+ * 进入时必须带入(创建：scopeId、siteType ,如果是创建本地联动，还要带上网关的deviceId：targetGateway) 或者 更新：sceneBean
  */
 public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, SceneSettingPresenter> implements SceneSettingView {
     private final int REQUEST_CODE_SELECT_CONDITION = 0X10;
@@ -81,8 +83,18 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         } else {
             mRuleEngineBean = new RuleEngineBean();
             mRuleEngineBean.setScopeId(getIntent().getLongExtra("scopeId", 0));
-            mRuleEngineBean.setSiteType(getIntent().getIntExtra("siteType", 0));
-            mRuleEngineBean.setRuleDescription("ayla");
+            mRuleEngineBean.setSiteType(getIntent().getIntExtra("siteType", 0));//1:本地 2:云端
+            if (mRuleEngineBean.getSiteType() == 1) {//创建的是本地联动
+                String targetGateway = getIntent().getStringExtra("targetGateway");
+                mRuleEngineBean.setTargetGateway(targetGateway);
+                for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
+                    if (devicesBean.getDeviceId().equals(targetGateway)) {
+                        mRuleEngineBean.setTargetGatewayType(devicesBean.getCuId());
+                        break;
+                    }
+                }
+            }
+            mRuleEngineBean.setRuleDescription("test");
             mRuleEngineBean.setStatus(1);
             mRuleEngineBean.setIconPath(getIconPathByIndex(1));
             mIconImageView.setImageResource(getIconResByIndex(1));
@@ -226,7 +238,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @OnClick(R.id.tv_scene_name)
     public void sceneNameClicked() {
-        SceneNameSetDialog.newInstance(new SceneNameSetDialog.DoneCallback() {
+        String currentSceneName = mSceneNameTextView.getText().toString();
+        SceneNameSetDialog.newInstance(currentSceneName, new SceneNameSetDialog.DoneCallback() {
             @Override
             public void onDone(DialogFragment dialog, String txt) {
                 mSceneNameTextView.setText(txt);

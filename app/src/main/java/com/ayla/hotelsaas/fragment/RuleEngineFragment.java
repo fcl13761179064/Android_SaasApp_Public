@@ -88,6 +88,9 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                         .show(new CustomSheet.CallBack() {
                             @Override
                             public void callback(int index) {
+                                Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
+                                intent.putExtra("scopeId", mRoom_order.getRoomId());
+
                                 if (index == 0) {//选择了本地联动
                                     DeviceListBean.DevicesBean gateway = null;
                                     List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
@@ -99,7 +102,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                                     }
                                     if (gateway != null) {//存在网关
                                         if (TempUtils.isDeviceOnline(gateway)) {//网关在线
-
+                                            intent.putExtra("targetGateway", gateway.getDeviceId());
                                         } else {
                                             CustomToast.makeText(getContext(), "请确保网关在线", R.drawable.ic_toast_warming).show();
                                             return;
@@ -108,11 +111,8 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                                         CustomToast.makeText(getContext(), "请先添加网关", R.drawable.ic_toast_warming).show();
                                         return;
                                     }
-                                } else {
-
                                 }
-                                Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
-                                intent.putExtra("scopeId", mRoom_order.getRoomId());
+
                                 intent.putExtra("siteType", index == 0 ? 1 : 2);
                                 startActivityForResult(intent, 0);
                             }
@@ -177,7 +177,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
     /**
      * subFragment 通知刷新的入口
      */
-    public final void notifyRefresh(){
+    public final void notifyRefresh() {
         mRefreshLayout.autoRefresh();//自动刷新
     }
 }
