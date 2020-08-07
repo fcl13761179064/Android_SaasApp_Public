@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.fragment.app.DialogFragment;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -20,6 +23,8 @@ import com.ayla.hotelsaas.widget.AllCustomeDialog;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CommonDialog;
 
+
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -36,13 +41,13 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
 
     private AllCustomeDialog allCustomeDialog;
     private DeviceListBean.DevicesBean mDevicesBean;
-    private String mScopeId;
+    private Long mScopeId;
 
     @Override
     public void refreshUI() {
         Constance.Is_Auto_ReFresh = -100;
         mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
-        mScopeId = getIntent().getStringExtra("scopeId");
+        mScopeId = getIntent().getLongExtra("scopeId", 0);
         appBar.setCenterText("更多");
         if (mDevicesBean != null && !TextUtils.isEmpty(mDevicesBean.getDeviceName())) {
             tv_device_name.setText(mDevicesBean.getNickname());
@@ -73,12 +78,12 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
             @Override
             public void onClick(View v) {
 
-                allCustomeDialog = new AllCustomeDialog(DeviceMoreActivity.this, getResources().getString(R.string.remove_device_content),  getResources().getString(R.string.remove_device_title));
+                allCustomeDialog = new AllCustomeDialog(DeviceMoreActivity.this, getResources().getString(R.string.remove_device_content), getResources().getString(R.string.remove_device_title));
                 allCustomeDialog.setOnSureClick("移除", new AllCustomeDialog.OnSureClick() {
                     @Override
                     public void click(Dialog dialog) {
                         if (mDevicesBean != null) {
-                            mPresenter.deviceRemove(mDevicesBean.getDeviceId(),mScopeId,"2");
+                            mPresenter.deviceRemove(mDevicesBean.getDeviceId(), mScopeId, "2");
                         }
                         SoftInputUtil.showSoftInput(rl_device_rename);
 
@@ -105,13 +110,13 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                 CommonDialog.newInstance(new CommonDialog.DoneCallback() {
                     @Override
                     public void onDone(DialogFragment dialog, String txt) {
-                        if (TextUtils.isEmpty(tv_device_name.getText())) {
+                        if (TextUtils.isEmpty(txt)) {
                             ToastUtils.showShortToast("修改设备名称不能为空");
                         } else {
                             tv_device_name.setText(txt);
-                        }
-                        if (mDevicesBean != null) {
-                            mPresenter.deviceRenameMethod(mDevicesBean.getDeviceId(), txt);
+                            if (mDevicesBean != null) {
+                                mPresenter.deviceRenameMethod(mDevicesBean.getDeviceId(), txt);
+                            }
                         }
                         SoftInputUtil.showSoftInput(rl_device_rename);
                         dialog.dismissAllowingStateLoss();
@@ -119,9 +124,10 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
 
                     @Override
                     public void onCancle(DialogFragment dialog) {
-                        SoftInputUtil.showSoftInput(rl_device_rename);
+                        SoftInputUtil.hideShow(rl_device_rename);
                     }
                 }, "修改名称").show(getSupportFragmentManager(), "scene_name");
+
             }
         });
 
@@ -137,4 +143,16 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         ToastUtils.showShortToast("修改成功");
         Constance.Is_Auto_ReFresh = Activity.RESULT_OK;
     }
+
+    @Override
+    public void operateRemoveSuccess(Boolean is_rename) {
+        ToastUtils.showShortToast("移除成功");
+        Constance.Is_Auto_ReFresh = Activity.RESULT_OK;
+    }
+
+    @Override
+    public void operateMoveFailSuccess(String code, String msg) {
+        ToastUtils.showShortToast(msg);
+    }
+
 }

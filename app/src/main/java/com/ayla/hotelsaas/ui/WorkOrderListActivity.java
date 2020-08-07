@@ -148,15 +148,21 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     @Override
     public void loadDataSuccess(WorkOrderBean data) {
         final List<WorkOrderBean.ResultListBean> resultList = data.getResultList();
-        if (resultList == null || resultList.isEmpty()) {
-            if (mAdapter.getData().isEmpty()) {
-                mAdapter.setEmptyView(R.layout.empty_work_order);
+        if (resultList != null) {
+            if (resultList.isEmpty()) {
+                if (mAdapter.getData().isEmpty()) {
+                    mAdapter.setEmptyView(R.layout.empty_work_order);
+                }
+                final View inflate = LayoutInflater.from(this).inflate(R.layout.room_root_view, null);
+                mAdapter.setFooterView(inflate);
+                mRefreshLayout.setEnableLoadMore(false);
+            } else {
+                mAdapter.addData(resultList);
             }
+        }else {
             final View inflate = LayoutInflater.from(this).inflate(R.layout.room_root_view, null);
             mAdapter.setFooterView(inflate);
             mRefreshLayout.setEnableLoadMore(false);
-        } else {
-            mAdapter.addData(resultList);
         }
         loadDataFinish();
     }
