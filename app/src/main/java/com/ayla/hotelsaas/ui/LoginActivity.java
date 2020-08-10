@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,11 +24,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aliyun.iot.aep.sdk.login.ILoginCallback;
+import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
+import com.ayla.hotelsaas.feiyansdk.ApnetActivity;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
 import com.ayla.hotelsaas.utils.AppManager;
@@ -207,6 +211,20 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
         startActivity(mainActivity);
         finish();
+
+        LoginBusiness.authCodeLogin(data.getAuthCode(), new ILoginCallback() {
+            @Override
+            public void onLoginSuccess() {
+                Log.d("onLoginSuccess", "成功");
+            }
+
+            @Override
+            public void onLoginFailed(int i, String s) {
+                Log.d("onLoginSuccess", "code: " + i + ", str: " + s);
+
+            }
+        });
+
     }
 
     @Override
