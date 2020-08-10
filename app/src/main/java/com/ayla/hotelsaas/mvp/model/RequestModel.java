@@ -199,7 +199,7 @@ public class RequestModel {
      */
     public Observable<BaseResult<Boolean>> updateProperty(String deviceId, String propertyName, String propertyValue) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("propertyName", propertyName);
+        jsonObject.addProperty("propertyCode", propertyName);
         jsonObject.addProperty("propertyValue", propertyValue);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
@@ -235,10 +235,6 @@ public class RequestModel {
      * @return
      */
     public Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(String oemModel) {
-//        String sss = "{\"code\":0,\"msg\":\"success\",\"data\":{\"id\":4,\"version\":\"1596617919129\",\"deviceCategory\":\"ZB-NODE-LC1-008\",\"deviceType\":0,\"deviceNodeType\":0,\"attributes\":[{\"code\":\"8:0x0000:app-version\",\"value\":null,\"custom\":2,\"dataType\":1,\"direction\":1,\"description\":\"APP版本\",\"displayName\":\"APP版本\",\"readWriteMode\":1},{\"code\":\"8:0x0000:version\",\"value\":null,\"custom\":2,\"dataType\":1,\"direction\":1,\"description\":\"版本\",\"displayName\":\"版本\",\"readWriteMode\":1},{\"code\":\"8:0x0102:Mode\",\"value\":null,\"custom\":2,\"dataType\":2,\"direction\":2,\"description\":\"Mode\",\"displayName\":\"Mode\",\"readWriteMode\":2},{\"code\":\"8:0x0102:MotorControl\",\"value\":[{\"code\":null,\"dataType\":7,\"displayName\":\"关\",\"description\":null,\"value\":0},{\"code\":null,\"dataType\":7,\"displayName\":\"开\",\"description\":null,\"value\":1},{\"code\":null,\"dataType\":7,\"displayName\":\"停止\",\"description\":null,\"value\":2},{\"code\":null,\"dataType\":7,\"displayName\":\"正转\",\"description\":null,\"value\":3},{\"code\":null,\"dataType\":7,\"displayName\":\"反转\",\"description\":null,\"value\":4}],\"custom\":2,\"dataType\":7,\"direction\":2,\"description\":\"MotorControl\",\"displayName\":\"MotorControl\",\"readWriteMode\":2},{\"code\":\"8:0x0102:OpenPercent\",\"value\":null,\"custom\":2,\"dataType\":2,\"direction\":2,\"description\":\"窗帘开的百分比\",\"displayName\":\"窗帘开的百分比\",\"readWriteMode\":2},{\"code\":\"oem_host_version\",\"value\":null,\"custom\":1,\"dataType\":1,\"direction\":1,\"description\":\"oem_host_version\",\"displayName\":\"oem_host_version\",\"readWriteMode\":1}]}}";
-//        BaseResult<DeviceTemplateBean> o = new Gson().fromJson(sss, new TypeToken<BaseResult<DeviceTemplateBean>>() {
-//        }.getType());
-//        return Observable.just(o);
         return getApiService().fetchDeviceTemplate(oemModel);
     }
 
