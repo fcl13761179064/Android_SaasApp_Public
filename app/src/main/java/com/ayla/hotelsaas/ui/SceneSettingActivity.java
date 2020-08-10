@@ -29,6 +29,7 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -418,7 +419,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     private void syncSourceAndAdapter2() {
         if (mRuleEngineBean.getRuleType() == 2) {//一键执行
-            mConditionAdapter.setNewData(Collections.singletonList(new SceneSettingConditionItemAdapter.OneKeyConditionItem()));
+            mConditionAdapter.setNewData(Arrays.asList(new SceneSettingConditionItemAdapter.OneKeyConditionItem()));
             mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
         }
 
@@ -449,7 +450,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         }
         mActionAdapter.setNewData(actions);
         if (mRuleEngineBean.getRuleType() == 2) {//一键执行
-            mConditionAdapter.setNewData(Collections.singletonList(new SceneSettingConditionItemAdapter.OneKeyConditionItem()));
+            mConditionAdapter.setNewData(Arrays.asList(new SceneSettingConditionItemAdapter.OneKeyConditionItem()));
             mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
         } else if (mRuleEngineBean.getRuleType() == 1) {//自动化
             List<SceneSettingConditionItemAdapter.ConditionItem> conditions = new ArrayList<>();
