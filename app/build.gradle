@@ -28,7 +28,9 @@ android {
             // abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             abiFilters "arm64-v8a", "armeabi-v7a"  //阿里云的sdk api8以上就需要静止2个so文件
         }
-
+        lintOptions {
+            abortOnError false
+        }
     }
 
     signingConfigs {
