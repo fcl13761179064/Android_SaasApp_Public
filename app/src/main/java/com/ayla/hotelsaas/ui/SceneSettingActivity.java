@@ -255,7 +255,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         if (mConditionAdapter.getData().size() == 1 && mConditionAdapter.getData().get(0) instanceof SceneSettingConditionItemAdapter.OneKeyConditionItem) {
             return;
         }
-        if (mConditionAdapter.getData().size() == 0) {
+        if (mConditionAdapter.getData().size() == 0 && mRuleEngineBean.getSiteType() == 2) {//只有云端场景才可以设置一键触发。
             Intent mainActivity = new Intent(this, RuleEngineConditionTypeGuideActivity.class);
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION);
         } else {
