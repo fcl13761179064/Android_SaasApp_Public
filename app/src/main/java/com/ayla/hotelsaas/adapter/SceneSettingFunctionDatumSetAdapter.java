@@ -34,14 +34,14 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
         private String operator;
         private int rightValueType;
 
-        private DeviceListBean.DevicesBean devicesBean;
+        private String iconUrl;
 
-        public DeviceListBean.DevicesBean getDevicesBean() {
-            return devicesBean;
+        public String getIconUrl() {
+            return iconUrl;
         }
 
-        public void setDevicesBean(DeviceListBean.DevicesBean devicesBean) {
-            this.devicesBean = devicesBean;
+        public void setIconUrl(String iconUrl) {
+            this.iconUrl = iconUrl;
         }
 
         public String getFunctionName() {
