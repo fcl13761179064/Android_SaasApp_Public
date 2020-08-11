@@ -251,7 +251,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         // 启动插件
         Bundle bundle = new Bundle();
         bundle.putString("productKey", productKey);
-        Router.getInstance().toUrlForResult(this, "link://router/connectConfig", 1, bundle);
+        Router.getInstance().toUrlForResult(DeviceAddCategoryActivity.this, "link://router/connectConfig", 1, bundle);
     }
 
     // 接收配网结果

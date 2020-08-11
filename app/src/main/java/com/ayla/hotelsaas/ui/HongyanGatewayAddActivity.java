@@ -52,8 +52,8 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     private int bindTag = 0;//0:绑定中 1:绑定成功 -1:绑定失败
     private String mIotId = "100";
     private boolean mIs_getway;
-    private long mCuId,mScopeId;
-    private String mProductKey,mDeviceName,mHongyanproductKey,mHongyandeviceName;
+    private long mCuId, mScopeId;
+    private String mProductKey, mDeviceName, mHongyanproductKey, mHongyandeviceName;
 
     @Override
     protected GatewayAddGuidePresenter initPresenter() {
@@ -74,14 +74,14 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
         mCuId = getIntent().getLongExtra("cuId", 1l);
         mProductKey = getIntent().getStringExtra("productKey");
         mDeviceName = getIntent().getStringExtra("deviceName");
-        mScopeId = getIntent().getLongExtra("scopeId",0l);
+        mScopeId = getIntent().getLongExtra("scopeId", 0l);
         mIs_getway = getIntent().getBooleanExtra("is_getway", false);
 
         if (mIs_getway) {
             getBindToken(mHongyanproductKey, mHongyandeviceName);
         } else {
-            // startBind("KrYPZCbVSHcHqZ1Kj7Am000000");
-          //  Log.d(TAG, "mHongyanproductKey=" + mProductKey + "hongyanDeviceName=" + mDeviceName);
+            //startBind("KrYPZCbVSHcHqZ1Kj7Am000000");
+            //  Log.d(TAG, "mHongyanproductKey=" + mProductKey + "hongyanDeviceName=" + mDeviceName);
             bindVirturalZigbeeToUser(mHongyanproductKey, mHongyandeviceName);
         }
     }
@@ -172,8 +172,8 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
                 final int code = ioTResponse.getCode();
                 if (code == 200) {
-                     BingHongyanBean ioTResponses = (BingHongyanBean) ioTResponse;
-                      mIotId = ioTResponses.getData().getIotId();
+                    BingHongyanBean ioTResponses = (BingHongyanBean) ioTResponse;
+                    mIotId = ioTResponses.getData().getIotId();
                     startBind(mIotId);
                     Log.d(TAG, "onResponse_HONGYAN_one: " + "mIotId=: " + mIotId);
                 } else {
