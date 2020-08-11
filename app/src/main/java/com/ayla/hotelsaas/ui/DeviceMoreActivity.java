@@ -49,7 +49,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
         mScopeId = getIntent().getLongExtra("scopeId", 0);
         appBar.setCenterText("更多");
-        if (mDevicesBean != null && !TextUtils.isEmpty(mDevicesBean.getDeviceName())) {
+        if (mDevicesBean != null && !TextUtils.isEmpty(mDevicesBean.getNickname())) {
             tv_device_name.setText(mDevicesBean.getNickname());
         }
 

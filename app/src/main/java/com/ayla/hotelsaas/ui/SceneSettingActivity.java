@@ -29,7 +29,6 @@ import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -254,7 +253,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         if (mConditionAdapter.getData().size() == 1 && mConditionAdapter.getData().get(0) instanceof SceneSettingConditionItemAdapter.OneKeyConditionItem) {
             return;
         }
-        if (mConditionAdapter.getData().size() == 0) {
+        if (mConditionAdapter.getData().size() == 0 && mRuleEngineBean.getSiteType() == 2) {//只有云端场景才可以设置一键触发。
             Intent mainActivity = new Intent(this, RuleEngineConditionTypeGuideActivity.class);
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION);
         } else {
@@ -418,7 +417,9 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     private void syncSourceAndAdapter2() {
         if (mRuleEngineBean.getRuleType() == 2) {//一键执行
-            mConditionAdapter.setNewData(Collections.singletonList(new SceneSettingConditionItemAdapter.OneKeyConditionItem()));
+            ArrayList<SceneSettingConditionItemAdapter.ConditionItem> list = new ArrayList<>();
+            list.add(new SceneSettingConditionItemAdapter.OneKeyConditionItem());
+            mConditionAdapter.setNewData(list);
             mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
         }
 
@@ -431,43 +432,5 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             actionItems.addAll(mRuleEngineBean.getAction().getItems());
         }
         mPresenter.loadFunctionDetail(conditionItems, actionItems);
-    }
-
-    private void syncSourceAndAdapter() {
-        List<SceneSettingFunctionDatumSetAdapter.DatumBean> actions = new ArrayList<>();
-        for (RuleEngineBean.Action.ActionItem actionItem : mRuleEngineBean.getAction().getItems()) {
-            SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
-            datumBean.setLeftValue(actionItem.getLeftValue());
-            datumBean.setFunctionName("1:0x0006:Onoff".equals(actionItem.getLeftValue()) ? "开关" : "动作");
-            datumBean.setValueName("1".equals(actionItem.getRightValue()) ? "开启" : "关闭");
-            datumBean.setDeviceId(actionItem.getTargetDeviceId());
-            datumBean.setDeviceType(actionItem.getTargetDeviceType());
-            datumBean.setRightValueType(actionItem.getRightValueType());
-            datumBean.setOperator(actionItem.getOperator());
-            datumBean.setLeftValue(actionItem.getLeftValue());
-            actions.add(datumBean);
-        }
-        mActionAdapter.setNewData(actions);
-        if (mRuleEngineBean.getRuleType() == 2) {//一键执行
-            mConditionAdapter.setNewData(Collections.singletonList(new SceneSettingConditionItemAdapter.OneKeyConditionItem()));
-            mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
-        } else if (mRuleEngineBean.getRuleType() == 1) {//自动化
-            List<SceneSettingConditionItemAdapter.ConditionItem> conditions = new ArrayList<>();
-            if (mRuleEngineBean.getCondition() != null && mRuleEngineBean.getCondition().getItems() != null) {
-                for (RuleEngineBean.Condition.ConditionItem conditionItem : mRuleEngineBean.getCondition().getItems()) {
-                    SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
-                    datumBean.setLeftValue(conditionItem.getLeftValue());
-                    datumBean.setFunctionName("1:0x0006:Onoff".equals(conditionItem.getLeftValue()) ? "开关" : "动作");
-                    datumBean.setValueName("1".equals(conditionItem.getRightValue()) ? "开启" : "关闭");
-                    datumBean.setDeviceId(conditionItem.getSourceDeviceId());
-                    datumBean.setDeviceType(conditionItem.getSourceDeviceType());
-                    datumBean.setOperator(conditionItem.getOperator());
-                    datumBean.setLeftValue(conditionItem.getLeftValue());
-                    SceneSettingConditionItemAdapter.ConditionItem bean = new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean);
-                    conditions.add(bean);
-                }
-            }
-            mConditionAdapter.setNewData(conditions);
-        }
     }
 }

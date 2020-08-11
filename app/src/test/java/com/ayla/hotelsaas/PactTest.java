@@ -405,7 +405,7 @@ public class PactTest {
                 .uponReceiving("更新属性")
                 .matchPath("/api/v1/construction/device/.*/property", "/api/v1/construction/device/1234/property")
                 .body(new PactDslJsonBody()
-                        .stringType("propertyName", "111")
+                        .stringType("propertyCode", "111")
                         .stringType("propertyValue", "2222")
                 )
                 .method("PUT")

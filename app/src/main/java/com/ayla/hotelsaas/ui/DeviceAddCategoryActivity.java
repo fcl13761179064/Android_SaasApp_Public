@@ -81,13 +81,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         leftRecyclerView.setAdapter(mLeftAdapter);
 
         mRightAdapter = new DeviceCategoryListRightAdapter(R.layout.item_device_add);
-        mRightAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                DeviceCategoryBean.SubBean bean = (DeviceCategoryBean.SubBean) adapter.getItem(position);
-                handleAddJump(bean);
-            }
-        });
         rightRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         rightRecyclerView.setAdapter(mRightAdapter);
         rightRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -110,7 +103,13 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
     @Override
     protected void initListener() {
-
+        mRightAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                DeviceCategoryBean.SubBean bean = (DeviceCategoryBean.SubBean) adapter.getItem(position);
+                handleAddJump(bean);
+            }
+        });
     }
 
     @Override
@@ -173,12 +172,16 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             if (gatewayCount == 0) {//没有网关
                 CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
             } else if (gatewayCount == 1) {//一个网关
-                Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
-                mainActivity.putExtra("deviceId", gateway.getDeviceId());
-                mainActivity.putExtra("cuId", gateway.getCuId());
-                mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
-                mainActivity.putExtra("deviceName", subBean.getDeviceName());
-                startActivityForResult(mainActivity, 0);
+                if (TempUtils.isDeviceOnline(gateway)) {//网关在线
+                    Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
+                    mainActivity.putExtra("deviceId", gateway.getDeviceId());
+                    mainActivity.putExtra("cuId", gateway.getCuId());
+                    mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+                    mainActivity.putExtra("deviceName", subBean.getDeviceName());
+                    startActivityForResult(mainActivity, 0);
+                }else{
+                    CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
+                }
             } else {//多个网关
                 Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
                 mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
