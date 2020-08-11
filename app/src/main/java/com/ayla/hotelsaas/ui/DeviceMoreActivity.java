@@ -1,30 +1,21 @@
 package com.ayla.hotelsaas.ui;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
-import com.ayla.hotelsaas.utils.SoftInputUtil;
-import com.ayla.hotelsaas.utils.ToastUtils;
-import com.ayla.hotelsaas.widget.AllCustomeDialog;
 import com.ayla.hotelsaas.widget.AppBar;
-import com.ayla.hotelsaas.widget.CommonDialog;
-
-
-import java.util.List;
+import com.ayla.hotelsaas.widget.CustomAlarmDialog;
+import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import butterknife.BindView;
 
@@ -39,13 +30,11 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     @BindView(R.id.my_account_button)
     TextView my_account_button;
 
-    private AllCustomeDialog allCustomeDialog;
     private DeviceListBean.DevicesBean mDevicesBean;
     private Long mScopeId;
 
     @Override
     public void refreshUI() {
-        Constance.Is_Auto_ReFresh = -100;
         mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
         mScopeId = getIntent().getLongExtra("scopeId", 0);
         appBar.setCenterText("更多");
@@ -77,27 +66,24 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         my_account_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CustomAlarmDialog
+                        .newInstance(new CustomAlarmDialog.Callback() {
+                            @Override
+                            public void onDone(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                                if (mDevicesBean != null) {
+                                    mPresenter.deviceRemove(mDevicesBean.getDeviceId(), mScopeId, "2");
+                                }
+                            }
 
-                allCustomeDialog = new AllCustomeDialog(DeviceMoreActivity.this, getResources().getString(R.string.remove_device_content), getResources().getString(R.string.remove_device_title));
-                allCustomeDialog.setOnSureClick("移除", new AllCustomeDialog.OnSureClick() {
-                    @Override
-                    public void click(Dialog dialog) {
-                        if (mDevicesBean != null) {
-                            mPresenter.deviceRemove(mDevicesBean.getDeviceId(), mScopeId, "2");
-                        }
-                        SoftInputUtil.showSoftInput(rl_device_rename);
-
-                    }
-                });
-                allCustomeDialog.setOnCancelClick("取消", new AllCustomeDialog.OnCancelClick() {
-                    @Override
-                    public void click(Dialog dialog) {
-                        allCustomeDialog.dismiss();
-                    }
-                });
-                allCustomeDialog.setCanceledOnTouchOutside(false);
-                allCustomeDialog.show();
-
+                            @Override
+                            public void onCancel(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                            }
+                        })
+                        .setTitle(getResources().getString(R.string.remove_device_title))
+                        .setContent(getResources().getString(R.string.remove_device_content))
+                        .show(getSupportFragmentManager(), "");
             }
         });
 
@@ -107,56 +93,52 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                 if (FastClickUtils.isDoubleClick()) {
                     return;
                 }
-                CommonDialog.newInstance(new CommonDialog.DoneCallback() {
-                    @Override
-                    public void onDone(DialogFragment dialog, String txt) {
-                        if (TextUtils.isEmpty(txt)) {
-                            ToastUtils.showShortToast("修改设备名称不能为空");
-                        } else if (!TextUtils.isEmpty(txt) && txt.length() >= 20) {
-                            ToastUtils.showShortToast("不能超过20个字符");
-                        } else {
-                            tv_device_name.setText(txt);
-                            if (mDevicesBean != null) {
-                                mPresenter.deviceRenameMethod(mDevicesBean.getDeviceId(), txt);
+                ValueChangeDialog
+                        .newInstance(new ValueChangeDialog.DoneCallback() {
+                            @Override
+                            public void onDone(DialogFragment dialog, String txt) {
+                                if (TextUtils.isEmpty(txt)) {
+                                    CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming).show();
+                                } else if (txt.length() >= 20) {
+                                    CustomToast.makeText(getBaseContext(), "不能超过20个字符", R.drawable.ic_toast_warming).show();
+                                } else {
+                                    tv_device_name.setText(txt);
+                                    if (mDevicesBean != null) {
+                                        mPresenter.deviceRenameMethod(mDevicesBean.getDeviceId(), txt);
+                                    }
+                                }
+                                dialog.dismissAllowingStateLoss();
                             }
-                        }
-                        SoftInputUtil.showSoftInput(rl_device_rename);
-                        dialog.dismissAllowingStateLoss();
-                    }
-
-                    @Override
-                    public void onCancle(DialogFragment dialog) {
-                        SoftInputUtil.hideShow(rl_device_rename);
-                    }
-                }, "修改名称").show(getSupportFragmentManager(), "scene_name");
-
+                        })
+                        .setEditValue(tv_device_name.getText().toString())
+                        .setTitle("修改名称")
+                        .show(getSupportFragmentManager(), "scene_name");
             }
         });
-
     }
 
     @Override
     public void operateError(String msg) {
-        ToastUtils.showShortToast(msg);
+        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
     }
 
     @Override
     public void operateSuccess(Boolean is_rename) {
-        ToastUtils.showShortToast("修改成功");
-        Constance.Is_Auto_ReFresh = Activity.RESULT_OK;
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_toast_success).show();
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override
     public void operateRemoveSuccess(Boolean is_rename) {
-        ToastUtils.showShortToast("移除成功");
-        Constance.Is_Auto_ReFresh = Activity.RESULT_OK;
-        setResult(Constance.Is_Auto_ReFresh);
+        CustomToast.makeText(this, "移除成功", R.drawable.ic_toast_success).show();
+        setResult(RESULT_OK);
         finish();
     }
 
     @Override
     public void operateMoveFailSuccess(String code, String msg) {
-        ToastUtils.showShortToast(msg);
+        CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
     }
 
 }

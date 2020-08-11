@@ -1,15 +1,13 @@
 package com.ayla.hotelsaas.widget;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,15 +17,28 @@ import androidx.fragment.app.DialogFragment;
 import com.ayla.hotelsaas.R;
 
 public class CustomAlarmDialog extends DialogFragment {
-    public static CustomAlarmDialog newInstance(Callback doneCallback, String title, String content) {
+    public static CustomAlarmDialog newInstance(Callback doneCallback) {
 
         Bundle args = new Bundle();
-        args.putString("title", title);
-        args.putString("content", content);
         CustomAlarmDialog fragment = new CustomAlarmDialog();
         fragment.setArguments(args);
         fragment.doneCallback = doneCallback;
         return fragment;
+    }
+
+
+    private String title;
+
+    public CustomAlarmDialog setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    private String content;
+
+    public CustomAlarmDialog setContent(String content) {
+        this.content = content;
+        return this;
     }
 
     private Callback doneCallback;
@@ -61,8 +72,13 @@ public class CustomAlarmDialog extends DialogFragment {
         });
         TextView titleTextView = view.findViewById(R.id.tv_title);
         TextView contentTextView = view.findViewById(R.id.tv_content);
-        titleTextView.setText(getArguments().getString("title"));
-        contentTextView.setText(getArguments().getString("content"));
+        if(TextUtils.isEmpty(title)){
+            titleTextView.setVisibility(View.GONE);
+        }else{
+            titleTextView.setVisibility(View.VISIBLE);
+            titleTextView.setText(title);
+        }
+        contentTextView.setText(content);
     }
 
     public interface Callback {

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ create by cairurui on 18-11-1 下午3:31.
+  ~ Copyright (c) 2018 SunseaIoT. All rights reserved.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv="扫描二维码"
+        app:left_iv="@mipmap/icon_back_black" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <cn.bingoogolapple.qrcode.zbar.ZBarView
+            android:id="@+id/zxingview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:qrcv_animTime="1000"
+            app:qrcv_borderColor="@android:color/white"
+            app:qrcv_borderSize="0dp"
+            app:qrcv_cornerColor="@android:color/white"
+            app:qrcv_cornerDisplayType="inside"
+            app:qrcv_cornerLength="20dp"
+            app:qrcv_cornerSize="2dp"
+            app:qrcv_isOnlyDecodeScanBoxArea="true"
+            app:qrcv_isShowDefaultGridScanLineDrawable="true"
+            app:qrcv_isTipTextBelowRect="true"
+            app:qrcv_maskColor="#33FFFFFF"
+            app:qrcv_qrCodeTipText="请将二维码或条形码放置在识别框内"
+            app:qrcv_rectWidth="200dp"
+            app:qrcv_scanLineColor="@android:color/white"
+            app:qrcv_scanLineSize="1dp"
+            app:qrcv_tipTextColor="@android:color/white"
+            app:qrcv_tipTextSize="12sp"
+            app:qrcv_topOffset="180dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="500dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/flash_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_scan_function_btn"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_flash_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_flash_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="打开灯光"
+                    android:textColor="#ffffffff"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="33dp"
+                android:layout_height="0dp" />
+
+            <LinearLayout
+                android:id="@+id/ll_write"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_scan_function_btn"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="手动输入"
+                    android:textColor="#ffffffff"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
