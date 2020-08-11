@@ -245,7 +245,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 mRuleEngineBean.setRuleName(txt);
                 dialog.dismissAllowingStateLoss();
             }
-        }).setEditValue(currentSceneName).show(getSupportFragmentManager(), "scene_name");
+        }).setTitle("场景名称").setEditValue(currentSceneName).show(getSupportFragmentManager(), "scene_name");
     }
 
     @OnClick(R.id.v_add_condition)
