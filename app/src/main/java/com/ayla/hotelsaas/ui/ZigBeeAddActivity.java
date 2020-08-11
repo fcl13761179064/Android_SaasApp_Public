@@ -20,7 +20,7 @@ import butterknife.OnClick;
 
 /**
  * ZigBee添加页面
- * 进入时必须带入网关deviceId 、cuId 、scopeId
+ * 进入时必须带入网关deviceId 、cuId 、scopeId、deviceName
  */
 public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddPresenter> implements ZigBeeAddView {
     private static final String TAG = "ZigBeeAddActivity";
