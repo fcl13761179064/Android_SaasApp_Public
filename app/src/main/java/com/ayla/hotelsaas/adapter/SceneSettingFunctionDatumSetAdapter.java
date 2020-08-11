@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.adapter;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -17,7 +18,7 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
     @Override
     protected void convert(BaseViewHolder helper, CheckableSupport<DatumBean> item) {
         helper.setChecked(R.id.cb_function_checked, item.isChecked());
-        helper.setText(R.id.tv_function_name,item.getData().getValueName());
+        helper.setText(R.id.tv_function_name, item.getData().getValueName());
     }
 
 
@@ -32,6 +33,16 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
         private String rightValue;
         private String operator;
         private int rightValueType;
+
+        private DeviceListBean.DevicesBean devicesBean;
+
+        public DeviceListBean.DevicesBean getDevicesBean() {
+            return devicesBean;
+        }
+
+        public void setDevicesBean(DeviceListBean.DevicesBean devicesBean) {
+            this.devicesBean = devicesBean;
+        }
 
         public String getFunctionName() {
             return functionName;

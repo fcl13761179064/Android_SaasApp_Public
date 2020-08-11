@@ -80,6 +80,7 @@ public class DeviceListBean implements Serializable {
         private String nickname;
         private String deviceStatus;
         private int connectTypeId;//1-网关设备、2-节点设备
+        private String iconUrl;
 
         public int getConnectTypeId() {
             return connectTypeId;
@@ -127,6 +128,14 @@ public class DeviceListBean implements Serializable {
 
         public void setDeviceStatus(String deviceStatus) {
             this.deviceStatus = deviceStatus;
+        }
+
+        public String getIconUrl() {
+            return iconUrl;
+        }
+
+        public void setIconUrl(String iconUrl) {
+            this.iconUrl = iconUrl;
         }
     }
 }

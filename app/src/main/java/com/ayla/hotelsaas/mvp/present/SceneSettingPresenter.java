@@ -233,6 +233,17 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             }
                             conditions.add(datumBean);
                         }
+                        for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
+                            for (SceneSettingFunctionDatumSetAdapter.DatumBean condition : conditions) {
+                                if (devicesBean.getDeviceId().equals(condition.getDeviceId())) {
+                                    condition.setDevicesBean(devicesBean);
+                                }
+                            }
+                            for (SceneSettingFunctionDatumSetAdapter.DatumBean action : actions) {
+                                action.setDevicesBean(devicesBean);
+                            }
+                        }
+
                         return new List[]{conditions, actions};
                     }
                 })
