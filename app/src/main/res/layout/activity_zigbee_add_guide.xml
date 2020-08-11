@@ -12,7 +12,7 @@
         app:center_tv="添加设备"
         app:left_iv="@mipmap/icon_back_black" />
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -32,7 +32,7 @@
             android:layout_below="@id/iv_01"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="115dp"
-            android:text="请确保网关已连接网线与电源"
+            android:text="请根据说明书使设备处于配网模式"
             android:textColor="#ff333333"
             android:textSize="14sp"
             android:visibility="visible" />

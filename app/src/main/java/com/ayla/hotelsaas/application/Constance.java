@@ -1,7 +1,5 @@
 package com.ayla.hotelsaas.application;
 
-import com.ayla.hotelsaas.bean.RuleEngineBean;
-
 /**
  * @描述 常量类
  * @作者 fanchunlei
@@ -25,9 +23,6 @@ public class Constance {
 
     //用户是否登录
     public static boolean UserIsLogin = false;
-
-    //startResultActivity返回的数据
-    public static int Is_Auto_ReFresh = -100;
 
     //登录保存key
     public static String SP_Login_Token = "login_token";

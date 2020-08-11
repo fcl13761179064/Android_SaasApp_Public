@@ -23,7 +23,7 @@ import com.ayla.hotelsaas.mvp.present.SceneSettingPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
-import com.ayla.hotelsaas.widget.SceneNameSetDialog;
+import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
@@ -238,14 +238,14 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     @OnClick(R.id.tv_scene_name)
     public void sceneNameClicked() {
         String currentSceneName = mSceneNameTextView.getText().toString();
-        SceneNameSetDialog.newInstance(currentSceneName, new SceneNameSetDialog.DoneCallback() {
+        ValueChangeDialog.newInstance(new ValueChangeDialog.DoneCallback() {
             @Override
             public void onDone(DialogFragment dialog, String txt) {
                 mSceneNameTextView.setText(txt);
                 mRuleEngineBean.setRuleName(txt);
                 dialog.dismissAllowingStateLoss();
             }
-        }).show(getSupportFragmentManager(), "scene_name");
+        }).setEditValue(currentSceneName).show(getSupportFragmentManager(), "scene_name");
     }
 
     @OnClick(R.id.v_add_condition)
@@ -412,7 +412,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             public void onCancel(CustomAlarmDialog dialog) {
                 dialog.dismissAllowingStateLoss();
             }
-        }, "确认是否移除", "确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
+        }).setTitle("确认是否移除").setContent("确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
     }
 
     private void syncSourceAndAdapter2() {

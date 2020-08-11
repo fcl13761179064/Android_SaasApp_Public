@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.base;
 
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.ClickUtils;
 import com.ayla.hotelsaas.widget.LoadingDialog;
@@ -50,9 +48,9 @@ public abstract class BasicActivity extends AppCompatActivity {
                 BarUtils.setStatusBarLightMode(this, true);
             } else {
                 BarUtils.setStatusBarColor(this, ContextCompat.getColor(this, R.color.color_statusbar_compare_color));
+            }
         }
     }
-}
 
 
     protected void setStatusBar() {
@@ -184,7 +182,6 @@ public abstract class BasicActivity extends AppCompatActivity {
     }
 
     protected void onBackPress() {
-        setResult(Constance.Is_Auto_ReFresh);
         finish();
     }
 

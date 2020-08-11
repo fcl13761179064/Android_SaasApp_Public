@@ -21,9 +21,11 @@ allprojects {
     repositories {
         //修改成国内阿里云的maven地址，否则某些地方下载不下来
         maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven {
+            url 'https://jitpack.io'
+        }
         google()
         jcenter()
-        
     }
 }
 

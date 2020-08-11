@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +20,8 @@ import com.ayla.hotelsaas.mvp.view.WorkOrderView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.ayla.hotelsaas.widget.AllCustomeDialog;
 import com.ayla.hotelsaas.widget.AppBar;
+import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -42,7 +41,6 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout mRefreshLayout;
     private WorkOrderAdapter mAdapter;
-    private AllCustomeDialog allCustomeDialog;
 
     @Override
     public void refreshUI() {
@@ -122,27 +120,27 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
 
     @Override
     protected void mExitApp() {
-        allCustomeDialog = new AllCustomeDialog(WorkOrderListActivity.this, getResources().getString(R.string.sing_out), "");
-        allCustomeDialog.setOnSureClick("退出", new AllCustomeDialog.OnSureClick() {
-            @Override
-            public void click(Dialog dialog) {
-                finish();
-                SharePreferenceUtils.remove(WorkOrderListActivity.this, Constance.SP_Login_Token);
-                MyApplication.getInstance().setUserEntity(null);
-                Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        });
-        allCustomeDialog.setOnCancelClick("取消", new AllCustomeDialog.OnCancelClick() {
-            @Override
-            public void click(Dialog dialog) {
-                allCustomeDialog.dismiss();
-            }
-        });
-        allCustomeDialog.setCanceledOnTouchOutside(false);
-        allCustomeDialog.show();
 
+        CustomAlarmDialog
+                .newInstance(new CustomAlarmDialog.Callback() {
+                    @Override
+                    public void onDone(CustomAlarmDialog dialog) {
+                        dialog.dismissAllowingStateLoss();
+                        SharePreferenceUtils.remove(WorkOrderListActivity.this, Constance.SP_Login_Token);
+                        MyApplication.getInstance().setUserEntity(null);
+                        Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancel(CustomAlarmDialog dialog) {
+                        dialog.dismissAllowingStateLoss();
+                    }
+                })
+                .setTitle("")
+                .setContent(getResources().getString(R.string.sing_out))
+                .show(getSupportFragmentManager(), "");
     }
 
     @Override
@@ -159,7 +157,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
             } else {
                 mAdapter.addData(resultList);
             }
-        }else {
+        } else {
             final View inflate = LayoutInflater.from(this).inflate(R.layout.room_root_view, null);
             mAdapter.setFooterView(inflate);
             mRefreshLayout.setEnableLoadMore(false);
