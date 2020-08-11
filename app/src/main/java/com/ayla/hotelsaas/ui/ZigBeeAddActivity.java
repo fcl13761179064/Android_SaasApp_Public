@@ -91,7 +91,6 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     @OnClick(R.id.bt_bind)
     public void handleButton() {
         if (bindProgress == 6) {
-            setResult(RESULT_OK);
             finish();
         } else {
             startBind();
@@ -150,6 +149,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
 
     @Override
     public void progressSuccess() {
+        setResult(RESULT_OK);
         Log.d(TAG, "zigBeeDeviceBindFinished: ");
         bindProgress = 6;
         refreshBindShow();
