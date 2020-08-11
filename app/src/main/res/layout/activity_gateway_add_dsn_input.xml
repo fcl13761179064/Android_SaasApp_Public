@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv="添加设备"
+        app:left_iv="@mipmap/icon_back_black" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/iv_01"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:src="@drawable/ic_device_add_start_2" />
+
+        <LinearLayout
+            android:id="@+id/step_2_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_01"
+            android:layout_marginTop="46dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="设备ID号"
+                android:textColor="#ff648c1a"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/et_dsn"
+                android:layout_width="300dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:hint="输入设备ID号"
+                android:maxLines="1"
+                android:textColor="#ff333333"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="300dp"
+                android:layout_height="2dp"
+                android:background="#DFE4EB" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/bt_start_add"
+            android:layout_width="238dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/iv_01"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="160dp"
+            android:background="@drawable/bg_bt_gateway_add_start_next"
+            android:text="下一步"
+            android:textColor="#ff648c1a"
+            android:textSize="14sp" />
+    </RelativeLayout>
+</LinearLayout>

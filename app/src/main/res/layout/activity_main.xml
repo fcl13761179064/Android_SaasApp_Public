@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv="@string/exit"
+        app:left_iv="@mipmap/icon_back_black" />
+
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/appBar"
+        android:background="@color/colorBackground" />
+
+
+
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:visibility="visible"
+        android:layout_weight="1" >
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/appBar"
+        android:background="@color/colorBackground" />
+
+    <RadioGroup
+        android:id="@+id/rg_main_fragment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/white"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/rb_main_fragment_device"
+            style="@style/tab_style"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_gravity="center"
+            android:drawableTop="@drawable/bar_bottom_device"
+            android:text="设备" />
+
+        <RadioButton
+            android:id="@+id/rb_main_fragment_linkage"
+            style="@style/tab_style"
+            android:layout_marginTop="@dimen/dp_8"
+            android:drawableTop="@drawable/bar_bottom_test"
+            android:text="场景" />
+
+        <RadioButton
+            android:id="@+id/rb_main_fragment_test"
+            style="@style/tab_style"
+            android:layout_marginTop="@dimen/dp_8"
+            android:drawableTop="@drawable/bar_bottom_test"
+            android:text="测试" />
+
+    </RadioGroup>
+
+
+</LinearLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ffffff</color>
+    <color name="colorPrimaryDark">#ffffff</color>
+    <color name="colorAccent">#648C1A</color>
+    <color name="bg_top_color">#1F62D8</color>
+    <color name="all_bg_color">#F5F6F9</color>
+
+    <color name="color_default">#4DC1AD</color>
+    <!--CustomProcessDialogxml文件的颜色值-->
+    <color name="white">#ffffffff</color>
+    <color name="remove_device_color">#D73B4B</color>
+    <!-- 背景颜色 -->
+    <color name="colorBackground">#F6F6F6</color>
+    <!-- 间隔线颜色 -->
+    <color name="colorDividerLine">#DFDFDF</color>
+    <!-- 字体颜色 -->
+    <color name="textDarkColor">#ff333333</color>
+    <color name="textGaryColor">#666666</color>
+    <color name="textLightColor">#999999</color>
+    <color name="loginLogoColor">#648C1A</color>
+    <color name="login_error_show">#D73B4B</color>
+
+
+    <!--登录的颜色值-->
+    <color name="gray">#6e6e6e</color>
+    <color name="login_text_percent">#666666</color>
+    <color name="login_deviding_line">#EEEEEE</color>
+
+    <!-- 配网过程提示loading步骤，提示文案颜色 -->
+    <color name="color_bind_logding_tips_failed">#D73B4B</color>
+
+    <!-- 固定色号 -->
+    <color name="color_333333">#333333</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_ffffff">#ffffff</color>
+    <color name="color_statusbar_compare_color">#80000000</color>
+
+    <!--dialog的颜色-->
+    <color name="custome_dialog">#333333</color>
+</resources>

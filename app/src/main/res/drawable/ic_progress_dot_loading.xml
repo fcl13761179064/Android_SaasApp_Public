@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ create by cairurui on 1/16/19 9:22 PM.
+  ~ Copyright (c) 2019 SunseaIoT. All rights reserved.
+  -->
+<animated-rotate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_progress_dot_loading_nu"
+    android:pivotX="50%"
+    android:pivotY="50%" />

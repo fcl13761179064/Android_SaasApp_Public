@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ create by cairurui on 8/1/19 5:54 PM.
+  ~ Copyright (c) 2019 SunseaIoT. All rights reserved.
+  -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true">
+
+        <shape android:shape="rectangle">
+
+            <solid android:color="#e4e4e4"/>
+        </shape>
+
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+
+            <solid android:color="#ffffff"/>
+        </shape>
+    </item>
+
+</selector>
