@@ -190,24 +190,15 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             }
         } else if (1 == subBean.getNetworkType()) {
             //跳转到阿里云的鸿雁网关设备
-            Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
+            Intent mainActivity = new Intent(this, HongyanGatewayAddActivity.class);
             mainActivity.putExtra("cuId", subBean.getCuId());
             mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
             mainActivity.putExtra("deviceName", subBean.getDeviceName());
+            mainActivity.putExtra("productKey", subBean.getOemModel());
             startActivityForResult(mainActivity, 0);
         } else if (4 == subBean.getNetworkType()) {//跳转鸿雁节点添加
             this.mSubBean = subBean;
-            mSubBean.setProductKey("a1S2QYxcig3");
-            Intent intent = new Intent(DeviceAddCategoryActivity.this, HongyanGatewayAddActivity.class);
-            intent.putExtra("HongyanproductKey", "a1S2QYxcig3");
-            intent.putExtra("is_getway", "false");
-            intent.putExtra("HongyandeviceName", mSubBean.getDeviceName());
-            intent.putExtra("cuId", 1);
-            intent.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
-            intent.putExtra("deviceName", mSubBean.getDeviceName());
-            intent.putExtras(getIntent());
-            startActivity(intent);
-            //HongyanZigBeeAddGuideActivity("a1S2QYxcig3");
+            HongyanZigBeeAddGuideActivity(subBean.getOemModel());
         }
     }
 
@@ -234,11 +225,11 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 return;
             }
             Intent intent = new Intent(DeviceAddCategoryActivity.this, HongyanGatewayAddActivity.class);
-            intent.putExtra("HongyanproductKey", mSubBean.getProductKey());
+            intent.putExtra("HongyanproductKey", mSubBean.getOemModel());
+            intent.putExtra("is_getway", "false");
             intent.putExtra("HongyandeviceName", mSubBean.getDeviceName());
-            intent.putExtra("cuId", 1);
+            intent.putExtra("cuId", mSubBean.getCuId());
             intent.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
-            intent.putExtra("deviceName", mSubBean.getDeviceName());
             intent.putExtras(getIntent());
             startActivity(intent);
         }

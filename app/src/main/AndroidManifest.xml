@@ -133,7 +133,13 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <activity
-            android:name=".ui.HongyanGatewayAddActivity"
+        android:name=".ui.HongyanGatewayAddActivity"
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".ui.TouchPanelActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />

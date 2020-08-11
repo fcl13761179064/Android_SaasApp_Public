@@ -44,7 +44,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     private RoomOrderBean.ResultListBean mRoom_order;
     private WorkOrderBean.ResultListBean mWork_order;
     private RecyclerView mRecyclerview;
-    private int Result_OK=1001;
+    private int Result_OK = 1001;
 
     public DeviceListFragment(RoomOrderBean.ResultListBean room_order) {
         this.mRoom_order = room_order;
@@ -72,11 +72,19 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                final Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
-                intent.putExtra("devicesBean", devicesBean);
-                intent.putExtra("scopeId", mRoom_order.getRoomId());
-                startActivityForResult(intent,Result_OK);
+                if (devicesBean.getConnectTypeId() == 1) {
+                    Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
+                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("scopeId", mRoom_order.getRoomId());
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
+                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("scopeId", mRoom_order.getRoomId());
+                    startActivityForResult(intent, Result_OK);
+                }
+
             }
         });
         mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
@@ -146,7 +154,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             mRefreshLayout.autoRefresh();
-        }else if (requestCode == Result_OK && resultCode == Activity.RESULT_OK){
+        } else if (requestCode == Result_OK && resultCode == Activity.RESULT_OK) {
             mRefreshLayout.autoRefresh();
         }
     }

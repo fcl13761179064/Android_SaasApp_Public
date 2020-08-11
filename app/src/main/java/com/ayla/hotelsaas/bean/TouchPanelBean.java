@@ -1,17 +1,17 @@
-package com.weying.business.bean;
+package com.ayla.hotelsaas.bean;
 
 /**
  * @描述
- * @作者 丁军伟
- * @时间 2017/9/14
+ * @作者 fanchunlei
+ * @时间 2020/8/12
  */
-public class MainSettingBean {
+public class TouchPanelBean {
 
     private int iconRes;
     private String title;
     private String msgCount;
 
-    public MainSettingBean(int iconRes, String title) {
+    public TouchPanelBean(int iconRes, String title) {
         this.iconRes = iconRes;
         this.title = title;
     }
