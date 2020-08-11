@@ -16,13 +16,13 @@ import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.TypeAdapter;
-import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.RequestBody;
 
@@ -114,8 +114,28 @@ public class RequestModel {
         return getApiService().fetchDeviceCategory();
     }
 
+    /**
+     * 获取品类支持的条件、功能 项目 详情
+     *
+     * @return
+     */
     public Observable<BaseResult<List<DeviceCategoryDetailBean>>> getDeviceCategoryDetail() {
-        return getApiService().fetchDeviceCategoryDetail();
+        return getApiService().fetchDeviceCategoryDetail()
+                //特别处理：如果是智镜设备，要强行加上 场景的支持。
+                .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, BaseResult<List<DeviceCategoryDetailBean>>>() {
+                    @Override
+                    public BaseResult<List<DeviceCategoryDetailBean>> apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
+                        List<DeviceCategoryDetailBean> data = listBaseResult.data;
+                        if (data != null) {
+                            for (DeviceCategoryDetailBean datum : data) {
+                                if ("a15mfjImwp9".equals(datum.getOemModel()) || "a1ZPeSFEOFO".equals(datum.getOemModel())) {
+                                    datum.getConditionProperties().add("KeyValueNotification.KeyValue");
+                                }
+                            }
+                        }
+                        return listBaseResult;
+                    }
+                });
     }
 
     /**
@@ -235,7 +255,174 @@ public class RequestModel {
      * @return
      */
     public Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(String oemModel) {
-        return getApiService().fetchDeviceTemplate(oemModel);
+        return getApiService().fetchDeviceTemplate(oemModel)
+                //特别处理：如果是智镜设备，要强行加上 场景的支持。
+                .map(new Function<BaseResult<DeviceTemplateBean>, BaseResult<DeviceTemplateBean>>() {
+                    @Override
+                    public BaseResult<DeviceTemplateBean> apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
+                        if ("a15mfjImwp9".equals(oemModel)) {
+                            DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
+                            if (data != null) {
+                                List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
+                                if (attributes != null) {
+                                    DeviceTemplateBean.AttributesBean attributesBean = new DeviceTemplateBean.AttributesBean();
+                                    attributesBean.setCode("KeyValueNotification.KeyValue");
+                                    attributesBean.setDisplayName("场景模式");
+                                    attributesBean.setDataType(1);
+                                    attributes.add(attributesBean);
+                                    {
+                                        List<DeviceTemplateBean.AttributesBean.ValueBean> valueBeans = new ArrayList<>();
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("回家");
+                                            valueBean.setValue("1");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("离店模式");
+                                            valueBean.setValue("2");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("睡眠模式");
+                                            valueBean.setValue("3");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("影音");
+                                            valueBean.setValue("4");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("全开");
+                                            valueBean.setValue("5");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("全关");
+                                            valueBean.setValue("6");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("开窗帘");
+                                            valueBean.setValue("7");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("关窗帘");
+                                            valueBean.setValue("8");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("暂停");
+                                            valueBean.setValue("9");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("阅读");
+                                            valueBean.setValue("10");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("睡眠");
+                                            valueBean.setValue("11");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("起床");
+                                            valueBean.setValue("12");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        attributesBean.setValue(valueBeans);
+                                    }
+                                }
+                            }
+                        }
+                        if ("a1ZPeSFEOFO".equals(oemModel)) {
+                            DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
+                            if (data != null) {
+                                List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
+                                if (attributes != null) {
+                                    DeviceTemplateBean.AttributesBean attributesBean = new DeviceTemplateBean.AttributesBean();
+                                    attributesBean.setCode("KeyValueNotification.KeyValue");
+                                    attributesBean.setDisplayName("场景模式");
+                                    attributesBean.setDataType(1);
+                                    attributes.add(attributesBean);
+                                    {
+                                        List<DeviceTemplateBean.AttributesBean.ValueBean> valueBeans = new ArrayList<>();
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("回家");
+                                            valueBean.setValue("1");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("会客");
+                                            valueBean.setValue("2");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("全开");
+                                            valueBean.setValue("3");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("离家");
+                                            valueBean.setValue("4");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("影音");
+                                            valueBean.setValue("5");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("全关");
+                                            valueBean.setValue("6");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        attributesBean.setValue(valueBeans);
+                                    }
+                                }
+                            }
+                        }
+                        return deviceTemplateBeanBaseResult;
+                    }
+                });
     }
 
 
@@ -260,7 +447,7 @@ public class RequestModel {
     public Observable<BaseResult<Boolean>> deviceRemove(String deviceId, long scopeId, String scopeType) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("deviceId", deviceId);
-        jsonObject.addProperty("scopeId", scopeId+"");
+        jsonObject.addProperty("scopeId", scopeId + "");
         jsonObject.addProperty("scopeType", scopeType);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().removeDevice(body111);
