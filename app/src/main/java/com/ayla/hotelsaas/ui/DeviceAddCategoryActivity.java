@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -10,13 +9,10 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aliyun.alink.business.devicecenter.api.discovery.IOnDeviceTokenGetListener;
-import com.aliyun.alink.business.devicecenter.api.discovery.LocalDeviceMgr;
 import com.aliyun.iot.aep.component.router.Router;
 import com.aliyun.iot.aep.sdk.apiclient.IoTAPIClient;
 import com.aliyun.iot.aep.sdk.apiclient.IoTAPIClientFactory;
@@ -31,10 +27,8 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.feiyansdk.ApnetActivity;
 import com.ayla.hotelsaas.mvp.present.DeviceAddCategoryPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
-import com.ayla.hotelsaas.utils.StatusBarUtil;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.JsonObject;
@@ -52,7 +46,8 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  * @作者 吴友金
  */
 public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView, DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
-
+    private final int REQUEST_CODE_ADD_DEVICE = 0X10;
+    private final int REQUEST_CODE_HONEYAN_ROUTE = 0X11;
     @BindView(R.id.rv_left)
     RecyclerView leftRecyclerView;
 
@@ -163,9 +158,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             if (gatewayCount == 0) {//没有网关
                 Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
                 mainActivity.putExtra("cuId", subBean.getCuId());
-                mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+                mainActivity.putExtras(getIntent());
                 mainActivity.putExtra("deviceName", subBean.getDeviceName());
-                startActivityForResult(mainActivity, 0);
+                startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             } else {
                 CustomToast.makeText(this, "只能绑定一个网关", R.drawable.ic_toast_warming).show();
             }
@@ -177,27 +172,27 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
                     mainActivity.putExtra("deviceId", gateway.getDeviceId());
                     mainActivity.putExtra("cuId", gateway.getCuId());
-                    mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+                    mainActivity.putExtras(getIntent());
                     mainActivity.putExtra("deviceName", subBean.getDeviceName());
-                    startActivityForResult(mainActivity, 0);
+                    startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                 } else {
                     CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
                 }
             } else {//多个网关
                 Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
-                mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+                mainActivity.putExtras(getIntent());
                 mainActivity.putExtra("deviceName", subBean.getDeviceName());
-                startActivityForResult(mainActivity, 0);
+                startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             }
         } else if (1 == subBean.getNetworkType()) {
             //跳转到阿里云的鸿雁网关设备
             Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
             mainActivity.putExtra("cuId", subBean.getCuId());
-            mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+            mainActivity.putExtras(getIntent());
             mainActivity.putExtra("deviceName", subBean.getDeviceName());
             mainActivity.putExtra("productKey", subBean.getOemModel());
             mainActivity.putExtra("is_getway", true);
-            startActivityForResult(mainActivity, 0);
+            startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
         } else if (4 == subBean.getNetworkType()) {//跳转鸿雁节点添加
             this.mSubBean = subBean;
             HongyanZigBeeAddGuideActivity(subBean.getOemModel());
@@ -244,17 +239,13 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         // 启动插件
         Bundle bundle = new Bundle();
         bundle.putString("productKey", productKey);
-        Router.getInstance().toUrlForResult(this, "link://router/connectConfig", 1, bundle);
+        Router.getInstance().toUrlForResult(this, "link://router/connectConfig", REQUEST_CODE_HONEYAN_ROUTE, bundle);
     }
 
     // 接收配网结果
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (Activity.RESULT_OK != resultCode) {
-                // 配网失败
-                return;
-            }
+        if (requestCode == REQUEST_CODE_HONEYAN_ROUTE && resultCode == RESULT_OK) {
             String productKey = data.getStringExtra("productKey");
             String deviceName = data.getStringExtra("deviceName");
             // 配网成功
@@ -269,9 +260,13 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             intent.putExtra("deviceName", mSubBean.getDeviceName());
             intent.putExtra("productKey", mSubBean.getOemModel());
             intent.putExtra("cuId", mSubBean.getCuId());
-            intent.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
             intent.putExtras(getIntent());
-            startActivity(intent);
+            intent.putExtras(getIntent());
+            startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
+        }
+        if (requestCode == REQUEST_CODE_ADD_DEVICE && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
         }
     }
 }

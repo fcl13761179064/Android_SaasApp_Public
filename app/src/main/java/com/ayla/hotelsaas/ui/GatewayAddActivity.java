@@ -70,6 +70,7 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
 
     @Override
     public void bindSuccess() {
+        setResult(RESULT_OK);
         bindTag = 1;
         refreshBindShow();
     }
@@ -83,7 +84,6 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
     @OnClick(R.id.bt_bind)
     public void handleButton() {
         if (bindTag == 1) {
-            setResult(RESULT_OK);
             finish();
         } else if (bindTag == -1) {
             startBind();
