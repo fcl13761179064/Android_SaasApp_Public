@@ -63,14 +63,16 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     protected void initView() {
         bindTag = 0;
         refreshBindShow();
-        mHongyanproductKey = getIntent().getStringExtra("HongyanproductKey");
-        mHongyandeviceName = getIntent().getStringExtra("HongyandeviceName");
+        /*mHongyanproductKey = getIntent().getStringExtra("HongyanproductKey");
+        mHongyandeviceName = getIntent().getStringExtra("HongyandeviceName");*/
+        mHongyandeviceName ="000D6F001066E3C2";
+        mHongyanproductKey = "a1ZPeSFEOFO";
         mIs_getway = getIntent().getBooleanExtra("is_getway", false);
         Log.d(TAG, "mHongyanproductKey=" + mHongyanproductKey + "hongyanDeviceName=" + mHongyandeviceName);
         if (mIs_getway) {
             getBindToken(mHongyanproductKey, mHongyandeviceName);
         } else {
-            startBind("CYwVQ3cFX7drc9Cz1Fex000000");
+            startBind("KrYPZCbVSHcHqZ1Kj7Am000000");
             //bindVirturalZigbeeToUser(mHongyanproductKey, mHongyandeviceName);
         }
     }
