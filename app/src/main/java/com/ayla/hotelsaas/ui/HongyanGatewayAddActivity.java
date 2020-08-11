@@ -17,8 +17,14 @@ import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequest;
 import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequestBuilder;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.BingHongyanBean;
 import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.GatewayAddGuideView;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +80,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
         if (mIs_getway) {
             getBindToken(mHongyanproductKey, mHongyandeviceName);
         } else {
-          // startBind("KrYPZCbVSHcHqZ1Kj7Am000000");
+            // startBind("KrYPZCbVSHcHqZ1Kj7Am000000");
           //  Log.d(TAG, "mHongyanproductKey=" + mProductKey + "hongyanDeviceName=" + mDeviceName);
             bindVirturalZigbeeToUser(mHongyanproductKey, mHongyandeviceName);
         }
@@ -166,8 +172,8 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
                 final int code = ioTResponse.getCode();
                 if (code == 200) {
-                    Log.d(TAG, "mHongyanproductKey=" + 33333333 + "hongyanDeviceName=" + "333333333");
-                    mIotId = (String) ioTResponse.getData();
+                     BingHongyanBean ioTResponses = (BingHongyanBean) ioTResponse;
+                      mIotId = ioTResponses.getData().getIotId();
                     startBind(mIotId);
                     Log.d(TAG, "onResponse_HONGYAN_one: " + "mIotId=: " + mIotId);
                 } else {
