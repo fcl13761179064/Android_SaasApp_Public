@@ -75,9 +75,9 @@ public class ApnetActivity extends AppCompatActivity implements OnDeviceAddListe
                         }
                         ApNet("a1gnkwYSKkj");
                         //
-                        getBindToken(foundDeviceListItems.get(0).productKey,foundDeviceListItems.get(0).deviceName);
+                        getBindToken(foundDeviceListItems.get(0).productKey, foundDeviceListItems.get(0).deviceName);
 
-                       //deviceAddHandler.filterDevice(foundDeviceListItems);
+                        //deviceAddHandler.filterDevice(foundDeviceListItems);
                     }
 
                 });
@@ -111,7 +111,7 @@ public class ApnetActivity extends AppCompatActivity implements OnDeviceAddListe
         final String productKey = mSupportDeviceListItems.get(0).getProductKey();
         final String deviceName = mSupportDeviceListItems.get(0).getDeviceName();
         //去配网
-       // ApNet(productKey);
+        // ApNet(productKey);
 
     }
 
@@ -131,8 +131,8 @@ public class ApnetActivity extends AppCompatActivity implements OnDeviceAddListe
     }
 
 
-    //基于网关的token方式的设备绑定
-    private void bindVirturalToUser(String pk, String dn, String token) {
+    //基于网关的token方式的设备绑定 这是绑定到阿里云上
+    private void bindVirturAlaliToUser(String pk, String dn, String token) {
         Map<String, Object> maps = new HashMap<>();
         maps.put("productKey", pk);
         maps.put("deviceName", dn);
@@ -149,13 +149,44 @@ public class ApnetActivity extends AppCompatActivity implements OnDeviceAddListe
         ioTAPIClient.send(request, new IoTCallback() {
             @Override
             public void onFailure(IoTRequest ioTRequest, Exception e) {
-                Log.d(TAG, "onResponse: "+e.getMessage());
+                Log.d(TAG, "onResponse: " + e.getMessage());
 
             }
 
             @Override
             public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
-                Log.d(TAG, "onResponse: "+ioTResponse.getMessage());
+                Log.d(TAG, "onResponse: " + ioTResponse.getMessage());
+
+            }
+        });
+    }
+
+
+    //基于网关的token方式的设备绑定 这是绑定到ayla上
+    private void bindVirturalToAylaUser(String pk, String dn, String token) {
+        Map<String, Object> maps = new HashMap<>();
+        maps.put("productKey", pk);
+        maps.put("deviceName", dn);
+        maps.put("token", token);
+        IoTRequestBuilder builder = new IoTRequestBuilder()
+                .setPath("/awss/token/user/bind")
+                .setApiVersion("1.0.3")
+                .setAuthType("iotAuth")
+                .setParams(maps);
+
+        IoTRequest request = builder.build();
+
+        IoTAPIClient ioTAPIClient = new IoTAPIClientFactory().getClient();
+        ioTAPIClient.send(request, new IoTCallback() {
+            @Override
+            public void onFailure(IoTRequest ioTRequest, Exception e) {
+                Log.d(TAG, "onResponse: " + e.getMessage());
+
+            }
+
+            @Override
+            public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
+                Log.d(TAG, "onResponse: " + ioTResponse.getMessage());
 
             }
         });
@@ -168,7 +199,9 @@ public class ApnetActivity extends AppCompatActivity implements OnDeviceAddListe
             public void onSuccess(String token) {
                 // 拿到绑定需要的token
                 //TODO 用户根据具体业务场景调用
-                bindVirturalToUser(productKey, deviceName, token);
+                bindVirturAlaliToUser(productKey, deviceName, token);
+                //绑定到ayla
+                bindVirturalToAylaUser(productKey, deviceName, token);
             }
 
             @Override

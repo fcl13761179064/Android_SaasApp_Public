@@ -1,6 +1,5 @@
 package com.ayla.hotelsaas.ui;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Handler;
@@ -20,10 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.aliyun.iot.aep.sdk.login.ILoginCallback;
 import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.ayla.hotelsaas.BuildConfig;
@@ -31,16 +27,13 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
-import com.ayla.hotelsaas.feiyansdk.ApnetActivity;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
 import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
-import com.ayla.hotelsaas.utils.StatusBarUtil;
 import com.ayla.hotelsaas.utils.ToastUtils;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 

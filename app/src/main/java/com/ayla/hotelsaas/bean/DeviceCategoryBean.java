@@ -53,6 +53,15 @@ public class DeviceCategoryBean {
         private int deviceConnectType;//1、网关设备 2、节点设备
         private int networkType;//1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉zigbee配网
         private String icon;
+        private String oemModel;
+
+        public String getProductKey() {
+            return oemModel;
+        }
+
+        public void setProductKey(String productKey) {
+            this.oemModel = productKey;
+        }
 
         public String getName() {
             return name;
