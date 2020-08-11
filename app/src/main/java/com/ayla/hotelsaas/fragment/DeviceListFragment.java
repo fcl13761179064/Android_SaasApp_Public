@@ -84,7 +84,6 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     intent.putExtra("scopeId", mRoom_order.getRoomId());
                     startActivityForResult(intent, Result_OK);
                 }
-
             }
         });
         mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {

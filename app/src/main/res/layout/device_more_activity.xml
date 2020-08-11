@@ -41,10 +41,10 @@
 
             <TextView
                 android:id="@+id/tv_device_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginRight="9dp"
-                android:gravity="center"
+                android:gravity="center|right"
                 android:text="调光开关"
                 android:maxLength="20"
                 android:ellipsize="end"

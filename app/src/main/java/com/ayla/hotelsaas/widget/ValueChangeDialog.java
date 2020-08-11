@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,15 +16,36 @@ import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
 
-public class SceneNameSetDialog extends DialogFragment {
-    public static SceneNameSetDialog newInstance(String currentSceneName, DoneCallback doneCallback) {
+public class ValueChangeDialog extends DialogFragment {
+
+    public static ValueChangeDialog newInstance(DoneCallback doneCallback) {
 
         Bundle args = new Bundle();
-        args.putString("currentSceneName", currentSceneName);
-        SceneNameSetDialog fragment = new SceneNameSetDialog();
+        ValueChangeDialog fragment = new ValueChangeDialog();
         fragment.setArguments(args);
         fragment.doneCallback = doneCallback;
         return fragment;
+    }
+
+    private String editValue;
+
+    public ValueChangeDialog setEditValue(String editValue) {
+        this.editValue = editValue;
+        return this;
+    }
+
+    private String title;
+
+    public ValueChangeDialog setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    private String editHint;
+
+    public ValueChangeDialog setEditHint(String editHint) {
+        this.editHint = editHint;
+        return this;
     }
 
     private DoneCallback doneCallback;
@@ -40,14 +62,17 @@ public class SceneNameSetDialog extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         EditText editText = view.findViewById(R.id.et_dsn);
-        editText.setText(getArguments().getString("currentSceneName"));
+        editText.setText(editValue);
+        editText.setHint(editHint);
+        TextView titleTextView = view.findViewById(R.id.tv_title);
+        titleTextView.setText(title);
         view.findViewById(R.id.v_done).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 String msg = editText.getText().toString();
                 if (doneCallback != null) {
-                    doneCallback.onDone(SceneNameSetDialog.this, msg);
+                    doneCallback.onDone(ValueChangeDialog.this, msg);
                 }
             }
         });
