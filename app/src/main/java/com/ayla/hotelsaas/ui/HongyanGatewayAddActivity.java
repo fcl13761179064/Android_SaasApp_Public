@@ -42,12 +42,12 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     public Button mFinishButton;
 
     private String TAG = MainActivity.class.getSimpleName();
-    private String mHongyanproductKey;
-    private String mHongyandeviceName;
 
     private int bindTag = 0;//0:绑定中 1:绑定成功 -1:绑定失败
     private String mIotId = "100";
     private boolean mIs_getway;
+    private long mCuId,mScopeId;
+    private String mProductKey,mDeviceName,mHongyanproductKey,mHongyandeviceName;
 
     @Override
     protected GatewayAddGuidePresenter initPresenter() {
@@ -63,17 +63,20 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     protected void initView() {
         bindTag = 0;
         refreshBindShow();
-        /*mHongyanproductKey = getIntent().getStringExtra("HongyanproductKey");
-        mHongyandeviceName = getIntent().getStringExtra("HongyandeviceName");*/
-        mHongyandeviceName ="000D6F001066E3C2";
-        mHongyanproductKey = "a1ZPeSFEOFO";
+        mHongyanproductKey = getIntent().getStringExtra("HongyanproductKey");
+        mHongyandeviceName = getIntent().getStringExtra("HongyandeviceName");
+        mCuId = getIntent().getLongExtra("cuId", 1l);
+        mProductKey = getIntent().getStringExtra("productKey");
+        mDeviceName = getIntent().getStringExtra("deviceName");
+        mScopeId = getIntent().getLongExtra("scopeId",0l);
         mIs_getway = getIntent().getBooleanExtra("is_getway", false);
-        Log.d(TAG, "mHongyanproductKey=" + mHongyanproductKey + "hongyanDeviceName=" + mHongyandeviceName);
+
         if (mIs_getway) {
             getBindToken(mHongyanproductKey, mHongyandeviceName);
         } else {
-            startBind("KrYPZCbVSHcHqZ1Kj7Am000000");
-            //bindVirturalZigbeeToUser(mHongyanproductKey, mHongyandeviceName);
+          // startBind("KrYPZCbVSHcHqZ1Kj7Am000000");
+          //  Log.d(TAG, "mHongyanproductKey=" + mProductKey + "hongyanDeviceName=" + mDeviceName);
+            bindVirturalZigbeeToUser(mHongyanproductKey, mHongyandeviceName);
         }
     }
 
@@ -136,7 +139,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
         });
     }
 
-    //基于网关的token方式的设备绑定
+    //基于时间窗口的方式绑定设备
     private void bindVirturalZigbeeToUser(String pk, String dn) {
         Map<String, Object> maps = new HashMap<>();
         maps.put("productKey", pk);
@@ -153,7 +156,9 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
         ioTAPIClient.send(request, new IoTCallback() {
             @Override
             public void onFailure(IoTRequest ioTRequest, Exception e) {
-                Log.d(TAG, "onResponse_HONGYAN_four: " + e.getMessage());
+                Log.d(TAG, "mHongyanproductKey=" + 1111111 + "hongyanDeviceName=" + "222222");
+                bindTag = -1;
+                refreshBindShow();
 
             }
 
@@ -161,6 +166,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
                 final int code = ioTResponse.getCode();
                 if (code == 200) {
+                    Log.d(TAG, "mHongyanproductKey=" + 33333333 + "hongyanDeviceName=" + "333333333");
                     mIotId = (String) ioTResponse.getData();
                     startBind(mIotId);
                     Log.d(TAG, "onResponse_HONGYAN_one: " + "mIotId=: " + mIotId);
@@ -173,7 +179,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     }
 
     private void startBind(String data) {
-        mPresenter.registerDeviceWithDSN(data, 1, getIntent().getLongExtra("scopeId", 0), mHongyandeviceName);
+        mPresenter.registerDeviceWithDSN(data, mCuId, mScopeId, mDeviceName);
     }
 
     @Override

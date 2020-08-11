@@ -72,11 +72,18 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                final Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
-                intent.putExtra("devicesBean", devicesBean);
-                intent.putExtra("scopeId", mRoom_order.getRoomId());
-                startActivityForResult(intent, Result_OK);
+                if (devicesBean.getConnectTypeId() == 1) {
+                    Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
+                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("scopeId", mRoom_order.getRoomId());
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
+                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("scopeId", mRoom_order.getRoomId());
+                    startActivityForResult(intent, Result_OK);
+                }
             }
         });
         mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {

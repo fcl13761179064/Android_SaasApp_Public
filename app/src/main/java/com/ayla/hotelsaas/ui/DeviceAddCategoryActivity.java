@@ -37,6 +37,7 @@ import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
 import com.ayla.hotelsaas.utils.StatusBarUtil;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -179,7 +180,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
                     mainActivity.putExtra("deviceName", subBean.getDeviceName());
                     startActivityForResult(mainActivity, 0);
-                }else{
+                } else {
                     CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
                 }
             } else {//多个网关
@@ -194,22 +195,50 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             mainActivity.putExtra("cuId", subBean.getCuId());
             mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
             mainActivity.putExtra("deviceName", subBean.getDeviceName());
+            mainActivity.putExtra("productKey", subBean.getOemModel());
+            mainActivity.putExtra("is_getway", true);
             startActivityForResult(mainActivity, 0);
         } else if (4 == subBean.getNetworkType()) {//跳转鸿雁节点添加
             this.mSubBean = subBean;
-            mSubBean.setProductKey("a1S2QYxcig3");
-            Intent intent = new Intent(DeviceAddCategoryActivity.this, HongyanGatewayAddActivity.class);
-            intent.putExtra("HongyanproductKey", "a1S2QYxcig3");
-            intent.putExtra("is_getway", "false");
-            intent.putExtra("HongyandeviceName", mSubBean.getDeviceName());
-            intent.putExtra("cuId", 1);
-            intent.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
-            intent.putExtra("deviceName", mSubBean.getDeviceName());
-            intent.putExtras(getIntent());
-            startActivity(intent);
-            //HongyanZigBeeAddGuideActivity("a1S2QYxcig3");
+            HongyanZigBeeAddGuideActivity(subBean.getOemModel());
+            //bindVirturalZigbeeToUser("a1ZPeSFEOFO","000D6F001066E3C2");
         }
     }
+
+
+    //基于时间窗口的方式绑定设备
+    private void bindVirturalZigbeeToUser(String pk, String dn) {
+        Map<String, Object> maps = new HashMap<>();
+        maps.put("productKey", pk);
+        maps.put("deviceName", dn);
+        IoTRequestBuilder builder = new IoTRequestBuilder()
+                .setPath("/awss/time/window/user/bind")
+                .setApiVersion("1.0.8")
+                .setAuthType("iotAuth")
+                .setParams(maps);
+
+        IoTRequest request = builder.build();
+
+        IoTAPIClient ioTAPIClient = new IoTAPIClientFactory().getClient();
+        ioTAPIClient.send(request, new IoTCallback() {
+            @Override
+            public void onFailure(IoTRequest ioTRequest, Exception e) {
+
+            }
+
+            @Override
+            public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
+                final int code = ioTResponse.getCode();
+                final JsonObject data = (JsonObject) ioTResponse.getData();
+                final JsonObject iotId = data.getAsJsonObject("iotId");
+                final byte[] rawData = ioTResponse.getRawData();
+                if (code == 200) {
+
+                }
+            }
+        });
+    }
+
 
     private void HongyanZigBeeAddGuideActivity(String productKey) {
         // 启动插件
@@ -234,11 +263,13 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 return;
             }
             Intent intent = new Intent(DeviceAddCategoryActivity.this, HongyanGatewayAddActivity.class);
-            intent.putExtra("HongyanproductKey", mSubBean.getProductKey());
-            intent.putExtra("HongyandeviceName", mSubBean.getDeviceName());
-            intent.putExtra("cuId", 1);
-            intent.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+            intent.putExtra("HongyanproductKey", productKey);
+            intent.putExtra("is_getway", "false");
+            intent.putExtra("HongyandeviceName", deviceName);
             intent.putExtra("deviceName", mSubBean.getDeviceName());
+            intent.putExtra("productKey", mSubBean.getOemModel());
+            intent.putExtra("cuId", mSubBean.getCuId());
+            intent.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
             intent.putExtras(getIntent());
             startActivity(intent);
         }
