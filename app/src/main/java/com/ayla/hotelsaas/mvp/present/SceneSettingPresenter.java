@@ -236,11 +236,11 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
                             for (SceneSettingFunctionDatumSetAdapter.DatumBean condition : conditions) {
                                 if (devicesBean.getDeviceId().equals(condition.getDeviceId())) {
-                                    condition.setDevicesBean(devicesBean);
+                                    condition.setIconUrl(devicesBean.getIconUrl());
                                 }
                             }
                             for (SceneSettingFunctionDatumSetAdapter.DatumBean action : actions) {
-                                action.setDevicesBean(devicesBean);
+                                action.setIconUrl(devicesBean.getIconUrl());
                             }
                         }
 

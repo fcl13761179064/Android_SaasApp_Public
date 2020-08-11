@@ -31,7 +31,7 @@ public class SceneSettingConditionItemAdapter extends BaseMultiItemQuickAdapter<
     protected void convert(BaseViewHolder helper, ConditionItem item) {
         if (item instanceof DeviceConditionItem) {
             String dsn = ((DeviceConditionItem) item).getDatumBean().getDeviceId();
-            ImageLoader.loadImg(helper.getView(R.id.left_iv), ((DeviceConditionItem) item).getDatumBean().getDevicesBean().getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
+            ImageLoader.loadImg(helper.getView(R.id.left_iv), ((DeviceConditionItem) item).getDatumBean().getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
             helper.setText(R.id.tv_function_name, String.format("%s:%s", ((DeviceConditionItem) item).getDatumBean().getFunctionName(), ((DeviceConditionItem) item).getDatumBean().getValueName()));
             List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
             helper.setText(R.id.tv_name, dsn);
