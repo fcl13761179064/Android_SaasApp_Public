@@ -240,7 +240,9 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                 }
                             }
                             for (SceneSettingFunctionDatumSetAdapter.DatumBean action : actions) {
-                                action.setIconUrl(devicesBean.getIconUrl());
+                                if (devicesBean.getDeviceId().equals(action.getDeviceId())) {
+                                    action.setIconUrl(devicesBean.getIconUrl());
+                                }
                             }
                         }
 

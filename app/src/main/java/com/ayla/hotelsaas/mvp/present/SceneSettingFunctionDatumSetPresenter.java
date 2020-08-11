@@ -17,7 +17,7 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
         for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
 
-            datumBean.setFunctionName("开关");
+            datumBean.setFunctionName(attributesBean.getDisplayName());
             datumBean.setValueName(valueBean.getDisplayName());
             datumBean.setLeftValue(attributesBean.getCode());
             datumBean.setOperator("==");
@@ -25,6 +25,7 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
             datumBean.setRightValueType(valueBean.getDataType());
             datumBean.setDeviceType(deviceBean.getCuId());
             datumBean.setDeviceId(deviceBean.getDeviceId());
+            datumBean.setIconUrl(deviceBean.getIconUrl());
             CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> bean = new CheckableSupport<>(datumBean);
             devices.add(bean);
         }
