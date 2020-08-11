@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    >
+
+
+    <TextView
+        android:id="@+id/item_tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:padding="@dimen/dp_16"
+        android:gravity="bottom"
+        android:singleLine="true"
+        android:textColor="@color/textDarkColor"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        tools:text="威尼斯特酒店(广州新白云国际机场店)" />
+</LinearLayout>

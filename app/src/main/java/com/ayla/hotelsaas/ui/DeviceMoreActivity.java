@@ -112,6 +112,8 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                     public void onDone(DialogFragment dialog, String txt) {
                         if (TextUtils.isEmpty(txt)) {
                             ToastUtils.showShortToast("修改设备名称不能为空");
+                        } else if (!TextUtils.isEmpty(txt) && txt.length() >= 20) {
+                            ToastUtils.showShortToast("不能超过20个字符");
                         } else {
                             tv_device_name.setText(txt);
                             if (mDevicesBean != null) {
@@ -148,6 +150,8 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     public void operateRemoveSuccess(Boolean is_rename) {
         ToastUtils.showShortToast("移除成功");
         Constance.Is_Auto_ReFresh = Activity.RESULT_OK;
+        setResult(Constance.Is_Auto_ReFresh);
+        finish();
     }
 
     @Override

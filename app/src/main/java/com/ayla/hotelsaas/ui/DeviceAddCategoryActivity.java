@@ -1,9 +1,12 @@
 package com.ayla.hotelsaas.ui;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -12,6 +15,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aliyun.alink.business.devicecenter.api.discovery.IOnDeviceTokenGetListener;
+import com.aliyun.alink.business.devicecenter.api.discovery.LocalDeviceMgr;
+import com.aliyun.iot.aep.component.router.Router;
+import com.aliyun.iot.aep.sdk.apiclient.IoTAPIClient;
+import com.aliyun.iot.aep.sdk.apiclient.IoTAPIClientFactory;
+import com.aliyun.iot.aep.sdk.apiclient.callback.IoTCallback;
+import com.aliyun.iot.aep.sdk.apiclient.callback.IoTResponse;
+import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequest;
+import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequestBuilder;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListLeftAdapter;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListRightAdapter;
@@ -19,13 +31,16 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.feiyansdk.ApnetActivity;
 import com.ayla.hotelsaas.mvp.present.DeviceAddCategoryPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
 import com.ayla.hotelsaas.utils.StatusBarUtil;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import me.jessyan.autosize.utils.AutoSizeUtils;
@@ -45,6 +60,8 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
     private DeviceCategoryListLeftAdapter mLeftAdapter;
     private DeviceCategoryListRightAdapter mRightAdapter;
+    private String mIotId = "100";
+    private DeviceCategoryBean.SubBean mSubBean;
 
     @Override
     protected int getLayoutId() {
@@ -142,14 +159,14 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 }
             }
         }
-        if (2 == subBean.getNetworkType()) {//跳转艾拉网关添加
+        if (2 == subBean.getNetworkType()) {//顺舟和ayla-插网线网关配网
             if (gatewayCount == 0) {//没有网关
                 Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
                 mainActivity.putExtra("cuId", subBean.getCuId());
                 mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
                 mainActivity.putExtra("deviceName", subBean.getDeviceName());
                 startActivityForResult(mainActivity, 0);
-            }else{
+            } else {
                 CustomToast.makeText(this, "只能绑定一个网关", R.drawable.ic_toast_warming).show();
             }
         } else if (3 == subBean.getNetworkType()) {//跳转艾拉节点添加
@@ -168,17 +185,59 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 mainActivity.putExtra("deviceName", subBean.getDeviceName());
                 startActivityForResult(mainActivity, 0);
             }
-        }else{
-            CustomToast.makeText(this, "暂不支持该设备", R.drawable.ic_toast_warming).show();
+        } else if (1 == subBean.getNetworkType()) {
+            //跳转到阿里云的鸿雁网关设备
+            Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
+            mainActivity.putExtra("cuId", subBean.getCuId());
+            mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+            mainActivity.putExtra("deviceName", subBean.getDeviceName());
+            startActivityForResult(mainActivity, 0);
+        } else if (4 == subBean.getNetworkType()) {//跳转鸿雁节点添加
+            this.mSubBean = subBean;
+            mSubBean.setProductKey("a1S2QYxcig3");
+            Intent intent = new Intent(DeviceAddCategoryActivity.this, HongyanGatewayAddActivity.class);
+            intent.putExtra("HongyanproductKey", "a1S2QYxcig3");
+            intent.putExtra("is_getway", "false");
+            intent.putExtra("HongyandeviceName", mSubBean.getDeviceName());
+            intent.putExtra("cuId", 1);
+            intent.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+            intent.putExtra("deviceName", mSubBean.getDeviceName());
+            intent.putExtras(getIntent());
+            startActivity(intent);
+            //HongyanZigBeeAddGuideActivity("a1S2QYxcig3");
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    private void HongyanZigBeeAddGuideActivity(String productKey) {
+        // 启动插件
+        Bundle bundle = new Bundle();
+        bundle.putString("productKey", productKey);
+        Router.getInstance().toUrlForResult(this, "link://router/connectConfig", 1, bundle);
+    }
+
+    // 接收配网结果
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == RESULT_OK) {
-            setResult(RESULT_OK);
-            finish();
+        if (requestCode == 1) {
+            if (Activity.RESULT_OK != resultCode) {
+                // 配网失败
+                return;
+            }
+            String productKey = data.getStringExtra("productKey");
+            String deviceName = data.getStringExtra("deviceName");
+            // 配网成功
+            Log.d("onResponse_HONGYAN_four", "productKey:" + productKey + "  deviceName:" + deviceName);
+            if (TextUtils.isEmpty(productKey) && TextUtils.isEmpty(deviceName)) {
+                return;
+            }
+            Intent intent = new Intent(DeviceAddCategoryActivity.this, HongyanGatewayAddActivity.class);
+            intent.putExtra("HongyanproductKey", mSubBean.getProductKey());
+            intent.putExtra("HongyandeviceName", mSubBean.getDeviceName());
+            intent.putExtra("cuId", 1);
+            intent.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
+            intent.putExtra("deviceName", mSubBean.getDeviceName());
+            intent.putExtras(getIntent());
+            startActivity(intent);
         }
     }
 }
