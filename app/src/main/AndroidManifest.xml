@@ -98,8 +98,7 @@
         <activity
             android:name=".ui.SceneSettingActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing|stateHidden" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SceneSettingDeviceSelectActivity"
             android:launchMode="singleTask"
