@@ -12,8 +12,7 @@
         app:center_tv="添加设备"
         app:left_iv="@mipmap/icon_back_black" />
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -136,9 +135,9 @@
             android:id="@+id/bt_bind"
             android:layout_width="238dp"
             android:layout_height="50dp"
-            android:layout_below="@id/iv_01"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="345dp"
+            android:layout_marginBottom="80dp"
             android:background="@drawable/bg_bt_gateway_add_start_next"
             android:text="完成"
             android:textColor="#ff648c1a"
