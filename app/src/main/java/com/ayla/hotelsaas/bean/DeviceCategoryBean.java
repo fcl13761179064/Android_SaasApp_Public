@@ -55,12 +55,12 @@ public class DeviceCategoryBean {
         private String icon;
         private String oemModel;
 
-        public String getProductKey() {
+        public String getOemModel() {
             return oemModel;
         }
 
-        public void setProductKey(String productKey) {
-            this.oemModel = productKey;
+        public void setOemModel(String oemModel) {
+            this.oemModel = oemModel;
         }
 
         public String getName() {
