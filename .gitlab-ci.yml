@@ -16,10 +16,10 @@ stages:
 
 lintDebug:
   stage: check
-  only:
-    - /^issue[-|/].+$/
-    - /^feature[-|/].+$/
-    - /^bugfix[-|/].+$/
+#  only:
+#    - /^issue[-|/].+$/
+#    - /^feature[-|/].+$/
+#    - /^bugfix[-|/].+$/
   script:
     - gradle -Pci --console=plain :app:lintDebug -PbuildDir=lint
   tags:
@@ -44,6 +44,7 @@ assembleRelease:
   stage: build
   only:
     - master
+    - prod
   script:
     - echo "开始打包"
     - gradle assembleRelease
