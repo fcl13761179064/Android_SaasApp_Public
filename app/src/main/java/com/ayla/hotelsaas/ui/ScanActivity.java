@@ -155,12 +155,12 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
     private void adjustFlashLight(boolean open) {
         if (open) {
             mZXingView.openFlashlight();
-//            mFlightLightStateImageView.setImageResource(R.drawable.ic_scan_light_on);
-            mFlashLightTextView.setText("打开灯光");
+            mFlightLightStateImageView.setImageResource(R.drawable.ic_scan_flash_off);
+            mFlashLightTextView.setText("关闭灯光");
         } else {
             mZXingView.closeFlashlight();
-//            mFlightLightStateImageView.setImageResource(R.drawable.ic_scan_light_off);
-            mFlashLightTextView.setText("关闭灯光");
+            mFlightLightStateImageView.setImageResource(R.drawable.ic_scan_flash_on);
+            mFlashLightTextView.setText("打开灯光");
         }
         flashLightState = open;
     }
