@@ -20,7 +20,7 @@ import butterknife.OnClick;
 
 /**
  * ZigBee添加页面
- * 进入时必须带入网关deviceId 、cuId 、scopeId
+ * 进入时必须带入网关deviceId 、cuId 、scopeId、deviceName
  */
 public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddPresenter> implements ZigBeeAddView {
     private static final String TAG = "ZigBeeAddActivity";
@@ -91,7 +91,6 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     @OnClick(R.id.bt_bind)
     public void handleButton() {
         if (bindProgress == 6) {
-            setResult(RESULT_OK);
             finish();
         } else {
             startBind();
@@ -150,6 +149,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
 
     @Override
     public void progressSuccess() {
+        setResult(RESULT_OK);
         Log.d(TAG, "zigBeeDeviceBindFinished: ");
         bindProgress = 6;
         refreshBindShow();

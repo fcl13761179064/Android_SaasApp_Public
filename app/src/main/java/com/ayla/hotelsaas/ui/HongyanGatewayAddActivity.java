@@ -1,6 +1,5 @@
 package com.ayla.hotelsaas.ui;
 
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -81,7 +80,6 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             getBindToken(mHongyanproductKey, mHongyandeviceName);
         } else {
             //startBind("KrYPZCbVSHcHqZ1Kj7Am000000");
-            //  Log.d(TAG, "mHongyanproductKey=" + mProductKey + "hongyanDeviceName=" + mDeviceName);
             bindVirturalZigbeeToUser(mHongyanproductKey, mHongyandeviceName);
         }
     }
@@ -190,6 +188,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
 
     @Override
     public void bindSuccess() {
+        setResult(RESULT_OK);
         bindTag = 1;
         refreshBindShow();
         Log.d(TAG, "onResponse_HONGYAN_two: " + "成功");
@@ -206,7 +205,6 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     @OnClick(R.id.bt_bind)
     public void handleButton() {
         if (bindTag == 1) {
-            setResult(RESULT_OK);
             finish();
         } else if (bindTag == -1) {
             bindTag = 0;

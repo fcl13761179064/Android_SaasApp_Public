@@ -32,6 +32,10 @@ import java.util.List;
 import butterknife.BindView;
 
 public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceListShowPresenter> implements DeviceListView {
+
+    private final int REQUEST_CODE_DEVICE_EDIT = 0X10;
+    private final int REQUEST_CODE_DEVICE_ADD = 0X11;
+
     @BindView(R.id.device_recyclerview)
     RecyclerView recyclerview;
     @BindView(R.id.float_btn)
@@ -44,7 +48,6 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     private RoomOrderBean.ResultListBean mRoom_order;
     private WorkOrderBean.ResultListBean mWork_order;
     private RecyclerView mRecyclerview;
-    private int Result_OK = 1001;
 
     public DeviceListFragment(RoomOrderBean.ResultListBean room_order) {
         this.mRoom_order = room_order;
@@ -73,17 +76,10 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
-                if (devicesBean.getConnectTypeId() == 1) {
-                    Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
-                    intent.putExtra("devicesBean", devicesBean);
-                    intent.putExtra("scopeId", mRoom_order.getRoomId());
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
-                    intent.putExtra("devicesBean", devicesBean);
-                    intent.putExtra("scopeId", mRoom_order.getRoomId());
-                    startActivityForResult(intent, Result_OK);
-                }
+                Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
+                intent.putExtra("devicesBean", devicesBean);
+                intent.putExtra("scopeId", mRoom_order.getRoomId());
+                startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
             }
         });
         mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
@@ -114,7 +110,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
                 intent.putExtra("scopeId", mRoom_order.getRoomId());
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, REQUEST_CODE_DEVICE_ADD);
             }
         });
 
@@ -151,9 +147,9 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE_DEVICE_ADD && resultCode == Activity.RESULT_OK) {
             mRefreshLayout.autoRefresh();
-        } else if (requestCode == Result_OK && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == REQUEST_CODE_DEVICE_EDIT && resultCode == Activity.RESULT_OK) {
             mRefreshLayout.autoRefresh();
         }
     }
