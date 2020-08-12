@@ -238,14 +238,20 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     @OnClick(R.id.tv_scene_name)
     public void sceneNameClicked() {
         String currentSceneName = mSceneNameTextView.getText().toString();
-        ValueChangeDialog.newInstance(new ValueChangeDialog.DoneCallback() {
-            @Override
-            public void onDone(DialogFragment dialog, String txt) {
-                mSceneNameTextView.setText(txt);
-                mRuleEngineBean.setRuleName(txt);
-                dialog.dismissAllowingStateLoss();
-            }
-        }).setTitle("场景名称").setEditValue(currentSceneName).show(getSupportFragmentManager(), "scene_name");
+        ValueChangeDialog
+                .newInstance(new ValueChangeDialog.DoneCallback() {
+                    @Override
+                    public void onDone(DialogFragment dialog, String txt) {
+                        mSceneNameTextView.setText(txt);
+                        mRuleEngineBean.setRuleName(txt);
+                        dialog.dismissAllowingStateLoss();
+                    }
+                })
+                .setTitle("场景名称")
+                .setEditHint("请输入场景名称")
+                .setEditValue(currentSceneName)
+                .setMaxLength(20)
+                .show(getSupportFragmentManager(), "scene_name");
     }
 
     @OnClick(R.id.v_add_condition)
