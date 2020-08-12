@@ -27,6 +27,7 @@ import java.util.List;
 import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.unit.Subunits;
 
+import static com.aliyun.iot.aep.sdk.IoTSmart.REGION_ALL;
 import static com.aliyun.iot.aep.sdk.IoTSmart.REGION_CHINA_ONLY;
 
 
@@ -90,7 +91,7 @@ public class MyApplication extends AApplication {
         // 默认的初始化参数
         IoTSmart.InitConfig initConfig = new IoTSmart.InitConfig()
                 // REGION_ALL: 支持连接中国大陆和海外多个接入点，REGION_CHINA_ONLY:直连中国大陆接入点，只在中国大陆出货选这个
-                .setRegionType(REGION_CHINA_ONLY)
+                .setRegionType(REGION_ALL)
                 // 对应控制台上的测试版（PRODUCT_ENV_DEV）和正式版（PRODUCT_ENV_PROD）(默认)
                 .setProductEnv(IoTSmart.PRODUCT_ENV_PROD)
                 // 是否打开日志
@@ -124,7 +125,6 @@ public class MyApplication extends AApplication {
         });
         // 初始化
         IoTSmart.init(app, initConfig);
-
         new AlcsCoAP().setLogLevel(ALog.LEVEL_ERROR);
 
     }

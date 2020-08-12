@@ -33,6 +33,9 @@ import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.JsonObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -196,7 +199,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         } else if (4 == subBean.getNetworkType()) {//跳转鸿雁节点添加
             this.mSubBean = subBean;
             HongyanZigBeeAddGuideActivity(subBean.getOemModel());
-            //bindVirturalZigbeeToUser("a1ZPeSFEOFO","000D6F001066E3C2");
+            // bindVirturalZigbeeToUser("a1gnkwYSKkj", "CCCCCCFFFE136A35");
         }
     }
 
@@ -224,10 +227,14 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             @Override
             public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
                 final int code = ioTResponse.getCode();
-                final JsonObject data = (JsonObject) ioTResponse.getData();
-                final JsonObject iotId = data.getAsJsonObject("iotId");
-                final byte[] rawData = ioTResponse.getRawData();
                 if (code == 200) {
+                    final JSONObject data = (JSONObject) ioTResponse.getData();
+                    try {
+                        String iotId = (String) data.get("iotId");
+                        final byte[] rawData = ioTResponse.getRawData();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                 }
             }
@@ -239,7 +246,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         // 启动插件
         Bundle bundle = new Bundle();
         bundle.putString("productKey", productKey);
-        Router.getInstance().toUrlForResult(this, "link://router/connectConfig", REQUEST_CODE_HONEYAN_ROUTE, bundle);
+        Router.getInstance().toUrlForResult(DeviceAddCategoryActivity.this, "link://router/connectConfig", REQUEST_CODE_HONEYAN_ROUTE, bundle);
     }
 
     // 接收配网结果

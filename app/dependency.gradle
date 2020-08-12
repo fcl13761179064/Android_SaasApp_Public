@@ -28,15 +28,4 @@ dependencies {
     api 'com.aliyun.alink.linksdk:breeze-biz:1.2.0.1'
     api 'com.aliyun.alink.linksdk:ble-library:1.3.1'
     api 'com.aliyun.alink.linksdk:breeze-ota:1.2.2'
-
-    api ('com.aliyun.alink.linksdk:iot-linkkit:1.7.0')
-    implementation ('com.aliyun.alink.linksdk:ilop-devicecenter:1.7.7.1'){
-        transitive = true
-    }
-    api 'com.aliyun.alink.linksdk:breeze-biz:1.2.0.1'
-    api 'com.aliyun.alink.linksdk:breeze:1.3.0.2'
-    /* 日志.begin */
-    api 'com.aliyun.iot.aep.sdk:alog:0.0.5.1'
-    /* API 通道.begin */
-    implementation 'com.aliyun.iot.aep.sdk:apiclient:0.0.8.2'
 }

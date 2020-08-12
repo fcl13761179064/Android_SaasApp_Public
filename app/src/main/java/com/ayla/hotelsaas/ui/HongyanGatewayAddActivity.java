@@ -16,8 +16,14 @@ import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequest;
 import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequestBuilder;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.BingHongyanBean;
 import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.GatewayAddGuideView;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,8 +79,6 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
         if (mIs_getway) {
             getBindToken(mHongyanproductKey, mHongyandeviceName);
         } else {
-            // startBind("KrYPZCbVSHcHqZ1Kj7Am000000");
-            //  Log.d(TAG, "mHongyanproductKey=" + mProductKey + "hongyanDeviceName=" + mDeviceName);
             bindVirturalZigbeeToUser(mHongyanproductKey, mHongyandeviceName);
         }
     }
@@ -87,7 +91,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
 
     public void getBindToken(final String productKey, final String deviceName) {
         //获取绑定设备的token
-        LocalDeviceMgr.getInstance().getDeviceToken(this, productKey, deviceName, 60 * 1000, 5 * 1000, new IOnDeviceTokenGetListener() {
+        LocalDeviceMgr.getInstance().getDeviceToken(productKey, deviceName, 60 * 1000, new IOnDeviceTokenGetListener() {
             @Override
             public void onSuccess(String token) {
                 // 拿到绑定需要的token
@@ -165,13 +169,13 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
                 final int code = ioTResponse.getCode();
                 if (code == 200) {
-                    Log.d(TAG, "mHongyanproductKey=" + 33333333 + "hongyanDeviceName=" + "333333333");
-                    mIotId = (String) ioTResponse.getData();
-                    startBind(mIotId);
-                    Log.d(TAG, "onResponse_HONGYAN_one: " + "mIotId=: " + mIotId);
-                } else {
-                    bindTag = -1;
-                    refreshBindShow();
+                    JSONObject data = (JSONObject) ioTResponse.getData();
+                    try {
+                        mIotId = (String) data.get("iotId");
+                        startBind(mIotId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
