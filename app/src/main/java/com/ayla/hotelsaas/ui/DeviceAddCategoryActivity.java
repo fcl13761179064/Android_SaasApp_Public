@@ -199,7 +199,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         } else if (4 == subBean.getNetworkType()) {//跳转鸿雁节点添加
             this.mSubBean = subBean;
             HongyanZigBeeAddGuideActivity(subBean.getOemModel());
-            //bindVirturalZigbeeToUser("a1gnkwYSKkj", "CCCCCCFFFE136A35");
+            // bindVirturalZigbeeToUser("a1gnkwYSKkj", "CCCCCCFFFE136A35");
         }
     }
 
