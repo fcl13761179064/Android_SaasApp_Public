@@ -18,7 +18,7 @@ public class Constance {
     /**
      * 正式环境地址
      */
-    public static String BASE_URL = "https://abp.ayla.com.cn/";
+    public static String BASE_URL = "https://abp-prod.ayla.com.cn/";
 
 
     //用户是否登录
