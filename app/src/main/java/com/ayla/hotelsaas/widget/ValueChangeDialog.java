@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.widget;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,13 @@ public class ValueChangeDialog extends DialogFragment {
         return this;
     }
 
+    private int maxLength = 20;
+
+    public ValueChangeDialog setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
+        return this;
+    }
+
     private String editHint;
 
     public ValueChangeDialog setEditHint(String editHint) {
@@ -64,6 +72,7 @@ public class ValueChangeDialog extends DialogFragment {
         EditText editText = view.findViewById(R.id.et_dsn);
         editText.setText(editValue);
         editText.setHint(editHint);
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
         TextView titleTextView = view.findViewById(R.id.tv_title);
         titleTextView.setText(title);
         view.findViewById(R.id.v_done).setOnClickListener(new View.OnClickListener() {

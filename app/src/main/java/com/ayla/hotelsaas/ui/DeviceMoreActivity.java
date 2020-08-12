@@ -99,8 +99,6 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                             public void onDone(DialogFragment dialog, String txt) {
                                 if (TextUtils.isEmpty(txt)) {
                                     CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming).show();
-                                } else if (txt.length() >= 20) {
-                                    CustomToast.makeText(getBaseContext(), "不能超过20个字符", R.drawable.ic_toast_warming).show();
                                 } else {
                                     tv_device_name.setText(txt);
                                     if (mDevicesBean != null) {
@@ -112,6 +110,8 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                         })
                         .setEditValue(tv_device_name.getText().toString())
                         .setTitle("修改名称")
+                        .setEditHint("请输入名称")
+                        .setMaxLength(20)
                         .show(getSupportFragmentManager(), "scene_name");
             }
         });
