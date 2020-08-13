@@ -27,6 +27,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
+import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
 import com.ayla.hotelsaas.utils.AppManager;
@@ -83,6 +84,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             case R.id.tv_switch:
                 showProgress("切换环境中");
                 Constance.isNetworkDebug = !Constance.isNetworkDebug;
+                RetrofitHelper.reset();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

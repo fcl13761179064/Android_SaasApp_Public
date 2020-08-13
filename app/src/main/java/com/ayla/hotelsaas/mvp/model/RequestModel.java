@@ -52,7 +52,7 @@ public class RequestModel {
     }
 
     private ApiService getApiService() {
-        return RetrofitHelper.getInstance().getApiService();
+        return RetrofitHelper.getApiService();
     }
 
     public Observable<BaseResult<User>> login(String account, String password) {

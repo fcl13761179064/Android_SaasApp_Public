@@ -46,76 +46,53 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
  * 3 拦截器方案 进行替换
  */
 public class RetrofitHelper {
-    private static volatile RetrofitHelper instance;
-
-    /**
-     * 用volatile修饰的变量，线程在每次使用变量的时候，都会读取变量修改后的最的值
-     */
-    private static volatile OkHttpClient sOkHttpClient;
-
     private static ApiService apiService;
 
-    public static final String apiBaseUrl = Constance.BASE_URL;
-
-    private static Retrofit retrofit;
-
-    public static RetrofitHelper getInstance() {
-        if (instance == null) {
-            synchronized (RetrofitHelper.class) {
-                if (instance == null) {
-                    instance = new RetrofitHelper();
-                }
-            }
-        }
-        return instance;
-    }
-
     private RetrofitHelper() {
-        retrofit = new Retrofit.Builder()
-                .client(getOkHttpClient())
-                .addConverterFactory(CustomGsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(apiBaseUrl)
-                .build();
-        apiService = retrofit.create(ApiService.class);
     }
 
-    public ApiService getApiService() {
+    public static ApiService getApiService() {
         if (apiService == null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .client(getOkHttpClient())
+                    .addConverterFactory(CustomGsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .baseUrl(Constance.getBaseUrl())
+                    .build();
             apiService = retrofit.create(ApiService.class);
         }
         return apiService;
     }
 
+    public static void reset() {
+        apiService = null;
+    }
+
     /**
      * 获取 OkHttpClient * * @return OkHttpClient
      */
-    private OkHttpClient getOkHttpClient() {
-        if (sOkHttpClient == null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+    private static OkHttpClient getOkHttpClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-            //HttpLoggingInterceptor打印网络日志的方法 默认日志拦截器普通版:OkHttp：
-            //自定义拦截器，小写日志
-            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-                @Override
-                public void log(String message) {
-                    if (MyApplication.getInstance() == null) {
-                        System.out.println(message);
-                    }
-                    Log.d("okhttp", message);
+        //HttpLoggingInterceptor打印网络日志的方法 默认日志拦截器普通版:OkHttp：
+        //自定义拦截器，小写日志
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                if (MyApplication.getInstance() == null) {
+                    System.out.println(message);
                 }
-            });
-            //添加请求头
-            builder.addInterceptor(CommonParameterInterceptor);
-            //登录失败 重新登录
-            builder.addInterceptor(ReloginInterceptor);
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            builder.addInterceptor(httpLoggingInterceptor);
+                Log.d("okhttp", message);
+            }
+        });
+        //添加请求头
+        builder.addInterceptor(CommonParameterInterceptor);
+        //登录失败 重新登录
+        builder.addInterceptor(ReloginInterceptor);
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        builder.addInterceptor(httpLoggingInterceptor);
 
-            sOkHttpClient = builder.build();
-        }
-
-        return sOkHttpClient;
+        return builder.build();
     }
 
     /**
@@ -141,7 +118,7 @@ public class RetrofitHelper {
      * 重新登录拦截器
      * 当code 为5003 或者为 5004 时重新登录
      */
-    private Interceptor ReloginInterceptor = new Interceptor() {
+    private static Interceptor ReloginInterceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
             //原始接口请求
