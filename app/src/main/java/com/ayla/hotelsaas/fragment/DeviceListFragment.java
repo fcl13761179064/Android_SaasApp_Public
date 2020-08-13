@@ -21,6 +21,8 @@ import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
 import com.ayla.hotelsaas.ui.DeviceMoreActivity;
+import com.ayla.hotelsaas.ui.TouchPanelActivity;
+import com.ayla.hotelsaas.ui.TouchPanelSelectActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -76,10 +78,22 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
-                Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
-                intent.putExtra("devicesBean", devicesBean);
-                intent.putExtra("scopeId", mRoom_order.getRoomId());
-                startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
+                if (devicesBean.getConnectTypeId() == 2 && devicesBean.getCuId() == 1 && "J9WX4aPBnZlxtipuQqwC000000".equals(devicesBean.getDeviceId())) {
+                    Intent intent = new Intent(getContext(), TouchPanelActivity.class);
+                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("pannel_type", "1");
+                    startActivity(intent);
+                } else if (devicesBean.getConnectTypeId() == 2 && devicesBean.getCuId() == 1 && "KrYPZCbVSHcHqZ1Kj7Am000000".equals(devicesBean.getDeviceId())) {
+                    Intent intent = new Intent(getContext(), TouchPanelSelectActivity.class);
+                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("pannel_type", "2");
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
+                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("scopeId", mRoom_order.getRoomId());
+                    startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
+                }
             }
         });
         mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {

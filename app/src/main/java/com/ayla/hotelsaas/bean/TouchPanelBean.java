@@ -9,11 +9,29 @@ public class TouchPanelBean {
 
     private int iconRes;
     private String title;
-    private String msgCount;
+    private int num;
+    private int id;
 
-    public TouchPanelBean(int iconRes, String title) {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
+    public TouchPanelBean(int iconRes, String title,int num) {
         this.iconRes = iconRes;
         this.title = title;
+        this.num = num;
     }
 
     public int getIconRes() {
@@ -32,11 +50,4 @@ public class TouchPanelBean {
         this.title = title;
     }
 
-    public String getMsgCount() {
-        return msgCount;
-    }
-
-    public void setMsgCount(String msgCount) {
-        this.msgCount = msgCount;
-    }
 }

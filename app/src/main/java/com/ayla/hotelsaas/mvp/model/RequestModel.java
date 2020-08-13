@@ -8,6 +8,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
+import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
@@ -15,11 +16,15 @@ import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 /**
@@ -33,6 +38,9 @@ public class RequestModel {
     public static final String APP_SECRET = "92bAH6hNF4Q9RHymVGqYCdn58Zr3FPTU";
 
     private volatile static RequestModel instance = null;
+    private Observable<BaseResult<Boolean>> mBaseResultObservable;
+    private RequestBody mBody111;
+    private RequestBody mMBody111;
 
     private RequestModel() {
     }
@@ -428,6 +436,48 @@ public class RequestModel {
         return getApiService().deviceRename(deviceId, body111);
     }
 
+
+    /**
+     * 场景重新命名
+     *
+     * @return
+     */
+    public Observable<BaseResult<Boolean>> tourchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue) {
+
+        try {
+            JSONObject uploadParams = new JSONObject();
+            JSONArray list = new JSONArray();
+            JSONObject jsonObject = new JSONObject();
+            if (id != 0) {
+                jsonObject.put("id", id);
+            }
+            jsonObject.put("deviceId", deviceId);
+            jsonObject.put("cuId", cuId);
+            jsonObject.put("propertyName", propertyName);
+            jsonObject.put("propertyType", propertyType);
+            jsonObject.put("propertyValue", propertyValue);
+            list.put(jsonObject);
+            uploadParams.put("propertyList", list);
+            mMBody111 = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        return getApiService().tourchPanelRenameAndIcon(mMBody111);
+    }
+
+    /**
+     * 获取所有的场景按键信息
+     *
+     * @return
+     */
+    public Observable<BaseResult<List<TouchPanelDataBean>>> getALlTouchPanelDeviceInfo(int id, String deviceId) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", id);
+        jsonObject.addProperty("deviceId", deviceId);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().touchpanelALlDevice(id, deviceId);
+    }
 
     /**
      * 移除设备
