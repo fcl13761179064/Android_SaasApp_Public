@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv="@string/exit"
+        app:left_iv="@mipmap/icon_back_black" />
+
+
+    <RelativeLayout
+        android:id="@+id/rl_touchpanel_rename"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="@drawable/room_num_shape">
+
+        <TextView
+            android:id="@+id/tv_scene_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_16"
+            android:text="场景按键名称："
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:layout_toRightOf="@+id/tv_scene_title"
+            android:paddingRight="@dimen/dp_16">
+
+            <TextView
+                android:id="@+id/tv_touchpanel_rename"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingRight="@dimen/dp_16"
+                android:gravity="center|right"
+                android:text="场景"
+                android:maxLength="20"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:drawableRight="@mipmap/left_ico"
+                android:textColor="#999999"
+                android:drawablePadding="@dimen/dp_16"
+                android:textSize="17sp" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:id="@+id/rl_touchpanel_icon"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="@drawable/room_num_shape">
+
+        <TextView
+            android:id="@+id/tv_scene_two_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_16"
+            android:text="场景按键icon："
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center|right"
+            android:layout_toRightOf="@+id/tv_scene_two_title"
+            android:layout_marginRight="@dimen/dp_16">
+
+            <ImageView
+                android:id="@+id/iv_scene_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="@dimen/dp_16"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_scene_1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_16"
+                android:drawableRight="@mipmap/left_ico"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>
+
+
