@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.data.net;
 
+import android.text.method.Touch;
+
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -7,9 +9,14 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
+import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
+import com.google.gson.JsonObject;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,4 +101,14 @@ public interface ApiService {
 
     @POST("api/v1/device/unregister")
     Observable<BaseResult<Boolean>> removeDevice(@Body RequestBody body);
+
+
+    @POST("/api/v1/construction/device/deviceProperties")
+    Observable<BaseResult<Boolean>> tourchPanelRenameAndIcon(@Body RequestBody body);
+
+    @GET("/api/v1/device/deviceProperties/{cuId}/{deviceId}")
+    Observable<BaseResult<List<TouchPanelDataBean>>> touchpanelALlDevice(@Path("cuId") int oemModel ,@Path("deviceId") String ss);
+
+
+
 }
