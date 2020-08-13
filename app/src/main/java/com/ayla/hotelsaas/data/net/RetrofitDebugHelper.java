@@ -124,9 +124,7 @@ public class RetrofitDebugHelper {
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(logging);
             //添加请求头
-            builder.addInterceptor(CommonParameterInterceptor);
             //登录失败 重新登录
-            builder.addInterceptor(ReloginInterceptor);
             builder.connectTimeout(15, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS);
@@ -136,139 +134,6 @@ public class RetrofitDebugHelper {
         return sOkHttpClient;
     }
 
-    /**
-     * Okhttp3 拦截器
-     * 添加公共请求头参数
-     */
-    private static Interceptor CommonParameterInterceptor = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request request = chain.request();
-
-            if (request.body() instanceof FormBody) {
-                FormBody oldFormBody = (FormBody) request.body();
-                Map<String, String> parameterMap = getRequestCommonParameter();
-                //登录了加上参数
-                if (null != MyApplication.getInstance().getUserEntity()) {
-                    parameterMap.put("token", MyApplication.getInstance().getUserEntity().getAuthToken());
-                }
-
-                //获取参数
-                for (int i = 0; i < oldFormBody.size(); i++) {
-                    //参数内容不为null  URLDecoder对中文进行解码
-                    if (!TextUtils.isEmpty(oldFormBody.encodedValue(i))) {
-//                        parameterMap.put(oldFormBody.encodedName(i), URLDecoder.decode(oldFormBody.encodedValue(i), "UTF-8"));
-                        parameterMap.put(oldFormBody.encodedName(i), Uri.decode(oldFormBody.encodedValue(i)));
-                    }
-                }
-                String signMD5 = MD5.getMD5Str(SignUtils.addsignParams(parameterMap) + RequestModel.APP_SECRET).toUpperCase();
-                parameterMap.put("signmethod", "MD5");
-                parameterMap.put("sign", signMD5);
-
-                //打印全部参数
-//                String sign2 = SignUtils.addsignParams(parameterMap);
-//                Log.d("OkHttp", sign2);
-                //打印全部url的方法
-                String url = request.url().toString().endsWith("?") ? request.url().toString() : request.url().toString() + "?";
-//                String urlString = url + URLEncoder.encode(sign2, "UTF-8");
-//                Log.d("OkHttp", "URL = " + urlString);
-
-//                Request.Builder newBuilder = request.newBuilder().url(urlString).post(new FormBody.Builder().build());
-
-                //只打印参数方法
-                Request.Builder newBuilder = request.newBuilder().url(url).post(new FormBody.Builder().build());
-                FormBody.Builder newFormBody = new FormBody.Builder();
-                for (Map.Entry<String, String> paramEntry : parameterMap.entrySet()) {
-                    newFormBody.addEncoded(paramEntry.getKey(), paramEntry.getValue());
-                }
-                newBuilder.post(newFormBody.build());
-                return chain.proceed(newBuilder.build());
-            }
-            return chain.proceed(request);
-        }
-    };
-
-    /**
-     * 重新登录拦截器
-     * 当code 为5003 或者为 5004 时重新登录
-     */
-    private static Interceptor ReloginInterceptor = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            //原始接口请求
-            Request originalRequest = chain.request();
-            Request request = originalRequest.newBuilder()
-//                    .addHeader("Content-type", "application/json; charset=utf-8")
-                    .build();
-            //原始接口结果
-            Response originalResponse = chain.proceed(request);
-            //未登录直接返回
-            if (!Constance.UserIsLogin) {
-                return originalResponse;
-            }
-            try {
-                //获得请求body
-                JSONObject json = getResponseBodyJson(originalResponse);
-
-                if (null != json
-                        && (json.optString("code").equals("5003")
-                        || json.optString("code").equals("5004"))) {
-                    sendLoginReceiver();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return originalResponse;
-        }
-
-        /**
-         * 登录失败跳转界面
-         * 跳转到登录界面
-         */
-        private void sendLoginReceiver() {
-            MyApplication.getInstance().setUserEntity(null);
-            //跳转到首页
-            Intent intent = new Intent(MyApplication.getContext(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            MyApplication.getContext().startActivity(intent);
-        }
-
-        private JSONObject getResponseBodyJson(Response response) throws IOException, JSONException {
-            if (null == response) {
-                return null;
-            }
-            //获得请求body  不能直接用response.body()
-            ResponseBody originalBody = response.peekBody(1024 * 1024);
-            long originalLength = originalBody.contentLength();
-            if (!HttpHeaders.hasBody(response)) {
-                return null;
-            } else if (bodyEncoded(response.headers())) {
-                return null;
-            } else {
-                BufferedSource source = originalBody.source();
-                source.request(Long.MAX_VALUE); // Buffer the entire body.
-                Buffer buffer = source.buffer();
-
-                Charset charset = UTF8;
-
-                MediaType contentType = originalBody.contentType();
-                if (contentType != null) {
-                    charset = contentType.charset(UTF8);
-                }
-
-                if (originalLength != 0) {
-                    String result = buffer.clone().readString(charset);
-                    return new JSONObject(result);
-                }
-                return null;
-            }
-        }
-
-        private boolean bodyEncoded(Headers headers) {
-            String contentEncoding = headers.get("Content-Encoding");
-            return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
-        }
-    };
 
     /**
      * 添加公共参数头

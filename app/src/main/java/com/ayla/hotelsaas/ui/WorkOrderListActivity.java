@@ -127,7 +127,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
                     public void onDone(CustomAlarmDialog dialog) {
                         dialog.dismissAllowingStateLoss();
                         SharePreferenceUtils.remove(WorkOrderListActivity.this, Constance.SP_Login_Token);
-                        MyApplication.getInstance().setUserEntity(null);
+                        SharePreferenceUtils.remove(WorkOrderListActivity.this, Constance.SP_Refresh_Token);
                         Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);

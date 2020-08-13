@@ -5,46 +5,27 @@ import android.util.Log;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
+import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.ssl.SSLSocketClient;
 import com.ayla.hotelsaas.ui.LoginActivity;
-import com.ayla.hotelsaas.utils.DateUtils;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.google.gson.JsonObject;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CountDownLatch;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okhttp3.internal.http.HttpHeaders;
 import okhttp3.logging.HttpLoggingInterceptor;
-import okio.Buffer;
-import okio.BufferedSource;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
@@ -65,8 +46,6 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
  * 3 拦截器方案 进行替换
  */
 public class RetrofitHelper {
-    private static final Charset UTF8 = Charset.forName("UTF-8");
-
     private static volatile RetrofitHelper instance;
 
     /**
@@ -114,27 +93,6 @@ public class RetrofitHelper {
     private OkHttpClient getOkHttpClient() {
         if (sOkHttpClient == null) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.sslSocketFactory(SSLSocketClient.getUnSafeSSLSocketFactory());
-            /*
-             * 在握手期间，如果URL的主机名和服务器的标识主机名不匹配，
-             * 则验证机制可以回调此接口实现程序来确定是否应该允许此连接，
-             * 如果回调内实现不恰当，默认接受所有域名，则有安全风险。
-             * 参数：
-             *  hostname-主机名
-             *  session - 到主机的连接上使用的 SSLSession
-             * 如果主机名是可接受，则返回true;
-             * */
-            builder.hostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    if ("youhostname".equals(hostname)) {
-                        return true;
-                    } else {
-                        HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
-                        return hv.verify(hostname, session);
-                    }
-                }
-            });
 
             //HttpLoggingInterceptor打印网络日志的方法 默认日志拦截器普通版:OkHttp：
             //自定义拦截器，小写日志
@@ -147,16 +105,10 @@ public class RetrofitHelper {
                     Log.d("okhttp", message);
                 }
             });
-
             //添加请求头
             builder.addInterceptor(CommonParameterInterceptor);
             //登录失败 重新登录
             builder.addInterceptor(ReloginInterceptor);
-            builder.connectTimeout(15, TimeUnit.SECONDS)
-                    .writeTimeout(30, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS);
-            builder.retryOnConnectionFailure(true);
-
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(httpLoggingInterceptor);
 
@@ -177,7 +129,7 @@ public class RetrofitHelper {
                 final String sava_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
                 if (sava_token != null) {
                     Request request = chain.request().newBuilder()
-                            .addHeader("Authorization", sava_token).build();
+                            .header("Authorization", sava_token).build();
                     return chain.proceed(request);
                 }
             }
@@ -194,23 +146,50 @@ public class RetrofitHelper {
         public Response intercept(Chain chain) throws IOException {
             //原始接口请求
             Request originalRequest = chain.request();
-            Request request = originalRequest.newBuilder()
-//                    .addHeader("Content-type", "application/json; charset=utf-8")
-                    .build();
             //原始接口结果
-            Response originalResponse = chain.proceed(request);
-            try {
-                //获得请求body
-                JSONObject json = getResponseBodyJson(originalResponse);
-                if (null != json && (json.optInt("code") == 401)) {
-                    sendRefreshToken(chain);
-                } else if (null != json && (json.optInt("code") == 122002)) {
-                    sendLoginReceiver();
+            Response originalResponse = chain.proceed(originalRequest);
+            MediaType mediaType = originalResponse.body().contentType();
+            String content = originalResponse.body().string();
+            if (originalResponse.isSuccessful()) {
+                try {
+                    JSONObject jsonObject = new JSONObject(content);
+                    int code = jsonObject.optInt("code");
+                    if (code == 401 || code == 122002) {//token过期
+                        final CountDownLatch countDownLatch = new CountDownLatch(1);
+                        String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
+                        final User[] newUser = {null};
+                        Disposable subscribe = RequestModel.getInstance().refreshToken(refresh_token)
+                                .doFinally(new Action() {
+                                    @Override
+                                    public void run() throws Exception {
+                                        countDownLatch.countDown();
+                                    }
+                                })
+                                .subscribe(new Consumer<BaseResult<User>>() {
+                                    @Override
+                                    public void accept(BaseResult<User> baseResult) throws Exception {
+                                        newUser[0] = baseResult.data;
+                                    }
+                                }, new Consumer<Throwable>() {
+                                    @Override
+                                    public void accept(Throwable throwable) throws Exception {
+                                        Log.d("token_refresh", "accept: " + throwable);
+                                    }
+                                });
+                        countDownLatch.await();
+                        if (newUser[0] != null) {//token刷新成功
+                            SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, newUser[0].getAuthToken());
+                            SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, newUser[0].getRefreshToken());
+                            return CommonParameterInterceptor.intercept(chain);
+                        } else {//token刷新失败
+                            sendLoginReceiver();
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e("token_refresh", "intercept: ", e);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
-            return originalResponse;
+            return originalResponse.newBuilder().body(ResponseBody.create(mediaType, content)).build();
         }
 
         /**
@@ -218,100 +197,10 @@ public class RetrofitHelper {
          * 重新登录
          */
         private void sendLoginReceiver() {
-            MyApplication.getInstance().setUserEntity(null);
             //跳转到首页
             Intent intent = new Intent(MyApplication.getContext(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             MyApplication.getContext().startActivity(intent);
         }
-
-        private JSONObject getResponseBodyJson(Response response) throws IOException, JSONException {
-            if (null == response) {
-                return null;
-            }
-            //获得请求body  不能直接用response.body()
-            //body() 和 peekBody() 方法返回的都是一个 ResponseBody 对象，不同的是 body() 返回的当前 response 的 body，查看源码
-            ResponseBody originalBody = response.peekBody(1024 * 1024);
-            long originalLength = originalBody.contentLength();
-            if (!HttpHeaders.hasBody(response)) {
-                return null;
-            } else if (bodyEncoded(response.headers())) {
-                return null;
-            } else {
-                BufferedSource source = originalBody.source();
-                source.request(Long.MAX_VALUE); // Buffer the entire body.
-                Buffer buffer = source.buffer();
-
-                Charset charset = UTF8;
-
-                MediaType contentType = originalBody.contentType();
-                if (contentType != null) {
-                    charset = contentType.charset(UTF8);
-                }
-
-                if (originalLength != 0) {
-                    String result = buffer.clone().readString(charset);
-                    return new JSONObject(result);
-                }
-                return null;
-            }
-        }
-
-        private boolean bodyEncoded(Headers headers) {
-            String contentEncoding = headers.get("Content-Encoding");
-            return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
-        }
     };
-
-    private void sendRefreshToken(Interceptor.Chain chain) {
-        String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
-        JsonObject body = new JsonObject();
-        body.addProperty("refreshToken", refresh_token);
-        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        getApiService().refreshToken(new_body)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(@NonNull Disposable disposable) throws Exception {
-                    }
-                })
-                .subscribe(new RxjavaObserver<User>() {
-
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-                        mCompositeDisposable.add(d);
-                    }
-
-                    @Override
-                    public void _onNext(User data) {
-                        MyApplication.getInstance().setUserEntity(data);
-                        SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, data.getAuthToken());
-                        SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, data.getRefreshToken());
-                    }
-
-                    @Override
-                    public void _onError(String code, String msg) {
-                    }
-                });
-    }
-
-    /**
-     * 添加公共参数头
-     * appkey   OpenApi.APP_key
-     * format   json
-     * apptype   drama
-     * timestamp   yyyy-MM-dd HH:mm:ss
-     * v        1.0
-     */
-    private static Map<String, String> getRequestCommonParameter() {
-        Map<String, String> parameterMap = new HashMap<>();
-        parameterMap.put("appkey", RequestModel.APP_key);
-        parameterMap.put("format", "json");
-        parameterMap.put("apptype", "drama");
-        parameterMap.put("timestamp", DateUtils.DateToString(new Date(), DateUtils.DateStyle.YYYY_MM_DD_HH_MM_SS));
-        parameterMap.put("v", "1.0");
-        return parameterMap;
-    }
 }
