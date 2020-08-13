@@ -50,7 +50,6 @@
                 android:hint="@string/phone_or_email"
                 android:inputType="textVisiblePassword"
                 android:singleLine="true"
-                android:text="chunlei.fan@aylaasia.com"
                 android:textColor="@color/login_text_percent"
                 android:textColorHint="@color/login_text_percent"
                 android:textSize="@dimen/sp_14" />
@@ -85,7 +84,6 @@
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:text="123456"
                 android:textColor="@color/login_text_percent"
                 android:textColorHint="@color/login_text_percent"
                 android:textSize="@dimen/sp_14" />
@@ -141,6 +139,6 @@
         android:textColor="@color/loginLogoColor"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </RelativeLayout>

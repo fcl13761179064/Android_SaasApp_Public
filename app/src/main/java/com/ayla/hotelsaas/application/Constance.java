@@ -11,18 +11,12 @@ public class Constance {
      */
     public static boolean isNetworkDebug = false;
 
-    /**
-     * 测试环境地址
-     */
-    public static final String BASE_URL_BATA = "http://divider_bottom_bg_white.gewala.net/openapi2/router/";
-    /**
-     * 正式环境地址
-     */
-    public static String BASE_URL = "https://abp.ayla.com.cn/";
+    public static String sProdUrl = "https://abp-prod.ayla.com.cn/";//正式环境
+    public static String sQaUrl = "https://abp.ayla.com.cn/";//测试换行
 
-
-    //用户是否登录
-    public static boolean UserIsLogin = false;
+    public static String getBaseUrl() {
+        return isNetworkDebug ? sQaUrl : sProdUrl;
+    }
 
     //登录保存key
     public static String SP_Login_Token = "login_token";

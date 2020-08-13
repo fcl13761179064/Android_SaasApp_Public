@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.mvp.model;
 
 
-import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -13,7 +12,6 @@ import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
-import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -25,9 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
@@ -64,10 +60,7 @@ public class RequestModel {
     }
 
     private ApiService getApiService() {
-        if (Constance.isNetworkDebug) {
-            return RetrofitDebugHelper.getInstance().getApiService();
-        }
-        return RetrofitHelper.getInstance().getApiService();
+        return RetrofitHelper.getApiService();
     }
 
     public Observable<BaseResult<User>> login(String account, String password) {
@@ -76,6 +69,13 @@ public class RequestModel {
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().login(new_body);
+    }
+
+    public Observable<BaseResult<User>> refreshToken(String refreshToken) {
+        JsonObject body = new JsonObject();
+        body.addProperty("refreshToken", refreshToken);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().refreshToken(new_body);
     }
 
     /**
@@ -163,16 +163,6 @@ public class RequestModel {
         body.addProperty("nickName", nickName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().bindDeviceWithDSN(body111);
-    }
-
-    public Observable<BaseResult<Boolean>> unbindDeviceWithDSN(String dsn, int scopeId) {
-        JsonObject body = new JsonObject();
-        body.addProperty("device_id", dsn);
-        body.addProperty("scope_id", scopeId);
-        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().unbindDeviceWithDSN(body111)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
     }
 
     /**

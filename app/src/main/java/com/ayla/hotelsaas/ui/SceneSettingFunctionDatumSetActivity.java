@@ -78,11 +78,10 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneS
                 for (CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> datum : mAdapter.getData()) {
                     if (datum.isChecked()) {
                         data.putExtra("result", datum.getData());
+                        setResult(RESULT_OK, data);
                         break;
                     }
                 }
-
-                setResult(RESULT_OK, data);
                 finish();
             }
         });

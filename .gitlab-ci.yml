@@ -11,37 +11,26 @@ cache:
     - .gradle/
 
 stages:
-  - check
-  - build
+  - lint
+  - assemble
 
-lintDebug:
-  stage: check
+job_lint:
+  stage: lint
 #  only:
 #    - /^issue[-|/].+$/
 #    - /^feature[-|/].+$/
 #    - /^bugfix[-|/].+$/
   script:
-    - gradle -Pci --console=plain :app:lintDebug -PbuildDir=lint
+    - echo "开始Lint"
+    - gradle -Pci --console=plain :app:lint -PbuildDir=lint
+    - echo "Lint结束"
   tags:
     - docker
     - android
     - hk
-# 影响pact 通过，暂时注释。
-#testDebug:
-#  stage: check
-#  only:
-#    - /^issue[-|/].+$/
-#    - /^feature[-|/].+$/
-#    - /^bugfix[-|/].+$/
-#  script:
-#    - gradle -Pci --console=plain :app:testDebug
-#  tags:
-#    - docker
-#    - android
-#    - hk
 
-assembleRelease:
-  stage: build
+job_assemble:
+  stage: assemble
   only:
     - master
     - prod
@@ -49,6 +38,9 @@ assembleRelease:
     - echo "开始打包"
     - gradle assembleRelease
     - echo "打包结束"
+    - echo "开始上传APP到蒲公英"
+    - curl -F 'file=@app/build/outputs/apk/release/app-release.apk' -F '_api_key=5777f19839fbacffeecd974818b88517' https://www.pgyer.com/apiv2/app/upload
+    - echo "上传APP到蒲公英结束"
   artifacts:
     paths:
       - app/build/outputs/apk/

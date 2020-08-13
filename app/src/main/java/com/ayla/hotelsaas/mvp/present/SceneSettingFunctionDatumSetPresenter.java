@@ -14,23 +14,27 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
 
     public void loadFunction(DeviceListBean.DevicesBean deviceBean, DeviceTemplateBean.AttributesBean attributesBean) {
         List<CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean>> devices = new ArrayList<>();
-        for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
-            SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
 
-            datumBean.setFunctionName(attributesBean.getDisplayName());
-            datumBean.setValueName(valueBean.getDisplayName());
-            datumBean.setLeftValue(attributesBean.getCode());
-            datumBean.setOperator("==");
-            datumBean.setRightValue(valueBean.getValue());
-            datumBean.setRightValueType(valueBean.getDataType());
-            datumBean.setDeviceType(deviceBean.getCuId());
-            datumBean.setDeviceId(deviceBean.getDeviceId());
-            datumBean.setIconUrl(deviceBean.getIconUrl());
-            CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> bean = new CheckableSupport<>(datumBean);
-            devices.add(bean);
+        List<DeviceTemplateBean.AttributesBean.ValueBean> attributesBeanValue = attributesBean.getValue();
+        if (attributesBeanValue != null) {
+            for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBeanValue) {
+                SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
+
+                datumBean.setFunctionName(attributesBean.getDisplayName());
+                datumBean.setValueName(valueBean.getDisplayName());
+                datumBean.setLeftValue(attributesBean.getCode());
+                datumBean.setOperator("==");
+                datumBean.setRightValue(valueBean.getValue());
+                datumBean.setRightValueType(valueBean.getDataType());
+                datumBean.setDeviceType(deviceBean.getCuId());
+                datumBean.setDeviceId(deviceBean.getDeviceId());
+                datumBean.setIconUrl(deviceBean.getIconUrl());
+                CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> bean = new CheckableSupport<>(datumBean);
+                devices.add(bean);
+            }
         }
-        CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> bean = devices.get(0);
-        if (bean != null) {
+        if (devices.size() != 0) {
+            CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> bean = devices.get(0);
             bean.setChecked(true);
         }
         mView.showFunctions(devices);
