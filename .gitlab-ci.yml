@@ -21,7 +21,7 @@ lintDebug:
 #    - /^feature[-|/].+$/
 #    - /^bugfix[-|/].+$/
   script:
-    - gradle -Pci --console=plain :app:lintDebug -PbuildDir=lint
+    - gradle -Pci --console=plain :app:lint -PbuildDir=lint
   tags:
     - docker
     - android
