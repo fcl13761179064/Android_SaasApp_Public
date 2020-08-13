@@ -22,10 +22,6 @@ public class Constance {
      */
     public static String BASE_URL = BuildConfig.ROOT_DOMAIN;
 
-
-    //用户是否登录
-    public static boolean UserIsLogin = false;
-
     //登录保存key
     public static String SP_Login_Token = "login_token";
 

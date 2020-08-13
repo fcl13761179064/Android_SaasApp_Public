@@ -1,6 +1,5 @@
 package com.ayla.hotelsaas.application;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
@@ -12,7 +11,6 @@ import com.aliyun.iot.aep.sdk.framework.config.GlobalConfig;
 import com.aliyun.iot.aep.sdk.log.ALog;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.bean.User;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -28,7 +26,6 @@ import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.unit.Subunits;
 
 import static com.aliyun.iot.aep.sdk.IoTSmart.REGION_ALL;
-import static com.aliyun.iot.aep.sdk.IoTSmart.REGION_CHINA_ONLY;
 
 
 /**
@@ -36,8 +33,6 @@ import static com.aliyun.iot.aep.sdk.IoTSmart.REGION_CHINA_ONLY;
  */
 public class MyApplication extends AApplication {
 
-    //用户登录成功数据
-    private User userEntity;
     private List<DeviceListBean.DevicesBean> mDevicesBean;
     private static MyApplication mInstance = null;
 
@@ -129,34 +124,12 @@ public class MyApplication extends AApplication {
 
     }
 
-
-    public User getUserEntity() {
-        return userEntity;
-    }
-
-    public void setUserEntity(User userEntity) {
-        if (null != userEntity) {
-            Constance.UserIsLogin = true;
-        } else {
-            Constance.UserIsLogin = false;
-        }
-        this.userEntity = userEntity;
-    }
-
     public List<DeviceListBean.DevicesBean> getDevicesBean() {
         return mDevicesBean;
     }
 
     public void setDevicesBean(List<DeviceListBean.DevicesBean> devicesBean) {
         mDevicesBean = devicesBean;
-    }
-
-    public static MyApplication getmInstance() {
-        return mInstance;
-    }
-
-    public static void setmInstance(MyApplication mInstance) {
-        MyApplication.mInstance = mInstance;
     }
 
     private void initAutoSize() {
