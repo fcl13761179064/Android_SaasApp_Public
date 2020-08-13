@@ -71,7 +71,6 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                     @Override
                     public void _onNext(User data) {
                         mView.hideProgress();
-                        MyApplication.getInstance().setUserEntity(data);
                         mView.loginSuccess(data);
 
                     }
