@@ -32,14 +32,13 @@ public class PactTest {
     static final Map<String, String> HEADERS;
 
     static {
-
         HEADERS = new HashMap<>();
         HEADERS.put("Content-Type", "application/json");
     }
 
     @Before
     public void setUp() {
-        Constance.BASE_URL = "http://localhost:9292/";
+        Constance.sProdUrl = Constance.sQaUrl = "http://localhost:9292/";
     }
 
     @Rule
