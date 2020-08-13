@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.mvp.model;
 
 
-import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -12,7 +11,6 @@ import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
-import com.ayla.hotelsaas.data.net.RetrofitDebugHelper;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -54,9 +52,6 @@ public class RequestModel {
     }
 
     private ApiService getApiService() {
-        if (Constance.isNetworkDebug) {
-            return RetrofitDebugHelper.getInstance().getApiService();
-        }
         return RetrofitHelper.getInstance().getApiService();
     }
 

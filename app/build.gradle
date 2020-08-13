@@ -48,17 +48,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    flavorDimensions "domain"
-    productFlavors {
-        qaDomain {
-            buildConfigField("String", "ROOT_DOMAIN", "\"https://abp.ayla.com.cn/\"")
-            dimension "domain"
-        }
-        massDomain {
-            buildConfigField("String", "ROOT_DOMAIN", "\"https://abp-prod.ayla.com.cn/\"")
-            dimension "domain"
-        }
-    }
 
     buildTypes {
         release {

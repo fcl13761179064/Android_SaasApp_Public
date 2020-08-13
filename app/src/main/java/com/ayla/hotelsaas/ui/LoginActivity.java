@@ -20,9 +20,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.aliyun.iot.aep.sdk.login.ILoginCallback;
 import com.aliyun.iot.aep.sdk.login.LoginBusiness;
-import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -33,7 +33,7 @@ import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
-import com.ayla.hotelsaas.utils.ToastUtils;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -62,13 +62,10 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     protected void initView() {
-        if (BuildConfig.DEBUG) {
-            tvSwitch.setVisibility(View.GONE);
-            if (Constance.isNetworkDebug) {
-                tvSwitch.setText("测");
-            } else {
-                tvSwitch.setText("正");
-            }
+        if (Constance.isNetworkDebug) {
+            tvSwitch.setText("测");
+        } else {
+            tvSwitch.setText("正");
         }
     }
 
@@ -77,7 +74,11 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.submitBtn:
-                mPresenter.login();
+                if ("aylatest".equals(edite_count.getText().toString())) {
+                    tvSwitch.setVisibility(tvSwitch.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                } else {
+                    mPresenter.login();
+                }
                 break;
             case R.id.tv_switch:
                 showProgress("切换环境中");
@@ -87,10 +88,10 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                     public void run() {
                         if (Constance.isNetworkDebug) {
                             tvSwitch.setText("测");
-                            ToastUtils.showShortToast("切换到测试网络");
+                            CustomToast.makeText(getBaseContext(), "切换到测试网络", R.drawable.ic_toast_success).show();
                         } else {
                             tvSwitch.setText("正");
-                            ToastUtils.showShortToast("切换到正式网络环境");
+                            CustomToast.makeText(getBaseContext(), "切换到正式网络环境", R.drawable.ic_toast_success).show();
                         }
                         hideProgress();
                     }
