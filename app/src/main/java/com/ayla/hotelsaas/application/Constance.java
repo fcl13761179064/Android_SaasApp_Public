@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.application;
 
+import com.ayla.hotelsaas.BuildConfig;
+
 /**
  * @描述 常量类
  * @作者 fanchunlei
@@ -18,7 +20,7 @@ public class Constance {
     /**
      * 正式环境地址
      */
-    public static String BASE_URL = "https://abp-prod.ayla.com.cn/";
+    public static String BASE_URL = BuildConfig.ROOT_DOMAIN;
 
 
     //用户是否登录

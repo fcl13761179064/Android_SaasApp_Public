@@ -47,6 +47,19 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    flavorDimensions "domain"
+    productFlavors {
+        qaDomain {
+            buildConfigField("String", "ROOT_DOMAIN", "\"https://abp.ayla.com.cn/\"")
+            dimension "domain"
+        }
+        massDomain {
+            buildConfigField("String", "ROOT_DOMAIN", "\"https://abp-prod.ayla.com.cn/\"")
+            dimension "domain"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -103,8 +116,8 @@ dependencies {
     implementation "com.airbnb.android:lottie:3.4.0"
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
 
-    api ('com.aliyun.alink.linksdk:iot-linkkit:1.7.0')
-    implementation ('com.aliyun.alink.linksdk:ilop-devicecenter:1.7.7.1'){
+    api('com.aliyun.alink.linksdk:iot-linkkit:1.7.0')
+    implementation('com.aliyun.alink.linksdk:ilop-devicecenter:1.7.7.1') {
         transitive = true
     }
     api 'com.aliyun.alink.linksdk:breeze-biz:1.2.0.1'
