@@ -56,8 +56,10 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
         appBar.setCenterText("场景按键设置");
         super.refreshUI();
         mPosition = getIntent().getStringExtra("position");
-        mTouch_position = getIntent().getStringExtra("touch_position");
         mId = getIntent().getIntExtra("id", 0);
+        final int[] drawableIcon = TouchPanelSelectActivity.drawableIcon;
+        final int drawable_icon = drawableIcon[Integer.parseInt(mPosition)];
+        iv_scene_icon.setImageResource(drawable_icon);
         mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
         tv_touchpanel_rename.setText("场景" + mPosition);
     }
@@ -85,7 +87,7 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyApplication.getContext(), SceneIconSelectActivity.class);
+                Intent intent = new Intent(MyApplication.getContext(), TouchPanelSceneIconSelectActivity.class);
                 try {
                     mIndex = Integer.parseInt(mPosition);
                 } catch (Exception ignore) {
@@ -144,8 +146,8 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_ICON && resultCode == RESULT_OK) {//选择ICON返回结果
             int index = data.getIntExtra("index", 1);
-            /*mRuleEngineBean.setIconPath(getIconPathByIndex(index));
-            mIconImageView.setImageResource(getIconResByIndex(index));*/
+            mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(), mPosition, "icon", index + "");
+            //iv_scene_icon.setImageResource();
         }
     }
 }
