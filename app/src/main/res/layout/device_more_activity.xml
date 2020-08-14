@@ -45,12 +45,11 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="9dp"
                 android:gravity="center|right"
+                android:ellipsize="middle"
                 android:text="调光开关"
-                android:maxLength="20"
-                android:ellipsize="end"
-                android:singleLine="true"
                 android:textColor="#999999"
-                android:textSize="17sp" />
+                android:textSize="17sp"
+                android:singleLine="true" />
 
             <ImageView
                 android:layout_width="wrap_content"
