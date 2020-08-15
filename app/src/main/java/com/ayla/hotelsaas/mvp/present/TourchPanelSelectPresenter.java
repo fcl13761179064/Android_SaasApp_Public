@@ -22,8 +22,8 @@ import io.reactivex.schedulers.Schedulers;
 public class TourchPanelSelectPresenter extends BasePresenter<TourchPanelSelectView> {
 
 
-    public void getTouchPanelData(int id, String  deviceId) {
-        RequestModel.getInstance().getALlTouchPanelDeviceInfo(id, deviceId)
+    public void getTouchPanelData(int cuId, String  deviceId) {
+        RequestModel.getInstance().getALlTouchPanelDeviceInfo(cuId, deviceId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

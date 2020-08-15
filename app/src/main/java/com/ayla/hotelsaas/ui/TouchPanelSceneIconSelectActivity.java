@@ -26,7 +26,7 @@ public class TouchPanelSceneIconSelectActivity extends BaseMvpActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_scene_icon_select;
+        return R.layout.activity_touchpanel_scene_icon_select;
     }
 
     @Override
