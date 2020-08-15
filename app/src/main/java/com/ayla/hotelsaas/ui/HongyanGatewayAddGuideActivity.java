@@ -46,6 +46,7 @@ import butterknife.OnClick;
  */
 public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements OnDeviceAddListener {
 
+    private static final int REQUEST_CODE_ADD_DEVICE = 1001;
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
     @BindView(R.id.appBar)
@@ -55,13 +56,11 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
     private String TAG = MainActivity.class.getSimpleName();
     private List<FoundDeviceListItem> mFoundDeviceListItems;
 
-
     @Override
     public void refreshUI() {
         deviceAddHandler = new DeviceAddHandler((OnDeviceAddListener) HongyanGatewayAddGuideActivity.this);
         appBar.setCenterText("添加设备");
         super.refreshUI();
-
     }
 
     @Override
@@ -83,9 +82,9 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        mAdapter.setEmptyView(R.layout.empty_hongyan_device);
 
     }
-
 
     @Override
     protected void initListener() {
@@ -131,7 +130,7 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
         intent.putExtra("HongyanproductKey", productKey);
         intent.putExtra("HongyandeviceName", deviceName);
         intent.putExtras(getIntent());
-        startActivityForResult(intent, 0);
+        startActivityForResult(intent,REQUEST_CODE_ADD_DEVICE);
     }
 
     @Override
@@ -146,6 +145,21 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
 
     @Override
     public void onFilterComplete(List<FoundDeviceListItem> foundDeviceListItems) {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD_DEVICE && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
+        }
 
     }
 }

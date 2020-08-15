@@ -63,6 +63,8 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     protected void initView() {
+        edite_count.setText("18000000020");
+        edit_password.setText("123456");
         if (Constance.isNetworkDebug) {
             tvSwitch.setText("测");
         } else {
@@ -206,8 +208,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         SharePreferenceUtils.saveString(LoginActivity.this, Constance.SP_Refresh_Token, data.getRefreshToken());
         Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
         startActivity(mainActivity);
-        finish();
-
+        Log.d("LoginActivity_authcode",data.getAuthCode());
         LoginBusiness.authCodeLogin(data.getAuthCode(), new ILoginCallback() {
             @Override
             public void onLoginSuccess() {
@@ -220,6 +221,8 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
             }
         });
+
+        finish();
 
     }
 
