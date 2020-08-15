@@ -1,37 +1,41 @@
 package com.ayla.hotelsaas.bean;
 
+import java.io.Serializable;
+
 /**
  * @描述
  * @作者 fanchunlei
  * @时间 2020/8/12
  */
-public class TouchPanelBean {
+public class TouchPanelBean implements Serializable {
 
     private int iconRes;
-    private String title;
-    private int num;
+    private String propertyValue;
     private int id;
+    private int number;
+    private int btn_position;
 
-    public int getId() {
-        return id;
+    public int getBtn_position() {
+        return btn_position;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setBtn_position(int btn_position) {
+        this.btn_position = btn_position;
     }
 
-    public int getNum() {
-        return num;
+    public int getNumber() {
+        return number;
     }
 
-    public void setNum(int num) {
-        this.num = num;
+    public void setNumber(int number) {
+        this.number = number;
     }
 
-    public TouchPanelBean(int iconRes, String title,int num) {
+    public TouchPanelBean(int iconRes, String propertyValue, int id, int btn_position) {
         this.iconRes = iconRes;
-        this.title = title;
-        this.num = num;
+        this.propertyValue = propertyValue;
+        this.id = id;
+        this.btn_position = btn_position;
     }
 
     public int getIconRes() {
@@ -42,12 +46,19 @@ public class TouchPanelBean {
         this.iconRes = iconRes;
     }
 
-    public String getTitle() {
-        return title;
+    public String getPropertyValue() {
+        return propertyValue;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPropertyValue(String propertyValue) {
+        this.propertyValue = propertyValue;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

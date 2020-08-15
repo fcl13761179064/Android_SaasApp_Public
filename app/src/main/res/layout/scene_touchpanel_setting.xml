@@ -89,9 +89,10 @@
                 android:id="@+id/iv_scene_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:background="@color/loginLogoColor"
                 android:layout_marginRight="@dimen/dp_16"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_scene_1" />
+                android:src="@drawable/one" />
 
             <TextView
                 android:layout_width="wrap_content"

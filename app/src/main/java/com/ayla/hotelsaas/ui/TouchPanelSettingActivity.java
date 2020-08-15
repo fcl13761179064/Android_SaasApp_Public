@@ -21,11 +21,13 @@ import com.ayla.hotelsaas.mvp.present.TourchPanelPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 import com.ayla.hotelsaas.mvp.view.TourchPanelView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
+import com.ayla.hotelsaas.utils.ToastUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -43,21 +45,25 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
     @BindView(R.id.iv_scene_icon)
     ImageView iv_scene_icon;
 
-    private String mPosition;
+    private int mPosition;
+    private String modify_txt;
 
     private final int REQUEST_CODE_SELECT_ICON = 0X12;
     private DeviceListBean.DevicesBean mDevicesBean;
-    private String mTouch_position;
-    private String mString;
     private int mId;
+    private List<TouchPanelBean> mTouchpanel_data;
+    private String mBtn_position;
+    private TouchPanelBean mTouchPanelBean;
 
     @Override
     public void refreshUI() {
         appBar.setCenterText("场景按键设置");
         super.refreshUI();
-        mPosition = getIntent().getStringExtra("position");
-        mTouch_position = getIntent().getStringExtra("touch_position");
-        mId = getIntent().getIntExtra("id", 0);
+        mBtn_position = getIntent().getStringExtra("btn_position");
+        mPosition = getIntent().getIntExtra("position", 0);
+        mTouchpanel_data = (ArrayList) getIntent().getSerializableExtra("touchpanel_data");
+        mId = mTouchpanel_data.get(mPosition).getId();
+        mTouchPanelBean = mTouchpanel_data.get(mPosition);
         mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
         tv_touchpanel_rename.setText("场景" + mPosition);
     }
@@ -68,13 +74,14 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
         return new TourchPanelPresenter();
     }
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.scene_touchpanel_setting;
-    }
+        @Override
+        protected int getLayoutId() {
+            return R.layout.scene_touchpanel_setting;
+        }
 
-    @Override
-    protected void initView() {
+        @Override
+        protected void initView() {
+            iv_scene_icon.setImageResource(mTouchPanelBean.getIconRes());
     }
 
     @Override
@@ -85,13 +92,14 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyApplication.getContext(), SceneIconSelectActivity.class);
+                ToastUtils.showShortToast("该功能暂时不可用");
+                /*Intent intent = new Intent(MyApplication.getContext(), TouchPanelSceneIconSelectActivity.class);
                 try {
                     mIndex = Integer.parseInt(mPosition);
                 } catch (Exception ignore) {
                 }
                 intent.putExtra("index", mIndex);
-                startActivityForResult(intent, REQUEST_CODE_SELECT_ICON);
+                startActivityForResult(intent, REQUEST_CODE_SELECT_ICON);*/
 
             }
         });
@@ -109,10 +117,10 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
                                 if (TextUtils.isEmpty(txt)) {
                                     CustomToast.makeText(getBaseContext(), "修改场景名称不能为空", R.drawable.ic_toast_warming).show();
                                 } else {
-                                    mString = txt;
+                                    modify_txt = txt;
                                     tv_touchpanel_rename.setHint(txt);
                                     if (mDevicesBean != null) {
-                                        mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(), mPosition, "Words", txt);
+                                        mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(), mBtn_position, "Words", txt);
                                     }
                                 }
                                 dialog.dismissAllowingStateLoss();
@@ -143,9 +151,10 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_ICON && resultCode == RESULT_OK) {//选择ICON返回结果
-            int index = data.getIntExtra("index", 1);
-            /*mRuleEngineBean.setIconPath(getIconPathByIndex(index));
-            mIconImageView.setImageResource(getIconResByIndex(index));*/
+            ToastUtils.showShortToast("该功能暂时不可用");
+          /*  int index = data.getIntExtra("index", 1);
+            mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(), index+"", "icon", index + "");*/
+            //iv_scene_icon.setImageResource();
         }
     }
 }
