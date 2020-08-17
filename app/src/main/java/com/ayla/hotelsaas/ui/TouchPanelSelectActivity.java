@@ -1,13 +1,10 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-
 import androidx.annotation.Nullable;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.TouchPanelSelectAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -19,7 +16,6 @@ import com.ayla.hotelsaas.mvp.present.TourchPanelSelectPresenter;
 import com.ayla.hotelsaas.mvp.view.TourchPanelSelectView;
 import com.ayla.hotelsaas.utils.ToastUtils;
 import com.ayla.hotelsaas.widget.AppBar;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
