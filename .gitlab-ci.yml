@@ -39,9 +39,6 @@ job_assemble:
     - echo "开始打包"
     - gradle assembleRelease
     - echo "打包结束"
-    - echo "开始上传APP到蒲公英"
-    - curl -F 'file=@app/build/outputs/apk/release/app-release.apk' -F '_api_key=5777f19839fbacffeecd974818b88517' https://www.pgyer.com/apiv2/app/upload
-    - echo "上传APP到蒲公英结束"
   artifacts:
     paths:
       - app/build/outputs/apk/
