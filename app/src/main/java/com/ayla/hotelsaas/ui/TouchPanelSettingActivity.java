@@ -65,7 +65,7 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
         mId = mTouchpanel_data.get(mPosition).getId();
         mTouchPanelBean = mTouchpanel_data.get(mPosition);
         mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
-        tv_touchpanel_rename.setText("场景" + mPosition);
+        tv_touchpanel_rename.setText("场景" + mBtn_position);
     }
 
 
