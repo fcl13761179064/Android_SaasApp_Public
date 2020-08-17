@@ -192,11 +192,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         mConditionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mRuleEngineBean.getCondition() != null && mRuleEngineBean.getCondition().getItems() != null) {
+                if (mRuleEngineBean.getCondition() != null
+                        && mRuleEngineBean.getCondition().getItems() != null
+                        && mRuleEngineBean.getCondition().getItems().size() > position) {
                     mRuleEngineBean.getCondition().getItems().remove(position);
                     mRuleEngineBean.getCondition().setExpression(calculateConditionExpression(mRuleEngineBean.getCondition().getItems()));
                 }
-                mConditionAdapter.remove(position);
+                adapter.remove(position);
                 mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_enable);
             }
         });
@@ -205,7 +207,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 mRuleEngineBean.getAction().getItems().remove(position);
                 mRuleEngineBean.getAction().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
-                mActionAdapter.remove(position);
+                adapter.remove(position);
             }
         });
         appBar.rightTextView.setOnClickListener(new View.OnClickListener() {

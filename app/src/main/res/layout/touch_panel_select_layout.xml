@@ -16,7 +16,7 @@
     <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/dp_14"
         android:layout_marginLeft="16dp"

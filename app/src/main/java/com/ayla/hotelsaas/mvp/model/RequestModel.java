@@ -471,12 +471,8 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<List<TouchPanelDataBean>>> getALlTouchPanelDeviceInfo(int id, String deviceId) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("id", id);
-        jsonObject.addProperty("deviceId", deviceId);
-        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().touchpanelALlDevice(id, deviceId);
+    public Observable<BaseResult<List<TouchPanelDataBean>>> getALlTouchPanelDeviceInfo(int cuId, String deviceId) {
+        return getApiService().touchpanelALlDevice(cuId, deviceId);
     }
 
     /**

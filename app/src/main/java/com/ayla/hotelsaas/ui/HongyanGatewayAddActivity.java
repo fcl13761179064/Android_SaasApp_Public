@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -46,13 +47,14 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     @BindView(R.id.bt_bind)
     public Button mFinishButton;
 
-    private String TAG = MainActivity.class.getSimpleName();
+    private String TAG = HongyanGatewayAddActivity.class.getSimpleName();
 
     private int bindTag = 0;//0:绑定中 1:绑定成功 -1:绑定失败
     private String mIotId = "100";
     private boolean mIs_getway;
     private long mCuId, mScopeId;
     private String mProductKey, mDeviceName, mHongyanproductKey, mHongyandeviceName;
+    private String mLotId;
 
     @Override
     protected GatewayAddGuidePresenter initPresenter() {
@@ -71,6 +73,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
         mHongyanproductKey = getIntent().getStringExtra("HongyanproductKey");
         mHongyandeviceName = getIntent().getStringExtra("HongyandeviceName");
         mCuId = getIntent().getLongExtra("cuId", 1l);
+        mLotId = getIntent().getStringExtra("lotId");
         mProductKey = getIntent().getStringExtra("productKey");
         mDeviceName = getIntent().getStringExtra("deviceName");
         mScopeId = getIntent().getLongExtra("scopeId", 0l);
@@ -89,7 +92,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     }
 
 
-    public void getBindToken(final String productKey, final String deviceName) {
+    public void getBindToken(String productKey, String deviceName) {
         //获取绑定设备的token
         LocalDeviceMgr.getInstance().getDeviceToken(productKey, deviceName, 60 * 1000, new IOnDeviceTokenGetListener() {
             @Override
@@ -117,7 +120,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
         maps.put("token", token);
         IoTRequestBuilder builder = new IoTRequestBuilder()
                 .setPath("/awss/token/user/bind")
-                .setApiVersion("1.0.3")
+                .setApiVersion("1.0.8")
                 .setAuthType("iotAuth")
                 .setParams(maps);
 
@@ -133,11 +136,16 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
 
             @Override
             public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
-                mIotId = (String) ioTResponse.getData();
-                startBind(mIotId);
-                Log.d(TAG, "onResponse_HONGYAN_one: " + "mIotId=: " + mIotId);
-
-
+                final int code = ioTResponse.getCode();
+                if (code == 200) {
+                    JSONObject data = (JSONObject) ioTResponse.getData();
+                    try {
+                        mIotId = (String) data.get("iotId");
+                        startBind(mIotId);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }
@@ -187,7 +195,6 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
 
     @Override
     public void bindSuccess() {
-        setResult(RESULT_OK);
         bindTag = 1;
         refreshBindShow();
         Log.d(TAG, "onResponse_HONGYAN_two: " + "成功");
@@ -204,6 +211,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     @OnClick(R.id.bt_bind)
     public void handleButton() {
         if (bindTag == 1) {
+            setResult(RESULT_OK);
             finish();
         } else if (bindTag == -1) {
             bindTag = 0;

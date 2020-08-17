@@ -4,20 +4,19 @@
     android:layout_height="100dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:background="@drawable/bg_device_item"
-    android:padding="16dp">
+    android:background="@drawable/bg_device_item">
 
     <ImageView
         android:id="@+id/left_iv"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/ic_scene_condition_type_onekey"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_scene_condition_type_onekey" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="16dp"
         android:layout_toStartOf="@id/tv_delete"
         android:layout_toEndOf="@id/left_iv"
         android:gravity="center_vertical"
@@ -27,6 +26,7 @@
             android:id="@+id/tv_function_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:maxLines="1"
             android:text="功能：一键执行"
             android:textColor="#ff333333"
@@ -38,7 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:ellipsize="end"
             android:gravity="center"
+            android:maxLines="1"
             android:orientation="horizontal"
             android:text="一键触发动作"
             android:textColor="#ff91909a"
@@ -51,6 +53,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:gravity="center"
+        android:padding="16dp"
         android:text="删除"
         android:textColor="#ff91909a"
         android:textSize="12sp" />

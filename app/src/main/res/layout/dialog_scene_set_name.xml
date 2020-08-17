@@ -34,6 +34,7 @@
             android:gravity="center|left"
             android:hint="请输入名称"
             android:maxLines="1"
+            android:inputType="text"
             android:textColor="#ff333333"
             android:textSize="14sp" />
 

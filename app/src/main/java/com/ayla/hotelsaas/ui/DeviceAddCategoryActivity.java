@@ -29,6 +29,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddCategoryPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
+import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.JsonObject;
@@ -146,6 +147,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
      * @param subBean
      */
     private void handleAddJump(DeviceCategoryBean.SubBean subBean) {
+        if (FastClickUtils.isDoubleClick()) {
+            return;
+        }
         int gatewayCount = 0;
         DeviceListBean.DevicesBean gateway = null;
         List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
@@ -188,23 +192,38 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             }
         } else if (1 == subBean.getNetworkType()) {
-            //跳转到阿里云的鸿雁网关设备
-            Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
-            mainActivity.putExtra("cuId", subBean.getCuId());
-            mainActivity.putExtras(getIntent());
-            mainActivity.putExtra("deviceName", subBean.getDeviceName());
-            mainActivity.putExtra("productKey", subBean.getOemModel());
-            mainActivity.putExtra("is_getway", true);
-            startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+            if (gatewayCount == 0) {//没有网关
+                //跳转到阿里云的鸿雁网关设备
+                Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
+                mainActivity.putExtra("cuId", subBean.getCuId());
+                mainActivity.putExtras(getIntent());
+                mainActivity.putExtra("deviceName", subBean.getDeviceName());
+                mainActivity.putExtra("productKey", subBean.getOemModel());
+                mainActivity.putExtra("is_getway", true);
+                startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+            } else {
+                CustomToast.makeText(this, "只能绑定一个网关", R.drawable.ic_toast_warming).show();
+            }
+
         } else if (4 == subBean.getNetworkType()) {//跳转鸿雁节点添加
-            this.mSubBean = subBean;
-            HongyanZigBeeAddGuideActivity(subBean.getOemModel());
-            // bindVirturalZigbeeToUser("a1gnkwYSKkj", "CCCCCCFFFE136A35");
+            if (gatewayCount == 0) {//没有网关
+                CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
+            } else if (gatewayCount == 1) {//一个网关
+
+                if (TempUtils.isDeviceOnline(gateway)) {//网关在线
+                    this.mSubBean = subBean;
+                    HongyanZigBeeAddGuideActivity(subBean.getOemModel());
+                    // bindVirturalZigbeeToUser("a1gnkwYSKkj", "CCCCCCFFFE136A35");
+                } else {
+                    CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
+                }
+            }
+
         }
     }
 
 
-    //基于时间窗口的方式绑定设备
+   /* //基于时间窗口的方式绑定设备
     private void bindVirturalZigbeeToUser(String pk, String dn) {
         Map<String, Object> maps = new HashMap<>();
         maps.put("productKey", pk);
@@ -240,7 +259,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             }
         });
     }
-
+*/
 
     private void HongyanZigBeeAddGuideActivity(String productKey) {
         // 启动插件
@@ -257,20 +276,20 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             String deviceName = data.getStringExtra("deviceName");
             // 配网成功
             Log.d("onResponse_HONGYAN_four", "productKey:" + productKey + "  deviceName:" + deviceName);
-            if (TextUtils.isEmpty(productKey) && TextUtils.isEmpty(deviceName)) {
-                return;
+            if (!TextUtils.isEmpty(productKey) && !TextUtils.isEmpty(deviceName)) {
+                Intent intent = new Intent(DeviceAddCategoryActivity.this, HongyanGatewayAddActivity.class);
+                intent.putExtra("HongyanproductKey", productKey);
+                intent.putExtra("is_getway", "false");
+                intent.putExtra("HongyandeviceName", deviceName);
+                intent.putExtra("deviceName", mSubBean.getDeviceName());
+                intent.putExtra("productKey", mSubBean.getOemModel());
+                intent.putExtra("cuId", mSubBean.getCuId());
+                intent.putExtras(getIntent());
+                intent.putExtras(getIntent());
+                startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
             }
-            Intent intent = new Intent(DeviceAddCategoryActivity.this, HongyanGatewayAddActivity.class);
-            intent.putExtra("HongyanproductKey", productKey);
-            intent.putExtra("is_getway", "false");
-            intent.putExtra("HongyandeviceName", deviceName);
-            intent.putExtra("deviceName", mSubBean.getDeviceName());
-            intent.putExtra("productKey", mSubBean.getOemModel());
-            intent.putExtra("cuId", mSubBean.getCuId());
-            intent.putExtras(getIntent());
-            intent.putExtras(getIntent());
-            startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
         }
+
         if (requestCode == REQUEST_CODE_ADD_DEVICE && resultCode == RESULT_OK) {
             setResult(RESULT_OK);
             finish();
