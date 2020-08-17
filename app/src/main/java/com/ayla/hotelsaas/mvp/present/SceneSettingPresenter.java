@@ -183,16 +183,26 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             datumBean.setOperator(actionItem.getOperator());
                             datumBean.setLeftValue(actionItem.getLeftValue());
                             s1:
-                            for (DeviceCategoryDetailBean categoryDetailBean : categoryDetailBeans) {
-                                for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
-                                    if (categoryDetailBean.getOemModel().equals(deviceTemplateBean.getDeviceCategory())) {
-                                        for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                            if (attribute.getCode().equals(actionItem.getLeftValue())) {
-                                                for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attribute.getValue()) {
-                                                    if (valueBean.getValue().equals(actionItem.getRightValue())) {
-                                                        datumBean.setFunctionName(attribute.getDisplayName());
-                                                        datumBean.setValueName(valueBean.getDisplayName());
-                                                        break s1;
+                            for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
+                                if (devicesBean.getDeviceId().equals(actionItem.getTargetDeviceId())) {
+                                    String deviceName = devicesBean.getDeviceName();
+                                    int cuId = devicesBean.getCuId();
+                                    for (DeviceCategoryDetailBean categoryDetailBean : categoryDetailBeans) {
+                                        if (deviceName.equals(categoryDetailBean.getDeviceName()) && cuId == categoryDetailBean.getCuId()) {
+                                            String oemModel = categoryDetailBean.getOemModel();
+                                            for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
+                                                String deviceCategory = deviceTemplateBean.getDeviceCategory();
+                                                if (oemModel.equals(deviceCategory)) {
+                                                    for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                                        if (attribute.getCode().equals(actionItem.getLeftValue())) {
+                                                            for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attribute.getValue()) {
+                                                                if (valueBean.getValue().equals(actionItem.getRightValue())) {
+                                                                    datumBean.setFunctionName(attribute.getDisplayName());
+                                                                    datumBean.setValueName(valueBean.getDisplayName());
+                                                                    break s1;
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
@@ -204,26 +214,36 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         }
 
                         List<SceneSettingFunctionDatumSetAdapter.DatumBean> conditions = new ArrayList<>();
-                        for (RuleEngineBean.Condition.ConditionItem actionItem : conditionItems) {
+                        for (RuleEngineBean.Condition.ConditionItem conditionItem : conditionItems) {
                             SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
-                            datumBean.setLeftValue(actionItem.getLeftValue());
-                            datumBean.setFunctionName(actionItem.getLeftValue());
-                            datumBean.setValueName(actionItem.getRightValue());
-                            datumBean.setDeviceId(actionItem.getSourceDeviceId());
-                            datumBean.setDeviceType(actionItem.getSourceDeviceType());
-                            datumBean.setOperator(actionItem.getOperator());
-                            datumBean.setLeftValue(actionItem.getLeftValue());
+                            datumBean.setLeftValue(conditionItem.getLeftValue());
+                            datumBean.setFunctionName(conditionItem.getLeftValue());
+                            datumBean.setValueName(conditionItem.getRightValue());
+                            datumBean.setDeviceId(conditionItem.getSourceDeviceId());
+                            datumBean.setDeviceType(conditionItem.getSourceDeviceType());
+                            datumBean.setOperator(conditionItem.getOperator());
+                            datumBean.setLeftValue(conditionItem.getLeftValue());
                             s1:
-                            for (DeviceCategoryDetailBean categoryDetailBean : categoryDetailBeans) {
-                                for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
-                                    if (categoryDetailBean.getOemModel().equals(deviceTemplateBean.getDeviceCategory())) {
-                                        for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                            if (attribute.getCode().equals(actionItem.getLeftValue())) {
-                                                for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attribute.getValue()) {
-                                                    if (valueBean.getValue().equals(actionItem.getRightValue())) {
-                                                        datumBean.setFunctionName(attribute.getDisplayName());
-                                                        datumBean.setValueName(valueBean.getDisplayName());
-                                                        break s1;
+                            for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
+                                if (devicesBean.getDeviceId().equals(conditionItem.getSourceDeviceId())) {
+                                    String deviceName = devicesBean.getDeviceName();
+                                    int cuId = devicesBean.getCuId();
+                                    for (DeviceCategoryDetailBean categoryDetailBean : categoryDetailBeans) {
+                                        if (deviceName.equals(categoryDetailBean.getDeviceName()) && cuId == categoryDetailBean.getCuId()) {
+                                            String oemModel = categoryDetailBean.getOemModel();
+                                            for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
+                                                String deviceCategory = deviceTemplateBean.getDeviceCategory();
+                                                if (oemModel.equals(deviceCategory)) {
+                                                    for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                                        if (attribute.getCode().equals(conditionItem.getLeftValue())) {
+                                                            for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attribute.getValue()) {
+                                                                if (valueBean.getValue().equals(conditionItem.getRightValue())) {
+                                                                    datumBean.setFunctionName(attribute.getDisplayName());
+                                                                    datumBean.setValueName(valueBean.getDisplayName());
+                                                                    break s1;
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
