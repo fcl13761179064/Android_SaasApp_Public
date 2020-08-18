@@ -451,6 +451,11 @@ public class RequestModel {
             if (id != 0) {
                 jsonObject.put("id", id);
             }
+            if ("J9WX4aPBnZlxtipuQqwC000000".equals(deviceId)) {
+                uploadParams.put("needHandleAliService", true);
+            } else {
+                uploadParams.put("needHandleAliService", false);
+            }
             jsonObject.put("deviceId", deviceId);
             jsonObject.put("cuId", cuId);
             jsonObject.put("propertyName", propertyName);

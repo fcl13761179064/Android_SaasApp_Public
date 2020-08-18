@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_device_name"
         android:layout_alignStart="@id/tv_device_name"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="11dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="编辑"
-
+            android:textSize="@dimen/sp_12"
             />
     </RelativeLayout>
 </RelativeLayout>

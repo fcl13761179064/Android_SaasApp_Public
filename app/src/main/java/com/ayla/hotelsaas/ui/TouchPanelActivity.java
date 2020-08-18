@@ -41,10 +41,10 @@ public class TouchPanelActivity extends BasicActivity {
     @Override
     protected void initView() {
         dataList = new ArrayList<>();
-        dataList.add(new TouchPanelBean(R.mipmap.go_home, "场景", 0, 0));
-        dataList.add(new TouchPanelBean(R.mipmap.back_home, "地暖", 0, 0));
-        dataList.add(new TouchPanelBean(R.mipmap.sleep_model, "空调", 0, 0));
-        dataList.add(new TouchPanelBean(R.mipmap.storm_model, "新风", 0, 0));
+        dataList.add(new TouchPanelBean(R.mipmap.go_home, "场景", 0, 0,0));
+        dataList.add(new TouchPanelBean(R.mipmap.back_home, "地暖", 0, 0,0));
+        dataList.add(new TouchPanelBean(R.mipmap.sleep_model, "空调", 0, 0,0));
+        dataList.add(new TouchPanelBean(R.mipmap.storm_model, "新风", 0, 0,0));
         mAdapter = new TouchPanelAdapter(dataList);
         mGridView.setAdapter(mAdapter);
 

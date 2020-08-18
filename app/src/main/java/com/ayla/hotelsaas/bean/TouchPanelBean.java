@@ -11,9 +11,26 @@ public class TouchPanelBean implements Serializable {
 
     private int iconRes;
     private String propertyValue;
-    private int id;
     private int number;
+    private int name_id;
+    private int icon_id;
     private int btn_position;
+
+    public int getName_id() {
+        return name_id;
+    }
+
+    public void setName_id(int name_id) {
+        this.name_id = name_id;
+    }
+
+    public int getIcon_id() {
+        return icon_id;
+    }
+
+    public void setIcon_id(int icon_id) {
+        this.icon_id = icon_id;
+    }
 
     public int getBtn_position() {
         return btn_position;
@@ -31,10 +48,11 @@ public class TouchPanelBean implements Serializable {
         this.number = number;
     }
 
-    public TouchPanelBean(int iconRes, String propertyValue, int id, int btn_position) {
+    public TouchPanelBean(int iconRes, String propertyValue, int name_id,int icon_id, int btn_position) {
         this.iconRes = iconRes;
         this.propertyValue = propertyValue;
-        this.id = id;
+        this.name_id = name_id;
+        this.icon_id = icon_id;
         this.btn_position = btn_position;
     }
 
@@ -54,11 +72,4 @@ public class TouchPanelBean implements Serializable {
         this.propertyValue = propertyValue;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }
