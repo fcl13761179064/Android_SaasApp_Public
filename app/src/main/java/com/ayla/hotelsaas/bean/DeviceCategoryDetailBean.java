@@ -17,7 +17,7 @@ public class DeviceCategoryDetailBean {
      */
 
     private String deviceName;
-    private long cuId;
+    private int cuId;
     private String oemModel;
     private List<String> conditionProperties;
     private List<String> actionProperties;
@@ -30,11 +30,11 @@ public class DeviceCategoryDetailBean {
         this.deviceName = deviceName;
     }
 
-    public long getCuId() {
+    public int getCuId() {
         return cuId;
     }
 
-    public void setCuId(long cuId) {
+    public void setCuId(int cuId) {
         this.cuId = cuId;
     }
 
