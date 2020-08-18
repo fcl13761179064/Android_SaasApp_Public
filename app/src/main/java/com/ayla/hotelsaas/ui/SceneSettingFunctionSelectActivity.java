@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionSelectAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -31,6 +32,8 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  * 1.支持的条件或者功能的propertiesName集合 。{@link java.util.ArrayList<String>}    properties 。
  * 2.{@link String} oemModel
  * 3.{@link DeviceListBean.DevicesBean} deviceBean
+ * 可选参数
+ * 1.datums {@link ArrayList<com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter.DatumBean>} 已选择的栏目
  */
 public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSettingFunctionSelectView, SceneSettingFunctionSelectPresenter> implements SceneSettingFunctionSelectView {
     @BindView(R.id.rv)
@@ -65,9 +68,21 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("deviceBean");
                 DeviceTemplateBean.AttributesBean attributesBean = mAdapter.getItem(position);
+                ArrayList<SceneSettingFunctionDatumSetAdapter.DatumBean> datums = getIntent().getParcelableArrayListExtra("datums");
+                if (datums != null) {
+                    for (SceneSettingFunctionDatumSetAdapter.DatumBean datumBean : datums) {
+                        if (deviceBean.getDeviceId().equals(datumBean.getDeviceId())) {
+                            if (attributesBean.getCode().equals(datumBean.getLeftValue())) {
+                                CustomToast.makeText(getBaseContext(), "不可重复添加", R.drawable.ic_toast_warming).show();
+                                return;
+                            }
+                        }
+                    }
+                }
                 Intent mainActivity = new Intent(SceneSettingFunctionSelectActivity.this, SceneSettingFunctionDatumSetActivity.class);
-                mainActivity.putExtra("deviceBean", getIntent().getSerializableExtra("deviceBean"));
+                mainActivity.putExtra("deviceBean", deviceBean);
                 mainActivity.putExtra("attributesBean", attributesBean);
                 startActivityForResult(mainActivity, 0);
             }

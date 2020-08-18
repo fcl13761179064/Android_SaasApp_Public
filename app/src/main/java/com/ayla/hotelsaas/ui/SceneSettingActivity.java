@@ -43,6 +43,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private final int REQUEST_CODE_SELECT_CONDITION = 0X10;
     private final int REQUEST_CODE_SELECT_ACTION = 0X11;
     private final int REQUEST_CODE_SELECT_ICON = 0X12;
+    private final int REQUEST_CODE_SELECT_CONDITION_TYPE = 0X13;
     @BindView(R.id.rv_condition)
     public RecyclerView mConditionRecyclerView;
     @BindView(R.id.rv_action)
@@ -65,8 +66,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private RuleEngineBean mRuleEngineBean;
     private SceneSettingConditionItemAdapter mConditionAdapter;
     private SceneSettingActionItemAdapter mActionAdapter;
-
-    private List<SceneSettingConditionItemAdapter.ConditionItem> conditionItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +155,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         mConditionRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .color(android.R.color.transparent)
                 .size(AutoSizeUtils.dp2px(this, 16)).build());
-        mConditionAdapter = new SceneSettingConditionItemAdapter(conditionItems);
+        mConditionAdapter = new SceneSettingConditionItemAdapter(new ArrayList<>());
         mConditionAdapter.bindToRecyclerView(mConditionRecyclerView);
         mConditionAdapter.setEmptyView(R.layout.item_scene_setting_condition_empty);
 
@@ -230,86 +229,42 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         });
     }
 
-    @OnClick(R.id.ll_icon_area)
-    public void jumpIconSelect() {
-        Intent mainActivity = new Intent(this, SceneIconSelectActivity.class);
-        mainActivity.putExtra("index", getIconIndexByPath(mRuleEngineBean.getIconPath()));
-        startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ICON);
-    }
-
-    @OnClick(R.id.tv_scene_name)
-    public void sceneNameClicked() {
-        String currentSceneName = mSceneNameTextView.getText().toString();
-        ValueChangeDialog
-                .newInstance(new ValueChangeDialog.DoneCallback() {
-                    @Override
-                    public void onDone(DialogFragment dialog, String txt) {
-                        mSceneNameTextView.setText(txt);
-                        mRuleEngineBean.setRuleName(txt);
-                        dialog.dismissAllowingStateLoss();
-                    }
-                })
-                .setTitle("场景名称")
-                .setEditHint("请输入场景名称")
-                .setEditValue(currentSceneName)
-                .setMaxLength(20)
-                .show(getSupportFragmentManager(), "scene_name");
-    }
-
-    @OnClick(R.id.v_add_condition)
-    public void jumpAddConditions() {
-        if (mConditionAdapter.getData().size() == 1 && mConditionAdapter.getData().get(0) instanceof SceneSettingConditionItemAdapter.OneKeyConditionItem) {
-            return;
-        }
-        if (mConditionAdapter.getData().size() == 0 && mRuleEngineBean.getSiteType() == 2) {//只有云端场景才可以设置一键触发。
-            Intent mainActivity = new Intent(this, RuleEngineConditionTypeGuideActivity.class);
-            startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION);
-        } else {
-            Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
-            mainActivity.putExtra("type", 0);
-            startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION);
-        }
-    }
-
-    @OnClick(R.id.v_add_action)
-    public void jumpAddActions() {
-        Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
-        mainActivity.putExtra("type", 1);
-        startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SELECT_CONDITION && resultCode == RESULT_OK) {//选择条件返回结果
-            if (data == null) {//选择的条件是 一键执行
+        if (requestCode == REQUEST_CODE_SELECT_CONDITION_TYPE && resultCode == RESULT_OK) {//选择条件类型返回结果
+            boolean onekey = data.getBooleanExtra("onekey", false);
+            if (onekey) {
                 mRuleEngineBean.setRuleType(2);
                 mConditionAdapter.addData(new SceneSettingConditionItemAdapter.OneKeyConditionItem());
                 mConditionAdapter.notifyDataSetChanged();
                 mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_disable);
             } else {
-                SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = (SceneSettingFunctionDatumSetAdapter.DatumBean) data.getSerializableExtra("result");
-                RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
-                conditionItem.setSourceDeviceId(datumBean.getDeviceId());
-                conditionItem.setSourceDeviceType(datumBean.getDeviceType());
-                conditionItem.setRightValue(datumBean.getRightValue());
-                conditionItem.setLeftValue(datumBean.getLeftValue());
-                conditionItem.setOperator(datumBean.getOperator());
-                mRuleEngineBean.setRuleType(1);
-                if (mRuleEngineBean.getCondition() == null) {
-                    mRuleEngineBean.setCondition(new RuleEngineBean.Condition());
-                }
-                if (mRuleEngineBean.getCondition().getItems() == null) {
-                    mRuleEngineBean.getCondition().setItems(new ArrayList<>());
-                }
-                mRuleEngineBean.getCondition().getItems().add(conditionItem);
-                mRuleEngineBean.getCondition().setExpression(calculateConditionExpression(mRuleEngineBean.getCondition().getItems()));
-                mConditionAdapter.getData().add(new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean));
-                mConditionAdapter.notifyDataSetChanged();
+                doJumpAddConditions();
             }
         }
+        if (requestCode == REQUEST_CODE_SELECT_CONDITION && resultCode == RESULT_OK) {//选择条件返回结果
+            SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = (SceneSettingFunctionDatumSetAdapter.DatumBean) data.getParcelableExtra("result");
+            RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
+            conditionItem.setSourceDeviceId(datumBean.getDeviceId());
+            conditionItem.setSourceDeviceType(datumBean.getDeviceType());
+            conditionItem.setRightValue(datumBean.getRightValue());
+            conditionItem.setLeftValue(datumBean.getLeftValue());
+            conditionItem.setOperator(datumBean.getOperator());
+            mRuleEngineBean.setRuleType(1);
+            if (mRuleEngineBean.getCondition() == null) {
+                mRuleEngineBean.setCondition(new RuleEngineBean.Condition());
+            }
+            if (mRuleEngineBean.getCondition().getItems() == null) {
+                mRuleEngineBean.getCondition().setItems(new ArrayList<>());
+            }
+            mRuleEngineBean.getCondition().getItems().add(conditionItem);
+            mRuleEngineBean.getCondition().setExpression(calculateConditionExpression(mRuleEngineBean.getCondition().getItems()));
+            mConditionAdapter.getData().add(new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean));
+            mConditionAdapter.notifyDataSetChanged();
+        }
         if (requestCode == REQUEST_CODE_SELECT_ACTION && resultCode == RESULT_OK) {//选择动作返回结果
-            SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = (SceneSettingFunctionDatumSetAdapter.DatumBean) data.getSerializableExtra("result");
+            SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = (SceneSettingFunctionDatumSetAdapter.DatumBean) data.getParcelableExtra("result");
             RuleEngineBean.Action.ActionItem actionItem = new RuleEngineBean.Action.ActionItem();
             actionItem.setTargetDeviceType(datumBean.getDeviceType());
             actionItem.setTargetDeviceId(datumBean.getDeviceId());
@@ -407,22 +362,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         }
     }
 
-    @OnClick(R.id.tv_delete)
-    public void handleDelete() {
-        CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
-            @Override
-            public void onDone(CustomAlarmDialog dialog) {
-                dialog.dismissAllowingStateLoss();
-                mPresenter.deleteScene(mRuleEngineBean.getRuleId());
-            }
-
-            @Override
-            public void onCancel(CustomAlarmDialog dialog) {
-                dialog.dismissAllowingStateLoss();
-            }
-        }).setTitle("确认是否移除").setContent("确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
-    }
-
     private void syncSourceAndAdapter2() {
         if (mRuleEngineBean.getRuleType() == 2) {//一键执行
             ArrayList<SceneSettingConditionItemAdapter.ConditionItem> list = new ArrayList<>();
@@ -440,5 +379,83 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             actionItems.addAll(mRuleEngineBean.getAction().getItems());
         }
         mPresenter.loadFunctionDetail(conditionItems, actionItems);
+    }
+
+    @OnClick(R.id.ll_icon_area)
+    public void jumpIconSelect() {
+        Intent mainActivity = new Intent(this, SceneIconSelectActivity.class);
+        mainActivity.putExtra("index", getIconIndexByPath(mRuleEngineBean.getIconPath()));
+        startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ICON);
+    }
+
+    @OnClick(R.id.tv_scene_name)
+    public void sceneNameClicked() {
+        String currentSceneName = mSceneNameTextView.getText().toString();
+        ValueChangeDialog
+                .newInstance(new ValueChangeDialog.DoneCallback() {
+                    @Override
+                    public void onDone(DialogFragment dialog, String txt) {
+                        mSceneNameTextView.setText(txt);
+                        mRuleEngineBean.setRuleName(txt);
+                        dialog.dismissAllowingStateLoss();
+                    }
+                })
+                .setTitle("场景名称")
+                .setEditHint("请输入场景名称")
+                .setEditValue(currentSceneName)
+                .setMaxLength(20)
+                .show(getSupportFragmentManager(), "scene_name");
+    }
+
+    @OnClick(R.id.v_add_condition)
+    public void jumpAddConditions() {
+        if (mConditionAdapter.getData().size() == 1 && mConditionAdapter.getData().get(0) instanceof SceneSettingConditionItemAdapter.OneKeyConditionItem) {
+            return;
+        }
+        if (mConditionAdapter.getData().size() == 0 && mRuleEngineBean.getSiteType() == 2) {//只有云端场景才可以设置一键触发。
+            Intent mainActivity = new Intent(this, RuleEngineConditionTypeGuideActivity.class);
+            startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION_TYPE);
+        } else {
+            doJumpAddConditions();
+        }
+    }
+
+    @OnClick(R.id.v_add_action)
+    public void jumpAddActions() {
+        Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
+        mainActivity.putExtra("type", 1);
+        mainActivity.putParcelableArrayListExtra("datums", new ArrayList<>(mActionAdapter.getData()));
+        startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION);
+    }
+
+    private void doJumpAddConditions() {
+        Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
+        mainActivity.putExtra("type", 0);
+        ArrayList<SceneSettingFunctionDatumSetAdapter.DatumBean> datums = new ArrayList<>();
+
+        for (SceneSettingConditionItemAdapter.ConditionItem datum : mConditionAdapter.getData()) {
+            if (datum instanceof SceneSettingConditionItemAdapter.DeviceConditionItem) {
+                datums.add(((SceneSettingConditionItemAdapter.DeviceConditionItem) datum).getDatumBean());
+            }
+        }
+
+        mainActivity.putParcelableArrayListExtra("datums", datums);
+        startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION);
+    }
+
+    @OnClick(R.id.tv_delete)
+    public void handleDelete() {
+        CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
+            @Override
+            public void onDone(CustomAlarmDialog dialog) {
+                dialog.dismissAllowingStateLoss();
+                mPresenter.deleteScene(mRuleEngineBean.getRuleId());
+            }
+
+            @Override
+            public void onCancel(CustomAlarmDialog dialog) {
+                dialog.dismissAllowingStateLoss();
+            }
+        }).setTitle("确认是否移除").setContent("确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
     }
 }
