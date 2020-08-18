@@ -10,8 +10,8 @@
 
     <LinearLayout
         android:id="@+id/ll_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
         android:gravity="center"
         android:padding="@dimen/dp_16"
         android:orientation="vertical">
@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="代办事项"
+            android:layout_marginTop="@dimen/dp_16"
             android:textColor="#333333"
             android:textSize="18sp" />
     </LinearLayout>

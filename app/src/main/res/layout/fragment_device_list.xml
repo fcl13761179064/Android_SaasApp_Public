@@ -17,7 +17,6 @@
         app:maxImageSize="@dimen/dp_16"
         android:src="@mipmap/add_device_btn"
         app:backgroundTint="@color/colorAccent"
-        app:elevation="5dp"
         app:fabSize="mini" />
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout

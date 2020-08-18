@@ -45,8 +45,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     FloatingActionButton float_btn;
     @BindView(R.id.device_refreshLayout)
     SmartRefreshLayout mRefreshLayout;
-
-
+    public static int[] drawableIcon = new int[]{R.drawable.one, R.drawable.two, R.drawable.three, R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, R.drawable.eight, R.drawable.nine, R.drawable.ten, R.drawable.eleven, R.drawable.tween};
     private DeviceListAdapter mAdapter;
     private RoomOrderBean.ResultListBean mRoom_order;
     private WorkOrderBean.ResultListBean mWork_order;
@@ -82,12 +81,12 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     return;
                 }
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
-                if (devicesBean.getConnectTypeId() == 2 && devicesBean.getCuId() == 1 && "J9WX4aPBnZlxtipuQqwC000000".equals(devicesBean.getDeviceId())) {
+                if (devicesBean.getCuId() == 1 && "J9WX4aPBnZlxtipuQqwC000000".equals(devicesBean.getDeviceId())) {
                     Intent intent = new Intent(getContext(), TouchPanelActivity.class);
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("pannel_type", "1");
                     startActivity(intent);
-                } else if (devicesBean.getConnectTypeId() == 2 && devicesBean.getCuId() == 1 && "KrYPZCbVSHcHqZ1Kj7Am000000".equals(devicesBean.getDeviceId())) {
+                } else if (devicesBean.getCuId() == 1 && "KrYPZCbVSHcHqZ1Kj7Am000000".equals(devicesBean.getDeviceId())) {
                     Intent intent = new Intent(getContext(), TouchPanelSelectActivity.class);
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("pannel_type", "2");

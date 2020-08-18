@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.TouchPanelBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.fragment.DeviceListFragment;
 import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
 import com.ayla.hotelsaas.mvp.present.TourchPanelPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
@@ -62,7 +63,6 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
         mBtn_position = getIntent().getStringExtra("btn_position");
         mPosition = getIntent().getIntExtra("position", 0);
         mTouchpanel_data = (ArrayList) getIntent().getSerializableExtra("touchpanel_data");
-        mId = mTouchpanel_data.get(mPosition).getId();
         mTouchPanelBean = mTouchpanel_data.get(mPosition);
         mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
         tv_touchpanel_rename.setText("场景" + mBtn_position);
@@ -74,32 +74,25 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
         return new TourchPanelPresenter();
     }
 
-        @Override
-        protected int getLayoutId() {
-            return R.layout.scene_touchpanel_setting;
-        }
+    @Override
+    protected int getLayoutId() {
+        return R.layout.scene_touchpanel_setting;
+    }
 
-        @Override
-        protected void initView() {
-            iv_scene_icon.setImageResource(mTouchPanelBean.getIconRes());
+    @Override
+    protected void initView() {
+        iv_scene_icon.setImageResource(mTouchPanelBean.getIconRes());
     }
 
     @Override
     protected void initListener() {
         rl_touchpanel_icon.setOnClickListener(new View.OnClickListener() {
 
-            private int mIndex;
-
             @Override
             public void onClick(View v) {
-                ToastUtils.showShortToast("该功能暂时不可用");
-                /*Intent intent = new Intent(MyApplication.getContext(), TouchPanelSceneIconSelectActivity.class);
-                try {
-                    mIndex = Integer.parseInt(mPosition);
-                } catch (Exception ignore) {
-                }
-                intent.putExtra("index", mIndex);
-                startActivityForResult(intent, REQUEST_CODE_SELECT_ICON);*/
+                Intent intent = new Intent(MyApplication.getContext(), TouchPanelSceneIconSelectActivity.class);
+                intent.putExtra("index", mBtn_position);
+                startActivityForResult(intent, REQUEST_CODE_SELECT_ICON);
 
             }
         });
@@ -120,7 +113,8 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
                                     modify_txt = txt;
                                     tv_touchpanel_rename.setHint(txt);
                                     if (mDevicesBean != null) {
-                                        mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(), mBtn_position, "Words", txt);
+                                        mId = mTouchpanel_data.get(mPosition).getName_id();
+                                        mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(),mBtn_position+"", "Words", txt);
                                     }
                                 }
                                 dialog.dismissAllowingStateLoss();
@@ -151,10 +145,11 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_ICON && resultCode == RESULT_OK) {//选择ICON返回结果
-            ToastUtils.showShortToast("该功能暂时不可用");
-          /*  int index = data.getIntExtra("index", 1);
-            mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(), index+"", "icon", index + "");*/
-            //iv_scene_icon.setImageResource();
+            int index = data.getIntExtra("index", 1)-1;
+            iv_scene_icon.setImageResource(DeviceListFragment.drawableIcon[index]);
+            mId = mTouchpanel_data.get(mPosition).getIcon_id();
+            mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(), mBtn_position+"" , "PictureCode", index + "");
+
         }
     }
 }
