@@ -138,7 +138,6 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
                         dialog.dismissAllowingStateLoss();
                     }
                 })
-                .setTitle("")
                 .setContent(getResources().getString(R.string.sing_out))
                 .show(getSupportFragmentManager(), "");
     }

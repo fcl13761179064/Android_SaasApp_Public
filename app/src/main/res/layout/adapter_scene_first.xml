@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="点击开启"
+            android:text="点击触发"
             android:textColor="#ff91909a"
             android:textSize="12sp" />
     </LinearLayout>
