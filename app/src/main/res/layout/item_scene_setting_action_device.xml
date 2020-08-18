@@ -23,11 +23,11 @@
 
         <TextView
             android:id="@+id/tv_function_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="单路开关 AZB-SW0-001RGB"
+            android:text="单路开关单路开关单路开关单路开关单路开关单路开关单路开关"
             android:textColor="#ff333333"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -37,11 +37,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:ellipsize="end"
+            android:ellipsize="middle"
             android:gravity="center"
-            android:maxLines="1"
             android:orientation="horizontal"
-            android:text="RGB智能灯 AZB-RGB-001"
+            android:singleLine="true"
+            android:text="RGB智能灯单路开关单路开关单路开关单路开关单路开关单路开关单路开关"
             android:textColor="#ff91909a"
             android:textSize="12sp" />
     </LinearLayout>
