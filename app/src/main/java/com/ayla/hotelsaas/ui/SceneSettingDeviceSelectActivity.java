@@ -15,17 +15,16 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingDeviceSelectPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 场景创建，选择设备的页面
- * 进入时必须带入参数int type  ，0：condition  1：action
+ * 进入时必须带入参数： int type  ，0：condition  1：action
+ * 可选参数：datums {@link ArrayList<com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter.DatumBean>} 已经选择了的栏目。
  */
 public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSettingDeviceSelectView, SceneSettingDeviceSelectPresenter> implements SceneSettingDeviceSelectView {
     @BindView(R.id.rv)
@@ -61,6 +60,7 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
                 mainActivity.putExtra("deviceBean", deviceBean);
                 mainActivity.putExtra("oemModel", oemModels.get(position));
                 mainActivity.putStringArrayListExtra("properties", new ArrayList<>(properties.get(position)));
+                mainActivity.putParcelableArrayListExtra("datums", getIntent().getParcelableArrayListExtra("datums"));
                 startActivityForResult(mainActivity, 0);
             }
         });
