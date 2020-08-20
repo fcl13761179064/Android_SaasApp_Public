@@ -258,9 +258,9 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             if (mRuleEngineBean.getCondition().getItems() == null) {
                 mRuleEngineBean.getCondition().setItems(new ArrayList<>());
             }
-            mRuleEngineBean.getCondition().getItems().add(conditionItem);
+            mRuleEngineBean.getCondition().getItems().add(0,conditionItem);
             mRuleEngineBean.getCondition().setExpression(calculateConditionExpression(mRuleEngineBean.getCondition().getItems()));
-            mConditionAdapter.getData().add(new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean));
+            mConditionAdapter.getData().add(0,new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean));
             mConditionAdapter.notifyDataSetChanged();
         }
         if (requestCode == REQUEST_CODE_SELECT_ACTION && resultCode == RESULT_OK) {//选择动作返回结果
@@ -278,9 +278,9 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             if (mRuleEngineBean.getAction().getItems() == null) {
                 mRuleEngineBean.getAction().setItems(new ArrayList<>());
             }
-            mRuleEngineBean.getAction().getItems().add(actionItem);
+            mRuleEngineBean.getAction().getItems().add(0,actionItem);
             mRuleEngineBean.getAction().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
-            mActionAdapter.getData().add(datumBean);
+            mActionAdapter.getData().add(0,datumBean);
             mActionAdapter.notifyDataSetChanged();
         }
         if (requestCode == REQUEST_CODE_SELECT_ICON && resultCode == RESULT_OK) {//选择ICON返回结果
