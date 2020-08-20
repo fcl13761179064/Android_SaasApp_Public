@@ -16,7 +16,7 @@ import butterknife.OnClick;
 
 /**
  * 网关添加页面
- * 进入时必须带上dsn、cuId 、scopeId、deviceName。
+ * 进入时必须带上dsn、cuId 、scopeId、deviceName、deviceCategory。
  */
 public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, GatewayAddGuidePresenter> implements GatewayAddGuideView {
     @BindView(R.id.iv_01)
@@ -65,6 +65,7 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
                 getIntent().getStringExtra("dsn"),
                 getIntent().getIntExtra("cuId", 0),
                 getIntent().getLongExtra("scopeId", 0),
+                getIntent().getStringExtra("deviceCategory"),
                 getIntent().getStringExtra("deviceName"));
     }
 

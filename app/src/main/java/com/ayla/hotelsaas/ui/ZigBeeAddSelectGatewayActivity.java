@@ -25,7 +25,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 添加节点，选择所属网关的页面
- * 进入时必须带入scopeId、deviceName
+ * 进入时必须带入scopeId、deviceName、deviceCategory
  */
 public class ZigBeeAddSelectGatewayActivity extends BaseMvpActivity<ZigBeeAddSelectGatewayView, ZigBeeAddSelectGatewayPresenter> implements ZigBeeAddSelectGatewayView {
     @BindView(R.id.rv)
@@ -59,6 +59,7 @@ public class ZigBeeAddSelectGatewayActivity extends BaseMvpActivity<ZigBeeAddSel
                     Intent mainActivity = new Intent(ZigBeeAddSelectGatewayActivity.this, ZigBeeAddGuideActivity.class);
                     mainActivity.putExtra("deviceId", device.getDeviceId());
                     mainActivity.putExtra("deviceName", getIntent().getStringExtra("deviceName"));
+                    mainActivity.putExtra("deviceCategory", getIntent().getStringExtra("deviceCategory"));
                     mainActivity.putExtra("cuId", device.getCuId());
                     mainActivity.putExtra("scopeId", getIntent().getLongExtra("scopeId", 0));
                     startActivityForResult(mainActivity, 0);
