@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -23,8 +24,11 @@ import com.ayla.hotelsaas.mvp.present.SceneSettingPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
+import com.ayla.hotelsaas.widget.CustomSheet;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.io.Serializable;
@@ -62,6 +66,10 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     ImageView mIconImageView;
     @BindView(R.id.tv_scene_site)
     TextView mSiteTextView;
+    @BindView(R.id.ll_join_type)
+    LinearLayout mJoinTypeLinearLayout;
+    @BindView(R.id.tv_join_type)
+    TextView mJoinTypeTextView;
 
     private RuleEngineBean mRuleEngineBean;
     private SceneSettingConditionItemAdapter mConditionAdapter;
@@ -80,6 +88,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             syncSourceAndAdapter2();
         } else {
             mRuleEngineBean = new RuleEngineBean();
+            mRuleEngineBean.setRuleSetMode(3);
             mRuleEngineBean.setScopeId(getIntent().getLongExtra("scopeId", 0));
             mRuleEngineBean.setSiteType(getIntent().getIntExtra("siteType", 0));//1:本地 2:云端
             if (mRuleEngineBean.getSiteType() == 1) {//创建的是本地联动
@@ -98,7 +107,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mIconImageView.setImageResource(getIconResByIndex(1));
             mDeleteView.setVisibility(View.GONE);
         }
+//        mJoinTypeLinearLayout.setVisibility(mRuleEngineBean.getSiteType() == 2 ? View.VISIBLE : View.GONE);
+        refreshJoinTypeShow();
         mSiteTextView.setText(mRuleEngineBean.getSiteType() == 1 ? "网关本地" : "云端");
+    }
+
+    private void refreshJoinTypeShow() {
+        mJoinTypeTextView.setText(mRuleEngineBean.getRuleSetMode() == 2 ? "当满足所有条件时" : "当满足任意条件时");
     }
 
     /**
@@ -195,7 +210,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                         && mRuleEngineBean.getCondition().getItems() != null
                         && mRuleEngineBean.getCondition().getItems().size() > position) {
                     mRuleEngineBean.getCondition().getItems().remove(position);
-                    mRuleEngineBean.getCondition().setExpression(calculateConditionExpression(mRuleEngineBean.getCondition().getItems()));
+                    mRuleEngineBean.getCondition().setExpression(calculateConditionExpression(mRuleEngineBean.getRuleSetMode() == 2, mRuleEngineBean.getCondition().getItems()));
                 }
                 adapter.remove(position);
                 mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_enable);
@@ -258,9 +273,9 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             if (mRuleEngineBean.getCondition().getItems() == null) {
                 mRuleEngineBean.getCondition().setItems(new ArrayList<>());
             }
-            mRuleEngineBean.getCondition().getItems().add(0,conditionItem);
-            mRuleEngineBean.getCondition().setExpression(calculateConditionExpression(mRuleEngineBean.getCondition().getItems()));
-            mConditionAdapter.getData().add(0,new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean));
+            mRuleEngineBean.getCondition().getItems().add(0, conditionItem);
+            mRuleEngineBean.getCondition().setExpression(calculateConditionExpression(mRuleEngineBean.getRuleSetMode() == 2, mRuleEngineBean.getCondition().getItems()));
+            mConditionAdapter.getData().add(0, new SceneSettingConditionItemAdapter.DeviceConditionItem(datumBean));
             mConditionAdapter.notifyDataSetChanged();
         }
         if (requestCode == REQUEST_CODE_SELECT_ACTION && resultCode == RESULT_OK) {//选择动作返回结果
@@ -278,9 +293,9 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             if (mRuleEngineBean.getAction().getItems() == null) {
                 mRuleEngineBean.getAction().setItems(new ArrayList<>());
             }
-            mRuleEngineBean.getAction().getItems().add(0,actionItem);
+            mRuleEngineBean.getAction().getItems().add(0, actionItem);
             mRuleEngineBean.getAction().setExpression(calculateActionExpression(mRuleEngineBean.getAction().getItems()));
-            mActionAdapter.getData().add(0,datumBean);
+            mActionAdapter.getData().add(0, datumBean);
             mActionAdapter.notifyDataSetChanged();
         }
         if (requestCode == REQUEST_CODE_SELECT_ICON && resultCode == RESULT_OK) {//选择ICON返回结果
@@ -293,16 +308,17 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     /**
      * 计算condition表达式 ，并且修改了每个condition's item 的joinType。
      *
+     * @param joinAll
      * @param conditionItems
      * @return
      */
-    private String calculateConditionExpression(List<RuleEngineBean.Condition.ConditionItem> conditionItems) {
+    private String calculateConditionExpression(boolean joinAll, List<RuleEngineBean.Condition.ConditionItem> conditionItems) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < conditionItems.size(); i++) {
             RuleEngineBean.Condition.ConditionItem conditionItem = conditionItems.get(i);
             result.append(String.format("func.get('%s','%s','%s') == %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getRightValue()));
             if (i < conditionItems.size() - 1) {
-                result.append(" && ");
+                result.append(joinAll ? " && " : " || ");
             }
             if (i == 0) {
                 conditionItem.setJoinType(0);
@@ -457,5 +473,28 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 dialog.dismissAllowingStateLoss();
             }
         }).setTitle("确认是否移除").setContent("确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
+    }
+
+    @OnClick(R.id.ll_join_type)
+    public void handleSwitchJoinType() {
+        new CustomSheet.Builder(this)
+                .setText("当满足任意条件时", "当满足所有条件时")
+                .show(new CustomSheet.CallBack() {
+                    @Override
+                    public void callback(int index) {
+                        if (mRuleEngineBean != null) {
+                            mRuleEngineBean.setRuleSetMode(index == 0 ? 3 : 2);
+                            refreshJoinTypeShow();
+                            if (mRuleEngineBean.getCondition() != null && mRuleEngineBean.getCondition().getItems() != null) {
+                                mRuleEngineBean.getCondition().setExpression(calculateConditionExpression(mRuleEngineBean.getRuleSetMode() == 2, mRuleEngineBean.getCondition().getItems()));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
     }
 }
