@@ -194,13 +194,19 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                 String deviceCategory = deviceTemplateBean.getDeviceCategory();
                                                 if (oemModel.equals(deviceCategory)) {
                                                     for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                                        datumBean.setFunctionName(attribute.getDisplayName());
                                                         if (attribute.getCode().equals(actionItem.getLeftValue())) {
-                                                            for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attribute.getValue()) {
-                                                                if (valueBean.getValue().equals(actionItem.getRightValue())) {
-                                                                    datumBean.setFunctionName(attribute.getDisplayName());
-                                                                    datumBean.setValueName(valueBean.getDisplayName());
-                                                                    break s1;
+                                                            List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
+                                                            if (attributeValue != null) {
+                                                                for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
+                                                                    if (valueBean.getValue().equals(actionItem.getRightValue())) {
+                                                                        datumBean.setValueName(valueBean.getDisplayName());
+                                                                        break s1;
+                                                                    }
                                                                 }
+                                                            } else {
+                                                                datumBean.setValueName(actionItem.getRightValue());
+                                                                break s1;
                                                             }
                                                         }
                                                     }
@@ -236,12 +242,17 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                 if (oemModel.equals(deviceCategory)) {
                                                     for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
                                                         if (attribute.getCode().equals(conditionItem.getLeftValue())) {
-                                                            for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attribute.getValue()) {
-                                                                if (valueBean.getValue().equals(conditionItem.getRightValue())) {
-                                                                    datumBean.setFunctionName(attribute.getDisplayName());
-                                                                    datumBean.setValueName(valueBean.getDisplayName());
-                                                                    break s1;
+                                                            List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
+                                                            if (attributeValue != null) {
+                                                                for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
+                                                                    if (valueBean.getValue().equals(conditionItem.getRightValue())) {
+                                                                        datumBean.setValueName(valueBean.getDisplayName());
+                                                                        break s1;
+                                                                    }
                                                                 }
+                                                            } else {
+                                                                datumBean.setValueName(conditionItem.getRightValue());
+                                                                break s1;
                                                             }
                                                         }
                                                     }

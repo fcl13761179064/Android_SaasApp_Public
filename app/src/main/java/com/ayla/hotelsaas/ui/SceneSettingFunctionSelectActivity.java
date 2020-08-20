@@ -83,7 +83,7 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
                 }
                 Intent mainActivity = new Intent(SceneSettingFunctionSelectActivity.this, SceneSettingFunctionDatumSetActivity.class);
                 mainActivity.putExtra("deviceBean", deviceBean);
-                mainActivity.putExtra("attributesBean", attributesBean);
+                mainActivity.putExtra("attributeBean", attributesBean);
                 startActivityForResult(mainActivity, 0);
             }
         });

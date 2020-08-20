@@ -10,7 +10,7 @@ import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionDatumSetView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSettingFunctionDatumSetView> {
+public class SceneSettingFunctionDatumSetSingleChoosePresenter extends BasePresenter<SceneSettingFunctionDatumSetView> {
 
     public void loadFunction(DeviceListBean.DevicesBean deviceBean, DeviceTemplateBean.AttributesBean attributesBean) {
         List<CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean>> devices = new ArrayList<>();

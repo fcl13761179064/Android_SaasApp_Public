@@ -78,7 +78,8 @@ public class DeviceTemplateBean {
         private int custom;//    DEVICE_FIXED(1,"设备固有"),    OEM_CUSTOM(2,"OEM自定义"),    USER_CUSTOM(3,"用户自定义");
         private int direction;//    OUTPUT_ONLY(1,"只上报"),    OUTPUT_INPUT(2,"可设置可上报");
         private int dataType;// TEXT(1, "字符串")，INT(2, "整型")，FLOAT(3, "单精度浮点")，DOUBLE(4, "双精度浮点")，DATE_TIME(5, "时间")，BOOL(6, "布尔")，ENUM(7, "枚举")，ARRAY(8, "数组")，ASSEMBLY(9, "组合")
-        private List<ValueBean> value;
+        private List<ValueBean> value;//dataType = BOOL ENUM 时使用
+        private SetupBean setup;//步进类型的数据 dataType = INT  FLOAT  DOUBLE  TEXT 时使用
 
         public String getCode() {
             return code;
@@ -144,6 +145,14 @@ public class DeviceTemplateBean {
             this.value = value;
         }
 
+        public SetupBean getSetup() {
+            return setup;
+        }
+
+        public void setSetup(SetupBean setup) {
+            this.setup = setup;
+        }
+
         public static class ValueBean implements Serializable {
             /**
              * dataType : 6
@@ -177,6 +186,36 @@ public class DeviceTemplateBean {
 
             public void setValue(String value) {
                 this.value = value;
+            }
+        }
+
+        public static class SetupBean implements Serializable {
+            private Double max;
+            private Double min;
+            private Double step;
+
+            public Double getMax() {
+                return max;
+            }
+
+            public void setMax(Double max) {
+                this.max = max;
+            }
+
+            public Double getMin() {
+                return min;
+            }
+
+            public void setMin(Double min) {
+                this.min = min;
+            }
+
+            public Double getStep() {
+                return step;
+            }
+
+            public void setStep(Double step) {
+                this.step = step;
             }
         }
     }
