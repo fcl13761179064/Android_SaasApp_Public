@@ -28,7 +28,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
      *
      * @param dsn
      */
-    public void bindZigBeeNodeWithGatewayDSN(String dsn, long cuId, long scopeId, String deviceName) {
+    public void bindZigBeeNodeWithGatewayDSN(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
         Observable.just(dsn)
                 .doOnNext(new Consumer<String>() {
                     @Override
@@ -99,7 +99,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         List<Observable<?>> tasks = new ArrayList<>();
                         for (DeviceListBean.DevicesBean device : devices) {
                             Observable<?> task = RequestModel.getInstance()
-                                    .bindDeviceWithDSN(device.getDeviceId(), cuId, scopeId, 2, deviceName, deviceName + "_" + device.getDeviceId())
+                                    .bindDeviceWithDSN(device.getDeviceId(), cuId, scopeId, 2, deviceCategory, deviceName, deviceName + "_" + device.getDeviceId())
                                     .doOnError(new Consumer<Throwable>() {
                                         @Override
                                         public void accept(Throwable throwable) throws Exception {

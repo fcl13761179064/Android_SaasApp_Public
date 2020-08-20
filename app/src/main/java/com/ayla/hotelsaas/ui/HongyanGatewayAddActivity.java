@@ -1,6 +1,5 @@
 package com.ayla.hotelsaas.ui;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,11 +16,8 @@ import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequest;
 import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequestBuilder;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.bean.BingHongyanBean;
 import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.GatewayAddGuideView;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +30,7 @@ import butterknife.OnClick;
 
 /**
  * 鸿雁网关添加页面
- * 进入时必须带上dsn、cuId 、scopeId。
+ * 进入时必须带上dsn、cuId 、scopeId、deviceCategory。
  * 樊春雷
  */
 public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, GatewayAddGuidePresenter> implements GatewayAddGuideView {
@@ -190,7 +186,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     }
 
     private void startBind(String data) {
-        mPresenter.registerDeviceWithDSN(data, mCuId, mScopeId, mDeviceName);
+        mPresenter.registerDeviceWithDSN(data, mCuId, mScopeId, getIntent().getStringExtra("deviceCategory"), mDeviceName);
     }
 
     @Override

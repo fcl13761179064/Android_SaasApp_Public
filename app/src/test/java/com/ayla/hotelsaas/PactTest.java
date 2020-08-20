@@ -500,7 +500,7 @@ public class PactTest {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN("111", 1, 2, 2, "abc", "abc");
+                                .bindDeviceWithDSN("111", 1, 2, 2, "abc", "abc", "abc");
                     }
                 })//修改设备名称
                 .concatMap(new Function<Object, ObservableSource<?>>() {
