@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.L;
 import com.aliyun.iot.aep.component.router.Router;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListLeftAdapter;
@@ -29,6 +30,7 @@ import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import me.jessyan.autosize.utils.AutoSizeUtils;
@@ -204,6 +206,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             } else if (gatewayCount == 1) {//一个网关
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
                     this.mSubBean = subBean;
+                    Log.d("HongyanZigBeeAddGuide", subBean.getOemModel());
                     HongyanZigBeeAddGuideActivity(subBean.getOemModel());
                 } else {
                     CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
@@ -266,6 +269,18 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
             String productKey = data.getStringExtra("productKey");
             String deviceName = data.getStringExtra("deviceName");
+            Bundle extras = data.getExtras();
+            Set<String> strings = extras.keySet();
+            for (String keyStr : strings) {
+                if (extras.get(keyStr) instanceof Integer) {
+                    Log.v("onResponse_HONGYAN_four", "intent extras(int) :" + keyStr + ":" + extras.get(keyStr));
+                } else if (extras.get(keyStr) instanceof String) {
+                    Log.v("onResponse_HONGYAN_four", "intent extras(String) :" + keyStr + ":" + extras.get(keyStr));
+                } else {
+                    Log.v("onResponse_HONGYAN_four", "intent extras() :" + keyStr + ":" + extras.get(keyStr));
+                }
+            }
+
             // 配网成功
             Log.d("onResponse_HONGYAN_four", "productKey:" + productKey + "  deviceName:" + deviceName);
             if (!TextUtils.isEmpty(productKey) && !TextUtils.isEmpty(deviceName)) {
