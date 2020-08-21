@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#ffffff</color>
     <color name="colorAccent">#648C1A</color>
     <color name="bg_top_color">#1F62D8</color>
-    <color name="all_bg_color">#F5F6F9</color>
+    <color name="all_bg_color">#F9FAFC</color>
 
     <color name="color_default">#4DC1AD</color>
     <!--CustomProcessDialogxml文件的颜色值-->

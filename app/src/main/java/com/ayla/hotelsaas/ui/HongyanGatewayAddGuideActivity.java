@@ -29,7 +29,7 @@ import butterknife.BindView;
 
 /**
  * 鸿雁网关添加引导页面
- * 进入时必须带上cuId 、scopeId 、deviceName。
+ * 进入时必须带上cuId 、scopeId 、deviceName、deviceCategory。
  * fanchunlei
  */
 public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements OnDeviceAddListener {

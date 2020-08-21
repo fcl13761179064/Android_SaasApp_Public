@@ -12,7 +12,7 @@ import butterknife.OnClick;
 
 /**
  * ZigBee添加引导页面
- * 进入时必须带入网关deviceId 、cuId 、scopeId 、deviceName
+ * 进入时必须带入网关deviceId 、cuId 、scopeId 、deviceName、deviceCategory
  */
 public class ZigBeeAddGuideActivity extends BaseMvpActivity {
     @Override

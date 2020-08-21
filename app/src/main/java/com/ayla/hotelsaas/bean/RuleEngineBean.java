@@ -29,6 +29,8 @@ public class RuleEngineBean implements Serializable {
 
     private int siteType;//1:本地 2:云端
 
+    private int ruleSetMode;//    ALL(2,"多条条件全部命中")   ANY(3,"多条条件任一命中")
+
     private int status;//0:不可用 1：可用
 
     private String targetGateway;//云端联动时，网关的dsn
@@ -45,6 +47,14 @@ public class RuleEngineBean implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getRuleSetMode() {
+        return ruleSetMode;
+    }
+
+    public void setRuleSetMode(int ruleSetMode) {
+        this.ruleSetMode = ruleSetMode;
     }
 
     public Long getRuleId() {

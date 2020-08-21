@@ -104,6 +104,7 @@ dependencies {
     implementation rootProject.libraries.utilcode
     implementation "com.airbnb.android:lottie:3.4.0"
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+    implementation 'com.xw.repo:bubbleseekbar:3.20'
 
     api('com.aliyun.alink.linksdk:iot-linkkit:1.7.0')
     implementation('com.aliyun.alink.linksdk:ilop-devicecenter:1.7.7.1') {

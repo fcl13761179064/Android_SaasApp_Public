@@ -70,16 +70,16 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
                                         @Override
                                         public void onDone(CustomAlarmDialog dialog) {
                                             dialog.dismissAllowingStateLoss();
+                                            finish();
                                             PermissionUtils.launchAppDetailsSettings();
                                         }
 
                                         @Override
                                         public void onCancel(CustomAlarmDialog dialog) {
-
+                                            dialog.dismissAllowingStateLoss();
                                         }
                                     })
-                                    .setTitle("请允许使用相机权限")
-                                    .setContent("").show(getSupportFragmentManager(), null);
+                                    .setContent("请允许使用相机权限").show(getSupportFragmentManager(), null);
                         }
                     }
                 });

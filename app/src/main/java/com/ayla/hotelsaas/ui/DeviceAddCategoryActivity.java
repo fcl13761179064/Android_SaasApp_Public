@@ -15,12 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aliyun.iot.aep.component.router.Router;
-import com.aliyun.iot.aep.sdk.apiclient.IoTAPIClient;
-import com.aliyun.iot.aep.sdk.apiclient.IoTAPIClientFactory;
-import com.aliyun.iot.aep.sdk.apiclient.callback.IoTCallback;
-import com.aliyun.iot.aep.sdk.apiclient.callback.IoTResponse;
-import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequest;
-import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequestBuilder;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListLeftAdapter;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListRightAdapter;
@@ -33,14 +27,8 @@ import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.gson.JsonObject;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import me.jessyan.autosize.utils.AutoSizeUtils;
@@ -167,6 +155,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
                 mainActivity.putExtra("cuId", subBean.getCuId());
                 mainActivity.putExtras(getIntent());
+                mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                 mainActivity.putExtra("deviceName", subBean.getDeviceName());
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             } else {
@@ -181,6 +170,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     mainActivity.putExtra("deviceId", gateway.getDeviceId());
                     mainActivity.putExtra("cuId", gateway.getCuId());
                     mainActivity.putExtras(getIntent());
+                    mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                     mainActivity.putExtra("deviceName", subBean.getDeviceName());
                     startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                 } else {
@@ -189,6 +179,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             } else {//多个网关
                 Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
                 mainActivity.putExtras(getIntent());
+                mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                 mainActivity.putExtra("deviceName", subBean.getDeviceName());
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             }
@@ -198,6 +189,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
                 mainActivity.putExtra("cuId", subBean.getCuId());
                 mainActivity.putExtras(getIntent());
+                mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                 mainActivity.putExtra("deviceName", subBean.getDeviceName());
                 mainActivity.putExtra("productKey", subBean.getOemModel());
                 mainActivity.putExtra("is_getway", true);
@@ -281,6 +273,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 intent.putExtra("HongyanproductKey", productKey);
                 intent.putExtra("is_getway", "false");
                 intent.putExtra("HongyandeviceName", deviceName);
+                intent.putExtra("deviceCategory", mSubBean.getOemModel());
                 intent.putExtra("deviceName", mSubBean.getDeviceName());
                 intent.putExtra("productKey", mSubBean.getOemModel());
                 intent.putExtra("cuId", mSubBean.getCuId());
