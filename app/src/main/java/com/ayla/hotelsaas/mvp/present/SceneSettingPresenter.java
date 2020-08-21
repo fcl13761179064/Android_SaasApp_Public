@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.mvp.present;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
@@ -197,6 +198,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                         datumBean.setFunctionName(attribute.getDisplayName());
                                                         if (attribute.getCode().equals(actionItem.getLeftValue())) {
                                                             List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
+                                                            DeviceTemplateBean.AttributesBean.SetupBean setupBean = attribute.getSetup();
                                                             if (attributeValue != null) {
                                                                 for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
                                                                     if (valueBean.getValue().equals(actionItem.getRightValue())) {
@@ -204,9 +206,11 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                                         break s1;
                                                                     }
                                                                 }
-                                                            } else {
-                                                                break s1;
+                                                            } else if (setupBean != null) {
+                                                                String unit = setupBean.getUnit();
+                                                                datumBean.setValueName(String.format("%s%s", datumBean.getValueName(), TextUtils.isEmpty(unit) ? "" : unit));
                                                             }
+                                                            break s1;
                                                         }
                                                     }
                                                 }
@@ -243,6 +247,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                         datumBean.setFunctionName(attribute.getDisplayName());
                                                         if (attribute.getCode().equals(conditionItem.getLeftValue())) {
                                                             List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
+                                                            DeviceTemplateBean.AttributesBean.SetupBean setupBean = attribute.getSetup();
                                                             if (attributeValue != null) {
                                                                 for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
                                                                     if (valueBean.getValue().equals(conditionItem.getRightValue())) {
@@ -250,9 +255,11 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                                         break s1;
                                                                     }
                                                                 }
-                                                            } else {
-                                                                break s1;
+                                                            } else if (setupBean != null) {
+                                                                String unit = setupBean.getUnit();
+                                                                datumBean.setValueName(String.format("%s%s", datumBean.getValueName(), TextUtils.isEmpty(unit) ? "" : unit));
                                                             }
+                                                            break s1;
                                                         }
                                                     }
                                                 }
