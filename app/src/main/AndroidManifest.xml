@@ -169,6 +169,11 @@
             android:screenOrientation="portrait"
             />
 
+        <activity
+            android:name=".ui.RegisterActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            />
         <meta-data
             android:name="design_width_in_dp"
             android:value="375" />

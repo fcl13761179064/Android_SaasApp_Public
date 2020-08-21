@@ -71,6 +71,15 @@ public class RequestModel {
         return getApiService().login(new_body);
     }
 
+ public Observable<BaseResult<User>> register(String account, String password) {
+        JsonObject body = new JsonObject();
+        body.addProperty("account", account);
+        body.addProperty("password", password);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().register(new_body);
+    }
+
+
     public Observable<BaseResult<User>> refreshToken(String refreshToken) {
         JsonObject body = new JsonObject();
         body.addProperty("refreshToken", refreshToken);

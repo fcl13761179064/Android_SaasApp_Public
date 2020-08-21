@@ -20,9 +20,10 @@
 
             <ImageView
                 android:id="@+id/iv_left"
-                android:layout_width="@dimen/appbar_height"
-                android:layout_height="@dimen/appbar_height"
-                android:padding="16dp"
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_gravity="right|center"
                 android:src="@mipmap/icon_back_black" />
 
             <TextView
@@ -34,7 +35,7 @@
                 android:gravity="center"
                 android:lines="1"
                 android:maxWidth="100dp"
-                android:paddingLeft="8dp"
+                android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="8dp"
                 android:text="left"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
