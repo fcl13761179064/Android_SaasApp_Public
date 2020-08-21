@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,6 +57,7 @@ public class SceneSettingFunctionDatumSetRangeFragment extends BaseMvpFragment i
         Double max = attributesBean.getSetup().getMax();
         Double min = attributesBean.getSetup().getMin();
         Double step = attributesBean.getSetup().getStep();
+        String unit = attributesBean.getSetup().getUnit();
         mAppCompatSeekBar.getConfigBuilder()
                 .min(min.floatValue())
                 .max(max.floatValue())
@@ -66,7 +68,7 @@ public class SceneSettingFunctionDatumSetRangeFragment extends BaseMvpFragment i
         mAppCompatSeekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListenerAdapter() {
             @Override
             public void onProgressChanged(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat, boolean fromUser) {
-                mValueTextView.setText(String.valueOf(progress));
+                mValueTextView.setText(String.format("%s%s", progress, TextUtils.isEmpty(unit) ? "" : unit));
             }
         });
         mAppCompatSeekBar.setProgress(Double.valueOf((max + min) / 2).floatValue());

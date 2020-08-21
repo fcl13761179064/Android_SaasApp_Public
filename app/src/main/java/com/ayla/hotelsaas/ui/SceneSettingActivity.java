@@ -27,8 +27,6 @@ import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.CustomSheet;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.io.Serializable;
@@ -239,6 +237,23 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     CustomToast.makeText(SceneSettingActivity.this, "请添加动作", R.drawable.ic_warning).show();
                     return;
                 }
+                if (mRuleEngineBean.getRuleSetMode() == 2) {//满足所有条件时
+                    List<String> exist = new ArrayList<>();
+                    for (SceneSettingConditionItemAdapter.ConditionItem datum : mConditionAdapter.getData()) {
+                        if (datum instanceof SceneSettingConditionItemAdapter.DeviceConditionItem) {
+                            SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = ((SceneSettingConditionItemAdapter.DeviceConditionItem) datum).getDatumBean();
+                            String deviceId = datumBean.getDeviceId();
+                            String leftValue = datumBean.getLeftValue();
+                            String value = deviceId + leftValue;
+                            if (exist.contains(value)) {
+                                CustomToast.makeText(getBaseContext(), "选择满足所有条件时，条件中不可以添加多个同一设备的同一功能", R.drawable.ic_toast_warming).show();
+                                return;
+                            } else {
+                                exist.add(value);
+                            }
+                        }
+                    }
+                }
                 mPresenter.saveOrUpdateRuleEngine(mRuleEngineBean);
             }
         });
@@ -323,7 +338,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             if (i == 0) {
                 conditionItem.setJoinType(0);
             } else {
-                conditionItem.setJoinType(1);
+                conditionItem.setJoinType(joinAll ? 1 : 2);
             }
         }
         return result.toString();
@@ -456,6 +471,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         }
 
         mainActivity.putParcelableArrayListExtra("datums", datums);
+        mainActivity.putExtra("ruleSetMode", mRuleEngineBean.getRuleSetMode());
         startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION);
     }
 

@@ -179,9 +179,10 @@ public class RequestModel {
      * 获取候选节点
      *
      * @param dsn 网关dsn
+     * @param deviceCategory 需要绑定节点设备的oemModel
      * @return
      */
-    public Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(String dsn) {
+    public Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(String dsn, String deviceCategory) {
         return getApiService().fetchCandidateNodes(dsn);
     }
 
