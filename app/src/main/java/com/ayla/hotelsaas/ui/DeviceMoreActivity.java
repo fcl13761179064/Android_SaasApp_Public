@@ -146,12 +146,4 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     public void operateMoveFailSuccess(String code, String msg) {
         CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
     }
-
-    @Override
-    public void showFunctions(List<DeviceTemplateBean.AttributesBean> attributeans) {
-
-        Log.d("attributeans_log","111111");
-
-    }
-
 }
