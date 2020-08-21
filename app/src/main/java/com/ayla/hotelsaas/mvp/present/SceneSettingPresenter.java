@@ -181,7 +181,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             datumBean.setDeviceType(actionItem.getTargetDeviceType());
                             datumBean.setRightValueType(actionItem.getRightValueType());
                             datumBean.setOperator(actionItem.getOperator());
-                            datumBean.setLeftValue(actionItem.getLeftValue());
+                            datumBean.setRightValue(actionItem.getRightValue());
                             s1:
                             for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
                                 if (devicesBean.getDeviceId().equals(actionItem.getTargetDeviceId())) {
@@ -205,7 +205,6 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                                     }
                                                                 }
                                                             } else {
-                                                                datumBean.setValueName(actionItem.getRightValue());
                                                                 break s1;
                                                             }
                                                         }
@@ -228,7 +227,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             datumBean.setDeviceId(conditionItem.getSourceDeviceId());
                             datumBean.setDeviceType(conditionItem.getSourceDeviceType());
                             datumBean.setOperator(conditionItem.getOperator());
-                            datumBean.setLeftValue(conditionItem.getLeftValue());
+                            datumBean.setRightValue(conditionItem.getRightValue());
                             s1:
                             for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
                                 if (devicesBean.getDeviceId().equals(conditionItem.getSourceDeviceId())) {
@@ -241,6 +240,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                 String deviceCategory = deviceTemplateBean.getDeviceCategory();
                                                 if (oemModel.equals(deviceCategory)) {
                                                     for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                                        datumBean.setFunctionName(attribute.getDisplayName());
                                                         if (attribute.getCode().equals(conditionItem.getLeftValue())) {
                                                             List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
                                                             if (attributeValue != null) {
@@ -251,7 +251,6 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                                     }
                                                                 }
                                                             } else {
-                                                                datumBean.setValueName(conditionItem.getRightValue());
                                                                 break s1;
                                                             }
                                                         }
