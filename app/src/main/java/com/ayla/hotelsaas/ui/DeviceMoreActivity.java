@@ -1,21 +1,26 @@
 package com.ayla.hotelsaas.ui;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 
+import com.airbnb.lottie.L;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
+
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -58,6 +63,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
 
     @Override
     protected void initView() {
+       // mPresenter.loadFunction(deviceId);
 
     }
 
@@ -139,6 +145,13 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     @Override
     public void operateMoveFailSuccess(String code, String msg) {
         CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
+    }
+
+    @Override
+    public void showFunctions(List<DeviceTemplateBean.AttributesBean> attributeans) {
+
+        Log.d("attributeans_log","111111");
+
     }
 
 }

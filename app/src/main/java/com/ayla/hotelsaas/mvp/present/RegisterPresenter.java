@@ -8,7 +8,7 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.mvp.view.LoginView;
+import com.ayla.hotelsaas.mvp.view.RegisterView;
 import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.utils.PregnancyUtil;
 
@@ -23,41 +23,40 @@ import io.reactivex.schedulers.Schedulers;
  * @作者 fanchunlei
  * @时间 2017/8/2
  */
-public class LoginPresenter extends BasePresenter<LoginView> {
+public class RegisterPresenter extends BasePresenter<RegisterView> {
 
-    public void login() {
+    public void register() {
         String account = mView.getAccount();
         String password = mView.getPassword();
-
         if (TextUtils.isEmpty(account)) {
-            CustomToast.makeText(MyApplication.getContext(),"登录账号不能为空",R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(),"账号不能为空",R.drawable.ic_toast_warming).show();
             mView.errorShake(1, 2, "");
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            CustomToast.makeText(MyApplication.getContext(),"登陆密码不能为空",R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(),"密码不能为空",R.drawable.ic_toast_warming).show();
             mView.errorShake(2, 2, "");
             return;
         }
 
         if (PregnancyUtil.checkEmail(account)) {
-            login(account, password);
+            register(account, password);
         } else if (PregnancyUtil.checkPhoneNum(account)) {
-            login(account, password);
+            register(account, password);
         } else {
-            CustomToast.makeText(MyApplication.getContext(), R.string.account_error,R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(),R.string.account_error,R.drawable.ic_toast_warming).show();
         }
     }
 
 
-    private void login(final String account, String password) {
-        RequestModel.getInstance().login(account, password)
+    private void register(final String account, String password) {
+        RequestModel.getInstance().register(account, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(@NonNull Disposable disposable) throws Exception {
-                        mView.showProgress("登录中...");
+                        mView.showProgress("注册中...");
                     }
                 })
                 .subscribe(new RxjavaObserver<User>() {

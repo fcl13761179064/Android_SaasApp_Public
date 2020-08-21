@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -209,11 +210,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             if (gatewayCount == 0) {//没有网关
                 CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
             } else if (gatewayCount == 1) {//一个网关
-
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
                     this.mSubBean = subBean;
                     HongyanZigBeeAddGuideActivity(subBean.getOemModel());
-                    // bindVirturalZigbeeToUser("a1gnkwYSKkj", "CCCCCCFFFE136A35");
                 } else {
                     CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
                 }
@@ -272,6 +271,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_HONEYAN_ROUTE && resultCode == RESULT_OK) {
+
             String productKey = data.getStringExtra("productKey");
             String deviceName = data.getStringExtra("deviceName");
             // 配网成功
@@ -284,7 +284,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 intent.putExtra("deviceName", mSubBean.getDeviceName());
                 intent.putExtra("productKey", mSubBean.getOemModel());
                 intent.putExtra("cuId", mSubBean.getCuId());
-                intent.putExtras(getIntent());
                 intent.putExtras(getIntent());
                 startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
             }

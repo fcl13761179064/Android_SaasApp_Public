@@ -8,7 +8,7 @@ import com.ayla.hotelsaas.bean.User;
  * @作者 fanchunlei
  * @时间 2017/8/2
  */
-public interface LoginView extends BaseView {
+public interface RegisterView extends BaseView {
 
     //获取账号
     String getAccount();
