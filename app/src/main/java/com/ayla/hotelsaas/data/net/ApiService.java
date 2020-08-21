@@ -69,7 +69,7 @@ public interface ApiService {
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
 
-    @GET("api/v1/construction/device/{deviceId}/candidates")
+    @GET("api/v1/construction/device/{deviceId}/candidates/{deviceCategory}")
     Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(@Path("deviceId") String deviceId);
 
     @POST("notify_gateway_config_exit")

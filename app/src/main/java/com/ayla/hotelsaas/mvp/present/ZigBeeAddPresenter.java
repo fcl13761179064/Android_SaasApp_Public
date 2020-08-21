@@ -58,7 +58,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public ObservableSource<List<DeviceListBean.DevicesBean>> apply(Object o) throws Exception {
                         long startTime = System.currentTimeMillis();
                         return RequestModel.getInstance()
-                                .fetchCandidateNodes(dsn)
+                                .fetchCandidateNodes(dsn, deviceCategory)
                                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                                     @Override
                                     public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
