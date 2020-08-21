@@ -53,6 +53,9 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     RelativeLayout rl_root_view;
     @BindView(R.id.ll_content_view)
     LinearLayout ll_content_view;
+    @BindView(R.id.tv_register)
+    TextView tv_register;
+
 
     private TranslateAnimation mShakeAnimation;
 
@@ -79,6 +82,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                     tvSwitch.setVisibility(tvSwitch.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 } else {
                     mPresenter.login();
+                    SoftInputUtil.hideSysSoftInput(LoginActivity.this);
                 }
                 break;
             case R.id.tv_switch:
@@ -117,6 +121,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             }
         });
         edit_password.addTextChangedListener(edtWatcher);
+        edite_count.addTextChangedListener(edtWatcher);
         edit_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
@@ -127,6 +132,14 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                     return true;
                 }
                 return false;
+            }
+        });
+
+        tv_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainActivity = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(mainActivity);
             }
         });
 
@@ -175,7 +188,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
         @Override
         public void afterTextChanged(Editable s) {
-            tv_error_show.setVisibility(View.GONE);
+            tv_error_show.setVisibility(View.INVISIBLE);
             if (!TextUtils.isEmpty(getAccount()) && !TextUtils.isEmpty(getPassword())) {
                 submitBtn.setEnabled(true);
             } else {
@@ -206,7 +219,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         SharePreferenceUtils.saveString(LoginActivity.this, Constance.SP_Refresh_Token, data.getRefreshToken());
         Intent mainActivity = new Intent(this, WorkOrderListActivity.class);
         startActivity(mainActivity);
-        Log.d("LoginActivity_authcode",data.getAuthCode());
+        Log.d("LoginActivity_authcode", data.getAuthCode());
         LoginBusiness.authCodeLogin(data.getAuthCode(), new ILoginCallback() {
             @Override
             public void onLoginSuccess() {
@@ -225,8 +238,9 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     }
 
     @Override
-    public void errorShake(int type, int CycleTimes) {
+    public void errorShake(int type, int CycleTimes, String msg) {
         tv_error_show.setVisibility(View.VISIBLE);
+        tv_error_show.setText(msg);
         // CycleTimes动画重复的次数
         if (null == mShakeAnimation) {
             mShakeAnimation = new TranslateAnimation(0, 10, 0, 0);

@@ -122,7 +122,7 @@ public class BiuEditTextUtils extends AppCompatEditText implements View.OnFocusC
 
 
     private void init() {
-        contentContainer = (ViewGroup) ((LoginActivity) getContext()).findViewById(android.R.id.content);
+        contentContainer = (ViewGroup)findViewById(android.R.id.content);
         WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         height = windowManager.getDefaultDisplay().getHeight();
     }

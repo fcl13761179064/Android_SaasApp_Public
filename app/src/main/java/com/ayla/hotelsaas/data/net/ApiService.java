@@ -45,6 +45,9 @@ public interface ApiService {
     @POST("api/v2/sso/login")
     Observable<BaseResult<User>> login(@Body RequestBody body);
 
+    @POST("api/v2/sso/login")
+    Observable<BaseResult<User>> register(@Body RequestBody body);
+
     @POST("api/v2/sso/refresh")
     Observable<BaseResult<User>> refreshToken(@Body RequestBody body);
 
@@ -93,7 +96,7 @@ public interface ApiService {
     @PUT("api/v1/construction/device/{deviceId}/property")
     Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
 
-    @GET("api/v1/construction/device/queryModelTemplate/{oemModel}")
+    @GET("/{oemModel}")
     Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("oemModel") String oemModel);
 
     @PUT("api/v1/device/{deviceId}/info")

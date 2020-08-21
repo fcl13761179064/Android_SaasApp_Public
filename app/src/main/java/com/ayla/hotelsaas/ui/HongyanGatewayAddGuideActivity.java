@@ -1,17 +1,11 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.alibaba.fastjson.JSON;
 import com.aliyun.alink.business.devicecenter.api.add.DeviceInfo;
 import com.aliyun.alink.business.devicecenter.api.discovery.DiscoveryType;
@@ -19,9 +13,7 @@ import com.aliyun.alink.business.devicecenter.api.discovery.IDeviceDiscoveryList
 import com.aliyun.alink.business.devicecenter.api.discovery.LocalDeviceMgr;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.HongyanGetwayAdapter;
-import com.ayla.hotelsaas.adapter.WorkOrderAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.feiyansdk.ApnetActivity;
 import com.ayla.hotelsaas.feiyansdk.DeviceAddHandler;
 import com.ayla.hotelsaas.feiyansdk.FoundDeviceListItem;
 import com.ayla.hotelsaas.feiyansdk.OnDeviceAddListener;
@@ -30,14 +22,10 @@ import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * 鸿雁网关添加引导页面

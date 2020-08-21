@@ -165,5 +165,11 @@ public class AppBar extends FrameLayout {
         center_tv = text;
         adjustContent();
     }
+
+    public void setAppBarlineHider(boolean b) {
+        bottom_line_visibility = b;
+        adjustContent();
+    }
+
 }
 
