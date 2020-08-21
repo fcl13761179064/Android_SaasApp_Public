@@ -13,8 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.airbnb.lottie.L;
 import com.aliyun.iot.aep.component.router.Router;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListLeftAdapter;
