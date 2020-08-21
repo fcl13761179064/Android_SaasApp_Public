@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.OneKeyView;
 
@@ -13,8 +14,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class OneKeyPresenter extends BasePresenter<OneKeyView> {
 
-    public void runRuleEngine(long ruleId) {
-        Disposable subscribe = RequestModel.getInstance().runRuleEngine(ruleId)
+    public void runRuleEngine(RuleEngineBean ruleEngineBean, boolean needWarming) {
+        Disposable subscribe = RequestModel.getInstance().runRuleEngine(ruleEngineBean.getRuleId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -38,7 +39,7 @@ public class OneKeyPresenter extends BasePresenter<OneKeyView> {
                 .subscribe(new Consumer<BaseResult<Boolean>>() {
                     @Override
                     public void accept(BaseResult<Boolean> booleanBaseResult) throws Exception {
-                        mView.runSceneSuccess();
+                        mView.runSceneSuccess(needWarming);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

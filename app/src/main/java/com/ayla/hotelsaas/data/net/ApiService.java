@@ -72,7 +72,7 @@ public interface ApiService {
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
 
-    @GET("api/v1/construction/device/{deviceId}/candidates")
+    @GET("api/v1/construction/device/{deviceId}/candidates/{deviceCategory}")
     Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(@Path("deviceId") String deviceId);
 
     @POST("notify_gateway_config_exit")
@@ -96,7 +96,7 @@ public interface ApiService {
     @PUT("api/v1/construction/device/{deviceId}/property")
     Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
 
-    @GET("/{oemModel}")
+    @GET("api/v1/construction/device/queryModelTemplate/{oemModel}")
     Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("oemModel") String oemModel);
 
     @PUT("api/v1/device/{deviceId}/info")

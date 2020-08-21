@@ -1,6 +1,9 @@
 package com.ayla.hotelsaas.mvp.present;
 
+import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.core.text.TextUtilsCompat;
 
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -105,12 +108,12 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
         List<DeviceCategoryDetailBean> categoryDetailBeans = new ArrayList<>();//记录品类描述信息
         for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
             for (RuleEngineBean.Action.ActionItem actionItem : actionItems) {
-                if (devicesBean.getDeviceId().equals(actionItem.getTargetDeviceId())) {
+                if (TextUtils.equals(devicesBean.getDeviceId(), actionItem.getTargetDeviceId())) {
                     enableDevices.add(devicesBean);
                 }
             }
             for (RuleEngineBean.Condition.ConditionItem conditionItem : conditionItems) {
-                if (devicesBean.getDeviceId().equals(conditionItem.getSourceDeviceId())) {
+                if (TextUtils.equals(devicesBean.getDeviceId(), conditionItem.getSourceDeviceId())) {
                     enableDevices.add(devicesBean);
                 }
             }
@@ -138,7 +141,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         for (DeviceListBean.DevicesBean enableDevice : enableDevices) {
                             for (DeviceCategoryDetailBean deviceCategoryDetailBean : deviceCategoryDetailBeans) {
                                 if (enableDevice.getCuId() == deviceCategoryDetailBean.getCuId()
-                                        && enableDevice.getDeviceName().equals(deviceCategoryDetailBean.getDeviceName())) {
+                                        && TextUtils.equals(deviceCategoryDetailBean.getDeviceName(), enableDevice.getDeviceName())) {
                                     Observable<DeviceTemplateBean> task = RequestModel.getInstance().fetchDeviceTemplate(deviceCategoryDetailBean.getOemModel())
                                             .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                                                 @Override
@@ -181,33 +184,35 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             datumBean.setDeviceType(actionItem.getTargetDeviceType());
                             datumBean.setRightValueType(actionItem.getRightValueType());
                             datumBean.setOperator(actionItem.getOperator());
-                            datumBean.setLeftValue(actionItem.getLeftValue());
+                            datumBean.setRightValue(actionItem.getRightValue());
                             s1:
                             for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
-                                if (devicesBean.getDeviceId().equals(actionItem.getTargetDeviceId())) {
+                                if (TextUtils.equals(devicesBean.getDeviceId(), actionItem.getTargetDeviceId())) {
                                     String deviceName = devicesBean.getDeviceName();
                                     int cuId = devicesBean.getCuId();
                                     for (DeviceCategoryDetailBean categoryDetailBean : categoryDetailBeans) {
-                                        if (deviceName.equals(categoryDetailBean.getDeviceName()) && cuId == categoryDetailBean.getCuId()) {
+                                        if (TextUtils.equals(categoryDetailBean.getDeviceName(), deviceName) && cuId == categoryDetailBean.getCuId()) {
                                             String oemModel = categoryDetailBean.getOemModel();
                                             for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
                                                 String deviceCategory = deviceTemplateBean.getDeviceCategory();
-                                                if (oemModel.equals(deviceCategory)) {
+                                                if (TextUtils.equals(oemModel, deviceCategory)) {
                                                     for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
                                                         datumBean.setFunctionName(attribute.getDisplayName());
-                                                        if (attribute.getCode().equals(actionItem.getLeftValue())) {
+                                                        if (TextUtils.equals(attribute.getCode(), actionItem.getLeftValue())) {
                                                             List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
+                                                            DeviceTemplateBean.AttributesBean.SetupBean setupBean = attribute.getSetup();
                                                             if (attributeValue != null) {
                                                                 for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
-                                                                    if (valueBean.getValue().equals(actionItem.getRightValue())) {
+                                                                    if (TextUtils.equals(valueBean.getValue(), actionItem.getRightValue())) {
                                                                         datumBean.setValueName(valueBean.getDisplayName());
                                                                         break s1;
                                                                     }
                                                                 }
-                                                            } else {
-                                                                datumBean.setValueName(actionItem.getRightValue());
-                                                                break s1;
+                                                            } else if (setupBean != null) {
+                                                                String unit = setupBean.getUnit();
+                                                                datumBean.setValueName(String.format("%s%s", datumBean.getValueName(), TextUtils.isEmpty(unit) ? "" : unit));
                                                             }
+                                                            break s1;
                                                         }
                                                     }
                                                 }
@@ -228,32 +233,35 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             datumBean.setDeviceId(conditionItem.getSourceDeviceId());
                             datumBean.setDeviceType(conditionItem.getSourceDeviceType());
                             datumBean.setOperator(conditionItem.getOperator());
-                            datumBean.setLeftValue(conditionItem.getLeftValue());
+                            datumBean.setRightValue(conditionItem.getRightValue());
                             s1:
                             for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
-                                if (devicesBean.getDeviceId().equals(conditionItem.getSourceDeviceId())) {
+                                if (TextUtils.equals(devicesBean.getDeviceId(), conditionItem.getSourceDeviceId())) {
                                     String deviceName = devicesBean.getDeviceName();
                                     int cuId = devicesBean.getCuId();
                                     for (DeviceCategoryDetailBean categoryDetailBean : categoryDetailBeans) {
-                                        if (deviceName.equals(categoryDetailBean.getDeviceName()) && cuId == categoryDetailBean.getCuId()) {
+                                        if (TextUtils.equals(categoryDetailBean.getDeviceName(), deviceName) && cuId == categoryDetailBean.getCuId()) {
                                             String oemModel = categoryDetailBean.getOemModel();
                                             for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
                                                 String deviceCategory = deviceTemplateBean.getDeviceCategory();
-                                                if (oemModel.equals(deviceCategory)) {
+                                                if (TextUtils.equals(oemModel, deviceCategory)) {
                                                     for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                                        if (attribute.getCode().equals(conditionItem.getLeftValue())) {
+                                                        datumBean.setFunctionName(attribute.getDisplayName());
+                                                        if (TextUtils.equals(attribute.getCode(), conditionItem.getLeftValue())) {
                                                             List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
+                                                            DeviceTemplateBean.AttributesBean.SetupBean setupBean = attribute.getSetup();
                                                             if (attributeValue != null) {
                                                                 for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
-                                                                    if (valueBean.getValue().equals(conditionItem.getRightValue())) {
+                                                                    if (TextUtils.equals(valueBean.getValue(), conditionItem.getRightValue())) {
                                                                         datumBean.setValueName(valueBean.getDisplayName());
                                                                         break s1;
                                                                     }
                                                                 }
-                                                            } else {
-                                                                datumBean.setValueName(conditionItem.getRightValue());
-                                                                break s1;
+                                                            } else if (setupBean != null) {
+                                                                String unit = setupBean.getUnit();
+                                                                datumBean.setValueName(String.format("%s%s", datumBean.getValueName(), TextUtils.isEmpty(unit) ? "" : unit));
                                                             }
+                                                            break s1;
                                                         }
                                                     }
                                                 }
@@ -266,12 +274,12 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         }
                         for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
                             for (SceneSettingFunctionDatumSetAdapter.DatumBean condition : conditions) {
-                                if (devicesBean.getDeviceId().equals(condition.getDeviceId())) {
+                                if (TextUtils.equals(devicesBean.getDeviceId(), condition.getDeviceId())) {
                                     condition.setIconUrl(devicesBean.getIconUrl());
                                 }
                             }
                             for (SceneSettingFunctionDatumSetAdapter.DatumBean action : actions) {
-                                if (devicesBean.getDeviceId().equals(action.getDeviceId())) {
+                                if (TextUtils.equals(devicesBean.getDeviceId(), action.getDeviceId())) {
                                     action.setIconUrl(devicesBean.getIconUrl());
                                 }
                             }

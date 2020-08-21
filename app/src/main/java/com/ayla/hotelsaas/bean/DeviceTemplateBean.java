@@ -193,6 +193,7 @@ public class DeviceTemplateBean {
             private Double max;
             private Double min;
             private Double step;
+            private String unit;
 
             public Double getMax() {
                 return max;
@@ -216,6 +217,14 @@ public class DeviceTemplateBean {
 
             public void setStep(Double step) {
                 this.step = step;
+            }
+
+            public String getUnit() {
+                return unit;
+            }
+
+            public void setUnit(String unit) {
+                this.unit = unit;
             }
         }
     }
