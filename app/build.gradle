@@ -102,7 +102,6 @@ dependencies {
     implementation rootProject.libraries.SmartRefreshHeader
     implementation rootProject.libraries.BaseRyViewAdapHelper
     implementation rootProject.libraries.utilcode
-    implementation "com.airbnb.android:lottie:3.4.0"
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     implementation 'com.xw.repo:bubbleseekbar:3.20'
 

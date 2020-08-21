@@ -3,9 +3,9 @@ package com.ayla.hotelsaas.ui;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.aliyun.alink.business.devicecenter.api.discovery.IOnDeviceTokenGetListener;
 import com.aliyun.alink.business.devicecenter.api.discovery.LocalDeviceMgr;
 import com.aliyun.iot.aep.sdk.apiclient.IoTAPIClient;
@@ -15,6 +15,7 @@ import com.aliyun.iot.aep.sdk.apiclient.callback.IoTResponse;
 import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequest;
 import com.aliyun.iot.aep.sdk.apiclient.request.IoTRequestBuilder;
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.GatewayAddGuideView;
@@ -35,7 +36,7 @@ import butterknife.OnClick;
  */
 public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, GatewayAddGuidePresenter> implements GatewayAddGuideView {
     @BindView(R.id.iv_01)
-    public LottieAnimationView mImageView;
+    public ImageView mImageView;
     @BindView(R.id.tv_loading)
     public TextView mLoadingTextView;
     @BindView(R.id.tv_bind_progress)
@@ -237,8 +238,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
                 mFinishButton.setText("重试");
                 break;
             default:
-                mImageView.setAnimation(R.raw.ic_device_bind_loading);
-                mImageView.playAnimation();
+                GlideApp.with(mImageView).load(R.drawable.ic_device_bind_loading).into(mImageView);
                 mLoadingTextView.setVisibility(View.VISIBLE);
                 mBindProgressTextView.setText("最长可能需要1分钟，请耐心等待");
                 mFinishButton.setVisibility(View.INVISIBLE);
