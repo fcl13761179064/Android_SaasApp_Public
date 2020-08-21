@@ -71,7 +71,7 @@ public class RequestModel {
         return getApiService().login(new_body);
     }
 
- public Observable<BaseResult<User>> register(String account, String password) {
+    public Observable<BaseResult<User>> register(String account, String password) {
         JsonObject body = new JsonObject();
         body.addProperty("account", account);
         body.addProperty("password", password);
@@ -178,12 +178,12 @@ public class RequestModel {
     /**
      * 获取候选节点
      *
-     * @param dsn 网关dsn
+     * @param dsn            网关dsn
      * @param deviceCategory 需要绑定节点设备的oemModel
      * @return
      */
     public Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(String dsn, String deviceCategory) {
-        return getApiService().fetchCandidateNodes(dsn);
+        return getApiService().fetchCandidateNodes(dsn, deviceCategory);
     }
 
     /**
