@@ -3,10 +3,12 @@ package com.ayla.hotelsaas.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -65,6 +67,8 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
         mViewPager.setAdapter(mAdapter);
         mRefreshLayout.setEnableLoadMore(false);
         mTabLayout.setupWithViewPager(mViewPager, true);
+        mTabLayout.setTabTextColors(Color.parseColor("#282828"), ContextCompat.getColor(getContext(), R.color.colorAccent));
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
     }
 
     @Override
