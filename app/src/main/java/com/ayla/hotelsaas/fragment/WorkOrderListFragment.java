@@ -1,4 +1,4 @@
-package com.ayla.hotelsaas.ui;
+package com.ayla.hotelsaas.fragment;
 
 
 import android.content.Intent;
@@ -12,14 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.WorkOrderAdapter;
 import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.WorkOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
+import com.ayla.hotelsaas.ui.LoginActivity;
+import com.ayla.hotelsaas.ui.RoomOrderListActivity;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -31,23 +32,13 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOrderPresenter> implements WorkOrderView {
+public class WorkOrderListFragment extends BaseMvpFragment<WorkOrderView, WorkOrderPresenter> implements WorkOrderView {
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
-    @BindView(R.id.appBar)
-    AppBar appBar;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout mRefreshLayout;
     private WorkOrderAdapter mAdapter;
-
-    @Override
-    public void refreshUI() {
-        appBar.setLeftText("退出");
-        appBar.setCenterText("房间管理");
-        super.refreshUI();
-    }
-
 
     @Override
     protected WorkOrderPresenter initPresenter() {
@@ -59,15 +50,16 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         return R.layout.work_order_list_activity;
     }
 
+
     @Override
-    protected void initView() {
-      //是否在刷新的时候禁止列表的操作
+    protected void initView(View view) {
+        //是否在刷新的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenRefresh(true);
         //是否在加载的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenLoading(true);
-        recyclerview.setLayoutManager(new LinearLayoutManager(this));
+        recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerview.setHasFixedSize(true);
-        recyclerview.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL, 3, R.color.all_bg_color));
+        recyclerview.addItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.VERTICAL, 3, R.color.all_bg_color));
         mAdapter = new WorkOrderAdapter();
         recyclerview.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(recyclerview);
@@ -81,7 +73,8 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!FastClickUtils.isDoubleClick()) {
-                    Intent intent = new Intent(WorkOrderListActivity.this, RoomOrderListActivity.class);
+                    Intent intent = new Intent(
+                            getContext(), RoomOrderListActivity.class);
                     WorkOrderBean.ResultListBean resultListBean = mAdapter.getData().get(position);
                     intent.putExtra("work_order", (Serializable) resultListBean);
                     startActivity(intent);
@@ -118,6 +111,11 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     }
 
     @Override
+    protected void initData() {
+
+    }
+
+    @Override
     protected void mExitApp() {
 
         CustomAlarmDialog
@@ -125,9 +123,9 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
                     @Override
                     public void onDone(CustomAlarmDialog dialog) {
                         dialog.dismissAllowingStateLoss();
-                        SharePreferenceUtils.remove(WorkOrderListActivity.this, Constance.SP_Login_Token);
-                        SharePreferenceUtils.remove(WorkOrderListActivity.this, Constance.SP_Refresh_Token);
-                        Intent intent = new Intent(WorkOrderListActivity.this, LoginActivity.class);
+                        SharePreferenceUtils.remove(getContext(), Constance.SP_Login_Token);
+                        SharePreferenceUtils.remove(getContext(), Constance.SP_Refresh_Token);
+                        Intent intent = new Intent(getContext(), LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }
@@ -138,7 +136,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
                     }
                 })
                 .setContent(getResources().getString(R.string.sing_out))
-                .show(getSupportFragmentManager(), "");
+                .show(getFragmentManager(), "");
     }
 
     @Override
@@ -149,14 +147,14 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
                 if (mAdapter.getData().isEmpty()) {
                     mAdapter.setEmptyView(R.layout.empty_work_order);
                 }
-                final View inflate = LayoutInflater.from(this).inflate(R.layout.room_root_view, null);
+                final View inflate = LayoutInflater.from(getContext()).inflate(R.layout.room_root_view, null);
                 mAdapter.setFooterView(inflate);
                 mRefreshLayout.setEnableLoadMore(false);
             } else {
                 mAdapter.addData(resultList);
             }
         } else {
-            final View inflate = LayoutInflater.from(this).inflate(R.layout.room_root_view, null);
+            final View inflate = LayoutInflater.from(getContext()).inflate(R.layout.room_root_view, null);
             mAdapter.setFooterView(inflate);
             mRefreshLayout.setEnableLoadMore(false);
         }
@@ -167,6 +165,7 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
     public void getAuthCodeSuccess(String data) {
 
     }
+
 
     @Override
     public void loadDataFinish() {

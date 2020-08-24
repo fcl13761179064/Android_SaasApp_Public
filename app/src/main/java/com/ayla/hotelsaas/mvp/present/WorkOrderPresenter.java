@@ -6,14 +6,6 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -60,6 +52,30 @@ public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
                     public void _onNext(WorkOrderBean data) {
 
                         mView.loadDataSuccess(data);
+                    }
+
+                    @Override
+                    public void _onError(String code, String msg) {
+
+                        mView.loadDataFinish();
+                    }
+
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        addSubscrebe(d);
+                    }
+                });
+    }
+
+    public void getAuthCode(String RoomId) {
+        RequestModel.getInstance().getAuthCode(RoomId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new RxjavaObserver<String>() {
+                    @Override
+                    public void _onNext(String data) {
+
+                        mView.getAuthCodeSuccess(data);
                     }
 
                     @Override

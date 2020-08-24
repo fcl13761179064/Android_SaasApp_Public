@@ -3,7 +3,6 @@ package com.ayla.hotelsaas.mvp.view;
 
 import com.ayla.hotelsaas.base.BaseView;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-import java.util.List;
 
 
 /**
@@ -14,6 +13,8 @@ import java.util.List;
 public interface WorkOrderView extends BaseView {
 
     void loadDataSuccess(WorkOrderBean data);
+
+    void getAuthCodeSuccess(String data);
 
     void loadDataFinish();
 

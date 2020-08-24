@@ -164,6 +164,12 @@
         />
 
         <activity
+            android:name=".ui.WorkRoomManageActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            />
+
+        <activity
             android:name=".ui.TouchPanelSceneIconSelectActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

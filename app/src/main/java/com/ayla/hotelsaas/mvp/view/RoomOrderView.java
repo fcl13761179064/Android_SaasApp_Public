@@ -4,8 +4,6 @@ package com.ayla.hotelsaas.mvp.view;
 import com.ayla.hotelsaas.base.BaseView;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 
-import java.util.List;
-
 
 /**
  * @描述
@@ -18,4 +16,5 @@ public interface RoomOrderView extends BaseView {
 
     void loadDataFinish();
 
+    void getAuthCodeSuccess(String data);
 }

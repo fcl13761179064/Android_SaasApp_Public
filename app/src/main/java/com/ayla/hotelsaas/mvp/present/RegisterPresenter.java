@@ -26,8 +26,14 @@ import io.reactivex.schedulers.Schedulers;
 public class RegisterPresenter extends BasePresenter<RegisterView> {
 
     public void register() {
+        String userName = mView.getUserName();
         String account = mView.getAccount();
         String password = mView.getPassword();
+        if (TextUtils.isEmpty(userName)) {
+            CustomToast.makeText(MyApplication.getContext(),"用户名不能为空",R.drawable.ic_toast_warming).show();
+            mView.errorShake(1, 2, "");
+            return;
+        }
         if (TextUtils.isEmpty(account)) {
             CustomToast.makeText(MyApplication.getContext(),"账号不能为空",R.drawable.ic_toast_warming).show();
             mView.errorShake(1, 2, "");
@@ -40,17 +46,17 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
         }
 
         if (PregnancyUtil.checkEmail(account)) {
-            register(account, password);
+            register(userName,account, password);
         } else if (PregnancyUtil.checkPhoneNum(account)) {
-            register(account, password);
+            register(userName,account, password);
         } else {
             CustomToast.makeText(MyApplication.getContext(),R.string.account_error,R.drawable.ic_toast_warming).show();
         }
     }
 
 
-    private void register(final String account, String password) {
-        RequestModel.getInstance().register(account, password)
+    private void register(String user_name,final String account, String password) {
+        RequestModel.getInstance().register(user_name,account, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -59,7 +65,7 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
                         mView.showProgress("注册中...");
                     }
                 })
-                .subscribe(new RxjavaObserver<User>() {
+                .subscribe(new RxjavaObserver<Boolean>() {
 
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -67,7 +73,7 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
                     }
 
                     @Override
-                    public void _onNext(User data) {
+                    public void _onNext(Boolean data) {
                         mView.hideProgress();
                         mView.loginSuccess(data);
 

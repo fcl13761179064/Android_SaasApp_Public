@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aliyun.iot.aep.sdk.login.ILoginCallback;
+import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.RoomOrderListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -19,9 +22,10 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.RoomOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.RoomOrderView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
-import com.ayla.hotelsaas.utils.RecycleViewDivider;
+import com.ayla.hotelsaas.utils.ToastUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -39,11 +43,14 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     SmartRefreshLayout mRefreshLayout;
     @BindView(R.id.appBar)
     AppBar appBar;
+    @BindView(R.id.float_btn)
+    FloatingActionButton float_btn;
     private RoomOrderListAdapter mAdapter;
     private WorkOrderBean.ResultListBean mWork_order;
     private View mView;
     private View mFoot_view;
     private boolean is_first = true;
+    private String mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +72,9 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
 
     @Override
     protected void initView() {
+        if (mPresenter != null) {
+            mPresenter.getAuthCode(mWork_order.getId() + "");
+        }
         //是否在刷新的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenRefresh(true);
         //是否在加载的时候禁止列表的操作
@@ -100,6 +110,19 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                     intent.putExtra("roomData", (Serializable) room_result);
                     intent.putExtra("workOrderdata", (Serializable) mWork_order);
                     startActivity(intent);
+
+                    LoginBusiness.authCodeLogin(mData, new ILoginCallback() {
+                        @Override
+                        public void onLoginSuccess() {
+                            Log.d("onLoginSuccess", "成功");
+                        }
+
+                        @Override
+                        public void onLoginFailed(int i, String s) {
+                            Log.d("onLoginSuccess", "code: " + i + ", str: " + s);
+
+                        }
+                    });
                 }
             }
         });
@@ -125,6 +148,12 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                 if (mPresenter != null) {
                     mPresenter.loadNextPage(mWork_order.getId() + "");
                 }
+            }
+        });
+        float_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
@@ -166,6 +195,12 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         is_first = false;
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
+    }
+
+    @Override
+    public void getAuthCodeSuccess(String data) {
+        this.mData=data;
+        ToastUtils.showShortToast(data);
     }
 
 }
