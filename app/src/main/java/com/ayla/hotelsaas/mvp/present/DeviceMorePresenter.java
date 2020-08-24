@@ -1,31 +1,13 @@
 package com.ayla.hotelsaas.mvp.present;
 
-import android.text.TextUtils;
-
-import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.DeviceTemplateBean;
-import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
-import com.ayla.hotelsaas.mvp.view.LoginView;
-import com.ayla.hotelsaas.utils.PregnancyUtil;
-import com.ayla.hotelsaas.utils.ToastUtil;
-import com.ayla.hotelsaas.utils.ToastUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**

@@ -134,11 +134,9 @@ public class MyApplication extends AApplication {
     }
 
     private void initAutoSize() {
-        AutoSizeConfig.getInstance()
-                .setBaseOnWidth(true)
-                .getUnitsManager()
-                .setSupportDP(false)
-                .setSupportSP(false)
-                .setSupportSubunits(Subunits.MM);
+//        AutoSizeConfig.getInstance()
+//                .setBaseOnWidth(true)
+//                .getUnitsManager()
+//                .setSupportSubunits(Subunits.MM);
     }
 }
