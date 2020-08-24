@@ -61,14 +61,36 @@
         </RelativeLayout>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_device_function_rename"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="@drawable/room_num_shape">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_16"
+            android:text="开关重命名"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:layout_width="8dp"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_menu_item_arrow_right" />
+    </RelativeLayout>
+
     <Button
         android:id="@+id/my_account_button"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_vertical"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="48dp"
         android:background="@drawable/room_num_shape"

@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -18,6 +19,7 @@ import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMorePresenter> implements DeviceMoreView {
 
@@ -44,7 +46,6 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
 
         super.refreshUI();
     }
-
 
     @Override
     protected DeviceMorePresenter initPresenter() {
@@ -140,5 +141,12 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     @Override
     public void operateMoveFailSuccess(String code, String msg) {
         CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
+    }
+
+    @OnClick(R.id.rl_device_function_rename)
+    public void handleFunctionRenameJump() {
+        Intent intent = new Intent(this, FunctionRenameActivity.class);
+        intent.putExtra("device", mDevicesBean);
+        startActivity(intent);
     }
 }
