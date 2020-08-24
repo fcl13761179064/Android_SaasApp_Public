@@ -14,6 +14,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
@@ -31,6 +32,8 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     TextView tv_device_name;
     @BindView(R.id.my_account_button)
     TextView my_account_button;
+    @BindView(R.id.rl_device_function_rename)
+    View rl_function_rename;
 
     private DeviceListBean.DevicesBean mDevicesBean;
     private Long mScopeId;
@@ -43,7 +46,9 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         if (mDevicesBean != null && !TextUtils.isEmpty(mDevicesBean.getNickname())) {
             tv_device_name.setText(mDevicesBean.getNickname());
         }
-
+        if (TempUtils.isDeviceGateway(mDevicesBean)) {
+            rl_function_rename.setVisibility(View.GONE);
+        }
         super.refreshUI();
     }
 
