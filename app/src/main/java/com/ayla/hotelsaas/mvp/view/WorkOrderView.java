@@ -14,8 +14,6 @@ public interface WorkOrderView extends BaseView {
 
     void loadDataSuccess(WorkOrderBean data);
 
-    void getAuthCodeSuccess(String data);
-
     void loadDataFinish();
 
 }

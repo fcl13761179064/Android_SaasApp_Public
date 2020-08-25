@@ -5,6 +5,7 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
+import com.ayla.hotelsaas.mvp.view.MainView;
 import com.ayla.hotelsaas.mvp.view.RoomOrderView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -17,41 +18,17 @@ import io.reactivex.schedulers.Schedulers;
  * @作者 fanchunlei
  * @时间 2020/7/14
  */
-public class RoomOrderPresenter extends BasePresenter<RoomOrderView> {
-    //页码
-    private int pageNum = 1;
-    //拉取数量
-    private static int maxNum = 100;
+public class MainPresenter extends BasePresenter<MainView> {
 
-    /**
-     * 加载下一页
-     */
-    public void loadNextPage(String businessId) {
-        pageNum++;
-        loadData(businessId);
-    }
-
-    /**
-     * 加载第一页
-     */
-    public void loadFistPage(String businessId) {
-        pageNum = 1;
-        loadData(businessId);
-    }
-
-    /**
-     * 加载列表
-     *
-     * @param businessId
-     */
-    public void loadData(String businessId) {
-        RequestModel.getInstance().getRoomOrderList(businessId, pageNum, maxNum)
+    public void getAuthCode(String RoomId) {
+        RequestModel.getInstance().getAuthCode(RoomId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new RxjavaObserver<RoomOrderBean>() {
+                .subscribe(new RxjavaObserver<String>() {
                     @Override
-                    public void _onNext(RoomOrderBean data) {
-                        mView.loadDataSuccess(data);
+                    public void _onNext(String data) {
+
+                        mView.getAuthCodeSuccess(data);
                     }
 
                     @Override

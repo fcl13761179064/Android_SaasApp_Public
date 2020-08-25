@@ -20,19 +20,6 @@
         android:layout_below="@+id/appBar"
         android:background="@color/colorBackground" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/float_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="28dp"
-        android:layout_marginBottom="122dp"
-        app:maxImageSize="@dimen/dp_16"
-        android:src="@mipmap/add_device_btn"
-        app:backgroundTint="@color/colorAccent"
-        app:fabSize="mini" />
-
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/room_refreshLayout"
         android:layout_width="match_parent"

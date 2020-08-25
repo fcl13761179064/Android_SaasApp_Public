@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.ayla.hotelsaas.fragment.RoomManageFragment;
 import com.ayla.hotelsaas.fragment.WorkOrderListFragment;
 
 /**
@@ -17,7 +18,7 @@ public class WorkRoomManagePagerAdapter extends FragmentPagerAdapter {
 
     public WorkRoomManagePagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
-        fragments = new Fragment[]{new WorkOrderListFragment(), new WorkOrderListFragment()};
+        fragments = new Fragment[]{new RoomManageFragment(), new WorkOrderListFragment()};
     }
 
 

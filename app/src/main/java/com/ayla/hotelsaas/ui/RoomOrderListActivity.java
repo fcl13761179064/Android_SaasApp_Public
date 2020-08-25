@@ -43,14 +43,11 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     SmartRefreshLayout mRefreshLayout;
     @BindView(R.id.appBar)
     AppBar appBar;
-    @BindView(R.id.float_btn)
-    FloatingActionButton float_btn;
     private RoomOrderListAdapter mAdapter;
     private WorkOrderBean.ResultListBean mWork_order;
     private View mView;
     private View mFoot_view;
     private boolean is_first = true;
-    private String mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +69,6 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
 
     @Override
     protected void initView() {
-        if (mPresenter != null) {
-            mPresenter.getAuthCode(mWork_order.getId() + "");
-        }
         //是否在刷新的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenRefresh(true);
         //是否在加载的时候禁止列表的操作
@@ -110,19 +104,6 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                     intent.putExtra("roomData", (Serializable) room_result);
                     intent.putExtra("workOrderdata", (Serializable) mWork_order);
                     startActivity(intent);
-
-                    LoginBusiness.authCodeLogin(mData, new ILoginCallback() {
-                        @Override
-                        public void onLoginSuccess() {
-                            Log.d("onLoginSuccess", "成功");
-                        }
-
-                        @Override
-                        public void onLoginFailed(int i, String s) {
-                            Log.d("onLoginSuccess", "code: " + i + ", str: " + s);
-
-                        }
-                    });
                 }
             }
         });
@@ -148,12 +129,6 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                 if (mPresenter != null) {
                     mPresenter.loadNextPage(mWork_order.getId() + "");
                 }
-            }
-        });
-        float_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
     }
@@ -196,11 +171,4 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
     }
-
-    @Override
-    public void getAuthCodeSuccess(String data) {
-        this.mData=data;
-        ToastUtils.showShortToast(data);
-    }
-
 }

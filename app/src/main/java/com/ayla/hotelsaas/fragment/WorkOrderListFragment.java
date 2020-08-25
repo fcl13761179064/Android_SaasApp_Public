@@ -162,12 +162,6 @@ public class WorkOrderListFragment extends BaseMvpFragment<WorkOrderView, WorkOr
     }
 
     @Override
-    public void getAuthCodeSuccess(String data) {
-
-    }
-
-
-    @Override
     public void loadDataFinish() {
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
