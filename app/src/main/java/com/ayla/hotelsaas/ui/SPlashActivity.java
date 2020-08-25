@@ -32,7 +32,7 @@ public class SPlashActivity extends BasicActivity {
                     Intent intent = new Intent(SPlashActivity.this, LoginActivity.class);
                     startActivity(intent);
                 } else {
-                    Intent intent = new Intent(SPlashActivity.this, WorkOrderListActivity.class);
+                    Intent intent = new Intent(SPlashActivity.this, WorkRoomManageActivity.class);
                     startActivity(intent);
                 }
                 finish();

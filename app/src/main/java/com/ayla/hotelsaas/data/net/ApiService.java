@@ -1,7 +1,5 @@
 package com.ayla.hotelsaas.data.net;
 
-import android.text.method.Touch;
-
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -12,11 +10,7 @@ import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,8 +39,12 @@ public interface ApiService {
     @POST("api/v2/sso/login")
     Observable<BaseResult<User>> login(@Body RequestBody body);
 
-    @POST("api/v2/sso/login")
-    Observable<BaseResult<User>> register(@Body RequestBody body);
+    @GET("api/v2/sso/{resourceId}")
+    Observable<BaseResult<String>> authCode(@Path("resourceId") String scopeId);
+
+
+    @PUT("api/v1/construction/user/register")
+    Observable<BaseResult<Boolean>> register(@Body RequestBody body);
 
     @POST("api/v2/sso/refresh")
     Observable<BaseResult<User>> refreshToken(@Body RequestBody body);

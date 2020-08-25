@@ -15,13 +15,10 @@ import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
@@ -71,8 +68,9 @@ public class RequestModel {
         return getApiService().login(new_body);
     }
 
-    public Observable<BaseResult<User>> register(String account, String password) {
+ public Observable<BaseResult<Boolean>> register(String user_name,String account, String password) {
         JsonObject body = new JsonObject();
+        body.addProperty("userName", user_name);
         body.addProperty("account", account);
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
@@ -97,6 +95,15 @@ public class RequestModel {
     public Observable<BaseResult<WorkOrderBean>> getWorkOrderList(int pageNum, int maxNum) {
         return getApiService().getWorkOrders(pageNum, maxNum);
     }
+
+
+    /**
+     *  获取authcode
+     */
+    public Observable<BaseResult<String>> getAuthCode(String roomId) {
+        return getApiService().authCode(roomId);
+    }
+
 
     /**
      * 获取房间号的条数

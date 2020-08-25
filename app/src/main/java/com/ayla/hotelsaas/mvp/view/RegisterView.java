@@ -10,6 +10,9 @@ import com.ayla.hotelsaas.bean.User;
  */
 public interface RegisterView extends BaseView {
 
+    //获取用户名
+    String getUserName();
+
     //获取账号
     String getAccount();
 
@@ -19,6 +22,6 @@ public interface RegisterView extends BaseView {
     //错误提示
     void errorShake(int type, int CycleTimes, String msg);
 
-    //登录成功
-    void loginSuccess(User data);
+    //注册成功
+    void loginSuccess(Boolean data);
 }

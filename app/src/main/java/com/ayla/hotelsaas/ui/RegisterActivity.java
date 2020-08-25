@@ -20,19 +20,25 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.mvp.present.RegisterPresenter;
 import com.ayla.hotelsaas.mvp.view.RegisterView;
 import com.ayla.hotelsaas.utils.AppManager;
+import com.ayla.hotelsaas.utils.CommonUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
+import com.ayla.hotelsaas.utils.ToastUtil;
+import com.ayla.hotelsaas.utils.ToastUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPresenter> implements RegisterView {
+    @BindView(R.id.et_user_name)
+    EditText et_user_name;
     @BindView(R.id.registeraccount)
     EditText registeraccount;
     @BindView(R.id.registerPass)
@@ -73,7 +79,7 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
     }
 
 
-    @OnClick({R.id.tv_also_account,R.id.register_submitBtn})
+    @OnClick({R.id.tv_also_account, R.id.register_submitBtn})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.tv_also_account:
@@ -138,6 +144,11 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
 
 
     @Override
+    public String getUserName() {
+        return et_user_name.getText().toString();
+    }
+
+    @Override
     public String getAccount() {
         return registeraccount.getText().toString();
     }
@@ -148,10 +159,10 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
     }
 
     @Override
-    public void loginSuccess(User data) {
-        Intent mainActivity = new Intent(this, LoginActivity.class);
-        startActivity(mainActivity);
-        finish();
+    public void loginSuccess(Boolean data) {
+        if (data == true) {
+            CustomToast.makeText(this, "注册成功", R.drawable.ic_toast_success).show();
+        }
 
     }
 

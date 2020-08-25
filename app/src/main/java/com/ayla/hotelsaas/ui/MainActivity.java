@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.aliyun.iot.aep.sdk.login.ILoginCallback;
+import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
@@ -20,7 +23,12 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.fragment.DeviceListFragment;
 import com.ayla.hotelsaas.fragment.RuleEngineFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
+import com.ayla.hotelsaas.mvp.present.MainPresenter;
+import com.ayla.hotelsaas.mvp.view.MainView;
+import com.ayla.hotelsaas.utils.ToastUtils;
 import com.ayla.hotelsaas.widget.AppBar;
+
+import org.mozilla.javascript.tools.jsc.Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +40,7 @@ import butterknife.BindView;
  * @作者 fanchunlei
  * @时间 2020/7/20
  */
-public class MainActivity extends BaseMvpActivity implements RadioGroup.OnCheckedChangeListener {
+public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements RadioGroup.OnCheckedChangeListener, MainView {
 
     @BindView(R.id.appBar)
     AppBar appBar;
@@ -75,7 +83,9 @@ public class MainActivity extends BaseMvpActivity implements RadioGroup.OnChecke
         mFragments.add(new DeviceListFragment(mRoom_order));
         mFragments.add(new RuleEngineFragment(mRoom_order));
         mFragments.add(new TestFragment());
-
+        if (mPresenter != null) {
+            mPresenter.getAuthCode(mRoom_order.getRoomId() + "");
+        }
     }
 
     @Override
@@ -177,8 +187,8 @@ public class MainActivity extends BaseMvpActivity implements RadioGroup.OnChecke
 
 
     @Override
-    protected BasePresenter initPresenter() {
-        return null;
+    protected MainPresenter initPresenter() {
+        return new MainPresenter();
     }
 
     @Override
@@ -218,4 +228,26 @@ public class MainActivity extends BaseMvpActivity implements RadioGroup.OnChecke
         }
     }
 
+    @Override
+    public void loadDataFinish() {
+
+    }
+
+    @Override
+    public void getAuthCodeSuccess(String data) {
+        ToastUtils.showShortToast(data);
+        LoginBusiness.authCodeLogin(data, new ILoginCallback() {
+            @Override
+            public void onLoginSuccess() {
+                Log.d("onLoginSuccess", "成功");
+            }
+
+            @Override
+            public void onLoginFailed(int i, String s) {
+                Log.d("onLoginSuccess", "code: " + i + ", str: " + s);
+
+            }
+        });
+
+    }
 }

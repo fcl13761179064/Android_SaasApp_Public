@@ -12,6 +12,7 @@ public class Constance {
     public static boolean isNetworkDebug = false;
 
     public static String sProdUrl = "https://abp-prod.ayla.com.cn/";//正式环境
+ //   public static String sProdUrl = "https://smarthotel-admin-test.ayla.com.cn";//晓玲测试环境
     public static String sQaUrl = "https://abp.ayla.com.cn/";//测试换行
 
     public static String getBaseUrl() {
