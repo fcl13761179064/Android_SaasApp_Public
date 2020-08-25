@@ -74,7 +74,7 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
         mPresenter.loadDevice(type == 0);
     }
 
-    private List<List<String>> properties;//支持的条件后者动作的描述信息
+    private List<List<String>> properties;//支持的条件或者动作的描述信息
     private List<String> oemModels;
 
     @Override
