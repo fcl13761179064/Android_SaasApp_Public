@@ -75,9 +75,9 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
 
                 boolean nest = true;
                 int type = getIntent().getIntExtra("type", 0);//选择的功能作为条件还是动作。
-                if(type == 0){//条件
-                    int ruleSetMode = getIntent().getIntExtra("ruleSetMode",2);//选择的功能作为条件还是动作。
-                    if(ruleSetMode == 3){//满足任意
+                if (type == 0) {//条件
+                    int ruleSetMode = getIntent().getIntExtra("ruleSetMode", 2);//选择的功能作为条件还是动作。
+                    if (ruleSetMode == 3) {//满足任意
                         nest = false;
                     }
                 }
@@ -109,7 +109,8 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
         super.onCreate(savedInstanceState);
         String oemModel = getIntent().getStringExtra("oemModel");
         ArrayList<String> properties = getIntent().getStringArrayListExtra("properties");
-        mPresenter.loadFunction(oemModel, properties);
+        DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("deviceBean");
+        mPresenter.loadFunction(deviceBean.getCuId(), deviceBean.getDeviceId(), oemModel, properties);
     }
 
     @Override

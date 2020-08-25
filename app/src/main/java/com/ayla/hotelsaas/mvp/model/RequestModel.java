@@ -15,13 +15,10 @@ import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
@@ -188,12 +185,12 @@ public class RequestModel {
     /**
      * 获取候选节点
      *
-     * @param dsn 网关dsn
+     * @param dsn            网关dsn
      * @param deviceCategory 需要绑定节点设备的oemModel
      * @return
      */
     public Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(String dsn, String deviceCategory) {
-        return getApiService().fetchCandidateNodes(dsn);
+        return getApiService().fetchCandidateNodes(dsn, deviceCategory);
     }
 
     /**

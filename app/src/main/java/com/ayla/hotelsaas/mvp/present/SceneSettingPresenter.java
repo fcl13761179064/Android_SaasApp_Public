@@ -3,8 +3,6 @@ package com.ayla.hotelsaas.mvp.present;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.core.text.TextUtilsCompat;
-
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
@@ -13,6 +11,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
+import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
@@ -27,6 +26,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -142,13 +142,33 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             for (DeviceCategoryDetailBean deviceCategoryDetailBean : deviceCategoryDetailBeans) {
                                 if (enableDevice.getCuId() == deviceCategoryDetailBean.getCuId()
                                         && TextUtils.equals(deviceCategoryDetailBean.getDeviceName(), enableDevice.getDeviceName())) {
-                                    Observable<DeviceTemplateBean> task = RequestModel.getInstance().fetchDeviceTemplate(deviceCategoryDetailBean.getOemModel())
+                                    Observable<DeviceTemplateBean> task = RequestModel.getInstance()
+                                            .fetchDeviceTemplate(deviceCategoryDetailBean.getOemModel())
                                             .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                                                 @Override
                                                 public DeviceTemplateBean apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
                                                     return deviceTemplateBeanBaseResult.data;
                                                 }
-                                            });
+                                            })
+                                            .zipWith(RequestModel.getInstance()
+                                                    .getALlTouchPanelDeviceInfo(enableDevice.getCuId(), enableDevice.getDeviceId()).map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
+                                                        @Override
+                                                        public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
+                                                            return listBaseResult.data;
+                                                        }
+                                                    }), new BiFunction<DeviceTemplateBean, List<TouchPanelDataBean>, DeviceTemplateBean>() {
+                                                @Override
+                                                public DeviceTemplateBean apply(DeviceTemplateBean deviceTemplateBean, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
+                                                    for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                                        for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
+                                                            if (TextUtils.equals(attribute.getCode(), touchPanelDataBean.getPropertyName())) {
+                                                                attribute.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                                            }
+                                                        }
+                                                    }
+                                                    return deviceTemplateBean;
+                                                }
+                                            });//根据功能的别名，篡改物模板里面的displayname。
                                     tasks.add(task);
                                     break;
                                 }

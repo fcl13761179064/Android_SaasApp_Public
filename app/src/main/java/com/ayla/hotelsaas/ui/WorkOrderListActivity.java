@@ -163,10 +163,6 @@ public class WorkOrderListActivity extends BaseMvpActivity<WorkOrderView, WorkOr
         loadDataFinish();
     }
 
-    @Override
-    public void getAuthCodeSuccess(String data) {
-
-    }
 
     @Override
     public void loadDataFinish() {

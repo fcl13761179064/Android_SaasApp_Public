@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -13,11 +14,13 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMorePresenter> implements DeviceMoreView {
 
@@ -29,6 +32,8 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     TextView tv_device_name;
     @BindView(R.id.my_account_button)
     TextView my_account_button;
+    @BindView(R.id.rl_device_function_rename)
+    View rl_function_rename;
 
     private DeviceListBean.DevicesBean mDevicesBean;
     private Long mScopeId;
@@ -41,10 +46,11 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         if (mDevicesBean != null && !TextUtils.isEmpty(mDevicesBean.getNickname())) {
             tv_device_name.setText(mDevicesBean.getNickname());
         }
-
+        if (TempUtils.isDeviceGateway(mDevicesBean)) {
+            rl_function_rename.setVisibility(View.GONE);
+        }
         super.refreshUI();
     }
-
 
     @Override
     protected DeviceMorePresenter initPresenter() {
@@ -140,5 +146,12 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     @Override
     public void operateMoveFailSuccess(String code, String msg) {
         CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
+    }
+
+    @OnClick(R.id.rl_device_function_rename)
+    public void handleFunctionRenameJump() {
+        Intent intent = new Intent(this, FunctionRenameActivity.class);
+        intent.putExtra("device", mDevicesBean);
+        startActivity(intent);
     }
 }
