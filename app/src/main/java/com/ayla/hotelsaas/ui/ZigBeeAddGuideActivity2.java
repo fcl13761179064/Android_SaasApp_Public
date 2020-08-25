@@ -22,7 +22,7 @@ import butterknife.BindView;
 
 /**
  * ZigBee添加引导页面，嵌套H5
- * 进入时必须带入网关deviceId 、cuId 、scopeId 、deviceName、deviceCategory
+ * 进入时必须带入网关deviceId 、cuId 、scopeId 、deviceName、deviceCategory、categoryId
  */
 public class ZigBeeAddGuideActivity2 extends BaseMvpActivity {
     private static final String TAG = "wyj";
@@ -34,9 +34,8 @@ public class ZigBeeAddGuideActivity2 extends BaseMvpActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int cuId = getIntent().getIntExtra("cuId", 0);
-        String deviceName = getIntent().getStringExtra("deviceName");
-        mWebView.loadUrl(String.format("https://smarthotel-h5-test.ayla.com.cn/addDevice.html?cuId=%s&deviceName=%s", cuId, deviceName));
+        long categoryId = getIntent().getLongExtra("categoryId", 0);
+        mWebView.loadUrl(String.format("https://smarthotel-h5-test.ayla.com.cn/addDevice.html?id=%s", categoryId));
     }
 
     @Override
