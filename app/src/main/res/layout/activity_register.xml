@@ -35,9 +35,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="top|center_horizontal"
+            android:gravity="top"
+            android:layout_marginLeft="@dimen/dp_40"
+            android:layout_marginRight="@dimen/dp_40"
             android:orientation="vertical"
             android:visibility="visible">
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -48,15 +51,13 @@
 
 
             <com.ayla.hotelsaas.widget.BiuEditTextUtils
-                android:id="@+id/registeraccount"
+                android:id="@+id/et_user_name"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginLeft="@dimen/dp_40"
-                android:layout_marginTop="@dimen/dp_16"
-                android:layout_marginRight="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_10"
                 android:background="@null"
-                android:gravity="center"
-                android:hint="填写邮箱或手机号"
+                android:gravity="center|left"
+                android:hint="请输入用户名称"
                 android:inputType="textVisiblePassword"
                 android:singleLine="true"
                 android:textColor="@color/login_text_percent"
@@ -67,14 +68,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_below="@+id/ll_account_layout"
-                android:layout_marginLeft="38dp"
-                android:layout_marginRight="38dp"
                 android:background="@color/login_deviding_line" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_18"
+                android:text="@string/login_youxiang_show"
+                android:layout_marginTop="@dimen/dp_10"
+                android:textColor="@color/color_333333"
+                android:textSize="@dimen/sp_12" />
+
+
+            <com.ayla.hotelsaas.widget.BiuEditTextUtils
+                android:id="@+id/registeraccount"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@null"
+                android:gravity="center|left"
+                android:hint="请输入手机号和邮箱"
+                android:inputType="textVisiblePassword"
+                android:singleLine="true"
+                android:textColor="@color/login_text_percent"
+                android:textColorHint="@color/login_text_percent"
+                android:textSize="@dimen/sp_14" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/ll_account_layout"
+                android:background="@color/login_deviding_line" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_16"
                 android:text="@string/login_password_show"
                 android:textColor="@color/color_333333"
                 android:textSize="@dimen/sp_12" />
@@ -85,12 +113,10 @@
                 android:layout_height="48dp"
                 android:layout_below="@+id/ll_account_layout"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_40"
-                android:layout_marginRight="@dimen/dp_40"
                 android:background="@null"
                 android:layout_marginTop="@dimen/dp_10"
-                android:gravity="center"
-                android:hint="填写密码"
+                android:gravity="center|left"
+                android:hint="支持6位以上的字母、数字、符号"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:singleLine="true"
@@ -102,8 +128,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_below="@+id/ll_password_layout"
-                android:layout_marginLeft="38dp"
-                android:layout_marginRight="38dp"
                 android:background="@color/login_deviding_line" />
 
             <TextView
@@ -112,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="注册账号和密码错误"
+                android:text="账号和密码错误"
                 android:textColor="@color/login_error_show"
                 android:textSize="14sp"
                 android:visibility="invisible" />
@@ -121,14 +145,13 @@
                 android:id="@+id/register_submitBtn"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="50dp"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="36dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginRight="36dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/green_btn_bg"
                 android:text="@string/register_btn"
+                android:layout_marginBottom="@dimen/dp_10"
                 android:enabled="false"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />

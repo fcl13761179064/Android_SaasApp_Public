@@ -10,10 +10,9 @@ import com.ayla.hotelsaas.bean.RoomOrderBean;
  * @作者 fanchunlei
  * @时间 2020/7/14
  */
-public interface RoomOrderView extends BaseView {
-
-    void loadDataSuccess(RoomOrderBean data);
+public interface MainView extends BaseView {
 
     void loadDataFinish();
 
+    void getAuthCodeSuccess(String data);
 }
