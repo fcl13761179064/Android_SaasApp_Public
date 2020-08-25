@@ -39,7 +39,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("device");
-        mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getDeviceName(), mDevicesBean.getDeviceId());
+        loadData();
     }
 
     @Override
@@ -79,6 +79,8 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
                                     CustomToast.makeText(getBaseContext(), "不能为空", R.drawable.ic_toast_warming).show();
                                 } else {
                                     if (mDevicesBean != null) {
+                                        attributesBean.setPropertyValue(txt);
+                                        mAdapter.notifyItemChanged(position);
                                         mPresenter.renameFunction(mDevicesBean.getCuId(), mDevicesBean.getDeviceId(),
                                                 attributesBean.getId(), attributesBean.getCode(), attributesBean.getDisplayName(), txt);
                                     }
@@ -103,11 +105,15 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     @Override
     public void renameSuccess() {
         CustomToast.makeText(this, "修改成功", R.drawable.ic_toast_success).show();
-        finish();
+        loadData();
     }
 
     @Override
     public void renameFailed() {
         CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_success).show();
+    }
+
+    private void loadData(){
+        mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getDeviceName(), mDevicesBean.getDeviceId());
     }
 }

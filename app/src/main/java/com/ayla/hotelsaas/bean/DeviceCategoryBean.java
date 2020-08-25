@@ -46,7 +46,7 @@ public class DeviceCategoryBean {
          * connectMode : 1
          * icon : http://172.31.16.100/product/typeIcon/cz.png
          */
-
+        private long id;
         private String name;
         private String deviceName;
         private long cuId;
@@ -54,6 +54,14 @@ public class DeviceCategoryBean {
         private int networkType;//1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉zigbee配网
         private String icon;
         private String oemModel;
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
 
         public String getOemModel() {
             return oemModel;

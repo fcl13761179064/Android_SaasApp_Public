@@ -12,7 +12,7 @@ import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.FunctionRenameView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,13 +56,14 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                                     @Override
                                     public List<DeviceTemplateBean.AttributesBean> apply(DeviceTemplateBean deviceTemplateBean) throws Exception {
                                         List<DeviceTemplateBean.AttributesBean> attributesBeans = new ArrayList<>();
-                                        Set<String> functions = new HashSet<>();
+                                        Set<String> functions = new LinkedHashSet<>();
                                         functions.addAll(deviceCategoryDetailBean.getConditionProperties());
                                         functions.addAll(deviceCategoryDetailBean.getActionProperties());
                                         for (String function : functions) {
                                             for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
                                                 if (TextUtils.equals(function, attribute.getCode())) {
                                                     attributesBeans.add(attribute);
+                                                    break;
                                                 }
                                             }
                                         }

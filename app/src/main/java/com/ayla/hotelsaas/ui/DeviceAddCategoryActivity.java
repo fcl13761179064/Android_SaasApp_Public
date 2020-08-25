@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.aliyun.iot.aep.component.router.Router;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListLeftAdapter;
@@ -166,12 +167,13 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
             } else if (gatewayCount == 1) {//一个网关
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
-                    Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
+                    Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity2.class);
                     mainActivity.putExtra("deviceId", gateway.getDeviceId());
                     mainActivity.putExtra("cuId", gateway.getCuId());
                     mainActivity.putExtras(getIntent());
                     mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                     mainActivity.putExtra("deviceName", subBean.getDeviceName());
+                    mainActivity.putExtra("categoryId", subBean.getId());
                     startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                 } else {
                     CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
@@ -181,6 +183,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 mainActivity.putExtras(getIntent());
                 mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                 mainActivity.putExtra("deviceName", subBean.getDeviceName());
+                mainActivity.putExtra("categoryId", subBean.getId());
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             }
         } else if (1 == subBean.getNetworkType()) {
