@@ -84,6 +84,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
+            android:name=".ui.ZigBeeAddGuideActivity2"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
             android:name=".ui.ZigBeeAddActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

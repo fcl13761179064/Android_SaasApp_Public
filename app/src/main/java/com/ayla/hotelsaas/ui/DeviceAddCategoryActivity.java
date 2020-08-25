@@ -166,7 +166,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
             } else if (gatewayCount == 1) {//一个网关
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
-                    Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
+                    Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity2.class);
                     mainActivity.putExtra("deviceId", gateway.getDeviceId());
                     mainActivity.putExtra("cuId", gateway.getCuId());
                     mainActivity.putExtras(getIntent());
