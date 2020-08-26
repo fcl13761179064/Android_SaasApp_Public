@@ -21,7 +21,7 @@ public class RoomOrderPresenter extends BasePresenter<RoomOrderView> {
     //页码
     private int pageNum = 1;
     //拉取数量
-    private static int maxNum = 100;
+    private static int maxNum = 10;
 
     /**
      * 加载下一页

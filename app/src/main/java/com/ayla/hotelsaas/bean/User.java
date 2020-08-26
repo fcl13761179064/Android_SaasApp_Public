@@ -9,15 +9,6 @@ public class User {
     private String authToken;
     private String refreshToken;
     private String expireTime;
-    private String authCode;
-
-    public String getAuthCode() {
-        return authCode;
-    }
-
-    public void setAuthCode(String authCode) {
-        this.authCode = authCode;
-    }
 
     public String getAuthToken() {
         return authToken;

@@ -57,6 +57,7 @@ public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView>
 
                     @Override
                     public void _onError(String code, String msg) {
+
                         mView.bindFailed();
                     }
                 });

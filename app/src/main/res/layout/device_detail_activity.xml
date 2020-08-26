@@ -15,19 +15,27 @@
 
 
     <RelativeLayout
-        android:id="@+id/rl_device_rename"
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:layout_marginTop="@dimen/dp_16"
         android:background="@drawable/room_num_shape">
 
         <TextView
-            android:id="@+id/tv_device_show_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
             android:paddingLeft="@dimen/dp_16"
-            android:text="设备重命名"
+            android:text="设备ID"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/tv_device_id"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginRight="22dp"
+            android:layout_alignParentRight="true"
             android:textColor="#333333"
             android:textSize="17sp" />
 
@@ -35,33 +43,26 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="right"
             android:layout_toRightOf="@+id/tv_device_show_name"
+            android:gravity="right"
             android:paddingRight="@dimen/dp_16">
 
             <TextView
                 android:id="@+id/tv_device_name"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingRight="9dp"
                 android:ellipsize="middle"
                 android:gravity="center"
+                android:paddingRight="9dp"
                 android:singleLine="true"
-                android:text="调光开关"
                 android:textColor="#999999"
                 android:textSize="17sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@+id/tv_device_name"
-                android:src="@mipmap/left_ico" />
 
         </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl_device_detail"
+        android:id="@+id/rl_device_type"
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:background="@drawable/room_num_shape">
@@ -71,56 +72,20 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:paddingLeft="@dimen/dp_16"
-            android:text="设备详情"
+            android:text="设备型号"
             android:textColor="#333333"
             android:textSize="17sp" />
-
-        <ImageView
-            android:layout_width="8dp"
-            android:layout_height="14dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/ic_menu_item_arrow_right" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl_device_function_rename"
-        android:layout_width="match_parent"
-        android:layout_height="57dp"
-        android:layout_marginTop="@dimen/dp_16"
-        android:background="@drawable/room_num_shape">
 
         <TextView
+            android:id="@+id/tv_device_type"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="22dp"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_16"
-            android:text="开关重命名"
             android:textColor="#333333"
             android:textSize="17sp" />
-
-        <ImageView
-            android:layout_width="8dp"
-            android:layout_height="14dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/ic_menu_item_arrow_right" />
     </RelativeLayout>
-
-    <Button
-        android:id="@+id/my_account_button"
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="57dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="48dp"
-        android:background="@drawable/room_num_shape"
-        android:text="@string/remove_device"
-        android:textColor="@color/remove_device_color"
-        android:textSize="18sp" />
-
 </LinearLayout>
 
 

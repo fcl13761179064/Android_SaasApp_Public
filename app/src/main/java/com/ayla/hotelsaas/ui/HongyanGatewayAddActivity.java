@@ -50,8 +50,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     private String mIotId = "100";
     private boolean mIs_getway;
     private long mCuId, mScopeId;
-    private String mProductKey, mDeviceName, mHongyanproductKey, mHongyandeviceName;
-    private String mLotId;
+    private String  mDeviceName, mHongyanproductKey, mHongyandeviceName;
 
     @Override
     protected GatewayAddGuidePresenter initPresenter() {
@@ -70,8 +69,6 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
         mHongyanproductKey = getIntent().getStringExtra("HongyanproductKey");
         mHongyandeviceName = getIntent().getStringExtra("HongyandeviceName");
         mCuId = getIntent().getLongExtra("cuId", 1l);
-        mLotId = getIntent().getStringExtra("lotId");
-        mProductKey = getIntent().getStringExtra("productKey");
         mDeviceName = getIntent().getStringExtra("deviceName");
         mScopeId = getIntent().getLongExtra("scopeId", 0l);
         mIs_getway = getIntent().getBooleanExtra("is_getway", false);
@@ -80,6 +77,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             getBindToken(mHongyanproductKey, mHongyandeviceName);
         } else {
             bindVirturalZigbeeToUser(mHongyanproductKey, mHongyandeviceName);
+            Log.d("aliyun_key_log","mHongyanproductKey="+mHongyanproductKey+"mHongyanproductKey="+mHongyandeviceName+"mDeviceName="+mDeviceName+"productKey="+ getIntent().getStringExtra("deviceCategory"));
         }
     }
 

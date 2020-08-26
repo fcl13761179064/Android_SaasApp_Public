@@ -3,7 +3,7 @@
     android:id="@+id/rl_empty_show"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1F1F1"
+    android:background="#F5F6F9"
     android:gravity="center_vertical">
 
     <ImageView
@@ -12,16 +12,7 @@
         android:layout_height="88dp"
         android:scaleType="centerInside"
         android:layout_centerHorizontal="true"
-        android:src="@mipmap/empty_device_imagevie" />
+        android:src="@mipmap/functional_test_page_empty" />
 
-    <TextView
-        android:id="@+id/tv_empty_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/iv_image"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="24dp"
-        android:text="功能建设中"
-        android:textSize="14sp" />
 </RelativeLayout>
 
