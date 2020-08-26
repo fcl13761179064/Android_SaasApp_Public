@@ -9,20 +9,21 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:center_tv="@string/exit"
+        app:center_tv="添加设备"
         app:left_iv="@mipmap/icon_back_black" />
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/room_refreshLayout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/room_recyclerview"
+        <com.ayla.hotelsaas.widget.LarkWebView
+            android:id="@+id/web_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            android:layout_height="match_parent"
+            android:layout_marginTop="1px" />
 
-
-
+        <include
+            android:id="@+id/error_page"
+            layout="@layout/h5_network_error" />
+    </FrameLayout>
 </LinearLayout>

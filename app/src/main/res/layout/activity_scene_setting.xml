@@ -268,7 +268,8 @@
                 android:padding="18dp"
                 android:text="移除场景"
                 android:textColor="#ffd73b4b"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>
