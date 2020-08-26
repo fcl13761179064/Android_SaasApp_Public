@@ -86,6 +86,7 @@ public class RoomManagePresenter extends BasePresenter<RoomManageView> {
                     public void _onError(String code, String msg) {
 
                         mView.loadDataFinish();
+                        mView.createRoomFail(code,msg);
                     }
 
                     @Override

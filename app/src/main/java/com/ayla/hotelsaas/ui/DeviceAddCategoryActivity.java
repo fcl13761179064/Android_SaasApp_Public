@@ -268,6 +268,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         if (requestCode == REQUEST_CODE_HONEYAN_ROUTE && resultCode == RESULT_OK) {
             final Bundle extras = data.getExtras();
             Set<String> strings = extras.keySet();
+            Log.v("onResponse_HONGYAN", "intent extras(int) :" + strings);
             for (String keyStr : strings) {
                 if (extras.get(keyStr) instanceof Integer) {
                     Log.v("onResponse_HONGYAN", "intent extras(int) :" + keyStr + ":" + extras.get(keyStr));

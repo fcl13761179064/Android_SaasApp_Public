@@ -22,6 +22,7 @@ import com.ayla.hotelsaas.ui.MainActivity;
 import com.ayla.hotelsaas.ui.RoomOrderListActivity;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
+import com.ayla.hotelsaas.utils.ToastUtil;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -74,7 +75,7 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                                 @Override
                                 public void onDone(DialogFragment dialog, String txt) {
                                     if (TextUtils.isEmpty(txt)) {
-                                        CustomToast.makeText(getContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming).show();
+                                        CustomToast.makeText(getContext(), "修改房间名称不能为空", R.drawable.ic_toast_warming).show();
                                     } else {
                                         mPresenter.createRoomNum(txt);
                                     }
@@ -171,6 +172,11 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
             mPresenter.loadFistPage();
         }
         loadDataFinish();
+    }
+
+    @Override
+    public void createRoomFail(String code, String msg) {
+        CustomToast.makeText(getContext(), msg, R.drawable.ic_toast_warming).show();
     }
 
     @Override
