@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -205,7 +206,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             } else if (gatewayCount == 1) {//一个网关
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
                     this.mSubBean = subBean;
-                    Log.d("HongyanZigBeeAddGuide", subBean.getOemModel());
                     HongyanZigBeeAddGuideActivity(subBean.getOemModel());
                 } else {
                     CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
@@ -255,6 +255,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 */
 
     private void HongyanZigBeeAddGuideActivity(String productKey) {
+        Log.d("HongyanZigBeeAddGuide", productKey);
         // 启动插件
         Bundle bundle = new Bundle();
         bundle.putString("productKey", productKey);
@@ -265,6 +266,17 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_HONEYAN_ROUTE && resultCode == RESULT_OK) {
+            final Bundle extras = data.getExtras();
+            Set<String> strings = extras.keySet();
+            for (String keyStr : strings) {
+                if (extras.get(keyStr) instanceof Integer) {
+                    Log.v("onResponse_HONGYAN", "intent extras(int) :" + keyStr + ":" + extras.get(keyStr));
+                } else if (extras.get(keyStr) instanceof String) {
+                    Log.v("onResponse_HONGYAN", "intent extras(String) :" + keyStr + ":" + extras.get(keyStr));
+                } else {
+                    Log.v("onResponse_HONGYAN", "intent extras() :" + keyStr + ":" + extras.get(keyStr));
+                }
+            }
             String productKey = data.getStringExtra("productKey");
             String deviceName = data.getStringExtra("deviceName");
             // 配网成功
