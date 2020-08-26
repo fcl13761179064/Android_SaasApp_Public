@@ -127,17 +127,14 @@ public class RetrofitHelper {
             //原始接口结果
             Response originalResponse = chain.proceed(originalRequest);
 
-            if (originalRequest.url().toString().contains("api/v2/sso/refresh")) {//如果本就是refresh接口，不做拦截处理。
-                return originalResponse;
-            }
-
             MediaType mediaType = originalResponse.body().contentType();
             String content = originalResponse.body().string();
             if (originalResponse.isSuccessful()) {
                 try {
                     JSONObject jsonObject = new JSONObject(content);
                     int code = jsonObject.optInt("code");
-                    if (code == 401) {//token过期
+                    if (code == 122001) {//authToken过期
+//                    if (originalRequest.url().toString().contains("construction/device/list")) {//和上面一行替换，模拟authToken过期的情况
                         final CountDownLatch countDownLatch = new CountDownLatch(1);
                         String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
                         final User[] newUser = {null};
@@ -171,8 +168,6 @@ public class RetrofitHelper {
                         } else {//token刷新失败
                             jump2Main();
                         }
-                    } else if (code == 122002 || code == 122001) {
-                        jump2Main();
                     }
                 } catch (Exception e) {
                     Log.e("token_refresh", "intercept: ", e);
