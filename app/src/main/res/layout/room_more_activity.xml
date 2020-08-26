@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv="@string/exit"
+        app:left_iv="@mipmap/icon_back_black" />
+
+
+    <RelativeLayout
+        android:id="@+id/rl_room_rename"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_below="@+id/appBar"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="@drawable/room_num_shape">
+
+        <TextView
+            android:id="@+id/tv_room_show_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_16"
+            android:text="设备重命名"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:paddingRight="@dimen/dp_16">
+
+            <TextView
+                android:id="@+id/tv_room_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:ellipsize="middle"
+                android:gravity="center"
+                android:paddingRight="9dp"
+                android:singleLine="true"
+                android:text="房间号1"
+                android:textColor="#999999"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/tv_room_name"
+                android:src="@mipmap/left_ico" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_remove_room"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/room_num_shape"
+        android:text="@string/remove_room"
+        android:textColor="@color/remove_device_color"
+        android:textSize="18sp" />
+
+</RelativeLayout>
+
+

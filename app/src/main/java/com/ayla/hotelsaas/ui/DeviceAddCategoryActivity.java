@@ -1,14 +1,12 @@
 package com.ayla.hotelsaas.ui;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -264,21 +262,8 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_HONEYAN_ROUTE && resultCode == RESULT_OK) {
-
             String productKey = data.getStringExtra("productKey");
             String deviceName = data.getStringExtra("deviceName");
-            Bundle extras = data.getExtras();
-            Set<String> strings = extras.keySet();
-            for (String keyStr : strings) {
-                if (extras.get(keyStr) instanceof Integer) {
-                    Log.v("onResponse_HONGYAN_four", "intent extras(int) :" + keyStr + ":" + extras.get(keyStr));
-                } else if (extras.get(keyStr) instanceof String) {
-                    Log.v("onResponse_HONGYAN_four", "intent extras(String) :" + keyStr + ":" + extras.get(keyStr));
-                } else {
-                    Log.v("onResponse_HONGYAN_four", "intent extras() :" + keyStr + ":" + extras.get(keyStr));
-                }
-            }
-
             // 配网成功
             Log.d("onResponse_HONGYAN_four", "productKey:" + productKey + "  deviceName:" + deviceName);
             if (!TextUtils.isEmpty(productKey) && !TextUtils.isEmpty(deviceName)) {
@@ -288,7 +273,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 intent.putExtra("HongyandeviceName", deviceName);
                 intent.putExtra("deviceCategory", mSubBean.getOemModel());
                 intent.putExtra("deviceName", mSubBean.getDeviceName());
-                intent.putExtra("productKey", mSubBean.getOemModel());
                 intent.putExtra("cuId", mSubBean.getCuId());
                 intent.putExtras(getIntent());
                 startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
