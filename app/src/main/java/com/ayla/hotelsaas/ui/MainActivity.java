@@ -9,9 +9,11 @@ import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.aliyun.iot.aep.sdk.login.ILoginCallback;
 import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.ayla.hotelsaas.R;
@@ -23,8 +25,10 @@ import com.ayla.hotelsaas.fragment.TestFragment;
 import com.ayla.hotelsaas.mvp.present.MainPresenter;
 import com.ayla.hotelsaas.mvp.view.MainView;
 import com.ayla.hotelsaas.widget.AppBar;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 
 /**
@@ -32,7 +36,11 @@ import butterknife.BindView;
  * @作者 fanchunlei
  * @时间 2020/7/20
  */
-public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements RadioGroup.OnCheckedChangeListener, MainView{
+public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements RadioGroup.OnCheckedChangeListener, MainView {
+    private static final int REQUEST_CODE_TO_MORE = 0x10;
+
+    public static final int RESULT_CODE_REMOVED = 0X20;
+    public static final int RESULT_CODE_RENAMED = 0X21;
 
     @BindView(R.id.appBar)
     AppBar appBar;
@@ -62,8 +70,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
 
     @Override
     public void refreshUI() {
-        mRoom_ID =  getIntent().getLongExtra("roomId",0);
-        mRoom_name =  getIntent().getStringExtra("roomName");
+        mRoom_ID = getIntent().getLongExtra("roomId", 0);
+        mRoom_name = getIntent().getStringExtra("roomName");
         appBar.setCenterText(mRoom_name);
         appBar.setRightText("更多");
         super.refreshUI();
@@ -83,10 +91,10 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
 
     @Override
     protected void appBarRightIvClicked() {
-        super.appBarLeftIvClicked();
+        super.appBarRightIvClicked();
         Intent intent = new Intent(MainActivity.this, RoomMoreActivity.class);
         intent.putExtras(getIntent());
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_TO_MORE);
     }
 
     @Override
@@ -257,8 +265,16 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==100001){
-
+        if (requestCode == REQUEST_CODE_TO_MORE) {
+            if (resultCode == RoomMoreActivity.RESULT_CODE_RENAMED) {
+                mRoom_name = data.getStringExtra("newName");
+                appBar.setCenterText(mRoom_name);
+                setResult(RESULT_CODE_RENAMED, new Intent().putExtra("roomId", mRoom_ID).putExtra("roomName", mRoom_name));
+            }
+            if (resultCode == RoomMoreActivity.RESULT_CODE_REMOVED) {
+                setResult(RESULT_CODE_REMOVED, new Intent().putExtra("roomId", mRoom_ID));
+                finish();
+            }
         }
     }
 }
