@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -16,7 +17,6 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
-import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
@@ -38,7 +38,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
 
     private final int REQUEST_CODE_DEVICE_EDIT = 0X10;
     private final int REQUEST_CODE_DEVICE_ADD = 0X11;
-
+    private final Long room_id;
     @BindView(R.id.device_recyclerview)
     RecyclerView recyclerview;
     @BindView(R.id.float_btn)
@@ -47,12 +47,10 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     SmartRefreshLayout mRefreshLayout;
     public static int[] drawableIcon = new int[]{R.drawable.one, R.drawable.two, R.drawable.three, R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, R.drawable.eight, R.drawable.nine, R.drawable.ten, R.drawable.eleven, R.drawable.tween};
     private DeviceListAdapter mAdapter;
-    private RoomOrderBean.ResultListBean mRoom_order;
-    private WorkOrderBean.ResultListBean mWork_order;
     private RecyclerView mRecyclerview;
 
-    public DeviceListFragment(RoomOrderBean.ResultListBean room_order) {
-        this.mRoom_order = room_order;
+    public DeviceListFragment(Long room_id) {
+        this.room_id = room_id;
     }
 
     @Override
@@ -81,7 +79,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     return;
                 }
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
-                if (devicesBean.getCuId() == 1 && "J9WX4aPBnZlxtipuQqwC000000".equals(devicesBean.getDeviceId())) {
+                if (devicesBean.getCuId() == 1 && "3MYMtLDu2DkCZGCWCpa5000000".equals(devicesBean.getDeviceId())) {
                     Intent intent = new Intent(getContext(), TouchPanelActivity.class);
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("pannel_type", "1");
@@ -94,7 +92,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                 }else {
                     Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
                     intent.putExtra("devicesBean", devicesBean);
-                    intent.putExtra("scopeId", mRoom_order.getRoomId());
+                    intent.putExtra("scopeId", room_id);
                     startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
                 }
             }
@@ -107,7 +105,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     mAdapter.notifyDataSetChanged();
                 }
                 if (mPresenter != null) {
-                    mPresenter.loadFistPage(mRoom_order.getRoomId());
+                    mPresenter.loadFistPage(room_id);
                 }
 
             }
@@ -115,7 +113,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                    mPresenter.loadNextPage(mRoom_order.getRoomId());
+                    mPresenter.loadNextPage(room_id);
                 }
             }
         });
@@ -129,7 +127,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     return;
                 }
                 Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
-                intent.putExtra("scopeId", mRoom_order.getRoomId());
+                intent.putExtra("scopeId", room_id);
                 startActivityForResult(intent, REQUEST_CODE_DEVICE_ADD);
             }
         });

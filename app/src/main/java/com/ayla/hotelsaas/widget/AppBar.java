@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.ui.MainActivity;
 
 
 public class AppBar extends FrameLayout {
@@ -33,7 +34,7 @@ public class AppBar extends FrameLayout {
     public TextView rightTextView;
     private TextView titleTextView;
     private LinearLayout leftLinearLayout;
-    private LinearLayout rightLinearLayout;
+    public LinearLayout rightLinearLayout;
     private View bottom_line;
 
     public AppBar(@NonNull Context context) {
@@ -74,7 +75,7 @@ public class AppBar extends FrameLayout {
         right_tv = ta.getString(R.styleable.AppBar_right_tv);
         center_tv = ta.getString(R.styleable.AppBar_center_tv);
         bottom_line_visibility = ta.getBoolean(R.styleable.AppBar_appbar_bottom_line, true);
-        right_tv_color = ta.getColor(R.styleable.AppBar_right_tv_color, ContextCompat.getColor(getContext(), R.color.color_333333));
+        right_tv_color = ta.getColor(R.styleable.AppBar_right_tv_color, ContextCompat.getColor(getContext(), R.color.loginLogoColor));
         ta.recycle();
 
         adjustContent();
@@ -160,6 +161,7 @@ public class AppBar extends FrameLayout {
         right_tv = text;
         adjustContent();
     }
+
 
     public void setCenterText(String text) {
         center_tv = text;

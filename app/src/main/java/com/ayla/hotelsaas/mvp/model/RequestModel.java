@@ -6,6 +6,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
@@ -98,6 +99,50 @@ public class RequestModel {
 
 
     /**
+     * 创建房间订单
+     *
+     * @param pageNum 页码 从1开始
+     * @param maxNum  每页加载量
+     * @return
+     */
+    public Observable<BaseResult<RoomManageBean>> getCreateRoomOrder(int pageNum, int maxNum) {
+        return getApiService().getcreateRoom(pageNum, maxNum);
+    }
+
+    /**
+     * 创建房间订单
+     * @return
+     */
+    public Observable<BaseResult<String>> createRoomOrder(String roomName) {
+        JsonObject body = new JsonObject();
+        body.addProperty("roomName", roomName);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().createRoom(body111);
+    }
+
+
+
+    /**
+     * 重新命名房间号
+     * @return
+     */
+    public Observable<BaseResult<String>> roomRename(long roomId,String rename) {
+        JsonObject body = new JsonObject();
+        body.addProperty("roomName", rename);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().roomRename(roomId,body111);
+    }
+
+
+    /**
+     * 删除房间
+     * @return
+     */
+    public Observable<BaseResult<String>> deleteRoomNum(long roomId) {
+        return getApiService().deleteRoomNum(roomId);
+    }
+
+    /**
      *  获取authcode
      */
     public Observable<BaseResult<String>> getAuthCode(String roomId) {
@@ -152,7 +197,7 @@ public class RequestModel {
                         List<DeviceCategoryDetailBean> data = listBaseResult.data;
                         if (data != null) {
                             for (DeviceCategoryDetailBean datum : data) {
-                                if ("a15mfjImwp9".equals(datum.getOemModel()) || "a1ZPeSFEOFO".equals(datum.getOemModel())) {
+                                if ("a1UR1BjfznK".equals(datum.getOemModel()) || "a1ZPeSFEOFO".equals(datum.getOemModel())) {
                                     datum.getConditionProperties().add("KeyValueNotification.KeyValue");
                                 }
                             }
@@ -276,7 +321,7 @@ public class RequestModel {
                 .map(new Function<BaseResult<DeviceTemplateBean>, BaseResult<DeviceTemplateBean>>() {
                     @Override
                     public BaseResult<DeviceTemplateBean> apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
-                        if ("a15mfjImwp9".equals(oemModel)) {
+                        if ("a1UR1BjfznK".equals(oemModel)) {
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();

@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -11,8 +12,11 @@ import androidx.fragment.app.DialogFragment;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
+import com.ayla.hotelsaas.mvp.present.RoomMorePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
+import com.ayla.hotelsaas.mvp.view.RoomMoreView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.AppBar;
@@ -22,67 +26,46 @@ import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMorePresenter> implements DeviceMoreView {
+public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePresenter> implements RoomMoreView {
 
     @BindView(R.id.appBar)
     AppBar appBar;
-    @BindView(R.id.rl_device_rename)
-    RelativeLayout rl_device_rename;
-    @BindView(R.id.tv_device_name)
-    TextView tv_device_name;
-    @BindView(R.id.my_account_button)
-    TextView my_account_button;
-    @BindView(R.id.rl_device_function_rename)
-    View rl_function_rename;
-    @BindView(R.id.rl_device_detail)
-    RelativeLayout rl_device_detail;
-
-
-    private DeviceListBean.DevicesBean mDevicesBean;
-    private Long mScopeId;
+    @BindView(R.id.rl_room_rename)
+    RelativeLayout rl_room_rename;
+    @BindView(R.id.tv_room_name)
+    TextView tv_room_name;
+    @BindView(R.id.btn_remove_room)
+    Button btn_remove_room;
+    private long mRoom_ID;
+    private String mRoom_name;
 
     @Override
     public void refreshUI() {
-        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
-        mScopeId = getIntent().getLongExtra("scopeId", 0);
         appBar.setCenterText("更多");
-        if (mDevicesBean != null && !TextUtils.isEmpty(mDevicesBean.getNickname())) {
-            tv_device_name.setText(mDevicesBean.getNickname());
-        }
-        if (TempUtils.isDeviceGateway(mDevicesBean)) {
-            rl_function_rename.setVisibility(View.GONE);
-        }
         super.refreshUI();
     }
 
     @Override
-    protected DeviceMorePresenter initPresenter() {
-        return new DeviceMorePresenter();
+    protected RoomMorePresenter initPresenter() {
+        return new RoomMorePresenter();
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.device_more_activity;
+        return R.layout.room_more_activity;
     }
 
     @Override
     protected void initView() {
-
-
+        mRoom_ID =  getIntent().getLongExtra("roomId",0);
+        mRoom_name =  getIntent().getStringExtra("roomName");
+        tv_room_name.setText(mRoom_name);
     }
 
     @Override
     protected void initListener() {
 
-        rl_device_detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DeviceMoreActivity.this, DeviceDetailActivity.class);
-                intent.putExtras(getIntent());
-                startActivity(intent);
-            }
-        });
-        my_account_button.setOnClickListener(new View.OnClickListener() {
+        btn_remove_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CustomAlarmDialog
@@ -90,8 +73,8 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                             @Override
                             public void onDone(CustomAlarmDialog dialog) {
                                 dialog.dismissAllowingStateLoss();
-                                if (mDevicesBean != null) {
-                                    mPresenter.deviceRemove(mDevicesBean.getDeviceId(), mScopeId, "2");
+                                if (mRoom_ID != 0) {
+                                    mPresenter.deleteRoomNum(mRoom_ID);
                                 }
                             }
 
@@ -106,7 +89,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
             }
         });
 
-        rl_device_rename.setOnClickListener(new View.OnClickListener() {
+        rl_room_rename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (FastClickUtils.isDoubleClick()) {
@@ -117,19 +100,19 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                             @Override
                             public void onDone(DialogFragment dialog, String txt) {
                                 if (TextUtils.isEmpty(txt)) {
-                                    CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming).show();
+                                    CustomToast.makeText(getBaseContext(), "修改房间名不能为空", R.drawable.ic_toast_warming).show();
                                 } else {
-                                    tv_device_name.setText(txt);
-                                    if (mDevicesBean != null) {
-                                        mPresenter.deviceRenameMethod(mDevicesBean.getDeviceId(), txt);
+                                    tv_room_name.setText(txt);
+                                    if (mRoom_ID != 0) {
+                                        mPresenter.roomRename(mRoom_ID, txt);
                                     }
                                 }
                                 dialog.dismissAllowingStateLoss();
                             }
                         })
-                        .setEditValue(tv_device_name.getText().toString())
+                        .setEditValue(tv_room_name.getText().toString())
                         .setTitle("修改名称")
-                        .setEditHint("请输入名称")
+                        .setEditHint("请输入房间名称")
                         .setMaxLength(20)
                         .show(getSupportFragmentManager(), "scene_name");
             }
@@ -142,28 +125,22 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     }
 
     @Override
-    public void operateSuccess(Boolean is_rename) {
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_toast_success).show();
-        setResult(RESULT_OK);
-        finish();
+    public void operateSuccess(String is_rename) {
+        if ("true".equals(is_rename)) {
+            CustomToast.makeText(this, "修改成功", R.drawable.ic_toast_success).show();
+            setResult(RESULT_OK);
+        }
     }
 
     @Override
-    public void operateRemoveSuccess(Boolean is_rename) {
+    public void operateRemoveSuccess(String is_rename) {
+        if ("true".equals(is_rename))
         CustomToast.makeText(this, "移除成功", R.drawable.ic_toast_success).show();
         setResult(RESULT_OK);
-        finish();
     }
 
     @Override
     public void operateMoveFailSuccess(String code, String msg) {
         CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
-    }
-
-    @OnClick(R.id.rl_device_function_rename)
-    public void handleFunctionRenameJump() {
-        Intent intent = new Intent(this, FunctionRenameActivity.class);
-        intent.putExtra("device", mDevicesBean);
-        startActivity(intent);
     }
 }

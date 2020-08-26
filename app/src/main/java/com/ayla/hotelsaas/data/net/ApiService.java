@@ -5,18 +5,18 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-
 import java.util.List;
 import java.util.Map;
-
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -42,12 +42,23 @@ public interface ApiService {
     @GET("api/v2/sso/{resourceId}")
     Observable<BaseResult<String>> authCode(@Path("resourceId") String scopeId);
 
+    @GET("api/v1/construction/hotelcontent/approom")
+    Observable<BaseResult<RoomManageBean>> getcreateRoom(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
+
+    @POST("api/v1/construction/hotelcontent/approom")
+    Observable<BaseResult<String>> createRoom(@Body RequestBody body);
 
     @PUT("api/v1/construction/user/register")
     Observable<BaseResult<Boolean>> register(@Body RequestBody body);
 
     @POST("api/v2/sso/refresh")
     Observable<BaseResult<User>> refreshToken(@Body RequestBody body);
+
+    @PUT("api/v1/construction/hotelcontent/approom/{id}")
+    Observable<BaseResult<String>> roomRename(@Path("id") long roomId,@Body RequestBody body);
+
+    @DELETE("api/v1/construction/hotelcontent/approom/{id}")
+    Observable<BaseResult<String>> deleteRoomNum(@Path("id") long roomId);
 
     @GET("/api/v1/construction/devicetypes")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();

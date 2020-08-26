@@ -68,6 +68,9 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     protected void initView() {
         if (Constance.isNetworkDebug) {
             tvSwitch.setText("测");
+            tvSwitch.setVisibility(View.VISIBLE);
+            edite_count.setText("chunlei.fan@aylaasia.com");
+            edit_password.setText("123456");
         } else {
             tvSwitch.setText("正");
         }
@@ -219,20 +222,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         SharePreferenceUtils.saveString(LoginActivity.this, Constance.SP_Refresh_Token, data.getRefreshToken());
         Intent mainActivity = new Intent(this, WorkRoomManageActivity.class);
         startActivity(mainActivity);
-        Log.d("LoginActivity_authcode", data.getAuthCode());
-        LoginBusiness.authCodeLogin(data.getAuthCode(), new ILoginCallback() {
-            @Override
-            public void onLoginSuccess() {
-                Log.d("onLoginSuccess", "成功");
-            }
-
-            @Override
-            public void onLoginFailed(int i, String s) {
-                Log.d("onLoginSuccess", "code: " + i + ", str: " + s);
-
-            }
-        });
-
         finish();
 
     }

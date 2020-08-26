@@ -2,9 +2,12 @@ package com.ayla.hotelsaas.mvp.present;
 
 
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
+import com.ayla.hotelsaas.mvp.view.RoomManageView;
+import com.ayla.hotelsaas.mvp.view.RoomOrderView;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -17,7 +20,7 @@ import io.reactivex.schedulers.Schedulers;
  * @作者 fanchunlei
  * @时间 2020/7/14
  */
-public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
+public class RoomManagePresenter extends BasePresenter<RoomManageView> {
     //页码
     private int pageNum = 1;
     //拉取数量
@@ -45,14 +48,38 @@ public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
      * @param
      */
     public void loadData() {
-        RequestModel.getInstance().getWorkOrderList(pageNum, maxNum)
+        RequestModel.getInstance().getCreateRoomOrder(pageNum, maxNum)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new RxjavaObserver<WorkOrderBean>() {
+                .subscribe(new RxjavaObserver<RoomManageBean>() {
                     @Override
-                    public void _onNext(WorkOrderBean data) {
+                    public void _onNext(RoomManageBean data) {
 
                         mView.loadDataSuccess(data);
+                    }
+
+                    @Override
+                    public void _onError(String code, String msg) {
+
+                        mView.loadDataFinish();
+                    }
+
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        addSubscrebe(d);
+                    }
+                });
+    }
+
+    public void createRoomNum(String room_name) {
+        RequestModel.getInstance().createRoomOrder(room_name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new RxjavaObserver<String>() {
+                    @Override
+                    public void _onNext(String data) {
+
+                        mView.createRoomSuccess(data);
                     }
 
                     @Override

@@ -100,9 +100,11 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!FastClickUtils.isDoubleClick()) {
                     Intent intent = new Intent(RoomOrderListActivity.this, MainActivity.class);
-                    final RoomOrderBean.ResultListBean room_result = mAdapter.getData().get(position);
-                    intent.putExtra("roomData", (Serializable) room_result);
-                    intent.putExtra("workOrderdata", (Serializable) mWork_order);
+                    RoomOrderBean.ResultListBean room_result = mAdapter.getData().get(position);
+                    long roomId = room_result.getRoomId();
+                    String roomName = room_result.getRoomName();
+                    intent.putExtra("roomId", roomId);
+                    intent.putExtra("roomName", roomName);
                     startActivity(intent);
                 }
             }
