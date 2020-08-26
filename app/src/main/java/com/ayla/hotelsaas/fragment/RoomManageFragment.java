@@ -173,6 +173,15 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
     }
 
     @Override
+    public void createRoomFailed(String code) {
+        if (TextUtils.equals("181000", code)) {
+            CustomToast.makeText(getContext(), "创建失败,房间名已存在", R.drawable.ic_toast_warming).show();
+        } else {
+            CustomToast.makeText(getContext(), "创建失败", R.drawable.ic_toast_warming).show();
+        }
+    }
+
+    @Override
     public void loadDataFinish() {
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
