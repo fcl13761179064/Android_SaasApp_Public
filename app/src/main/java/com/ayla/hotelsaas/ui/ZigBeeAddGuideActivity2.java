@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.Button;
 
 import androidx.annotation.Nullable;
 
@@ -50,8 +49,9 @@ public class ZigBeeAddGuideActivity2 extends BaseMvpActivity {
 
     @Override
     protected void initView() {
-        mErrorPageView.setVisibility(View.GONE);
     }
+
+    boolean loadError = false;
 
     @Override
     protected void initListener() {
@@ -59,27 +59,34 @@ public class ZigBeeAddGuideActivity2 extends BaseMvpActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 Log.d(TAG, "onPageStarted: " + url);
-                mErrorPageView.setVisibility(View.GONE);
+                if (!loadError) {
+                    mErrorPageView.setVisibility(View.GONE);
+                }
+                loadError = false;
                 showProgress();
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 Log.d(TAG, "onPageFinished: " + url);
+                if (!loadError) {
+                    mErrorPageView.setVisibility(View.GONE);
+                }
                 hideProgress();
             }
 
             @Override
             public void onPageError(WebView view, int errorCode, String description, String failingUrl) {
                 Log.d(TAG, "onPageError: " + failingUrl);
+                loadError = true;
                 mErrorPageView.setVisibility(View.VISIBLE);
-                Button refreshButton = mErrorPageView.findViewById(R.id.refresh_bt);
-                refreshButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mWebView.reload();
-                    }
-                });
+                mErrorPageView.findViewById(R.id.refresh_bt)
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mWebView.reload();
+                            }
+                        });
             }
         });
         mWebView.registerJsBridgeCallBack(new LarkWebView.JsBridgeCallBack() {

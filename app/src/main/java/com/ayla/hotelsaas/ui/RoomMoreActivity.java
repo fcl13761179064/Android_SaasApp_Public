@@ -11,22 +11,18 @@ import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.bean.RoomOrderBean;
-import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
 import com.ayla.hotelsaas.mvp.present.RoomMorePresenter;
-import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 import com.ayla.hotelsaas.mvp.view.RoomMoreView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
-import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePresenter> implements RoomMoreView {
+    public static final int RESULT_CODE_REMOVED = 0X10;
+    public static final int RESULT_CODE_RENAMED = 0X11;
 
     @BindView(R.id.appBar)
     AppBar appBar;
@@ -57,8 +53,8 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
 
     @Override
     protected void initView() {
-        mRoom_ID =  getIntent().getLongExtra("roomId",0);
-        mRoom_name =  getIntent().getStringExtra("roomName");
+        mRoom_ID = getIntent().getLongExtra("roomId", 0);
+        mRoom_name = getIntent().getStringExtra("roomName");
         tv_room_name.setText(mRoom_name);
     }
 
@@ -83,8 +79,7 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
                                 dialog.dismissAllowingStateLoss();
                             }
                         })
-                        .setTitle(getResources().getString(R.string.remove_device_title))
-                        .setContent(getResources().getString(R.string.remove_device_content))
+                        .setContent("是否删除当前房间，设备与联动关系")
                         .show(getSupportFragmentManager(), "");
             }
         });
@@ -101,6 +96,7 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
                             public void onDone(DialogFragment dialog, String txt) {
                                 if (TextUtils.isEmpty(txt)) {
                                     CustomToast.makeText(getBaseContext(), "修改房间名不能为空", R.drawable.ic_toast_warming).show();
+                                    return;
                                 } else {
                                     tv_room_name.setText(txt);
                                     if (mRoom_ID != 0) {
@@ -125,18 +121,16 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
     }
 
     @Override
-    public void operateSuccess(String is_rename) {
-        if ("true".equals(is_rename)) {
-            CustomToast.makeText(this, "修改成功", R.drawable.ic_toast_success).show();
-            setResult(RESULT_OK);
-        }
+    public void operateSuccess(String newName) {
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_toast_success).show();
+        setResult(RESULT_CODE_RENAMED, new Intent().putExtra("newName", newName));
     }
 
     @Override
     public void operateRemoveSuccess(String is_rename) {
-        if ("true".equals(is_rename))
         CustomToast.makeText(this, "移除成功", R.drawable.ic_toast_success).show();
-        setResult(RESULT_OK);
+        setResult(RESULT_CODE_REMOVED);
+        finish();
     }
 
     @Override

@@ -11,6 +11,8 @@ import com.ayla.hotelsaas.mvp.view.RoomMoreView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -20,15 +22,27 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
 
-    public void roomRename(long room_id,String reName) {
-        RequestModel.getInstance().roomRename(room_id,reName)
+    public void roomRename(long room_id, String reName) {
+        RequestModel.getInstance().roomRename(room_id, reName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
                 .subscribe(new RxjavaObserver<String>() {
                     @Override
                     public void _onNext(String data) {
 
-                        mView.operateSuccess(data);
+                        mView.operateSuccess(reName);
                     }
 
                     @Override
@@ -49,6 +63,18 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
         RequestModel.getInstance().deleteRoomNum(room_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
                 .subscribe(new RxjavaObserver<String>() {
                     @Override
                     public void _onNext(String data) {
@@ -59,7 +85,7 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
                     @Override
                     public void _onError(String code, String msg) {
 
-                        mView.operateMoveFailSuccess(code,msg);
+                        mView.operateMoveFailSuccess(code, msg);
                     }
 
                     @Override

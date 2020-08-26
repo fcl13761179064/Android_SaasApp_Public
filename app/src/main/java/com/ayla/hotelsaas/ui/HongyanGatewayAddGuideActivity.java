@@ -3,9 +3,11 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.alibaba.fastjson.JSON;
 import com.aliyun.alink.business.devicecenter.api.add.DeviceInfo;
 import com.aliyun.alink.business.devicecenter.api.discovery.DiscoveryType;
@@ -22,9 +24,11 @@ import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+
 import butterknife.BindView;
 
 /**
@@ -41,7 +45,6 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
     AppBar appBar;
     private HongyanGetwayAdapter mAdapter;
     private DeviceAddHandler deviceAddHandler;
-    private String TAG = MainActivity.class.getSimpleName();
     private List<FoundDeviceListItem> mFoundDeviceListItems;
 
     @Override
@@ -113,12 +116,12 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
 
     public void handleJump(int position) {
         Intent intent = new Intent(this, HongyanGatewayAddActivity.class);
-         String productKey = mAdapter.getData().get(position).getProductKey();
-         String deviceName = mAdapter.getData().get(position).getDeviceName();
+        String productKey = mAdapter.getData().get(position).getProductKey();
+        String deviceName = mAdapter.getData().get(position).getDeviceName();
         intent.putExtra("HongyanproductKey", productKey);
         intent.putExtra("HongyandeviceName", deviceName);
         intent.putExtras(getIntent());
-        startActivityForResult(intent,REQUEST_CODE_ADD_DEVICE);
+        startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
     }
 
     @Override

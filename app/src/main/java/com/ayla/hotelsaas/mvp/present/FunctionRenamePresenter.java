@@ -129,9 +129,9 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
 
     }
 
-    public void renameFunction(int cuId, String deviceId, int id, String propertyName, String propertyType, String propertyValue) {
+    public void renameFunction(int cuId, String deviceId, int id, String propertyName, String propertyValue) {
         Disposable subscribe = RequestModel.getInstance()
-                .tourchPanelRenameMethod(id, deviceId, cuId, propertyName, propertyType, propertyValue)
+                .tourchPanelRenameMethod(id, deviceId, cuId, propertyName, "nickName", propertyValue)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

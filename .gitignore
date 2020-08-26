@@ -47,3 +47,5 @@ captures/
 
 # pact 文件
 app/target
+app/debug
+app/release

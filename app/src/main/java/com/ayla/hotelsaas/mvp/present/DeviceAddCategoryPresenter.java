@@ -10,6 +10,8 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class DeviceAddCategoryPresenter extends BasePresenter<DeviceAddCategoryView> {
@@ -19,6 +21,18 @@ public class DeviceAddCategoryPresenter extends BasePresenter<DeviceAddCategoryV
                 .getDeviceCategory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
                 .subscribe(new RxjavaObserver<List<DeviceCategoryBean>>() {
                     @Override
                     public void onSubscribe(Disposable d) {

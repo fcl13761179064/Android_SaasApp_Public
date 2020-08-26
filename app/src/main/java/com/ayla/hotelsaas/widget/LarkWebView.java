@@ -11,6 +11,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.ayla.hotelsaas.BuildConfig;
+
 import java.lang.ref.WeakReference;
 
 
@@ -90,7 +92,7 @@ public class LarkWebView extends WebView {
         String appCacheDir = this.getContext().getDir("cache", Context.MODE_PRIVATE).getAbsolutePath();
         webSettings.setAppCachePath(appCacheDir);
         webSettings.setAllowFileAccess(true);
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webSettings.setCacheMode(BuildConfig.DEBUG ? WebSettings.LOAD_NO_CACHE : WebSettings.LOAD_DEFAULT);
         webSettings.setAllowFileAccess(true);
         webSettings.setAllowFileAccessFromFileURLs(true);
         webSettings.setAllowUniversalAccessFromFileURLs(true);

@@ -143,6 +143,13 @@ public abstract class BasicFragment extends Fragment {
         }
     }
 
+    public void showProgress() {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof BaseMvpActivity) {
+            ((BaseMvpActivity) activity).showProgress();
+        }
+    }
+
     public void refreshUI() {
         final View appbarRoot = getActivity().findViewById(R.id.appbar_root_rl_ff91090);
         if (appbarRoot != null) {
