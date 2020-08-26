@@ -231,14 +231,14 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             case -1:
                 mImageView.setImageResource(R.drawable.ic_device_bind_failed);
                 mLoadingTextView.setVisibility(View.INVISIBLE);
-                mBindProgressTextView.setText("设备绑定失败\n请再检查设备状态与设备ID号后重试");
+                mBindProgressTextView.setText("发现网关失败，请确保网关与手机处于同一Wi-Fi下");
                 mFinishButton.setVisibility(View.VISIBLE);
                 mFinishButton.setText("重试");
                 break;
             default:
                 GlideApp.with(mImageView).load(R.drawable.ic_device_bind_loading).into(mImageView);
                 mLoadingTextView.setVisibility(View.VISIBLE);
-                mBindProgressTextView.setText("最长可能需要1分钟，请耐心等待");
+                mBindProgressTextView.setText("正在发现网关，最长可能需要1分钟。\n请确保网关与手机处于同一Wi-Fi下");
                 mFinishButton.setVisibility(View.INVISIBLE);
                 break;
         }

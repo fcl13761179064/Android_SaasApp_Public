@@ -111,14 +111,14 @@ public class RoomManageBean implements Serializable {
          * contentName : 施工房间1号
          */
 
-        private String id;
+        private long id;
         private String contentName;
 
-        public String getId() {
+        public long getId() {
             return id;
         }
 
-        public void setId(String id) {
+        public void setId(long id) {
             this.id = id;
         }
 

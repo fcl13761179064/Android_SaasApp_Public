@@ -79,10 +79,21 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
                                     CustomToast.makeText(getBaseContext(), "不能为空", R.drawable.ic_toast_warming).show();
                                 } else {
                                     if (mDevicesBean != null) {
+                                        for (int i = 0; i < mAdapter.getData().size(); i++) {
+                                            FunctionRenameListAdapter.Bean item = mAdapter.getItem(i);
+                                            if (i == position) {
+                                                continue;
+                                            }
+                                            if (TextUtils.equals(item.getPropertyValue(), txt) || TextUtils.equals(item.getDisplayName(), txt)) {
+                                                CustomToast.makeText(getBaseContext(), "不能和其他开关重名", R.drawable.ic_toast_warming).show();
+                                                return;
+                                            }
+                                        }
+
                                         attributesBean.setPropertyValue(txt);
                                         mAdapter.notifyItemChanged(position);
                                         mPresenter.renameFunction(mDevicesBean.getCuId(), mDevicesBean.getDeviceId(),
-                                                attributesBean.getId(), attributesBean.getCode(), attributesBean.getDisplayName(), txt);
+                                                attributesBean.getId(), attributesBean.getCode(), txt);
                                     }
                                 }
                                 dialog.dismissAllowingStateLoss();
@@ -110,10 +121,10 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
 
     @Override
     public void renameFailed() {
-        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
     }
 
-    private void loadData(){
+    private void loadData() {
         mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getDeviceName(), mDevicesBean.getDeviceId());
     }
 }

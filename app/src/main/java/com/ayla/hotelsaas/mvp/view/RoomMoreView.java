@@ -16,7 +16,7 @@ public interface RoomMoreView extends BaseView {
     void operateError(String msg);
 
     //操作成功
-    void operateSuccess(String is_rename);
+    void operateSuccess(String newName);
 
     //移除成功
     void operateRemoveSuccess(String is_rename);

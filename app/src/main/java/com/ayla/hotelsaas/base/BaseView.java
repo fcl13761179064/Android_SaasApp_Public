@@ -8,6 +8,8 @@ public interface BaseView {
 
     void showProgress(String msg);
 
+    void showProgress();
+
     void hideProgress();
 
 }
