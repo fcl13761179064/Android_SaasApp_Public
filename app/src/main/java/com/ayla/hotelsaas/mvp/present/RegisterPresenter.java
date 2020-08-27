@@ -85,7 +85,7 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
 
                     @Override
                     public void _onError(String code, String msg) {
-                        mView.errorShake(0, 2, msg);
+                        mView.errorShake(0, 2, code);
                         mView.hideProgress();
                     }
                 });

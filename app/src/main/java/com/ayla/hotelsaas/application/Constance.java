@@ -9,7 +9,7 @@ public class Constance {
     /**
      * 是否是网络测试环境
      */
-    public static boolean isNetworkDebug = true;
+    public static boolean isNetworkDebug = false;
 
     public static String sProdUrl = "https://abp-prod.ayla.com.cn/";//正式环境
    // public static String sProdUrl = "https://smarthotel-admin-test.ayla.com.cn";//晓玲测试环境

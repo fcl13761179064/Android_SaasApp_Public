@@ -68,9 +68,9 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     protected void initView() {
         if (Constance.isNetworkDebug) {
             tvSwitch.setText("测");
-            tvSwitch.setVisibility(View.VISIBLE);
+         /*   tvSwitch.setVisibility(View.VISIBLE);
             edite_count.setText("chunlei.fan@aylaasia.com");
-            edit_password.setText("123456");
+            edit_password.setText("123456");*/
         } else {
             tvSwitch.setText("正");
         }

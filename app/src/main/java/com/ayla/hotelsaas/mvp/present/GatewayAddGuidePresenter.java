@@ -22,7 +22,8 @@ public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView>
      * @param cuId
      * @param scopeId
      */
-    public void registerDeviceWithDSN(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
+    public void
+    registerDeviceWithDSN(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
         long startTime = System.currentTimeMillis();
         RequestModel.getInstance().bindDeviceWithDSN(dsn, cuId, scopeId, 2, deviceCategory, deviceName, deviceName + "_" + dsn)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
@@ -52,6 +53,7 @@ public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView>
 
                     @Override
                     public void _onNext(Object data) {
+
                         mView.bindSuccess();
                     }
 

@@ -20,7 +20,7 @@ public interface RegisterView extends BaseView {
     String getPassword();
 
     //错误提示
-    void errorShake(int type, int CycleTimes, String msg);
+    void errorShake(int type, int CycleTimes, String code);
 
     //注册成功
     void loginSuccess(Boolean data);

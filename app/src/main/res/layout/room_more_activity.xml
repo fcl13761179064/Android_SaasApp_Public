@@ -27,7 +27,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:paddingLeft="@dimen/dp_16"
-            android:text="设备重命名"
+            android:text="房间名称"
             android:textColor="#333333"
             android:textSize="17sp" />
 

@@ -144,7 +144,7 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
         if (records != null) {
             if (records.isEmpty()) {
                 if (mAdapter.getData().isEmpty()) {
-                    mAdapter.setEmptyView(R.layout.empty_work_order);
+                    mAdapter.setEmptyView(R.layout.empty_room_manage);
                 }
                 final View inflate = LayoutInflater.from(getContext()).inflate(R.layout.room_root_view, null);
                 mAdapter.setFooterView(inflate);

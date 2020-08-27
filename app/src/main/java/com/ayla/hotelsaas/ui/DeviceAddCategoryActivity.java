@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -270,13 +271,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             Set<String> strings = extras.keySet();
             Log.v("onResponse_HONGYAN", "intent extras(int) :" + strings);
             for (String keyStr : strings) {
-                if (extras.get(keyStr) instanceof Integer) {
-                    Log.v("onResponse_HONGYAN", "intent extras(int) :" + keyStr + ":" + extras.get(keyStr));
-                } else if (extras.get(keyStr) instanceof String) {
-                    Log.v("onResponse_HONGYAN", "intent extras(String) :" + keyStr + ":" + extras.get(keyStr));
-                } else {
-                    Log.v("onResponse_HONGYAN", "intent extras() :" + keyStr + ":" + extras.get(keyStr));
-                }
+                Log.v("onResponse_HONGYAN", "intent extras() :" + keyStr + ":" + keyStr);
             }
             String productKey = data.getStringExtra("productKey");
             String deviceName = data.getStringExtra("deviceName");
