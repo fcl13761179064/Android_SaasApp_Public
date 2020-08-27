@@ -34,7 +34,7 @@ public class MainPresenter extends BasePresenter<MainView> {
                     @Override
                     public void _onError(String code, String msg) {
 
-                        mView.loadDataFinish();
+                        mView.getAuthCodeFail(code,msg);
                     }
 
                     @Override

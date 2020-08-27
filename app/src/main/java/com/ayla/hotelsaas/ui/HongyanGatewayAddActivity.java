@@ -164,10 +164,14 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
                 try {
                     final int code = ioTResponse.getCode();
+                     String message = ioTResponse.getMessage();
+                    Log.d(TAG, "LotID=" +code+"message="+message);
                     if (code == 200) {
                         JSONObject data = (JSONObject) ioTResponse.getData();
                         mIotId = (String) data.get("iotId");
                         startBind(mIotId);
+                    }else {
+                        mPresenter.registerDeviceWithDSN(mIotId, mCuId, mScopeId, getIntent().getStringExtra("deviceCategory"), mDeviceName);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
