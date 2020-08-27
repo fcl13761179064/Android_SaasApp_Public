@@ -15,8 +15,10 @@ import com.ayla.hotelsaas.utils.PregnancyUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.http.HEAD;
 
 /**
  * @描述
@@ -69,6 +71,12 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
                         mView.showProgress("注册中...");
                     }
                 })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
                 .subscribe(new RxjavaObserver<Boolean>() {
 
                     @Override
@@ -78,15 +86,13 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
 
                     @Override
                     public void _onNext(Boolean data) {
-                        mView.hideProgress();
-                        mView.loginSuccess(data);
-
+                        mView.RegistSuccess(data);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
                         mView.errorShake(0, 2, code);
-                        mView.hideProgress();
+
                     }
                 });
     }

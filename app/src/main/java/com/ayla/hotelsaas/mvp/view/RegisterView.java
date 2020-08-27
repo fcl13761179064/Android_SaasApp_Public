@@ -23,5 +23,5 @@ public interface RegisterView extends BaseView {
     void errorShake(int type, int CycleTimes, String code);
 
     //注册成功
-    void loginSuccess(Boolean data);
+    void RegistSuccess(Boolean data);
 }

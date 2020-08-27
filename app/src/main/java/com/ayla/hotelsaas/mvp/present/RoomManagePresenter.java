@@ -1,6 +1,8 @@
 package com.ayla.hotelsaas.mvp.present;
 
 
+import android.text.TextUtils;
+
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
@@ -13,7 +15,10 @@ import com.ayla.hotelsaas.mvp.view.WorkOrderView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.http.HEAD;
 
 /**
  * @描述
@@ -75,10 +80,21 @@ public class RoomManagePresenter extends BasePresenter<RoomManageView> {
         RequestModel.getInstance().createRoomOrder(room_name)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
                 .subscribe(new RxjavaObserver<String>() {
                     @Override
                     public void _onNext(String data) {
-
                         mView.createRoomSuccess(data);
                     }
 
@@ -86,7 +102,7 @@ public class RoomManagePresenter extends BasePresenter<RoomManageView> {
                     public void _onError(String code, String msg) {
 
                         mView.loadDataFinish();
-                        mView.createRoomFail(code,msg);
+                        mView.createRoomFailed(code);
                     }
 
                     @Override

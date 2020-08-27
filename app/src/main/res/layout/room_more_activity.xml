@@ -12,17 +12,18 @@
         app:center_tv="@string/exit"
         app:left_iv="@mipmap/icon_back_black" />
 
-
     <RelativeLayout
         android:id="@+id/rl_room_rename"
         android:layout_width="match_parent"
-        android:layout_height="57dp"
-        android:layout_below="@+id/appBar"
-        android:layout_marginTop="@dimen/dp_16"
-        android:background="@drawable/room_num_shape">
+        android:layout_height="56dp"
+        android:layout_below="@id/appBar"
+        android:layout_marginTop="16dp"
+        android:background="#FFFFFF"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <TextView
-            android:id="@+id/tv_room_show_name"
+            android:id="@+id/tv_function_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -31,32 +32,30 @@
             android:textColor="#333333"
             android:textSize="17sp" />
 
-
-        <RelativeLayout
+        <TextView
+            android:id="@+id/tv_room_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@id/tv_arrow"
+            android:layout_toRightOf="@id/tv_function_name"
+            android:ellipsize="end"
             android:gravity="right"
-            android:paddingRight="@dimen/dp_16">
+            android:maxLines="1"
+            android:minWidth="200dp"
+            android:text="开关一"
+            android:textColor="#ff999999"
+            android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tv_room_name"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:ellipsize="middle"
-                android:gravity="center"
-                android:paddingRight="9dp"
-                android:singleLine="true"
-                android:text="房间号1"
-                android:textColor="#999999"
-                android:textSize="17sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@+id/tv_room_name"
-                android:src="@mipmap/left_ico" />
-
-        </RelativeLayout>
+        <ImageView
+            android:id="@+id/tv_arrow"
+            android:layout_width="8dp"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_menu_item_arrow_right" />
     </RelativeLayout>
 
     <Button
