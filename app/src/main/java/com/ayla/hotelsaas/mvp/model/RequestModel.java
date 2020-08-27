@@ -16,10 +16,13 @@ import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
@@ -69,7 +72,7 @@ public class RequestModel {
         return getApiService().login(new_body);
     }
 
- public Observable<BaseResult<Boolean>> register(String user_name,String account, String password) {
+    public Observable<BaseResult<Boolean>> register(String user_name, String account, String password) {
         JsonObject body = new JsonObject();
         body.addProperty("userName", user_name);
         body.addProperty("account", account);
@@ -111,6 +114,7 @@ public class RequestModel {
 
     /**
      * 创建房间订单
+     *
      * @return
      */
     public Observable<BaseResult<String>> createRoomOrder(String roomName) {
@@ -121,21 +125,22 @@ public class RequestModel {
     }
 
 
-
     /**
      * 重新命名房间号
+     *
      * @return
      */
-    public Observable<BaseResult<String>> roomRename(long roomId,String rename) {
+    public Observable<BaseResult<String>> roomRename(long roomId, String rename) {
         JsonObject body = new JsonObject();
         body.addProperty("roomName", rename);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().roomRename(roomId,body111);
+        return getApiService().roomRename(roomId, body111);
     }
 
 
     /**
      * 删除房间
+     *
      * @return
      */
     public Observable<BaseResult<String>> deleteRoomNum(long roomId) {
@@ -143,7 +148,7 @@ public class RequestModel {
     }
 
     /**
-     *  获取authcode
+     * 获取authcode
      */
     public Observable<BaseResult<String>> getAuthCode(String roomId) {
         return getApiService().authCode(roomId);
@@ -189,22 +194,7 @@ public class RequestModel {
      * @return
      */
     public Observable<BaseResult<List<DeviceCategoryDetailBean>>> getDeviceCategoryDetail() {
-        return getApiService().fetchDeviceCategoryDetail()
-                //特别处理：如果是智镜设备，要强行加上 场景的支持。
-                .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, BaseResult<List<DeviceCategoryDetailBean>>>() {
-                    @Override
-                    public BaseResult<List<DeviceCategoryDetailBean>> apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
-                        List<DeviceCategoryDetailBean> data = listBaseResult.data;
-                        if (data != null) {
-                            for (DeviceCategoryDetailBean datum : data) {
-                                if ("a1UR1BjfznK".equals(datum.getOemModel()) || "a1ZPeSFEOFO".equals(datum.getOemModel())) {
-                                    datum.getConditionProperties().add("KeyValueNotification.KeyValue");
-                                }
-                            }
-                        }
-                        return listBaseResult;
-                    }
-                });
+        return getApiService().fetchDeviceCategoryDetail();
     }
 
     /**
@@ -474,6 +464,30 @@ public class RequestModel {
                                             valueBean.setDataType(1);
                                             valueBean.setDisplayName("全关");
                                             valueBean.setValue("6");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        attributesBean.setValue(valueBeans);
+                                    }
+                                }
+                            }
+                        }
+                        if ("a1009Fd5ZCJ".equals(oemModel)) {//紧急按钮设备
+                            DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
+                            if (data != null) {
+                                List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
+                                if (attributes != null) {
+                                    DeviceTemplateBean.AttributesBean attributesBean = new DeviceTemplateBean.AttributesBean();
+                                    attributesBean.setCode("EmergencyTriggerAlarm.KeyValue");
+                                    attributesBean.setDisplayName("紧急触发报警");
+                                    attributesBean.setDataType(1);
+                                    attributes.add(attributesBean);
+                                    {
+                                        List<DeviceTemplateBean.AttributesBean.ValueBean> valueBeans = new ArrayList<>();
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("紧急报警");
+                                            valueBean.setValue("1");
                                             valueBeans.add(valueBean);
                                         }
                                         attributesBean.setValue(valueBeans);
