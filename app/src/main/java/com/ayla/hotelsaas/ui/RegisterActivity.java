@@ -159,15 +159,21 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
     }
 
     @Override
-    public void loginSuccess(Boolean data) {
+    public void RegistSuccess(Boolean data) {
         CustomToast.makeText(this, "注册成功", R.drawable.ic_toast_success).show();
-        finish();
     }
 
     @Override
-    public void errorShake(int type, int CycleTimes, String msg) {
+    public void errorShake(int type, int CycleTimes,String code) {
         tv_error_show.setVisibility(View.VISIBLE);
-        tv_error_show.setText(msg);
+        if ("171000".equals(code)){
+            tv_error_show.setText("用户已存在");
+        }else if (TextUtils.isEmpty(code)){
+
+        }else {
+            tv_error_show.setText("服务异常");
+        }
+
         // CycleTimes动画重复的次数
         if (null == mShakeAnimation) {
             mShakeAnimation = new TranslateAnimation(0, 10, 0, 0);

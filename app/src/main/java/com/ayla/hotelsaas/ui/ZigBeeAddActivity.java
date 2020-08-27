@@ -14,8 +14,6 @@ import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.ZigBeeAddPresenter;
 import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
-import com.ayla.hotelsaas.utils.ImageLoader;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 

@@ -21,6 +21,7 @@ import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.MainActivity;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
+import com.ayla.hotelsaas.utils.ToastUtil;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -74,7 +75,7 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                                 @Override
                                 public void onDone(DialogFragment dialog, String txt) {
                                     if (TextUtils.isEmpty(txt)) {
-                                        CustomToast.makeText(getContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming).show();
+                                        CustomToast.makeText(getContext(), "修改房间名称不能为空", R.drawable.ic_toast_warming).show();
                                     } else {
                                         mPresenter.createRoomNum(txt);
                                     }
@@ -143,7 +144,7 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
         if (records != null) {
             if (records.isEmpty()) {
                 if (mAdapter.getData().isEmpty()) {
-                    mAdapter.setEmptyView(R.layout.empty_work_order);
+                    mAdapter.setEmptyView(R.layout.empty_room_manage);
                 }
                 final View inflate = LayoutInflater.from(getContext()).inflate(R.layout.room_root_view, null);
                 mAdapter.setFooterView(inflate);
@@ -172,7 +173,7 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
         loadDataFinish();
     }
 
-    @Override
+
     public void createRoomFailed(String code) {
         if (TextUtils.equals("181000", code)) {
             CustomToast.makeText(getContext(), "创建失败,房间名已存在", R.drawable.ic_toast_warming).show();

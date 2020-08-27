@@ -25,13 +25,11 @@
         <TextView
             android:id="@+id/tv_function_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:ellipsize="end"
-            android:maxWidth="120dp"
-            android:maxLines="1"
-            android:text="设备重命名"
-            android:textColor="#ff333333"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_16"
+            android:text="房间名称"
+            android:textColor="#333333"
             android:textSize="17sp" />
 
         <TextView

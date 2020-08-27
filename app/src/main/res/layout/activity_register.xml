@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="账号和密码错误"
+                android:text=""
                 android:textColor="@color/login_error_show"
                 android:textSize="14sp"
                 android:visibility="invisible" />
