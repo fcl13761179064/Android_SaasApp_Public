@@ -62,6 +62,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     public final static int GO_HOME_TYPE = 0;
     public final static int GO_THREE_TYPE = 2;
     public final static int GO_SECOND_TYPE = 1;
+    public static  boolean mAuthCode=false;
 
     @Override
     protected int getLayoutId() {
@@ -238,8 +239,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     }
 
     @Override
-    public void loadDataFinish() {
-
+    public void getAuthCodeFail(String code,String msg) {
+        mAuthCode = false;
     }
 
     @Override
@@ -248,11 +249,13 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
             LoginBusiness.authCodeLogin(data, new ILoginCallback() {
                 @Override
                 public void onLoginSuccess() {
+                    mAuthCode = true;
                     Log.d("onLoginSuccess", "成功");
                 }
 
                 @Override
                 public void onLoginFailed(int i, String s) {
+                    mAuthCode = false;
                     Log.d("onLoginSuccess", "code: " + i + ", str: " + s);
 
                 }

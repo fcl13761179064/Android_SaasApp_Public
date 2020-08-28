@@ -18,6 +18,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.http.HEAD;
 
 /**
  * @描述
@@ -99,6 +100,8 @@ public class RoomManagePresenter extends BasePresenter<RoomManageView> {
 
                     @Override
                     public void _onError(String code, String msg) {
+
+                        mView.loadDataFinish();
                         mView.createRoomFailed(code);
                     }
 

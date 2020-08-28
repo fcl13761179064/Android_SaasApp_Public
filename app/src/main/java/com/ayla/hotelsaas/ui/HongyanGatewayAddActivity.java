@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.aliyun.alink.business.devicecenter.api.discovery.IOnDeviceTokenGetListener;
 import com.aliyun.alink.business.devicecenter.api.discovery.LocalDeviceMgr;
 import com.aliyun.iot.aep.sdk.apiclient.IoTAPIClient;
@@ -19,13 +18,10 @@ import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.GatewayAddGuideView;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -43,14 +39,13 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     public TextView mBindProgressTextView;
     @BindView(R.id.bt_bind)
     public Button mFinishButton;
-
     private String TAG = HongyanGatewayAddActivity.class.getSimpleName();
 
     private int bindTag = 0;//0:绑定中 1:绑定成功 -1:绑定失败
     private String mIotId = "100";
     private boolean mIs_getway;
     private long mCuId, mScopeId;
-    private String  mDeviceName, mHongyanproductKey, mHongyandeviceName;
+    private String mDeviceName, mHongyanproductKey, mHongyandeviceName;
 
     @Override
     protected GatewayAddGuidePresenter initPresenter() {
@@ -77,7 +72,7 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             getBindToken(mHongyanproductKey, mHongyandeviceName);
         } else {
             bindVirturalZigbeeToUser(mHongyanproductKey, mHongyandeviceName);
-            Log.d("aliyun_key_log","mHongyanproductKey="+mHongyanproductKey+"mHongyanproductKey="+mHongyandeviceName+"mDeviceName="+mDeviceName+"productKey="+ getIntent().getStringExtra("deviceCategory"));
+            Log.d("aliyun_key_log", "mHongyanproductKey=" + mHongyanproductKey + "mHongyanproductKey=" + mHongyandeviceName + "mDeviceName=" + mDeviceName + "productKey=" + getIntent().getStringExtra("deviceCategory"));
         }
     }
 
@@ -163,22 +158,23 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             @Override
             public void onFailure(IoTRequest ioTRequest, Exception e) {
                 Log.d(TAG, "mHongyanproductKey=" + 1111111 + "hongyanDeviceName=" + "222222");
-                bindTag = -1;
-                refreshBindShow();
-
             }
 
             @Override
             public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
-                final int code = ioTResponse.getCode();
-                if (code == 200) {
-                    JSONObject data = (JSONObject) ioTResponse.getData();
-                    try {
+                try {
+                    final int code = ioTResponse.getCode();
+                     String message = ioTResponse.getMessage();
+                    Log.d(TAG, "LotID=" +code+"message="+message);
+                    if (code == 200) {
+                        JSONObject data = (JSONObject) ioTResponse.getData();
                         mIotId = (String) data.get("iotId");
                         startBind(mIotId);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    }else {
+                        mPresenter.registerDeviceWithDSN(mIotId, mCuId, mScopeId, getIntent().getStringExtra("deviceCategory"), mDeviceName);
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -221,6 +217,14 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
      */
     private void refreshBindShow() {
         switch (bindTag) {
+            case 0:
+                GlideApp.with(mImageView).load(R.drawable.ic_device_bind_loading).into(mImageView);
+                mLoadingTextView.setVisibility(View.VISIBLE);
+                mBindProgressTextView.setText("正在发现网关，最长可能需要1分钟。\n请确保网关与手机处于同一Wi-Fi下");
+                mLoadingTextView.setText("绑定中...");
+                mFinishButton.setVisibility(View.INVISIBLE);
+                break;
+
             case 1:
                 mImageView.setImageResource(R.drawable.ic_device_bind_success);
                 mLoadingTextView.setVisibility(View.INVISIBLE);
@@ -231,16 +235,12 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             case -1:
                 mImageView.setImageResource(R.drawable.ic_device_bind_failed);
                 mLoadingTextView.setVisibility(View.INVISIBLE);
+                mLoadingTextView.setText("绑定失败...");
                 mBindProgressTextView.setText("发现网关失败，请确保网关与手机处于同一Wi-Fi下");
                 mFinishButton.setVisibility(View.VISIBLE);
                 mFinishButton.setText("重试");
                 break;
-            default:
-                GlideApp.with(mImageView).load(R.drawable.ic_device_bind_loading).into(mImageView);
-                mLoadingTextView.setVisibility(View.VISIBLE);
-                mBindProgressTextView.setText("正在发现网关，最长可能需要1分钟。\n请确保网关与手机处于同一Wi-Fi下");
-                mFinishButton.setVisibility(View.INVISIBLE);
-                break;
+
         }
     }
 

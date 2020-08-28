@@ -84,7 +84,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("pannel_type", "1");
                     startActivity(intent);
-                } else if (devicesBean.getCuId() == 1 && "KrYPZCbVSHcHqZ1Kj7Am000000".equals(devicesBean.getDeviceId())) {
+                } else if (devicesBean.getCuId() == 1 && "RXWOYL8HkAXU2MOjmk47000000".equals(devicesBean.getDeviceId())) {
                     Intent intent = new Intent(getContext(), TouchPanelSelectActivity.class);
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("pannel_type", "2");

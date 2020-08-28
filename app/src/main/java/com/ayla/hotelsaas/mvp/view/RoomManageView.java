@@ -16,6 +16,7 @@ public interface RoomManageView extends BaseView {
 
     void createRoomSuccess(String data);
 
+
     void createRoomFailed(String code);
 
     void loadDataFinish();

@@ -141,6 +141,8 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
 
     @Override
     protected void onDestroy() {
+        LocalDeviceMgr.getInstance().stopDiscovery();
+        Log.d("stopDiscovery","已经停止发现网关");
         super.onDestroy();
     }
 

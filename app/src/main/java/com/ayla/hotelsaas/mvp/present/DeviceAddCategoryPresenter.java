@@ -9,6 +9,7 @@ import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -47,6 +48,31 @@ public class DeviceAddCategoryPresenter extends BasePresenter<DeviceAddCategoryV
                     @Override
                     public void _onError(String code, String msg) {
 
+                    }
+                });
+    }
+
+
+    public void getAuthCode(String RoomId) {
+        RequestModel.getInstance().getAuthCode(RoomId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new RxjavaObserver<String>() {
+                    @Override
+                    public void _onNext(String data) {
+
+                        mView.getAuthCodeSuccess(data);
+                    }
+
+                    @Override
+                    public void _onError(String code, String msg) {
+
+                        mView.getAuthCodeFail(code,msg);
+                    }
+
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        addSubscrebe(d);
                     }
                 });
     }

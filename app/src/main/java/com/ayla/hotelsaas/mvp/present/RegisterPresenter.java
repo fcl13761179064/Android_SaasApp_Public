@@ -18,6 +18,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.http.HEAD;
 
 /**
  * @描述
@@ -85,12 +86,13 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
 
                     @Override
                     public void _onNext(Boolean data) {
-                        mView.loginSuccess(data);
+                        mView.RegistSuccess(data);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
-                        mView.errorShake(0, 2, msg);
+                        mView.errorShake(0, 2, code);
+
                     }
                 });
     }
