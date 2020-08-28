@@ -311,7 +311,7 @@ public class RequestModel {
                 .map(new Function<BaseResult<DeviceTemplateBean>, BaseResult<DeviceTemplateBean>>() {
                     @Override
                     public BaseResult<DeviceTemplateBean> apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
-                        if ("a1UR1BjfznK".equals(oemModel)) {
+                        if ("a1UR1BjfznK".equals(oemModel)) {//触控面板
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
@@ -412,7 +412,7 @@ public class RequestModel {
                                 }
                             }
                         }
-                        if ("a1ZPeSFEOFO".equals(oemModel)) {
+                        if ("a1dnviXyhqx".equals(oemModel)) {//六键场景开关
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
