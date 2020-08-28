@@ -99,7 +99,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         List<Observable<?>> tasks = new ArrayList<>();
                         for (DeviceListBean.DevicesBean device : devices) {
                             Observable<?> task = RequestModel.getInstance()
-                                    .bindDeviceWithDSN(device.getDeviceId(), cuId, scopeId, 2, deviceCategory, deviceName, deviceName + "_" + device.getDeviceId())
+                                    .bindDeviceWithDSN(device.getDeviceId(), cuId, scopeId, 2, deviceCategory, deviceName, deviceName)
                                     .doOnError(new Consumer<Throwable>() {
                                         @Override
                                         public void accept(Throwable throwable) throws Exception {
