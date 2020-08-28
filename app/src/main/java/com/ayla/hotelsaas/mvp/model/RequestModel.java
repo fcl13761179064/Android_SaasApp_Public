@@ -477,7 +477,7 @@ public class RequestModel {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
                                 if (attributes != null) {
                                     DeviceTemplateBean.AttributesBean attributesBean = new DeviceTemplateBean.AttributesBean();
-                                    attributesBean.setCode("EmergencyTriggerAlarm.KeyValue");
+                                    attributesBean.setCode("EmergencyTriggerAlarm.AlarmType");
                                     attributesBean.setDisplayName("紧急触发报警");
                                     attributesBean.setDataType(1);
                                     attributes.add(attributesBean);
