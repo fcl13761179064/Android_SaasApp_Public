@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aliyun.iot.aep.component.router.Router;
+import com.aliyun.iot.aep.sdk.login.ILoginCallback;
+import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListLeftAdapter;
 import com.ayla.hotelsaas.adapter.DeviceCategoryListRightAdapter;
@@ -33,6 +35,8 @@ import java.util.Set;
 
 import butterknife.BindView;
 import me.jessyan.autosize.utils.AutoSizeUtils;
+
+import static com.ayla.hotelsaas.ui.MainActivity.mAuthCode;
 
 /**
  * @描述 添加设备入口页面，展示产品分类二级列表
@@ -60,6 +64,10 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
     @Override
     protected void initView() {
+        if (mPresenter != null && !mAuthCode) {
+            String mRoom_ID = getIntent().getStringExtra("scopeId");
+            mPresenter.getAuthCode(mRoom_ID + "");
+        }
         leftRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mLeftAdapter = new DeviceCategoryListLeftAdapter(R.layout.item_device_add_category);
         mLeftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -117,6 +125,33 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     public void showCategory(List<DeviceCategoryBean> deviceCategoryBeans) {
         mLeftAdapter.setNewData(deviceCategoryBeans);
         adjustData(0);
+    }
+
+    @Override
+    public void getAuthCodeSuccess(String data) {
+        if (!TextUtils.isEmpty(data)) {
+            LoginBusiness.authCodeLogin(data, new ILoginCallback() {
+                @Override
+                public void onLoginSuccess() {
+                    mAuthCode = true;
+                    Log.d("onLoginSuccess", "成功");
+                }
+
+                @Override
+                public void onLoginFailed(int i, String s) {
+                    mAuthCode = false;
+                    Log.d("onLoginSuccess", "code: " + i + ", str: " + s);
+
+                }
+            });
+        } else {
+            Log.d("aliyun_auth_code", "authCode为空");
+        }
+    }
+
+    @Override
+    public void getAuthCodeFail(String code, String msg) {
+        Log.d("aliyun_auth_code", "authCode授权失败");
     }
 
     /**
@@ -187,7 +222,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             }
         } else if (1 == subBean.getNetworkType()) {
-            if (gatewayCount == 0) {//没有网关
+            if (gatewayCount ==0) {//没有网关
                 //跳转到阿里云的鸿雁网关设备
                 Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
                 mainActivity.putExtra("cuId", subBean.getCuId());
@@ -269,9 +304,14 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         if (requestCode == REQUEST_CODE_HONEYAN_ROUTE && resultCode == RESULT_OK) {
             final Bundle extras = data.getExtras();
             Set<String> strings = extras.keySet();
-            Log.v("onResponse_HONGYAN", "intent extras(int) :" + strings);
             for (String keyStr : strings) {
-                Log.v("onResponse_HONGYAN", "intent extras() :" + keyStr + ":" + keyStr);
+                if (extras.get(keyStr) instanceof Integer) {
+                    Log.v("onResponse_HONGYAN", "intent extras(int) :" + keyStr + ":" + extras.get(keyStr));
+                } else if (extras.get(keyStr) instanceof String) {
+                    Log.v("onResponse_HONGYAN", "intent extras(String) :" + keyStr + ":" + extras.get(keyStr));
+                } else {
+                    Log.v("onResponse_HONGYAN", "intent extras() :" + keyStr + ":" + extras.get(keyStr));
+                }
             }
             String productKey = data.getStringExtra("productKey");
             String deviceName = data.getStringExtra("deviceName");

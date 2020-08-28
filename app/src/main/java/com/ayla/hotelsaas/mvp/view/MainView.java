@@ -12,7 +12,7 @@ import com.ayla.hotelsaas.bean.RoomOrderBean;
  */
 public interface MainView extends BaseView {
 
-    void loadDataFinish();
+    void getAuthCodeFail(String code,String msg);
 
     void getAuthCodeSuccess(String data);
 }

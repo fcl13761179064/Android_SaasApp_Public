@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface DeviceAddCategoryView extends BaseView {
     void showCategory(List<DeviceCategoryBean> deviceCategoryBeans);
+
+    void getAuthCodeSuccess(String data);
+
+    void getAuthCodeFail(String code, String msg);
 }
