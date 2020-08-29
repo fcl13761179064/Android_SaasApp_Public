@@ -56,6 +56,7 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
         mPresenter.getTouchPanelData(1, mDevicesBean.getDeviceId());
         mPannel_types = getIntent().getStringExtra("pannel_type");
         if ("1".equals(mPannel_types)) {
+            appBar.rightTextView.setVisibility(View.GONE);
             dataList = new ArrayList<>();
             dataList.add(new TouchPanelBean(R.mipmap.go_home, "回家", 0, 0, 1));
             dataList.add(new TouchPanelBean(R.mipmap.back_home, "离店模式", 0, 0, 2));
@@ -70,7 +71,7 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
             dataList.add(new TouchPanelBean(R.mipmap.sleep_model, "睡眠", 0, 0, 11));
             dataList.add(new TouchPanelBean(R.mipmap.getup_model, "起床", 0, 0, 12));
         } else {
-
+            appBar.rightTextView.setVisibility(View.VISIBLE);
             dataList = new ArrayList<>();
             dataList.add(new TouchPanelBean(R.mipmap.go_home, "回家", 0, 0, 1));
             dataList.add(new TouchPanelBean(R.mipmap.back_home, "会客", 0, 0, 2));
@@ -119,29 +120,29 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
             final String propertyName = touchPanelDataBean.getPropertyName();
             final String propertyType = touchPanelDataBean.getPropertyType();
             final String propertyValue = touchPanelDataBean.getPropertyValue();
-            final String deviceId = touchPanelDataBean.getDeviceId();
-            int btn_position = Integer.parseInt(propertyName)-1;
             int id = touchPanelDataBean.getId();
-            if ("J9WX4aPBnZlxtipuQqwC000000".equals(deviceId)) {
-                if ("Words".equals(propertyType)) {
-                    dataList.get(btn_position).setPropertyValue(propertyValue);
-                    dataList.get(btn_position).setName_id(id);
+            if (!"KeyValueNotification.KeyValue".equals(propertyName)) {
+                int btn_position = Integer.parseInt(propertyName) - 1;
+                if ("a1UR1BjfznK".equals(mDevicesBean.getDeviceCategory())) {
+                    if ("Words".equals(propertyType)) {
+                        dataList.get(btn_position).setPropertyValue(propertyValue);
+                        dataList.get(btn_position).setName_id(id);
+                    } else {
+                        final int x = Integer.parseInt(propertyValue);
+                        dataList.get(btn_position).setIconRes(DeviceListFragment.drawableIcon[x]);
+                        dataList.get(btn_position).setIcon_id(id);
+                    }
                 } else {
-                    final int x = Integer.parseInt(propertyValue);
-                    dataList.get(btn_position).setIconRes(DeviceListFragment.drawableIcon[x]);
-                    dataList.get(btn_position).setIcon_id(id);
-                }
-            } else {
-                if ("Words".equals(propertyType)) {
-                    dataList.get(btn_position).setPropertyValue(propertyValue);
-                    dataList.get(btn_position).setName_id(id);
-                } else {
-                    final int x = Integer.parseInt(propertyValue);
-                    dataList.get(btn_position).setIconRes(DeviceListFragment.drawableIcon[x]);
-                    dataList.get(btn_position).setIcon_id(id);
+                    if ("Words".equals(propertyType)) {
+                        dataList.get(btn_position).setPropertyValue(propertyValue);
+                        dataList.get(btn_position).setName_id(id);
+                    } else {
+                        final int x = Integer.parseInt(propertyValue);
+                        dataList.get(btn_position).setIconRes(DeviceListFragment.drawableIcon[x]);
+                        dataList.get(btn_position).setIcon_id(id);
+                    }
                 }
             }
-
         }
 
         mAdapter = new TouchPanelSelectAdapter(dataList);

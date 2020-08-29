@@ -65,7 +65,8 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
         mTouchpanel_data = (ArrayList) getIntent().getSerializableExtra("touchpanel_data");
         mTouchPanelBean = mTouchpanel_data.get(mPosition);
         mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
-        tv_touchpanel_rename.setText("场景" + mBtn_position);
+        String propertyValue = mTouchpanel_data.get(mPosition).getPropertyValue();
+        tv_touchpanel_rename.setText(propertyValue);
     }
 
 
@@ -111,10 +112,10 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
                                     CustomToast.makeText(getBaseContext(), "修改场景名称不能为空", R.drawable.ic_toast_warming).show();
                                 } else {
                                     modify_txt = txt;
-                                    tv_touchpanel_rename.setHint(txt);
+                                    tv_touchpanel_rename.setText(txt);
                                     if (mDevicesBean != null) {
                                         mId = mTouchpanel_data.get(mPosition).getName_id();
-                                        mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(),mBtn_position+"", "Words", txt);
+                                        mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(), mBtn_position + "", "Words", txt, mDevicesBean.getDeviceCategory());
                                     }
                                 }
                                 dialog.dismissAllowingStateLoss();
@@ -145,10 +146,10 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_ICON && resultCode == RESULT_OK) {//选择ICON返回结果
-            int index = data.getIntExtra("index", 1)-1;
+            int index = data.getIntExtra("index", 1) - 1;
             iv_scene_icon.setImageResource(DeviceListFragment.drawableIcon[index]);
             mId = mTouchpanel_data.get(mPosition).getIcon_id();
-            mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(), mBtn_position+"" , "PictureCode", index + "");
+            mPresenter.TourchPanelRenameInsertMethod(mId, mDevicesBean.getDeviceId(), mDevicesBean.getCuId(), mBtn_position, "PictureCode", index + "", mDevicesBean.getDeviceCategory());
 
         }
     }

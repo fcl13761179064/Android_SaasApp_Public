@@ -217,6 +217,20 @@ public class RequestModel {
         return getApiService().bindDeviceWithDSN(body111);
     }
 
+
+    /**
+     * @param mHongyanproductKey
+     * @param mHongyandeviceName
+     * @return
+     */
+    public Observable<BaseResult<String>> removeDeviceAllReleate(String mHongyanproductKey, String mHongyandeviceName) {
+        JsonObject body = new JsonObject();
+        body.addProperty("productKey", mHongyanproductKey);
+        body.addProperty("deviceName", mHongyandeviceName);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().removeDeviceAllReleate(body111);
+    }
+
     /**
      * 获取候选节点
      *
@@ -519,7 +533,7 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> tourchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue) {
+    public Observable<BaseResult<Boolean>> tourchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue,String deviceCategory) {
 
         try {
             JSONObject uploadParams = new JSONObject();
@@ -528,7 +542,7 @@ public class RequestModel {
             if (id != 0) {
                 jsonObject.put("id", id);
             }
-            if ("J9WX4aPBnZlxtipuQqwC000000".equals(deviceId)) {
+            if ("a1UR1BjfznK".equals(deviceCategory)) {
                 uploadParams.put("needHandleAliService", true);
             } else {
                 uploadParams.put("needHandleAliService", false);

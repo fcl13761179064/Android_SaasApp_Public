@@ -364,8 +364,12 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     }
 
     @Override
-    public void saveFailed() {
-        CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming).show();
+    public void saveFailed(String code) {
+        if ("159999".equals(code)) {
+            CustomToast.makeText(this, "该设备有异常,请移除后再创建场景", R.drawable.ic_toast_warming).show();
+        } else {
+            CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming).show();
+        }
     }
 
     @Override
