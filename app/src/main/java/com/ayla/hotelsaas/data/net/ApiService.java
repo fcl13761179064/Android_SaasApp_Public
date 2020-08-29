@@ -48,6 +48,9 @@ public interface ApiService {
     @POST("api/v1/construction/hotelcontent/approom")
     Observable<BaseResult<String>> createRoom(@Body RequestBody body);
 
+    @POST("api/v1/construction/device/bingingRemove")
+    Observable<BaseResult<String>> removeDeviceAllReleate(@Body RequestBody body);//移除鸿雁解绑关系接口
+
     @PUT("api/v1/construction/user/register")
     Observable<BaseResult<Boolean>> register(@Body RequestBody body);
 
@@ -120,6 +123,5 @@ public interface ApiService {
 
     @GET("/api/v1/device/deviceProperties/{cuId}/{deviceId}")
     Observable<BaseResult<List<TouchPanelDataBean>>> touchpanelALlDevice(@Path("cuId") int oemModel, @Path("deviceId") String ss);
-
 
 }

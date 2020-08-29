@@ -1,10 +1,12 @@
 package com.ayla.hotelsaas.ui;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.aliyun.alink.business.devicecenter.api.discovery.IOnDeviceTokenGetListener;
 import com.aliyun.alink.business.devicecenter.api.discovery.LocalDeviceMgr;
 import com.aliyun.iot.aep.sdk.apiclient.IoTAPIClient;
@@ -17,11 +19,16 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
+import com.ayla.hotelsaas.mvp.present.HongyanGatewayAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.GatewayAddGuideView;
+import com.ayla.hotelsaas.mvp.view.HongyanGatewayAddGuideView;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -30,7 +37,7 @@ import butterknife.OnClick;
  * 进入时必须带上dsn、cuId 、scopeId、deviceCategory。
  * 樊春雷
  */
-public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, GatewayAddGuidePresenter> implements GatewayAddGuideView {
+public class HongyanGatewayAddActivity extends BaseMvpActivity<HongyanGatewayAddGuideView, HongyanGatewayAddGuidePresenter> implements HongyanGatewayAddGuideView {
     @BindView(R.id.iv_01)
     public ImageView mImageView;
     @BindView(R.id.tv_loading)
@@ -48,8 +55,8 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
     private String mDeviceName, mHongyanproductKey, mHongyandeviceName;
 
     @Override
-    protected GatewayAddGuidePresenter initPresenter() {
-        return new GatewayAddGuidePresenter();
+    protected HongyanGatewayAddGuidePresenter initPresenter() {
+        return new HongyanGatewayAddGuidePresenter();
     }
 
     @Override
@@ -71,7 +78,12 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
         if (mIs_getway) {
             getBindToken(mHongyanproductKey, mHongyandeviceName);
         } else {
-            bindVirturalZigbeeToUser(mHongyanproductKey, mHongyandeviceName);
+            //这里先解除设备和用户，阿里云的关系
+            if (!TextUtils.isEmpty(mHongyanproductKey) && !TextUtils.isEmpty(mHongyandeviceName)) {
+                mPresenter.removeDeviceAllReleate(mHongyanproductKey, mHongyandeviceName);
+            }
+
+
             Log.d("aliyun_key_log", "mHongyanproductKey=" + mHongyanproductKey + "mHongyanproductKey=" + mHongyandeviceName + "mDeviceName=" + mDeviceName + "productKey=" + getIntent().getStringExtra("deviceCategory"));
         }
     }
@@ -164,13 +176,13 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
             public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
                 try {
                     final int code = ioTResponse.getCode();
-                     String message = ioTResponse.getMessage();
-                    Log.d(TAG, "LotID=" +code+"message="+message);
+                    String message = ioTResponse.getMessage();
+                    Log.d(TAG, "LotID=" + code + "message=" + message);
                     if (code == 200) {
                         JSONObject data = (JSONObject) ioTResponse.getData();
                         mIotId = (String) data.get("iotId");
                         startBind(mIotId);
-                    }else {
+                    } else {
                         mPresenter.registerDeviceWithDSN(mIotId, mCuId, mScopeId, getIntent().getStringExtra("deviceCategory"), mDeviceName);
                     }
                 } catch (JSONException e) {
@@ -196,6 +208,16 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<GatewayAddGuideVi
         bindTag = -1;
         refreshBindShow();
         Log.d(TAG, "onResponse_HONGYAN_three: " + "失败");
+    }
+
+    @Override
+    public void removeReleteSuccess(String data) {
+        bindVirturalZigbeeToUser(mHongyanproductKey, mHongyandeviceName);
+    }
+
+    @Override
+    public void removeReleteFail(String code, String msg) {
+
     }
 
 

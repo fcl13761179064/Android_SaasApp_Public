@@ -21,8 +21,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class TourchPanelPresenter extends BasePresenter<TourchPanelView> {
 
-    public void TourchPanelRenameInsertMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue) {
-        RequestModel.getInstance().tourchPanelRenameMethod(id, deviceId, cuId, propertyName, propertyType, propertyValue)
+    public void TourchPanelRenameInsertMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue,String deviceCategory) {
+        RequestModel.getInstance().tourchPanelRenameMethod(id, deviceId, cuId, propertyName, propertyType, propertyValue,deviceCategory)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

@@ -12,6 +12,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
@@ -62,7 +63,9 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.saveFailed();
+                        RxjavaFlatmapThrowable mThrowable = (RxjavaFlatmapThrowable) throwable;
+                         String code = mThrowable.getCode();
+                        mView.saveFailed(code);
                     }
                 });
         addSubscrebe(subscribe);

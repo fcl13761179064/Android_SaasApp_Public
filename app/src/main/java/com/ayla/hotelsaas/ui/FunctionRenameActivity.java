@@ -93,7 +93,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
                                         attributesBean.setPropertyValue(txt);
                                         mAdapter.notifyItemChanged(position);
                                         mPresenter.renameFunction(mDevicesBean.getCuId(), mDevicesBean.getDeviceId(),
-                                                attributesBean.getId(), attributesBean.getCode(), txt);
+                                                attributesBean.getId(), attributesBean.getCode(), txt,mDevicesBean.getDeviceCategory());
                                     }
                                 }
                                 dialog.dismissAllowingStateLoss();
