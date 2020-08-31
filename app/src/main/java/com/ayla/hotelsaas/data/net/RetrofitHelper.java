@@ -133,41 +133,49 @@ public class RetrofitHelper {
                 try {
                     JSONObject jsonObject = new JSONObject(content);
                     int code = jsonObject.optInt("code");
-                    if (code == 122001) {//authToken过期
-//                    if (originalRequest.url().toString().contains("construction/device/list")) {//和上面一行替换，模拟authToken过期的情况
-                        final CountDownLatch countDownLatch = new CountDownLatch(1);
-                        String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
-                        final User[] newUser = {null};
-                        if (!TextUtils.isEmpty(refresh_token)) {
-                            Disposable subscribe = RequestModel.getInstance().refreshToken(refresh_token)
-                                    .doFinally(new Action() {
-                                        @Override
-                                        public void run() throws Exception {
-                                            countDownLatch.countDown();
-                                        }
-                                    })
-                                    .subscribe(new Consumer<BaseResult<User>>() {
-                                        @Override
-                                        public void accept(BaseResult<User> baseResult) throws Exception {
-                                            newUser[0] = baseResult.data;
-                                        }
-                                    }, new Consumer<Throwable>() {
-                                        @Override
-                                        public void accept(Throwable throwable) throws Exception {
-                                            Log.d("token_refresh", "accept: " + throwable);
-                                        }
-                                    });
-                        } else {
-                            countDownLatch.countDown();
+                    switch (code) {
+                        case 122001: //authToken过期
+                        {//authToken过期
+                            final CountDownLatch countDownLatch = new CountDownLatch(1);
+                            String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
+                            final User[] newUser = {null};
+                            if (!TextUtils.isEmpty(refresh_token)) {
+                                Disposable subscribe = RequestModel.getInstance().refreshToken(refresh_token)
+                                        .doFinally(new Action() {
+                                            @Override
+                                            public void run() throws Exception {
+                                                countDownLatch.countDown();
+                                            }
+                                        })
+                                        .subscribe(new Consumer<BaseResult<User>>() {
+                                            @Override
+                                            public void accept(BaseResult<User> baseResult) throws Exception {
+                                                newUser[0] = baseResult.data;
+                                            }
+                                        }, new Consumer<Throwable>() {
+                                            @Override
+                                            public void accept(Throwable throwable) throws Exception {
+                                                Log.d("token_refresh", "accept: " + throwable);
+                                            }
+                                        });
+                            } else {
+                                countDownLatch.countDown();
+                            }
+                            countDownLatch.await();
+                            if (newUser[0] != null) {//token刷新成功
+                                SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, newUser[0].getAuthToken());
+                                SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, newUser[0].getRefreshToken());
+                                return CommonParameterInterceptor.intercept(chain);
+                            } else {//token刷新失败
+                                jump2Main();
+                            }
                         }
-                        countDownLatch.await();
-                        if (newUser[0] != null) {//token刷新成功
-                            SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, newUser[0].getAuthToken());
-                            SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, newUser[0].getRefreshToken());
-                            return CommonParameterInterceptor.intercept(chain);
-                        } else {//token刷新失败
+                        break;
+                        case 121002://authToken不正确
+                        {
                             jump2Main();
                         }
+                        break;
                     }
                 } catch (Exception e) {
                     Log.e("token_refresh", "intercept: ", e);
