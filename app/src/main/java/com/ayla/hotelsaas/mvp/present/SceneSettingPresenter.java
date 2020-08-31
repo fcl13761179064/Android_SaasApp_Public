@@ -64,7 +64,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         RxjavaFlatmapThrowable mThrowable = (RxjavaFlatmapThrowable) throwable;
-                         String code = mThrowable.getCode();
+                        String code = mThrowable.getCode();
                         mView.saveFailed(code);
                     }
                 });
@@ -162,10 +162,20 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                     }), new BiFunction<DeviceTemplateBean, List<TouchPanelDataBean>, DeviceTemplateBean>() {
                                                 @Override
                                                 public DeviceTemplateBean apply(DeviceTemplateBean deviceTemplateBean, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
-                                                    for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                                    for (DeviceTemplateBean.AttributesBean attributesBean : deviceTemplateBean.getAttributes()) {
                                                         for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
-                                                            if (TextUtils.equals(attribute.getCode(), touchPanelDataBean.getPropertyName())) {
-                                                                attribute.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                                            if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
+                                                                    TextUtils.equals(attributesBean.getCode(), touchPanelDataBean.getPropertyName())) {
+                                                                attributesBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                                            }
+                                                            if("Words".equals(touchPanelDataBean.getPropertyType())){
+                                                                if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
+                                                                    for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
+                                                                        if (TextUtils.equals(valueBean.getValue(),touchPanelDataBean.getPropertyName())) {
+                                                                            valueBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                                                        }
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }

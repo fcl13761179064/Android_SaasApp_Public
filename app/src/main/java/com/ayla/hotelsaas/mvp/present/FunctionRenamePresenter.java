@@ -90,10 +90,10 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                             bean.setDisplayName(displayName);
                             bean.setPropertyValue(attributesBean.getDisplayName());
                             for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
-                                if (TextUtils.equals(code, touchPanelDataBean.getPropertyName())) {
+                                if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
+                                        TextUtils.equals(code, touchPanelDataBean.getPropertyName())) {
                                     bean.setPropertyValue(touchPanelDataBean.getPropertyValue());
                                     bean.setId(touchPanelDataBean.getId());
-                                    break;
                                 }
                             }
                         }
