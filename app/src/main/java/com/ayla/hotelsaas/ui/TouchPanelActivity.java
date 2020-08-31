@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import androidx.annotation.Nullable;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.TouchPanelAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -18,6 +20,9 @@ import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * 触控面板页面
+ */
 public class TouchPanelActivity extends BasicActivity {
     @BindView(R.id.gridView)
     GridView mGridView;
@@ -41,13 +46,12 @@ public class TouchPanelActivity extends BasicActivity {
     @Override
     protected void initView() {
         dataList = new ArrayList<>();
-        dataList.add(new TouchPanelBean(R.mipmap.go_home, "场景", 0, 0,0));
-        dataList.add(new TouchPanelBean(R.mipmap.back_home, "地暖", 0, 0,0));
-        dataList.add(new TouchPanelBean(R.mipmap.sleep_model, "空调", 0, 0,0));
-        dataList.add(new TouchPanelBean(R.mipmap.storm_model, "新风", 0, 0,0));
+        dataList.add(new TouchPanelBean(R.mipmap.go_home, "场景", 1));
+        dataList.add(new TouchPanelBean(R.mipmap.back_home, "地暖", 2));
+        dataList.add(new TouchPanelBean(R.mipmap.sleep_model, "空调", 3));
+        dataList.add(new TouchPanelBean(R.mipmap.storm_model, "新风", 4));
         mAdapter = new TouchPanelAdapter(dataList);
         mGridView.setAdapter(mAdapter);
-
     }
 
     @Override
@@ -57,7 +61,7 @@ public class TouchPanelActivity extends BasicActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(TouchPanelActivity.this, DeviceMoreActivity.class);
                 intent.putExtras(getIntent());
-                startActivity(intent);
+                startActivityForResult(intent,1001);
             }
         });
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -66,11 +70,20 @@ public class TouchPanelActivity extends BasicActivity {
                 if (position == 0) {
                     Intent intent = new Intent(MyApplication.getContext(), TouchPanelSelectActivity.class);
                     intent.putExtras(getIntent());
+                    intent.putExtra("pannel_type", 1);
                     startActivity(intent);
                 } else {
                     ToastUtils.showShortToast("该功能未开发");
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1001 && resultCode == RESULT_OK) {
+           finish();
+        }
     }
 }
