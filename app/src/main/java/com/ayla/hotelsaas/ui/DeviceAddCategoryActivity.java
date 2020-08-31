@@ -3,7 +3,6 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -202,7 +201,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
             } else if (gatewayCount == 1) {//一个网关
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
-                    Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity2.class);
+                    Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
                     mainActivity.putExtra("deviceId", gateway.getDeviceId());
                     mainActivity.putExtra("cuId", gateway.getCuId());
                     mainActivity.putExtras(getIntent());
