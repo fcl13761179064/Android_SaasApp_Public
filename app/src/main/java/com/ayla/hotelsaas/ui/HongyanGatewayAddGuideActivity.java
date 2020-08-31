@@ -122,6 +122,8 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
         intent.putExtra("HongyandeviceName", deviceName);
         intent.putExtras(getIntent());
         startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
+        LocalDeviceMgr.getInstance().stopDiscovery();
+        Log.d("stopDiscovery","已经停止发现网关");
     }
 
     @Override
@@ -141,9 +143,9 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         LocalDeviceMgr.getInstance().stopDiscovery();
         Log.d("stopDiscovery","已经停止发现网关");
-        super.onDestroy();
     }
 
     @Override

@@ -7,12 +7,16 @@ import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class DeviceAddCategoryPresenter extends BasePresenter<DeviceAddCategoryView> {
@@ -54,9 +58,27 @@ public class DeviceAddCategoryPresenter extends BasePresenter<DeviceAddCategoryV
 
 
     public void getAuthCode(String RoomId) {
+        long startTime = System.currentTimeMillis();
         RequestModel.getInstance().getAuthCode(RoomId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                long currentTime = System.currentTimeMillis();
+                                long s = currentTime - startTime;
+                                if (s > 60_000) {
+                                    return Observable.error(throwable);
+                                } else {
+                                    return Observable.timer(3, TimeUnit.SECONDS);
+                                }
+                            }
+                        });
+                    }
+                })
                 .subscribe(new RxjavaObserver<String>() {
                     @Override
                     public void _onNext(String data) {
@@ -67,7 +89,7 @@ public class DeviceAddCategoryPresenter extends BasePresenter<DeviceAddCategoryV
                     @Override
                     public void _onError(String code, String msg) {
 
-                        mView.getAuthCodeFail(code,msg);
+                        mView.getAuthCodeFail(code, msg);
                     }
 
                     @Override
