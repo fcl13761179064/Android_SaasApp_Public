@@ -51,9 +51,18 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
                     public List<DeviceTemplateBean.AttributesBean> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
                         for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans) {
                             for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
-                                if (TextUtils.equals(attributesBean.getCode(), touchPanelDataBean.getPropertyName())) {
+                                if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
+                                        TextUtils.equals(attributesBean.getCode(), touchPanelDataBean.getPropertyName())) {
                                     attributesBean.setDisplayName(touchPanelDataBean.getPropertyValue());
-                                    break;
+                                }
+                                if("Words".equals(touchPanelDataBean.getPropertyType())){
+                                    if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
+                                        for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
+                                            if (TextUtils.equals(valueBean.getValue(),touchPanelDataBean.getPropertyName())) {
+                                                valueBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

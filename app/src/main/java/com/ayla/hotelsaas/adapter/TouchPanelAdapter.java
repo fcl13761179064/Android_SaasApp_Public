@@ -47,7 +47,7 @@ public class TouchPanelAdapter extends BaseAdapter {
                 new LinearLayout.LayoutParams(400, 400));
 
         TouchPanelBean bean = mTouchPanelBeans.get(position);
-        tv_title.setText(bean.getPropertyValue());
+        tv_title.setText(bean.getWords());
 
         return view;
     }

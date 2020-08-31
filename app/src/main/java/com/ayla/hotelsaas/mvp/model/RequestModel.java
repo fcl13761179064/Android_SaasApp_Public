@@ -530,7 +530,7 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> tourchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue, String deviceCategory) {
+    public Observable<BaseResult<Boolean>> touchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue, String deviceCategory, boolean needHandleAliService) {
         return Observable
                 .fromCallable(new Callable<RequestBody>() {
                     @Override
@@ -541,11 +541,7 @@ public class RequestModel {
                         if (id != 0) {
                             jsonObject.put("id", id);
                         }
-                        if ("a1UR1BjfznK".equals(deviceCategory)) {
-                            uploadParams.put("needHandleAliService", true);
-                        } else {
-                            uploadParams.put("needHandleAliService", false);
-                        }
+                        uploadParams.put("needHandleAliService", needHandleAliService);
                         jsonObject.put("deviceId", deviceId);
                         jsonObject.put("cuId", cuId);
                         jsonObject.put("propertyName", propertyName);

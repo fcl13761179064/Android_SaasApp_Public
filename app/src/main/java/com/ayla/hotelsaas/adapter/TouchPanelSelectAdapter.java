@@ -46,7 +46,7 @@ public class TouchPanelSelectAdapter extends BaseAdapter {
         TouchPanelBean bean = mTouchPanelBeans.get(position);
 
         iv_icon.setImageResource(bean.getIconRes());
-        tv_title.setText(bean.getPropertyValue());
+        tv_title.setText(bean.getWords());
 
         return view;
     }

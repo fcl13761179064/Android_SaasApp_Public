@@ -3,7 +3,6 @@ package com.ayla.hotelsaas.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -16,7 +15,6 @@ import com.ayla.hotelsaas.adapter.DeviceListAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
@@ -75,21 +73,20 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (FastClickUtils.isDoubleClick()){
+                if (FastClickUtils.isDoubleClick()) {
                     return;
                 }
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
                 if (devicesBean.getCuId() == 1 && "a1UR1BjfznK".equals(devicesBean.getDeviceCategory())) {
                     Intent intent = new Intent(getContext(), TouchPanelActivity.class);
                     intent.putExtra("devicesBean", devicesBean);
-                    intent.putExtra("pannel_type", "1");
                     startActivity(intent);
-                } else if (devicesBean.getCuId() == 1 && "a1dnviXyhqx".equals(devicesBean.getDeviceCategory())) {
-                    Intent intent = new Intent(getContext(), TouchPanelSelectActivity.class);
-                    intent.putExtra("devicesBean", devicesBean);
-                    intent.putExtra("pannel_type", "2");
-                    startActivity(intent);
-                }else {
+//                } else if (devicesBean.getCuId() == 1 && "a1dnviXyhqx".equals(devicesBean.getDeviceCategory())) {
+//                    Intent intent = new Intent(getContext(), TouchPanelSelectActivity.class);
+//                    intent.putExtra("devicesBean", devicesBean);
+//                    intent.putExtra("pannel_type", 2);
+//                    startActivity(intent);
+                } else {
                     Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("scopeId", room_id);
@@ -123,7 +120,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (FastClickUtils.isDoubleClick()){
+                if (FastClickUtils.isDoubleClick()) {
                     return;
                 }
                 Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);

@@ -14,6 +14,9 @@ import java.util.List;
 import butterknife.BindViews;
 import butterknife.OnClick;
 
+/**
+ * 进入时带入参数int "index"，对应按钮的下标 ，从0开始。
+ */
 public class TouchPanelSceneIconSelectActivity extends BaseMvpActivity {
     @BindViews({R.id.cb_function_checked_01, R.id.cb_function_checked_02, R.id.cb_function_checked_03,
             R.id.cb_function_checked_04, R.id.cb_function_checked_05, R.id.cb_function_checked_06})
@@ -42,13 +45,13 @@ public class TouchPanelSceneIconSelectActivity extends BaseMvpActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int index = getIntent().getIntExtra("index", 1);
+        int index = getIntent().getIntExtra("index", 0);
         syncIconShow(index);
     }
 
     private void syncIconShow(int index) {
         for (int i = 0; i < checkBoxes.size(); i++) {
-            if (index == i + 1) {
+            if (index == i) {
                 checkBoxes.get(i).setChecked(true);
             } else {
                 checkBoxes.get(i).setChecked(false);
@@ -59,25 +62,25 @@ public class TouchPanelSceneIconSelectActivity extends BaseMvpActivity {
     @OnClick({R.id.rl_01, R.id.rl_02, R.id.rl_03,
             R.id.rl_04, R.id.rl_05, R.id.rl_06})
     void handleClicks(View view) {
-        int index = 1;
+        int index = 0;
         switch (view.getId()) {
             case R.id.rl_01:
-                index = 1;
+                index = 0;
                 break;
             case R.id.rl_02:
-                index = 2;
+                index = 1;
                 break;
             case R.id.rl_03:
-                index = 3;
+                index = 2;
                 break;
             case R.id.rl_04:
-                index = 4;
+                index = 3;
                 break;
             case R.id.rl_05:
-                index = 5;
+                index = 4;
                 break;
             case R.id.rl_06:
-                index = 6;
+                index = 5;
                 break;
         }
         syncIconShow(index);
