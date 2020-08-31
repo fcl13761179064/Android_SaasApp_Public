@@ -22,14 +22,14 @@ import io.reactivex.schedulers.Schedulers;
 public class TourchPanelSelectPresenter extends BasePresenter<TourchPanelSelectView> {
 
 
-    public void getTouchPanelData(int cuId, String  deviceId) {
+    public void getTouchPanelData(int cuId, String deviceId) {
         RequestModel.getInstance().getALlTouchPanelDeviceInfo(cuId, deviceId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
-                        mView.showProgress("移除中...");
+                        mView.showProgress();
                     }
                 })
                 .subscribe(new RxjavaObserver<List<TouchPanelDataBean>>() {

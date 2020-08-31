@@ -10,50 +10,16 @@ import java.io.Serializable;
 public class TouchPanelBean implements Serializable {
 
     private int iconRes;
-    private String propertyValue;
-    private int number;
-    private int name_id;
-    private int icon_id;
-    private int btn_position;
+    private String words;//按键别名
+    private String pictureCode;//按键图标
+    private int wordsId;//按键别名资源ID
+    private int pictureCodeId;//按键图标资源ID
+    private int sequence;//按键序号
 
-    public int getName_id() {
-        return name_id;
-    }
-
-    public void setName_id(int name_id) {
-        this.name_id = name_id;
-    }
-
-    public int getIcon_id() {
-        return icon_id;
-    }
-
-    public void setIcon_id(int icon_id) {
-        this.icon_id = icon_id;
-    }
-
-    public int getBtn_position() {
-        return btn_position;
-    }
-
-    public void setBtn_position(int btn_position) {
-        this.btn_position = btn_position;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public TouchPanelBean(int iconRes, String propertyValue, int name_id,int icon_id, int btn_position) {
+    public TouchPanelBean(int iconRes, String words, int sequence) {
         this.iconRes = iconRes;
-        this.propertyValue = propertyValue;
-        this.name_id = name_id;
-        this.icon_id = icon_id;
-        this.btn_position = btn_position;
+        this.words = words;
+        this.sequence = sequence;
     }
 
     public int getIconRes() {
@@ -64,12 +30,43 @@ public class TouchPanelBean implements Serializable {
         this.iconRes = iconRes;
     }
 
-    public String getPropertyValue() {
-        return propertyValue;
+    public String getWords() {
+        return words;
     }
 
-    public void setPropertyValue(String propertyValue) {
-        this.propertyValue = propertyValue;
+    public void setWords(String words) {
+        this.words = words;
     }
 
+    public String getPictureCode() {
+        return pictureCode;
+    }
+
+    public void setPictureCode(String pictureCode) {
+        this.pictureCode = pictureCode;
+    }
+
+    public int getWordsId() {
+        return wordsId;
+    }
+
+    public void setWordsId(int wordsId) {
+        this.wordsId = wordsId;
+    }
+
+    public int getPictureCodeId() {
+        return pictureCodeId;
+    }
+
+    public void setPictureCodeId(int pictureCodeId) {
+        this.pictureCodeId = pictureCodeId;
+    }
+
+    public int getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(int sequence) {
+        this.sequence = sequence;
+    }
 }
