@@ -3,10 +3,12 @@ package com.ayla.hotelsaas.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -38,6 +40,7 @@ import butterknife.BindView;
  * RuleEngine页面
  */
 public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEnginePresenter> implements RuleEngineView {
+    private final long mRoom_ID;
     @BindView(R.id.tl_tabs)
     TabLayout mTabLayout;
     @BindView(R.id.float_btn)
@@ -48,10 +51,9 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
     ViewPager mViewPager;
 
     private RuleEnginePagerAdapter mAdapter;
-    private RoomOrderBean.ResultListBean mRoom_order;
 
-    public RuleEngineFragment(RoomOrderBean.ResultListBean room_order) {
-        this.mRoom_order = room_order;
+    public RuleEngineFragment(long mRoom_ID) {
+        this.mRoom_ID = mRoom_ID;
     }
 
     @Override
@@ -65,6 +67,8 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
         mViewPager.setAdapter(mAdapter);
         mRefreshLayout.setEnableLoadMore(false);
         mTabLayout.setupWithViewPager(mViewPager, true);
+        mTabLayout.setTabTextColors(Color.parseColor("#282828"), ContextCompat.getColor(getContext(), R.color.colorAccent));
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
     }
 
     @Override
@@ -73,7 +77,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                    mPresenter.loadData(mRoom_order.getRoomId());
+                    mPresenter.loadData(mRoom_ID);
                 }
             }
         });
@@ -89,7 +93,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                             @Override
                             public void callback(int index) {
                                 Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
-                                intent.putExtra("scopeId", mRoom_order.getRoomId());
+                                intent.putExtra("scopeId", mRoom_ID);
 
                                 if (index == 0) {//选择了本地联动
                                     DeviceListBean.DevicesBean gateway = null;

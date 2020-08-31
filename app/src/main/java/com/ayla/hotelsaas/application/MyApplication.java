@@ -9,6 +9,7 @@ import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.aliyun.iot.aep.sdk.framework.config.GlobalConfig;
 import com.aliyun.iot.aep.sdk.log.ALog;
+import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -22,10 +23,6 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
 import java.util.List;
 
-import me.jessyan.autosize.AutoSizeConfig;
-import me.jessyan.autosize.unit.Subunits;
-
-import static com.aliyun.iot.aep.sdk.IoTSmart.REGION_ALL;
 import static com.aliyun.iot.aep.sdk.IoTSmart.REGION_CHINA_ONLY;
 
 
@@ -34,6 +31,7 @@ import static com.aliyun.iot.aep.sdk.IoTSmart.REGION_CHINA_ONLY;
  */
 public class MyApplication extends AApplication {
 
+    private final String TAG = this.getClass().getSimpleName();
     private List<DeviceListBean.DevicesBean> mDevicesBean;
     private static MyApplication mInstance = null;
 
@@ -72,6 +70,7 @@ public class MyApplication extends AApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "version name: " + BuildConfig.VERSION_NAME + ", version code: " + BuildConfig.VERSION_CODE);
         mInstance = this;
         initAutoSize();
         //初始化飞燕sdk
@@ -134,11 +133,9 @@ public class MyApplication extends AApplication {
     }
 
     private void initAutoSize() {
-        AutoSizeConfig.getInstance()
-                .setBaseOnWidth(true)
-                .getUnitsManager()
-                .setSupportDP(false)
-                .setSupportSP(false)
-                .setSupportSubunits(Subunits.MM);
+//        AutoSizeConfig.getInstance()
+//                .setBaseOnWidth(true)
+//                .getUnitsManager()
+//                .setSupportSubunits(Subunits.MM);
     }
 }

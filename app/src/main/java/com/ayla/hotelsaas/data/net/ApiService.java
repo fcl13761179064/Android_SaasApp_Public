@@ -1,28 +1,22 @@
 package com.ayla.hotelsaas.data.net;
 
-import android.text.method.Touch;
-
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-import com.google.gson.JsonObject;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -45,8 +39,29 @@ public interface ApiService {
     @POST("api/v2/sso/login")
     Observable<BaseResult<User>> login(@Body RequestBody body);
 
+    @GET("api/v2/sso/{resourceId}")
+    Observable<BaseResult<String>> authCode(@Path("resourceId") String scopeId);
+
+    @GET("api/v1/construction/hotelcontent/approom")
+    Observable<BaseResult<RoomManageBean>> getcreateRoom(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
+
+    @POST("api/v1/construction/hotelcontent/approom")
+    Observable<BaseResult<String>> createRoom(@Body RequestBody body);
+
+    @POST("api/v1/construction/device/bingingRemove")
+    Observable<BaseResult<String>> removeDeviceAllReleate(@Body RequestBody body);//移除鸿雁解绑关系接口
+
+    @PUT("api/v1/construction/user/register")
+    Observable<BaseResult<Boolean>> register(@Body RequestBody body);
+
     @POST("api/v2/sso/refresh")
     Observable<BaseResult<User>> refreshToken(@Body RequestBody body);
+
+    @PUT("api/v1/construction/hotelcontent/approom/{id}")
+    Observable<BaseResult<String>> roomRename(@Path("id") long roomId,@Body RequestBody body);
+
+    @DELETE("api/v1/construction/hotelcontent/approom/{id}")
+    Observable<BaseResult<String>> deleteRoomNum(@Path("id") long roomId);
 
     @GET("/api/v1/construction/devicetypes")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
@@ -69,8 +84,8 @@ public interface ApiService {
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
 
-    @GET("api/v1/construction/device/{deviceId}/candidates")
-    Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(@Path("deviceId") String deviceId);
+    @GET("api/v1/construction/device/{deviceId}/candidates/{deviceCategory}")
+    Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(@Path("deviceId") String deviceId, @Path("deviceCategory") String deviceCategory);
 
     @POST("notify_gateway_config_exit")
     Observable<BaseResult<Boolean>> notifyGatewayConfigExit(@Body RequestBody body);
@@ -107,8 +122,6 @@ public interface ApiService {
     Observable<BaseResult<Boolean>> tourchPanelRenameAndIcon(@Body RequestBody body);
 
     @GET("/api/v1/device/deviceProperties/{cuId}/{deviceId}")
-    Observable<BaseResult<List<TouchPanelDataBean>>> touchpanelALlDevice(@Path("cuId") int oemModel ,@Path("deviceId") String ss);
-
-
+    Observable<BaseResult<List<TouchPanelDataBean>>> touchpanelALlDevice(@Path("cuId") int oemModel, @Path("deviceId") String ss);
 
 }

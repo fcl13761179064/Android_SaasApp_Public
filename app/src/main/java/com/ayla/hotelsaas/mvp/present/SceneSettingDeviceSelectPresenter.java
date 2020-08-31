@@ -37,8 +37,8 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                         List<List<String>> others = new ArrayList<>();
                         List<String> oemModels = new ArrayList<>();
                         List<DeviceListBean.DevicesBean> devicesBeans = MyApplication.getInstance().getDevicesBean();
-                        for (DeviceCategoryDetailBean categoryDetailBean : deviceCategoryDetailBeans) {
-                            for (DeviceListBean.DevicesBean devicesBean : devicesBeans) {
+                        for (DeviceListBean.DevicesBean devicesBean : devicesBeans) {
+                            for (DeviceCategoryDetailBean categoryDetailBean : deviceCategoryDetailBeans) {
                                 if (categoryDetailBean.getCuId() == devicesBean.getCuId()
                                         && categoryDetailBean.getDeviceName().equals(devicesBean.getDeviceName())) {//找到已绑定的设备的条件、动作描述信息
                                     if (condition) {
@@ -56,6 +56,7 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                                             oemModels.add(categoryDetailBean.getOemModel());
                                         }
                                     }
+                                    break;
                                 }
                             }
                         }

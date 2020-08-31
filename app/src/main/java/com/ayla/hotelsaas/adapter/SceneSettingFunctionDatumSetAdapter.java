@@ -1,5 +1,8 @@
 package com.ayla.hotelsaas.adapter;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -22,7 +25,7 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
     }
 
 
-    public static class DatumBean implements Serializable {
+    public static class DatumBean implements Parcelable {
 
         private String functionName;
         private String valueName;
@@ -107,6 +110,51 @@ public class SceneSettingFunctionDatumSetAdapter extends BaseQuickAdapter<Checka
         public void setOperator(String operator) {
             this.operator = operator;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.functionName);
+            dest.writeString(this.valueName);
+            dest.writeInt(this.deviceType);
+            dest.writeString(this.deviceId);
+            dest.writeString(this.leftValue);
+            dest.writeString(this.rightValue);
+            dest.writeString(this.operator);
+            dest.writeInt(this.rightValueType);
+            dest.writeString(this.iconUrl);
+        }
+
+        public DatumBean() {
+        }
+
+        protected DatumBean(Parcel in) {
+            this.functionName = in.readString();
+            this.valueName = in.readString();
+            this.deviceType = in.readInt();
+            this.deviceId = in.readString();
+            this.leftValue = in.readString();
+            this.rightValue = in.readString();
+            this.operator = in.readString();
+            this.rightValueType = in.readInt();
+            this.iconUrl = in.readString();
+        }
+
+        public static final Parcelable.Creator<DatumBean> CREATOR = new Parcelable.Creator<DatumBean>() {
+            @Override
+            public DatumBean createFromParcel(Parcel source) {
+                return new DatumBean(source);
+            }
+
+            @Override
+            public DatumBean[] newArray(int size) {
+                return new DatumBean[size];
+            }
+        };
     }
 
 }

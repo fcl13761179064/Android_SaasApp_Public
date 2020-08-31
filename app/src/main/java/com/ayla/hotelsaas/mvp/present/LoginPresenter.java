@@ -9,9 +9,8 @@ import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.LoginView;
+import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.utils.PregnancyUtil;
-import com.ayla.hotelsaas.utils.ToastUtil;
-import com.ayla.hotelsaas.utils.ToastUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -31,13 +30,13 @@ public class LoginPresenter extends BasePresenter<LoginView> {
         String password = mView.getPassword();
 
         if (TextUtils.isEmpty(account)) {
-            ToastUtils.showShortToast("登陆账号不能为空");
-            mView.errorShake(1, 2);
+            CustomToast.makeText(MyApplication.getContext(),"登录账号不能为空",R.drawable.ic_toast_warming).show();
+            mView.errorShake(1, 2, "");
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            ToastUtils.showShortToast("登陆密码不能为空");
-            mView.errorShake(2, 2);
+            CustomToast.makeText(MyApplication.getContext(),"登陆密码不能为空",R.drawable.ic_toast_warming).show();
+            mView.errorShake(2, 2, "");
             return;
         }
 
@@ -46,7 +45,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
         } else if (PregnancyUtil.checkPhoneNum(account)) {
             login(account, password);
         } else {
-            ToastUtil.show(MyApplication.getContext(), R.string.account_error);
+            CustomToast.makeText(MyApplication.getContext(), R.string.account_error,R.drawable.ic_toast_warming).show();
         }
     }
 
@@ -77,8 +76,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
 
                     @Override
                     public void _onError(String code, String msg) {
-                        ToastUtils.showShortToast(msg);
-                        mView.errorShake(0, 2);
+                        mView.errorShake(0, 2,msg);
                         mView.hideProgress();
                     }
                 });

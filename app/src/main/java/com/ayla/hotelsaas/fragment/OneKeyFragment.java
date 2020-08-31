@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.OneKeyRuleEngineAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.mvp.present.OneKeyPresenter;
 import com.ayla.hotelsaas.mvp.view.OneKeyView;
@@ -53,7 +55,23 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 RuleEngineBean ruleEngineBean = (RuleEngineBean) adapter.getItem(position);
-                mPresenter.runRuleEngine(ruleEngineBean.getRuleId());
+                boolean needWarming = false;
+                s1:
+                for (RuleEngineBean.Action.ActionItem actionItem : ruleEngineBean.getAction().getItems()) {
+                    String targetDeviceId = actionItem.getTargetDeviceId();
+                    for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
+                        if (devicesBean.getDeviceId().equals(targetDeviceId)) {
+                            continue s1;
+                        }
+                    }
+                    if (ruleEngineBean.getAction().getItems().size() == 1) {
+                        CustomToast.makeText(getContext(), "执行失败，设备已移除", R.drawable.ic_toast_warming).show();
+                        return;
+                    } else {
+                        needWarming = true;
+                    }
+                }
+                mPresenter.runRuleEngine(ruleEngineBean, needWarming);
             }
         });
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
@@ -79,12 +97,12 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
     }
 
     @Override
-    public void runSceneSuccess() {
-        CustomToast.makeText(getContext(), "触发成功", R.drawable.ic_toast_success).show();
+    public void runSceneSuccess(boolean needWarming) {
+        CustomToast.makeText(getContext(), String.format("%s%s", "执行成功", needWarming ? "，有设备已移除请检查" : ""), R.drawable.ic_toast_success).show();
     }
 
     @Override
     public void runSceneFailed() {
-        CustomToast.makeText(getContext(), "触发失败", R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(getContext(), "执行失败", R.drawable.ic_toast_warming).show();
     }
 }

@@ -1,12 +1,8 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,9 +15,7 @@ import com.aliyun.alink.business.devicecenter.api.discovery.IDeviceDiscoveryList
 import com.aliyun.alink.business.devicecenter.api.discovery.LocalDeviceMgr;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.HongyanGetwayAdapter;
-import com.ayla.hotelsaas.adapter.WorkOrderAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.feiyansdk.ApnetActivity;
 import com.ayla.hotelsaas.feiyansdk.DeviceAddHandler;
 import com.ayla.hotelsaas.feiyansdk.FoundDeviceListItem;
 import com.ayla.hotelsaas.feiyansdk.OnDeviceAddListener;
@@ -30,18 +24,16 @@ import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * 鸿雁网关添加引导页面
- * 进入时必须带上cuId 、scopeId 、deviceName。
+ * 进入时必须带上cuId 、scopeId 、deviceName、deviceCategory。
  * fanchunlei
  */
 public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements OnDeviceAddListener {
@@ -53,7 +45,6 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
     AppBar appBar;
     private HongyanGetwayAdapter mAdapter;
     private DeviceAddHandler deviceAddHandler;
-    private String TAG = MainActivity.class.getSimpleName();
     private List<FoundDeviceListItem> mFoundDeviceListItems;
 
     @Override
@@ -125,12 +116,14 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
 
     public void handleJump(int position) {
         Intent intent = new Intent(this, HongyanGatewayAddActivity.class);
-         String productKey = mAdapter.getData().get(position).getProductKey();
-         String deviceName = mAdapter.getData().get(position).getDeviceName();
+        String productKey = mAdapter.getData().get(position).getProductKey();
+        String deviceName = mAdapter.getData().get(position).getDeviceName();
         intent.putExtra("HongyanproductKey", productKey);
         intent.putExtra("HongyandeviceName", deviceName);
         intent.putExtras(getIntent());
-        startActivityForResult(intent,REQUEST_CODE_ADD_DEVICE);
+        startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
+        LocalDeviceMgr.getInstance().stopDiscovery();
+        Log.d("stopDiscovery","已经停止发现网关");
     }
 
     @Override
@@ -151,6 +144,8 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity implements O
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LocalDeviceMgr.getInstance().stopDiscovery();
+        Log.d("stopDiscovery","已经停止发现网关");
     }
 
     @Override

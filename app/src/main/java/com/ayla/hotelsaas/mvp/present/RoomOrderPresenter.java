@@ -7,8 +7,6 @@ import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.RoomOrderView;
 
-import java.util.List;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -23,7 +21,7 @@ public class RoomOrderPresenter extends BasePresenter<RoomOrderView> {
     //页码
     private int pageNum = 1;
     //拉取数量
-    private static int maxNum = 100;
+    private static int maxNum = 10;
 
     /**
      * 加载下一页
@@ -47,7 +45,7 @@ public class RoomOrderPresenter extends BasePresenter<RoomOrderView> {
      * @param businessId
      */
     public void loadData(String businessId) {
-        RequestModel.getInstance().getRoomOrderList(businessId,pageNum,maxNum)
+        RequestModel.getInstance().getRoomOrderList(businessId, pageNum, maxNum)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxjavaObserver<RoomOrderBean>() {

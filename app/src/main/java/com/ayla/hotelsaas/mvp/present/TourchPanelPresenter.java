@@ -1,13 +1,9 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 import com.ayla.hotelsaas.mvp.view.TourchPanelView;
-
-import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -21,8 +17,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class TourchPanelPresenter extends BasePresenter<TourchPanelView> {
 
-    public void TourchPanelRenameInsertMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue) {
-        RequestModel.getInstance().tourchPanelRenameMethod(id, deviceId, cuId, propertyName, propertyType, propertyValue)
+    public void TourchPanelRenameInsertMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue, String deviceCategory) {
+        RequestModel.getInstance().touchPanelRenameMethod(id, deviceId, cuId, propertyName, propertyType, propertyValue, deviceCategory, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

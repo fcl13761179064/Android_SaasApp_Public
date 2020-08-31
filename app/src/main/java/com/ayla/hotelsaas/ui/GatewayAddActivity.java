@@ -3,10 +3,11 @@ package com.ayla.hotelsaas.ui;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.GatewayAddGuideView;
@@ -16,11 +17,11 @@ import butterknife.OnClick;
 
 /**
  * 网关添加页面
- * 进入时必须带上dsn、cuId 、scopeId、deviceName。
+ * 进入时必须带上dsn、cuId 、scopeId、deviceName、deviceCategory。
  */
 public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, GatewayAddGuidePresenter> implements GatewayAddGuideView {
     @BindView(R.id.iv_01)
-    public LottieAnimationView mImageView;
+    public ImageView mImageView;
     @BindView(R.id.tv_loading)
     public TextView mLoadingTextView;
     @BindView(R.id.tv_bind_progress)
@@ -65,6 +66,7 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
                 getIntent().getStringExtra("dsn"),
                 getIntent().getIntExtra("cuId", 0),
                 getIntent().getLongExtra("scopeId", 0),
+                getIntent().getStringExtra("deviceCategory"),
                 getIntent().getStringExtra("deviceName"));
     }
 
@@ -110,8 +112,7 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
                 mFinishButton.setText("重试");
                 break;
             default:
-                mImageView.setAnimation(R.raw.ic_device_bind_loading);
-                mImageView.playAnimation();
+                GlideApp.with(mImageView).load(R.drawable.ic_device_bind_loading).into(mImageView);
                 mLoadingTextView.setVisibility(View.VISIBLE);
                 mBindProgressTextView.setText("最长可能需要1分钟，请耐心等待");
                 mFinishButton.setVisibility(View.INVISIBLE);

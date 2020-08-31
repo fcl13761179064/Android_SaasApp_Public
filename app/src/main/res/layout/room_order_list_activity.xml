@@ -12,13 +12,6 @@
         app:center_tv="@string/exit"
         app:left_iv="@mipmap/icon_back_black" />
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorBackground" />
-
-
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/room_refreshLayout"
         android:layout_width="match_parent"
@@ -29,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
 
 
 </LinearLayout>

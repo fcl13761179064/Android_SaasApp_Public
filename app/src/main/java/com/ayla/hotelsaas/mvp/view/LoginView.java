@@ -17,7 +17,7 @@ public interface LoginView extends BaseView {
     String getPassword();
 
     //错误提示
-    void errorShake(int type, int CycleTimes);
+    void errorShake(int type, int CycleTimes, String msg);
 
     //登录成功
     void loginSuccess(User data);

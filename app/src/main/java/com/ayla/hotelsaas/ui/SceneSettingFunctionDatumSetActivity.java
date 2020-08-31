@@ -1,102 +1,74 @@
 package com.ayla.hotelsaas.ui;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.CheckableSupport;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
-import com.ayla.hotelsaas.mvp.present.SceneSettingFunctionDatumSetPresenter;
-import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionDatumSetView;
 import com.ayla.hotelsaas.widget.AppBar;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
-
-import java.util.List;
 
 import butterknife.BindView;
-import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 场景创建，选择执行功能点的页面
  * 进入时必须带入参数
- * 1.{@link DeviceTemplateBean.AttributesBean} attributesBean
+ * 1.{@link DeviceTemplateBean.AttributesBean} attributeBean
  * 2.{@link DeviceListBean.DevicesBean} deviceBean
  */
-public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneSettingFunctionDatumSetView, SceneSettingFunctionDatumSetPresenter> implements SceneSettingFunctionDatumSetView {
-    @BindView(R.id.rv)
-    public RecyclerView mRecyclerView;
+public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
     @BindView(R.id.appBar)
     AppBar appBar;
-    private SceneSettingFunctionDatumSetAdapter mAdapter;
 
     @Override
-    protected SceneSettingFunctionDatumSetPresenter initPresenter() {
-        return new SceneSettingFunctionDatumSetPresenter();
+    protected BasePresenter initPresenter() {
+        return null;
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_zigbee_add_select_gateway;
+        return R.layout.activity_scene_function_datum_set;
     }
 
     @Override
     protected void initView() {
         appBar.setCenterText("选择功能");
         appBar.setRightText("完成");
-        mAdapter = new SceneSettingFunctionDatumSetAdapter(R.layout.item_scene_setting_function_datum_set);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
-                .showLastDivider()
-                .color(android.R.color.transparent).size(AutoSizeUtils.dp2px(this, 1)).build());
-        mRecyclerView.setAdapter(mAdapter);
+
+        DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getIntent().getSerializableExtra("attributeBean");
+        DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("deviceBean");
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        if (attributesBean.getValue() != null) {
+            fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(deviceBean, attributesBean), "content");
+        } else if (attributesBean.getSetup() != null) {
+            fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeFragment.newInstance(deviceBean, attributesBean), "content");
+        }
+        fragmentTransaction.commitNowAllowingStateLoss();
     }
 
     @Override
     protected void initListener() {
-        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                for (int i = 0; i < adapter.getData().size(); i++) {
-                    CheckableSupport bean = (CheckableSupport) adapter.getItem(i);
-                    bean.setChecked(i == position);
-                }
-                mAdapter.notifyDataSetChanged();
-            }
-        });
         appBar.rightTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent data = new Intent();
-                for (CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> datum : mAdapter.getData()) {
-                    if (datum.isChecked()) {
-                        data.putExtra("result", datum.getData());
-                        setResult(RESULT_OK, data);
-                        break;
-                    }
+                Fragment contentFragment = getSupportFragmentManager().findFragmentByTag("content");
+                if (contentFragment instanceof ISceneSettingFunctionDatumSet) {
+                    SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = ((ISceneSettingFunctionDatumSet) contentFragment).getDatum();
+
+                    Intent data = new Intent();
+                    data.putExtra("result", datumBean);
+                    setResult(Activity.RESULT_OK, data);
+                    finish();
                 }
-                finish();
             }
         });
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getIntent().getSerializableExtra("attributesBean");
-        DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("deviceBean");
-        mPresenter.loadFunction(deviceBean, attributesBean);
-    }
-
-    @Override
-    public void showFunctions(List<CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean>> data) {
-        mAdapter.setNewData(data);
     }
 }

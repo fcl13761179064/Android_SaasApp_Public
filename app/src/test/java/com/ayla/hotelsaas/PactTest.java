@@ -213,7 +213,7 @@ public class PactTest {
                 //获取候选节点
                 .given("获取成功")
                 .uponReceiving("获取候选节点")
-                .matchPath("/api/v1/construction/device/.*/candidates", "/api/v1/construction/device/12345/candidates")
+                .matchPath("/api/v1/construction/device/.*/candidates/.*", "/api/v1/construction/device/12345/candidates/222222")
                 .method("GET")
                 .willRespondWith()
                 .status(200)
@@ -500,7 +500,7 @@ public class PactTest {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN("111", 1, 2, 2, "abc", "abc");
+                                .bindDeviceWithDSN("111", 1, 2, 2, "abc", "abc", "abc");
                     }
                 })//修改设备名称
                 .concatMap(new Function<Object, ObservableSource<?>>() {
@@ -514,7 +514,7 @@ public class PactTest {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .fetchCandidateNodes("11111");
+                                .fetchCandidateNodes("11111", "22222");
                     }
                 })//获取网关的候选节点
                 .concatMap(new Function<Object, ObservableSource<?>>() {

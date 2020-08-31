@@ -7,13 +7,6 @@ import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -28,7 +21,7 @@ public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
     //页码
     private int pageNum = 1;
     //拉取数量
-    private static int maxNum = 100;
+    private static int maxNum = 10;
 
     /**
      * 加载下一页
@@ -74,4 +67,5 @@ public class WorkOrderPresenter extends BasePresenter<WorkOrderView> {
                     }
                 });
     }
+
 }

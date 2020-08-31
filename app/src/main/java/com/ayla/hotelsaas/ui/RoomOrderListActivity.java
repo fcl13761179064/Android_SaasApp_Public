@@ -3,25 +3,31 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aliyun.iot.aep.sdk.login.ILoginCallback;
+import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.RoomOrderListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.RoomOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.RoomOrderView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
-import com.ayla.hotelsaas.utils.RecycleViewDivider;
+import com.ayla.hotelsaas.utils.ToastUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -32,6 +38,7 @@ import java.util.List;
 import butterknife.BindView;
 
 public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOrderPresenter> implements RoomOrderView {
+    private static final int REQUEST_CODE_TO_ROOM = 0x10;
 
     @BindView(R.id.room_recyclerview)
     RecyclerView recyclerview;
@@ -96,10 +103,12 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (!FastClickUtils.isDoubleClick()) {
                     Intent intent = new Intent(RoomOrderListActivity.this, MainActivity.class);
-                    final RoomOrderBean.ResultListBean room_result = mAdapter.getData().get(position);
-                    intent.putExtra("roomData", (Serializable) room_result);
-                    intent.putExtra("workOrderdata", (Serializable) mWork_order);
-                    startActivity(intent);
+                    RoomOrderBean.ResultListBean room_result = mAdapter.getData().get(position);
+                    long roomId = room_result.getRoomId();
+                    String roomName = room_result.getRoomName();
+                    intent.putExtra("roomId", roomId);
+                    intent.putExtra("roomName", roomName);
+                    startActivityForResult(intent, REQUEST_CODE_TO_ROOM);
                 }
             }
         });
@@ -168,4 +177,30 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         mRefreshLayout.finishLoadMore();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_TO_ROOM && data != null) {
+            long roomId = data.getLongExtra("roomId", 0);
+            int editPosition = -1;
+            for (int i = 0; i < mAdapter.getData().size(); i++) {
+                RoomOrderBean.ResultListBean recordsBean = mAdapter.getData().get(i);
+                if (recordsBean.getRoomId() == roomId) {
+                    editPosition = i;
+                    break;
+                }
+            }
+            if (resultCode == MainActivity.RESULT_CODE_RENAMED) {
+                String roomName = data.getStringExtra("roomName");
+                mAdapter.getData().get(editPosition).setRoomName(roomName);
+                mAdapter.notifyItemChanged(editPosition + mAdapter.getHeaderLayoutCount());
+            }
+            if (resultCode == MainActivity.RESULT_CODE_REMOVED) {
+                if (editPosition != -1) {
+                    mAdapter.remove(editPosition);
+                }
+            }
+        }
+    }
 }

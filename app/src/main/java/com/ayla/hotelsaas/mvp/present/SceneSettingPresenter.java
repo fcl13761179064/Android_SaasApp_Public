@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.mvp.present;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
@@ -10,6 +11,8 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
+import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
@@ -24,6 +27,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -59,7 +63,9 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.saveFailed();
+                        RxjavaFlatmapThrowable mThrowable = (RxjavaFlatmapThrowable) throwable;
+                        String code = mThrowable.getCode();
+                        mView.saveFailed(code);
                     }
                 });
         addSubscrebe(subscribe);
@@ -105,12 +111,12 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
         List<DeviceCategoryDetailBean> categoryDetailBeans = new ArrayList<>();//记录品类描述信息
         for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
             for (RuleEngineBean.Action.ActionItem actionItem : actionItems) {
-                if (devicesBean.getDeviceId().equals(actionItem.getTargetDeviceId())) {
+                if (TextUtils.equals(devicesBean.getDeviceId(), actionItem.getTargetDeviceId())) {
                     enableDevices.add(devicesBean);
                 }
             }
             for (RuleEngineBean.Condition.ConditionItem conditionItem : conditionItems) {
-                if (devicesBean.getDeviceId().equals(conditionItem.getSourceDeviceId())) {
+                if (TextUtils.equals(devicesBean.getDeviceId(), conditionItem.getSourceDeviceId())) {
                     enableDevices.add(devicesBean);
                 }
             }
@@ -138,14 +144,44 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         for (DeviceListBean.DevicesBean enableDevice : enableDevices) {
                             for (DeviceCategoryDetailBean deviceCategoryDetailBean : deviceCategoryDetailBeans) {
                                 if (enableDevice.getCuId() == deviceCategoryDetailBean.getCuId()
-                                        && enableDevice.getDeviceName().equals(deviceCategoryDetailBean.getDeviceName())) {
-                                    Observable<DeviceTemplateBean> task = RequestModel.getInstance().fetchDeviceTemplate(deviceCategoryDetailBean.getOemModel())
+                                        && TextUtils.equals(deviceCategoryDetailBean.getDeviceName(), enableDevice.getDeviceName())) {
+                                    Observable<DeviceTemplateBean> task = RequestModel.getInstance()
+                                            .fetchDeviceTemplate(deviceCategoryDetailBean.getOemModel())
                                             .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                                                 @Override
                                                 public DeviceTemplateBean apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
                                                     return deviceTemplateBeanBaseResult.data;
                                                 }
-                                            });
+                                            })
+                                            .zipWith(RequestModel.getInstance()
+                                                    .getALlTouchPanelDeviceInfo(enableDevice.getCuId(), enableDevice.getDeviceId()).map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
+                                                        @Override
+                                                        public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
+                                                            return listBaseResult.data;
+                                                        }
+                                                    }), new BiFunction<DeviceTemplateBean, List<TouchPanelDataBean>, DeviceTemplateBean>() {
+                                                @Override
+                                                public DeviceTemplateBean apply(DeviceTemplateBean deviceTemplateBean, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
+                                                    for (DeviceTemplateBean.AttributesBean attributesBean : deviceTemplateBean.getAttributes()) {
+                                                        for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
+                                                            if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
+                                                                    TextUtils.equals(attributesBean.getCode(), touchPanelDataBean.getPropertyName())) {
+                                                                attributesBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                                            }
+                                                            if("Words".equals(touchPanelDataBean.getPropertyType())){
+                                                                if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
+                                                                    for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
+                                                                        if (TextUtils.equals(valueBean.getValue(),touchPanelDataBean.getPropertyName())) {
+                                                                            valueBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    return deviceTemplateBean;
+                                                }
+                                            });//根据功能的别名，篡改物模板里面的displayname。
                                     tasks.add(task);
                                     break;
                                 }
@@ -181,27 +217,35 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             datumBean.setDeviceType(actionItem.getTargetDeviceType());
                             datumBean.setRightValueType(actionItem.getRightValueType());
                             datumBean.setOperator(actionItem.getOperator());
-                            datumBean.setLeftValue(actionItem.getLeftValue());
+                            datumBean.setRightValue(actionItem.getRightValue());
                             s1:
                             for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
-                                if (devicesBean.getDeviceId().equals(actionItem.getTargetDeviceId())) {
+                                if (TextUtils.equals(devicesBean.getDeviceId(), actionItem.getTargetDeviceId())) {
                                     String deviceName = devicesBean.getDeviceName();
                                     int cuId = devicesBean.getCuId();
                                     for (DeviceCategoryDetailBean categoryDetailBean : categoryDetailBeans) {
-                                        if (deviceName.equals(categoryDetailBean.getDeviceName()) && cuId == categoryDetailBean.getCuId()) {
+                                        if (TextUtils.equals(categoryDetailBean.getDeviceName(), deviceName) && cuId == categoryDetailBean.getCuId()) {
                                             String oemModel = categoryDetailBean.getOemModel();
                                             for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
                                                 String deviceCategory = deviceTemplateBean.getDeviceCategory();
-                                                if (oemModel.equals(deviceCategory)) {
+                                                if (TextUtils.equals(oemModel, deviceCategory)) {
                                                     for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                                        if (attribute.getCode().equals(actionItem.getLeftValue())) {
-                                                            for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attribute.getValue()) {
-                                                                if (valueBean.getValue().equals(actionItem.getRightValue())) {
-                                                                    datumBean.setFunctionName(attribute.getDisplayName());
-                                                                    datumBean.setValueName(valueBean.getDisplayName());
-                                                                    break s1;
+                                                        datumBean.setFunctionName(attribute.getDisplayName());
+                                                        if (TextUtils.equals(attribute.getCode(), actionItem.getLeftValue())) {
+                                                            List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
+                                                            DeviceTemplateBean.AttributesBean.SetupBean setupBean = attribute.getSetup();
+                                                            if (attributeValue != null) {
+                                                                for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
+                                                                    if (TextUtils.equals(valueBean.getValue(), actionItem.getRightValue())) {
+                                                                        datumBean.setValueName(valueBean.getDisplayName());
+                                                                        break s1;
+                                                                    }
                                                                 }
+                                                            } else if (setupBean != null) {
+                                                                String unit = setupBean.getUnit();
+                                                                datumBean.setValueName(String.format("%s%s", datumBean.getValueName(), TextUtils.isEmpty(unit) ? "" : unit));
                                                             }
+                                                            break s1;
                                                         }
                                                     }
                                                 }
@@ -222,27 +266,35 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             datumBean.setDeviceId(conditionItem.getSourceDeviceId());
                             datumBean.setDeviceType(conditionItem.getSourceDeviceType());
                             datumBean.setOperator(conditionItem.getOperator());
-                            datumBean.setLeftValue(conditionItem.getLeftValue());
+                            datumBean.setRightValue(conditionItem.getRightValue());
                             s1:
                             for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
-                                if (devicesBean.getDeviceId().equals(conditionItem.getSourceDeviceId())) {
+                                if (TextUtils.equals(devicesBean.getDeviceId(), conditionItem.getSourceDeviceId())) {
                                     String deviceName = devicesBean.getDeviceName();
                                     int cuId = devicesBean.getCuId();
                                     for (DeviceCategoryDetailBean categoryDetailBean : categoryDetailBeans) {
-                                        if (deviceName.equals(categoryDetailBean.getDeviceName()) && cuId == categoryDetailBean.getCuId()) {
+                                        if (TextUtils.equals(categoryDetailBean.getDeviceName(), deviceName) && cuId == categoryDetailBean.getCuId()) {
                                             String oemModel = categoryDetailBean.getOemModel();
                                             for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
                                                 String deviceCategory = deviceTemplateBean.getDeviceCategory();
-                                                if (oemModel.equals(deviceCategory)) {
+                                                if (TextUtils.equals(oemModel, deviceCategory)) {
                                                     for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                                        if (attribute.getCode().equals(conditionItem.getLeftValue())) {
-                                                            for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attribute.getValue()) {
-                                                                if (valueBean.getValue().equals(conditionItem.getRightValue())) {
-                                                                    datumBean.setFunctionName(attribute.getDisplayName());
-                                                                    datumBean.setValueName(valueBean.getDisplayName());
-                                                                    break s1;
+                                                        datumBean.setFunctionName(attribute.getDisplayName());
+                                                        if (TextUtils.equals(attribute.getCode(), conditionItem.getLeftValue())) {
+                                                            List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
+                                                            DeviceTemplateBean.AttributesBean.SetupBean setupBean = attribute.getSetup();
+                                                            if (attributeValue != null) {
+                                                                for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
+                                                                    if (TextUtils.equals(valueBean.getValue(), conditionItem.getRightValue())) {
+                                                                        datumBean.setValueName(valueBean.getDisplayName());
+                                                                        break s1;
+                                                                    }
                                                                 }
+                                                            } else if (setupBean != null) {
+                                                                String unit = setupBean.getUnit();
+                                                                datumBean.setValueName(String.format("%s%s", datumBean.getValueName(), TextUtils.isEmpty(unit) ? "" : unit));
                                                             }
+                                                            break s1;
                                                         }
                                                     }
                                                 }
@@ -255,12 +307,12 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         }
                         for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
                             for (SceneSettingFunctionDatumSetAdapter.DatumBean condition : conditions) {
-                                if (devicesBean.getDeviceId().equals(condition.getDeviceId())) {
+                                if (TextUtils.equals(devicesBean.getDeviceId(), condition.getDeviceId())) {
                                     condition.setIconUrl(devicesBean.getIconUrl());
                                 }
                             }
                             for (SceneSettingFunctionDatumSetAdapter.DatumBean action : actions) {
-                                if (devicesBean.getDeviceId().equals(action.getDeviceId())) {
+                                if (TextUtils.equals(devicesBean.getDeviceId(), action.getDeviceId())) {
                                     action.setIconUrl(devicesBean.getIconUrl());
                                 }
                             }

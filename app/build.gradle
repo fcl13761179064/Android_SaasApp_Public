@@ -20,7 +20,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode Integer.parseInt(new Date().format("yyyyMMdd"))
-        versionName "1.0"
+        versionName "1.0.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
@@ -51,6 +51,7 @@ android {
 
     buildTypes {
         release {
+            zipAlignEnabled true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
@@ -102,8 +103,8 @@ dependencies {
     implementation rootProject.libraries.SmartRefreshHeader
     implementation rootProject.libraries.BaseRyViewAdapHelper
     implementation rootProject.libraries.utilcode
-    implementation "com.airbnb.android:lottie:3.4.0"
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+    implementation 'com.xw.repo:bubbleseekbar:3.20'
 
     api('com.aliyun.alink.linksdk:iot-linkkit:1.7.0')
     implementation('com.aliyun.alink.linksdk:ilop-devicecenter:1.7.7.1') {

@@ -28,7 +28,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
      *
      * @param dsn
      */
-    public void bindZigBeeNodeWithGatewayDSN(String dsn, long cuId, long scopeId, String deviceName) {
+    public void bindZigBeeNodeWithGatewayDSN(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
         Observable.just(dsn)
                 .doOnNext(new Consumer<String>() {
                     @Override
@@ -58,7 +58,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public ObservableSource<List<DeviceListBean.DevicesBean>> apply(Object o) throws Exception {
                         long startTime = System.currentTimeMillis();
                         return RequestModel.getInstance()
-                                .fetchCandidateNodes(dsn)
+                                .fetchCandidateNodes(dsn, deviceCategory)
                                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                                     @Override
                                     public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
@@ -99,7 +99,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         List<Observable<?>> tasks = new ArrayList<>();
                         for (DeviceListBean.DevicesBean device : devices) {
                             Observable<?> task = RequestModel.getInstance()
-                                    .bindDeviceWithDSN(device.getDeviceId(), cuId, scopeId, 2, deviceName, deviceName + "_" + device.getDeviceId())
+                                    .bindDeviceWithDSN(device.getDeviceId(), cuId, scopeId, 2, deviceCategory, deviceName, deviceName)
                                     .doOnError(new Consumer<Throwable>() {
                                         @Override
                                         public void accept(Throwable throwable) throws Exception {

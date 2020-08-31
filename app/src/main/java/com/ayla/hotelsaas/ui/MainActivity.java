@@ -1,25 +1,29 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.aliyun.iot.aep.sdk.login.ILoginCallback;
+import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.base.BasicFragment;
-import com.ayla.hotelsaas.bean.RoomOrderBean;
-import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.fragment.DeviceListFragment;
 import com.ayla.hotelsaas.fragment.RuleEngineFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
+import com.ayla.hotelsaas.mvp.present.MainPresenter;
+import com.ayla.hotelsaas.mvp.view.MainView;
 import com.ayla.hotelsaas.widget.AppBar;
 
 import java.util.ArrayList;
@@ -32,7 +36,11 @@ import butterknife.BindView;
  * @作者 fanchunlei
  * @时间 2020/7/20
  */
-public class MainActivity extends BaseMvpActivity implements RadioGroup.OnCheckedChangeListener {
+public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements RadioGroup.OnCheckedChangeListener, MainView {
+    private static final int REQUEST_CODE_TO_MORE = 0x10;
+
+    public static final int RESULT_CODE_REMOVED = 0X20;
+    public static final int RESULT_CODE_RENAMED = 0X21;
 
     @BindView(R.id.appBar)
     AppBar appBar;
@@ -47,13 +55,14 @@ public class MainActivity extends BaseMvpActivity implements RadioGroup.OnChecke
     @BindView(R.id.rb_main_fragment_test)
     RadioButton main_test;
 
-    private RoomOrderBean.ResultListBean mRoom_order;
-    private WorkOrderBean.ResultListBean mWork_order;
+    private long mRoom_ID;
+    private String mRoom_name;
     private List<Fragment> mFragments;
     private BasicFragment currentFragment;
     public final static int GO_HOME_TYPE = 0;
     public final static int GO_THREE_TYPE = 2;
     public final static int GO_SECOND_TYPE = 1;
+    public static  boolean mAuthCode=false;
 
     @Override
     protected int getLayoutId() {
@@ -62,9 +71,10 @@ public class MainActivity extends BaseMvpActivity implements RadioGroup.OnChecke
 
     @Override
     public void refreshUI() {
-        mRoom_order = (RoomOrderBean.ResultListBean) getIntent().getSerializableExtra("roomData");
-        mWork_order = (WorkOrderBean.ResultListBean) getIntent().getSerializableExtra("workOrderdata");
-        appBar.setCenterText(mRoom_order.getRoomName());
+        mRoom_ID = getIntent().getLongExtra("roomId", 0);
+        mRoom_name = getIntent().getStringExtra("roomName");
+        appBar.setCenterText(mRoom_name);
+        appBar.setRightText("更多");
         super.refreshUI();
     }
 
@@ -72,10 +82,20 @@ public class MainActivity extends BaseMvpActivity implements RadioGroup.OnChecke
     @Override
     protected void initView() {
         mFragments = new ArrayList<>();
-        mFragments.add(new DeviceListFragment(mRoom_order));
-        mFragments.add(new RuleEngineFragment(mRoom_order));
+        mFragments.add(new DeviceListFragment(mRoom_ID));
+        mFragments.add(new RuleEngineFragment(mRoom_ID));
         mFragments.add(new TestFragment());
+        if (mPresenter != null) {
+            mPresenter.getAuthCode(mRoom_ID + "");
+        }
+    }
 
+    @Override
+    protected void appBarRightIvClicked() {
+        super.appBarRightIvClicked();
+        Intent intent = new Intent(MainActivity.this, RoomMoreActivity.class);
+        intent.putExtras(getIntent());
+        startActivityForResult(intent, REQUEST_CODE_TO_MORE);
     }
 
     @Override
@@ -105,7 +125,7 @@ public class MainActivity extends BaseMvpActivity implements RadioGroup.OnChecke
         drawable_tuijian.setBounds(0, 0, 48, 48);
         //设置图片在文字的哪个方向
         main_test.setCompoundDrawables(null, drawable_tuijian, null, null);
-
+        appBar.setRightText("更多");
     }
 
 
@@ -161,11 +181,11 @@ public class MainActivity extends BaseMvpActivity implements RadioGroup.OnChecke
         switch (type) {
             case GO_HOME_TYPE: {
 
-                return new DeviceListFragment(mRoom_order);
+                return new DeviceListFragment(mRoom_ID);
 
             }
             case GO_SECOND_TYPE: {
-                return new RuleEngineFragment(mRoom_order);
+                return new RuleEngineFragment(mRoom_ID);
             }
             case GO_THREE_TYPE: {
 
@@ -177,8 +197,8 @@ public class MainActivity extends BaseMvpActivity implements RadioGroup.OnChecke
 
 
     @Override
-    protected BasePresenter initPresenter() {
-        return null;
+    protected MainPresenter initPresenter() {
+        return new MainPresenter();
     }
 
     @Override
@@ -201,12 +221,12 @@ public class MainActivity extends BaseMvpActivity implements RadioGroup.OnChecke
 
         switch (checkedId) {
             case R.id.rb_main_fragment_device: {
-                appBar.setCenterText(mRoom_order.getRoomName());
+                appBar.setCenterText(mRoom_name);
                 changeFragment(GO_HOME_TYPE);
                 break;
             }
             case R.id.rb_main_fragment_linkage: {
-                appBar.setCenterText(mRoom_order.getRoomName());
+                appBar.setCenterText(mRoom_name);
                 changeFragment(GO_SECOND_TYPE);
                 break;
             }
@@ -218,4 +238,46 @@ public class MainActivity extends BaseMvpActivity implements RadioGroup.OnChecke
         }
     }
 
+    @Override
+    public void getAuthCodeFail(String code,String msg) {
+        mAuthCode = false;
+    }
+
+    @Override
+    public void getAuthCodeSuccess(String data) {
+        if (!TextUtils.isEmpty(data)) {
+            LoginBusiness.authCodeLogin(data, new ILoginCallback() {
+                @Override
+                public void onLoginSuccess() {
+                    mAuthCode = true;
+                    Log.d("onLoginSuccess", "成功");
+                }
+
+                @Override
+                public void onLoginFailed(int i, String s) {
+                    mAuthCode = false;
+                    Log.d("onLoginSuccess", "code: " + i + ", str: " + s);
+
+                }
+            });
+        } else {
+            Log.d("aliyun_auth_code", "authCode为空");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_TO_MORE) {
+            if (resultCode == RoomMoreActivity.RESULT_CODE_RENAMED) {
+                mRoom_name = data.getStringExtra("newName");
+                appBar.setCenterText(mRoom_name);
+                setResult(RESULT_CODE_RENAMED, new Intent().putExtra("roomId", mRoom_ID).putExtra("roomName", mRoom_name));
+            }
+            if (resultCode == RoomMoreActivity.RESULT_CODE_REMOVED) {
+                setResult(RESULT_CODE_REMOVED, new Intent().putExtra("roomId", mRoom_ID));
+                finish();
+            }
+        }
+    }
 }

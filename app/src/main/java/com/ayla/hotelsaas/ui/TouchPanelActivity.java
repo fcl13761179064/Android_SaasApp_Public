@@ -18,6 +18,9 @@ import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * 触控面板页面
+ */
 public class TouchPanelActivity extends BasicActivity {
     @BindView(R.id.gridView)
     GridView mGridView;
@@ -41,13 +44,12 @@ public class TouchPanelActivity extends BasicActivity {
     @Override
     protected void initView() {
         dataList = new ArrayList<>();
-        dataList.add(new TouchPanelBean(R.mipmap.go_home, "场景", 0, 0));
-        dataList.add(new TouchPanelBean(R.mipmap.back_home, "地暖", 0, 0));
-        dataList.add(new TouchPanelBean(R.mipmap.sleep_model, "空调", 0, 0));
-        dataList.add(new TouchPanelBean(R.mipmap.storm_model, "新风", 0, 0));
+        dataList.add(new TouchPanelBean(R.mipmap.go_home, "场景", 1));
+        dataList.add(new TouchPanelBean(R.mipmap.back_home, "地暖", 2));
+        dataList.add(new TouchPanelBean(R.mipmap.sleep_model, "空调", 3));
+        dataList.add(new TouchPanelBean(R.mipmap.storm_model, "新风", 4));
         mAdapter = new TouchPanelAdapter(dataList);
         mGridView.setAdapter(mAdapter);
-
     }
 
     @Override
@@ -66,6 +68,7 @@ public class TouchPanelActivity extends BasicActivity {
                 if (position == 0) {
                     Intent intent = new Intent(MyApplication.getContext(), TouchPanelSelectActivity.class);
                     intent.putExtras(getIntent());
+                    intent.putExtra("pannel_type", 1);
                     startActivity(intent);
                 } else {
                     ToastUtils.showShortToast("该功能未开发");

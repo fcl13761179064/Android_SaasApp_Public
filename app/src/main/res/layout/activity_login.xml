@@ -26,7 +26,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="top|center_horizontal"
+            android:gravity="top|left"
+            android:layout_marginLeft="@dimen/dp_40"
+            android:layout_marginRight="@dimen/dp_40"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -42,11 +44,9 @@
                 android:id="@+id/editCount"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginLeft="@dimen/dp_40"
                 android:layout_marginTop="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_40"
                 android:background="@null"
-                android:gravity="center"
+                android:gravity="left|center"
                 android:hint="@string/phone_or_email"
                 android:inputType="textVisiblePassword"
                 android:singleLine="true"
@@ -58,8 +58,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_below="@+id/ll_account_layout"
-                android:layout_marginLeft="38dp"
-                android:layout_marginRight="38dp"
                 android:background="@color/login_deviding_line" />
 
             <TextView
@@ -76,10 +74,8 @@
                 android:layout_height="48dp"
                 android:layout_below="@+id/ll_account_layout"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_40"
-                android:layout_marginRight="@dimen/dp_40"
                 android:background="@null"
-                android:gravity="center"
+                android:gravity="center|left"
                 android:hint="@string/login_password"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
@@ -92,8 +88,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_below="@+id/ll_password_layout"
-                android:layout_marginLeft="38dp"
-                android:layout_marginRight="38dp"
                 android:background="@color/login_deviding_line" />
 
 
@@ -106,7 +100,7 @@
                 android:text="密码或者账号错误"
                 android:textColor="@color/login_error_show"
                 android:textSize="14sp"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
             <Button
                 android:id="@+id/submitBtn"
@@ -115,15 +109,28 @@
                 android:layout_height="44dp"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="36dp"
                 android:layout_marginTop="30dp"
-                android:layout_marginRight="36dp"
                 android:background="@drawable/green_btn_bg"
+                android:enabled="false"
                 android:text="@string/login_btn"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
+
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/dp_10"
+        android:text="注册账号"
+        android:layout_below="@+id/ll_content_view"
+        android:textColor="@color/loginLogoColor"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_switch"
@@ -140,5 +147,6 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:visibility="gone" />
+
 
 </RelativeLayout>

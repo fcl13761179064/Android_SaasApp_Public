@@ -9,23 +9,22 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.ZigBeeAddPresenter;
 import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
  * ZigBee添加页面
- * 进入时必须带入网关deviceId 、cuId 、scopeId、deviceName
+ * 进入时必须带入网关deviceId 、cuId 、scopeId、deviceName、deviceCategory
  */
 public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddPresenter> implements ZigBeeAddView {
     private static final String TAG = "ZigBeeAddActivity";
     @BindView(R.id.iv_01)
-    public LottieAnimationView mImageView;
+    public ImageView mImageView;
     @BindView(R.id.tv_loading)
     public TextView mLoadingTextView;
     @BindView(R.id.tv_progress)
@@ -85,6 +84,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                 getIntent().getStringExtra("deviceId"),
                 getIntent().getIntExtra("cuId", 0),
                 getIntent().getLongExtra("scopeId", 0),
+                getIntent().getStringExtra("deviceCategory"),
                 getIntent().getStringExtra("deviceName"));
     }
 
@@ -103,8 +103,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     private void refreshBindShow() {
         switch (bindProgress) {
             case 0:
-                mImageView.setAnimation(R.raw.ic_device_bind_loading);
-                mImageView.playAnimation();
+                GlideApp.with(mImageView).load(R.drawable.ic_device_bind_loading).into(mImageView);
                 mLoadingTextView.setVisibility(View.VISIBLE);
                 mProgressTextView.setText("最长可能需要1分钟，请耐心等待");
                 mProgressView.setVisibility(View.VISIBLE);

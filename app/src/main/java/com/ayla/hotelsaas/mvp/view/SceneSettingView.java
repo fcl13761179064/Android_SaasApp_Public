@@ -8,7 +8,7 @@ import java.util.List;
 public interface SceneSettingView extends BaseView {
     void saveSuccess();
 
-    void saveFailed();
+    void saveFailed(String code);
 
     void deleteSuccess();
 

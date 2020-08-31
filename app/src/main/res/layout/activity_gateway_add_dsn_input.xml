@@ -55,7 +55,7 @@
 
             <View
                 android:layout_width="300dp"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:background="#DFE4EB" />
 
         </LinearLayout>

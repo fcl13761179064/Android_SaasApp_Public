@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     android:layout_marginTop="@dimen/dp_10"
+    android:layout_marginRight="16dp"
     android:background="@drawable/bg_device_item"
     android:padding="16dp">
 
@@ -20,8 +20,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@id/device_left_iv"
-        android:maxLines="1"
-        android:text="单路开关 AZB-SW0-001"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:text="单路开关"
         android:textColor="#ff333333"
         android:textSize="14sp"
         android:textStyle="bold" />

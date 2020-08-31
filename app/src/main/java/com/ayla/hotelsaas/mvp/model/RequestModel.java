@@ -6,6 +6,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
@@ -21,8 +22,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -38,9 +41,6 @@ public class RequestModel {
     public static final String APP_SECRET = "92bAH6hNF4Q9RHymVGqYCdn58Zr3FPTU";
 
     private volatile static RequestModel instance = null;
-    private Observable<BaseResult<Boolean>> mBaseResultObservable;
-    private RequestBody mBody111;
-    private RequestBody mMBody111;
 
     private RequestModel() {
     }
@@ -71,6 +71,16 @@ public class RequestModel {
         return getApiService().login(new_body);
     }
 
+    public Observable<BaseResult<Boolean>> register(String user_name, String account, String password) {
+        JsonObject body = new JsonObject();
+        body.addProperty("userName", user_name);
+        body.addProperty("account", account);
+        body.addProperty("password", password);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().register(new_body);
+    }
+
+
     public Observable<BaseResult<User>> refreshToken(String refreshToken) {
         JsonObject body = new JsonObject();
         body.addProperty("refreshToken", refreshToken);
@@ -88,6 +98,61 @@ public class RequestModel {
     public Observable<BaseResult<WorkOrderBean>> getWorkOrderList(int pageNum, int maxNum) {
         return getApiService().getWorkOrders(pageNum, maxNum);
     }
+
+
+    /**
+     * 创建房间订单
+     *
+     * @param pageNum 页码 从1开始
+     * @param maxNum  每页加载量
+     * @return
+     */
+    public Observable<BaseResult<RoomManageBean>> getCreateRoomOrder(int pageNum, int maxNum) {
+        return getApiService().getcreateRoom(pageNum, maxNum);
+    }
+
+    /**
+     * 创建房间订单
+     *
+     * @return
+     */
+    public Observable<BaseResult<String>> createRoomOrder(String roomName) {
+        JsonObject body = new JsonObject();
+        body.addProperty("roomName", roomName);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().createRoom(body111);
+    }
+
+
+    /**
+     * 重新命名房间号
+     *
+     * @return
+     */
+    public Observable<BaseResult<String>> roomRename(long roomId, String rename) {
+        JsonObject body = new JsonObject();
+        body.addProperty("roomName", rename);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().roomRename(roomId, body111);
+    }
+
+
+    /**
+     * 删除房间
+     *
+     * @return
+     */
+    public Observable<BaseResult<String>> deleteRoomNum(long roomId) {
+        return getApiService().deleteRoomNum(roomId);
+    }
+
+    /**
+     * 获取authcode
+     */
+    public Observable<BaseResult<String>> getAuthCode(String roomId) {
+        return getApiService().authCode(roomId);
+    }
+
 
     /**
      * 获取房间号的条数
@@ -128,22 +193,7 @@ public class RequestModel {
      * @return
      */
     public Observable<BaseResult<List<DeviceCategoryDetailBean>>> getDeviceCategoryDetail() {
-        return getApiService().fetchDeviceCategoryDetail()
-                //特别处理：如果是智镜设备，要强行加上 场景的支持。
-                .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, BaseResult<List<DeviceCategoryDetailBean>>>() {
-                    @Override
-                    public BaseResult<List<DeviceCategoryDetailBean>> apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
-                        List<DeviceCategoryDetailBean> data = listBaseResult.data;
-                        if (data != null) {
-                            for (DeviceCategoryDetailBean datum : data) {
-                                if ("a15mfjImwp9".equals(datum.getOemModel()) || "a1ZPeSFEOFO".equals(datum.getOemModel())) {
-                                    datum.getConditionProperties().add("KeyValueNotification.KeyValue");
-                                }
-                            }
-                        }
-                        return listBaseResult;
-                    }
-                });
+        return getApiService().fetchDeviceCategoryDetail();
     }
 
     /**
@@ -153,26 +203,42 @@ public class RequestModel {
      * @return
      */
     public Observable<BaseResult> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
-                                                    int scopeType, String deviceName, String nickName) {
+                                                    int scopeType, String deviceCategory, String deviceName, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("scopeId", scopeId);
         body.addProperty("cuId", cuId);
         body.addProperty("scopeType", scopeType);
+        body.addProperty("deviceCategory", deviceCategory);
         body.addProperty("deviceName", deviceName);
         body.addProperty("nickName", nickName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().bindDeviceWithDSN(body111);
     }
 
+
+    /**
+     * @param mHongyanproductKey
+     * @param mHongyandeviceName
+     * @return
+     */
+    public Observable<BaseResult<String>> removeDeviceAllReleate(String mHongyanproductKey, String mHongyandeviceName) {
+        JsonObject body = new JsonObject();
+        body.addProperty("productKey", mHongyanproductKey);
+        body.addProperty("deviceName", mHongyandeviceName);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().removeDeviceAllReleate(body111);
+    }
+
     /**
      * 获取候选节点
      *
-     * @param dsn 网关dsn
+     * @param dsn            网关dsn
+     * @param deviceCategory 需要绑定节点设备的oemModel
      * @return
      */
-    public Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(String dsn) {
-        return getApiService().fetchCandidateNodes(dsn);
+    public Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(String dsn, String deviceCategory) {
+        return getApiService().fetchCandidateNodes(dsn, deviceCategory);
     }
 
     /**
@@ -258,7 +324,7 @@ public class RequestModel {
                 .map(new Function<BaseResult<DeviceTemplateBean>, BaseResult<DeviceTemplateBean>>() {
                     @Override
                     public BaseResult<DeviceTemplateBean> apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
-                        if ("a15mfjImwp9".equals(oemModel)) {
+                        if ("a1UR1BjfznK".equals(oemModel)) {//触控面板
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
@@ -359,7 +425,7 @@ public class RequestModel {
                                 }
                             }
                         }
-                        if ("a1ZPeSFEOFO".equals(oemModel)) {
+                        if ("a1dnviXyhqx".equals(oemModel)) {//六键场景开关
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
@@ -418,11 +484,34 @@ public class RequestModel {
                                 }
                             }
                         }
+                        if ("a1009Fd5ZCJ".equals(oemModel)) {//紧急按钮设备
+                            DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
+                            if (data != null) {
+                                List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
+                                if (attributes != null) {
+                                    DeviceTemplateBean.AttributesBean attributesBean = new DeviceTemplateBean.AttributesBean();
+                                    attributesBean.setCode("EmergencyTriggerAlarm.AlarmType");
+                                    attributesBean.setDisplayName("紧急触发报警");
+                                    attributesBean.setDataType(1);
+                                    attributes.add(attributesBean);
+                                    {
+                                        List<DeviceTemplateBean.AttributesBean.ValueBean> valueBeans = new ArrayList<>();
+                                        {
+                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
+                                            valueBean.setDataType(1);
+                                            valueBean.setDisplayName("紧急报警");
+                                            valueBean.setValue("1");
+                                            valueBeans.add(valueBean);
+                                        }
+                                        attributesBean.setValue(valueBeans);
+                                    }
+                                }
+                            }
+                        }
                         return deviceTemplateBeanBaseResult;
                     }
                 });
     }
-
 
     /**
      * 设置重新命名
@@ -436,34 +525,39 @@ public class RequestModel {
         return getApiService().deviceRename(deviceId, body111);
     }
 
-
     /**
      * 场景重新命名
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> tourchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue) {
-
-        try {
-            JSONObject uploadParams = new JSONObject();
-            JSONArray list = new JSONArray();
-            JSONObject jsonObject = new JSONObject();
-            if (id != 0) {
-                jsonObject.put("id", id);
-            }
-            jsonObject.put("deviceId", deviceId);
-            jsonObject.put("cuId", cuId);
-            jsonObject.put("propertyName", propertyName);
-            jsonObject.put("propertyType", propertyType);
-            jsonObject.put("propertyValue", propertyValue);
-            list.put(jsonObject);
-            uploadParams.put("propertyList", list);
-            mMBody111 = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-        return getApiService().tourchPanelRenameAndIcon(mMBody111);
+    public Observable<BaseResult<Boolean>> touchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue, String deviceCategory, boolean needHandleAliService) {
+        return Observable
+                .fromCallable(new Callable<RequestBody>() {
+                    @Override
+                    public RequestBody call() throws Exception {
+                        JSONObject uploadParams = new JSONObject();
+                        JSONArray list = new JSONArray();
+                        JSONObject jsonObject = new JSONObject();
+                        if (id != 0) {
+                            jsonObject.put("id", id);
+                        }
+                        uploadParams.put("needHandleAliService", needHandleAliService);
+                        jsonObject.put("deviceId", deviceId);
+                        jsonObject.put("cuId", cuId);
+                        jsonObject.put("propertyName", propertyName);
+                        jsonObject.put("propertyType", propertyType);
+                        jsonObject.put("propertyValue", propertyValue);
+                        list.put(jsonObject);
+                        uploadParams.put("propertyList", list);
+                        return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
+                    }
+                })
+                .flatMap(new Function<RequestBody, ObservableSource<BaseResult<Boolean>>>() {
+                    @Override
+                    public ObservableSource<BaseResult<Boolean>> apply(RequestBody body) throws Exception {
+                        return getApiService().tourchPanelRenameAndIcon(body);
+                    }
+                });
     }
 
     /**

@@ -12,10 +12,19 @@ public class Constance {
     public static boolean isNetworkDebug = false;
 
     public static String sProdUrl = "https://abp-prod.ayla.com.cn/";//正式环境
-    public static String sQaUrl = "https://abp.ayla.com.cn/";//测试换行
+    public static String sQaUrl = "https://abp.ayla.com.cn/";//测试环境
 
     public static String getBaseUrl() {
         return isNetworkDebug ? sQaUrl : sProdUrl;
+    }
+
+    /**
+     * H5配网帮助页面URL
+     *
+     * @return
+     */
+    public static String getAssistantBaseUrl() {
+        return isNetworkDebug ? "https://smarthotel-h5-test.ayla.com.cn/" : "https://smarthotel-h5.ayla.com.cn/";
     }
 
     //登录保存key
