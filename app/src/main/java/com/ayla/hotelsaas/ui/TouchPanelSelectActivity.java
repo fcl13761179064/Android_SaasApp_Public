@@ -90,7 +90,7 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
             public void onClick(View v) {
                 Intent intent = new Intent(TouchPanelSelectActivity.this, DeviceMoreActivity.class);
                 intent.putExtras(getIntent());
-                startActivity(intent);
+                startActivityForResult(intent, 1002);
             }
         });
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -154,6 +154,8 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1001 && resultCode == RESULT_OK) {
             mPresenter.getTouchPanelData(1, mDevicesBean.getDeviceId());
+        }else if (requestCode == 1002 && resultCode == RESULT_OK){
+            finish();
         }
     }
 }

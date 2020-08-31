@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import androidx.annotation.Nullable;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.TouchPanelAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -59,7 +61,7 @@ public class TouchPanelActivity extends BasicActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(TouchPanelActivity.this, DeviceMoreActivity.class);
                 intent.putExtras(getIntent());
-                startActivity(intent);
+                startActivityForResult(intent,1001);
             }
         });
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -75,5 +77,13 @@ public class TouchPanelActivity extends BasicActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1001 && resultCode == RESULT_OK) {
+           finish();
+        }
     }
 }
