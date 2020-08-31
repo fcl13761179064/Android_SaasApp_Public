@@ -39,7 +39,7 @@ public class LarkWebView extends WebView {
         @Override
         public void onPageFinished(WebView view, String url) {
             if (null != loadCallBackWeakReference) {
-                LoadCallBack loadCallBack = loadCallBackWeakReference.get();
+                LoadCallBack loadCallBack = loadCallBackWeakReference;
                 if (null != loadCallBack) {
                     loadCallBack.onPageFinished(view, url);
                 }
@@ -49,7 +49,7 @@ public class LarkWebView extends WebView {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             if (null != loadCallBackWeakReference) {
-                LoadCallBack loadCallBack = loadCallBackWeakReference.get();
+                LoadCallBack loadCallBack = loadCallBackWeakReference;
                 if (null != loadCallBack) {
                     loadCallBack.onPageStarted(view, url, favicon);
                 }
@@ -60,7 +60,7 @@ public class LarkWebView extends WebView {
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
             super.onReceivedError(view, errorCode, description, failingUrl);
             if (null != loadCallBackWeakReference) {
-                LoadCallBack loadCallBack = loadCallBackWeakReference.get();
+                LoadCallBack loadCallBack = loadCallBackWeakReference;
                 if (null != loadCallBack) {
                     loadCallBack.onPageError(view, errorCode, description, failingUrl);
                 }
@@ -77,7 +77,7 @@ public class LarkWebView extends WebView {
             public void callJava(final String json) {
                 Log.d(TAG, this.hashCode() + "->callJava: " + json);
                 if (null != jsBridgeCallBackWeakReference) {
-                    JsBridgeCallBack jsBridgeCallBack = jsBridgeCallBackWeakReference.get();
+                    JsBridgeCallBack jsBridgeCallBack = jsBridgeCallBackWeakReference;
                     if (null != jsBridgeCallBack) {
                         jsBridgeCallBack.onJsCall(json);
                     }
@@ -104,8 +104,8 @@ public class LarkWebView extends WebView {
     }
 
 
-    private WeakReference<LoadCallBack> loadCallBackWeakReference;
-    private WeakReference<JsBridgeCallBack> jsBridgeCallBackWeakReference;
+    private LoadCallBack loadCallBackWeakReference;
+    private JsBridgeCallBack jsBridgeCallBackWeakReference;
 
     @Override
     protected void onAttachedToWindow() {
@@ -121,25 +121,19 @@ public class LarkWebView extends WebView {
 
     public void registerJsBridgeCallBack(JsBridgeCallBack jsBridgeCallBack) {
         unregisterJsBridgeCallBack();
-        jsBridgeCallBackWeakReference = new WeakReference<>(jsBridgeCallBack);
+        jsBridgeCallBackWeakReference = jsBridgeCallBack;
     }
 
     public void unregisterJsBridgeCallBack() {
-        if (null != jsBridgeCallBackWeakReference) {
-            jsBridgeCallBackWeakReference.clear();
-        }
         jsBridgeCallBackWeakReference = null;
     }
 
     public synchronized void registerLoadCallBack(LoadCallBack loadCallBack) {
         unregisterLoadCallBack();
-        loadCallBackWeakReference = new WeakReference<>(loadCallBack);
+        loadCallBackWeakReference = loadCallBack;
     }
 
     public synchronized void unregisterLoadCallBack() {
-        if (null != loadCallBackWeakReference) {
-            loadCallBackWeakReference.clear();
-        }
         loadCallBackWeakReference = null;
     }
 

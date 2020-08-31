@@ -22,8 +22,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -39,9 +41,6 @@ public class RequestModel {
     public static final String APP_SECRET = "92bAH6hNF4Q9RHymVGqYCdn58Zr3FPTU";
 
     private volatile static RequestModel instance = null;
-    private Observable<BaseResult<Boolean>> mBaseResultObservable;
-    private RequestBody mBody111;
-    private RequestBody mMBody111;
 
     private RequestModel() {
     }
@@ -514,7 +513,6 @@ public class RequestModel {
                 });
     }
 
-
     /**
      * 设置重新命名
      *
@@ -527,39 +525,43 @@ public class RequestModel {
         return getApiService().deviceRename(deviceId, body111);
     }
 
-
     /**
      * 场景重新命名
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> tourchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue,String deviceCategory) {
-
-        try {
-            JSONObject uploadParams = new JSONObject();
-            JSONArray list = new JSONArray();
-            JSONObject jsonObject = new JSONObject();
-            if (id != 0) {
-                jsonObject.put("id", id);
-            }
-            if ("a1UR1BjfznK".equals(deviceCategory)) {
-                uploadParams.put("needHandleAliService", true);
-            } else {
-                uploadParams.put("needHandleAliService", false);
-            }
-            jsonObject.put("deviceId", deviceId);
-            jsonObject.put("cuId", cuId);
-            jsonObject.put("propertyName", propertyName);
-            jsonObject.put("propertyType", propertyType);
-            jsonObject.put("propertyValue", propertyValue);
-            list.put(jsonObject);
-            uploadParams.put("propertyList", list);
-            mMBody111 = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-        return getApiService().tourchPanelRenameAndIcon(mMBody111);
+    public Observable<BaseResult<Boolean>> tourchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue, String deviceCategory) {
+        return Observable
+                .fromCallable(new Callable<RequestBody>() {
+                    @Override
+                    public RequestBody call() throws Exception {
+                        JSONObject uploadParams = new JSONObject();
+                        JSONArray list = new JSONArray();
+                        JSONObject jsonObject = new JSONObject();
+                        if (id != 0) {
+                            jsonObject.put("id", id);
+                        }
+                        if ("a1UR1BjfznK".equals(deviceCategory)) {
+                            uploadParams.put("needHandleAliService", true);
+                        } else {
+                            uploadParams.put("needHandleAliService", false);
+                        }
+                        jsonObject.put("deviceId", deviceId);
+                        jsonObject.put("cuId", cuId);
+                        jsonObject.put("propertyName", propertyName);
+                        jsonObject.put("propertyType", propertyType);
+                        jsonObject.put("propertyValue", propertyValue);
+                        list.put(jsonObject);
+                        uploadParams.put("propertyList", list);
+                        return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
+                    }
+                })
+                .flatMap(new Function<RequestBody, ObservableSource<BaseResult<Boolean>>>() {
+                    @Override
+                    public ObservableSource<BaseResult<Boolean>> apply(RequestBody body) throws Exception {
+                        return getApiService().tourchPanelRenameAndIcon(body);
+                    }
+                });
     }
 
     /**
