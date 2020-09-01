@@ -49,6 +49,7 @@
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:hint="输入设备ID号"
+                android:inputType="text"
                 android:maxLines="1"
                 android:textColor="#ff333333"
                 android:textSize="14sp" />

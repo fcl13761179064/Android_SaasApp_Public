@@ -50,10 +50,10 @@ public class GatewayAddGuideActivity extends BaseMvpActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == REQUEST_CODE_FOR_DSN_SCAN || requestCode == REQUEST_CODE_FOR_DSN_INPUT) && resultCode == RESULT_OK) {//获取到了DSN
             if (data != null) {
-                String dsn = data.getStringExtra("result");
+                String dsn = data.getStringExtra("result").trim();
                 if (!TextUtils.isEmpty(dsn)) {
                     if (dsn.startsWith("Lark_DSN:") && dsn.endsWith("##")) {
-                        dsn = dsn.substring(9, dsn.length() - 2);
+                        dsn = dsn.substring(9, dsn.length() - 2).trim();
                     }
                     if (!TextUtils.isEmpty(dsn)) {
                         Intent mainActivity = new Intent(this, GatewayAddActivity.class);
@@ -64,7 +64,7 @@ public class GatewayAddGuideActivity extends BaseMvpActivity {
                     }
                 }
             }
-            CustomToast.makeText(this, "无效的二维码", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(this, "无效的设备ID号", R.drawable.ic_toast_warming).show();
         } else if (requestCode == REQUEST_CODE_FOR_DSN_SCAN && resultCode == ScanActivity.RESULT_FOR_INPUT) {//扫码页面回退到手动输入页面
             Intent mainActivity = new Intent(this, GatewayAddDsnInputActivity.class);
             startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_INPUT);
