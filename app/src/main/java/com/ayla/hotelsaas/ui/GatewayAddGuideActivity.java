@@ -53,9 +53,7 @@ public class GatewayAddGuideActivity extends BaseMvpActivity {
                 String dsn = data.getStringExtra("result");
                 if (!TextUtils.isEmpty(dsn)) {
                     if (dsn.startsWith("Lark_DSN:") && dsn.endsWith("##")) {
-                        dsn = dsn.substring(9, dsn.length() - 2);
-                    }
-                    if (!TextUtils.isEmpty(dsn)) {
+                        dsn = dsn.substring(9, dsn.length() - 2).trim();
                         Intent mainActivity = new Intent(this, GatewayAddActivity.class);
                         mainActivity.putExtra("dsn", dsn);
                         mainActivity.putExtras(getIntent());
