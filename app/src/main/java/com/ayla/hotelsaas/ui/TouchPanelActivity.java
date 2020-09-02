@@ -61,7 +61,7 @@ public class TouchPanelActivity extends BasicActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(TouchPanelActivity.this, DeviceMoreActivity.class);
                 intent.putExtras(getIntent());
-                startActivityForResult(intent,1001);
+                startActivityForResult(intent, 1001);
             }
         });
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -83,7 +83,8 @@ public class TouchPanelActivity extends BasicActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1001 && resultCode == RESULT_OK) {
-           finish();
+            setResult(RESULT_OK);
+            finish();
         }
     }
 }
