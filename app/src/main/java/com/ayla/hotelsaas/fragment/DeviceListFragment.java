@@ -35,7 +35,6 @@ import butterknife.BindView;
 public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceListShowPresenter> implements DeviceListView {
 
     private final int REQUEST_CODE_DEVICE_EDIT = 0X10;
-    private final int REQUEST_CODE_DEVICE_ADD = 0X11;
     private final Long room_id;
     @BindView(R.id.device_recyclerview)
     RecyclerView recyclerview;
@@ -82,13 +81,13 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("scopeId", room_id);
                     intent.putExtra("pannel_type", "1");
-                    startActivityForResult(intent, REQUEST_CODE_DEVICE_ADD);
+                    startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
                 }/* else if (devicesBean.getCuId() == 1 && "a1dnviXyhqx".equals(devicesBean.getDeviceCategory())) {
                     Intent intent = new Intent(getContext(), TouchPanelSelectActivity.class);
                     intent.putExtra("scopeId", room_id);
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("pannel_type", "2");
-                    startActivityForResult(intent, REQUEST_CODE_DEVICE_ADD);
+                    startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
                 }*/ else {
                     Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
                     intent.putExtra("devicesBean", devicesBean);
@@ -128,7 +127,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                 }
                 Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
                 intent.putExtra("scopeId", room_id);
-                startActivityForResult(intent, REQUEST_CODE_DEVICE_ADD);
+                startActivityForResult(intent,REQUEST_CODE_DEVICE_EDIT);
             }
         });
 
@@ -165,9 +164,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_DEVICE_ADD && resultCode == Activity.RESULT_OK) {
-            mRefreshLayout.autoRefresh();
-        } else if (requestCode == REQUEST_CODE_DEVICE_EDIT && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE_DEVICE_EDIT && resultCode == Activity.RESULT_OK) {
             mRefreshLayout.autoRefresh();
         }
     }
