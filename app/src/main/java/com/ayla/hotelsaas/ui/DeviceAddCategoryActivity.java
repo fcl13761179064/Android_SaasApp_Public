@@ -53,7 +53,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
     private DeviceCategoryListLeftAdapter mLeftAdapter;
     private DeviceCategoryListRightAdapter mRightAdapter;
-    private String mIotId = "100";
     private DeviceCategoryBean.SubBean mSubBean;
 
     @Override

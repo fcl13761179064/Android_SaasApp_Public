@@ -147,6 +147,15 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<HongyanGatewayAdd
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    //code==2064为该设备被绑定
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            CustomToast.makeTextSize(HongyanGatewayAddActivity.this, "网关已经被绑定，请解绑后在尝试添加", R.drawable.ic_toast_success,12).show();
+                            startBind(mIotId);
+                        }
+                    });
                 }
             }
         });
