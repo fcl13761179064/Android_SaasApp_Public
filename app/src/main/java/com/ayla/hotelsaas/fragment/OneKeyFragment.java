@@ -98,7 +98,7 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
 
     @Override
     public void runSceneSuccess(boolean needWarming) {
-        CustomToast.makeText(getContext(), String.format("%s%s", "执行成功", needWarming ? "，有设备已移除请检查" : ""), R.drawable.ic_toast_success).show();
+        CustomToast.makeText(getContext(), String.format("%s%s", "执行成功", needWarming ? "，有设备已移除请检查" : ""), R.drawable.ic_success).show();
     }
 
     @Override

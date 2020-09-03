@@ -99,6 +99,16 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
+            android:name=".ui.SceneSettingEnableTimeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".ui.SceneSettingRepeatDataActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
             android:name=".ui.SceneSettingDeviceSelectActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

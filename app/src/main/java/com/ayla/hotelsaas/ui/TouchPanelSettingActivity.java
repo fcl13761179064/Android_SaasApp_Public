@@ -127,7 +127,7 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
 
     @Override
     public void operateSuccess(Boolean is_rename) {
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
         setResult(RESULT_OK);
     }
 

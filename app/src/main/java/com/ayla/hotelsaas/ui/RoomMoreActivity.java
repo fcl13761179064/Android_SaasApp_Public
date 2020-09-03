@@ -122,13 +122,13 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
 
     @Override
     public void operateSuccess(String newName) {
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
         setResult(RESULT_CODE_RENAMED, new Intent().putExtra("newName", newName));
     }
 
     @Override
     public void operateRemoveSuccess(String is_rename) {
-        CustomToast.makeText(this, "移除成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "移除成功", R.drawable.ic_success).show();
         setResult(RESULT_CODE_REMOVED);
         finish();
     }
