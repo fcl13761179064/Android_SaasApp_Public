@@ -43,7 +43,7 @@ import java.util.List;
 import butterknife.BindView;
 
 public class WorkRoomManageActivity extends BasicActivity {
-
+    private final int REQUEST_CODE_DISTRIBUTION_ROOM = 0x10;
     @BindView(R.id.tl_tabs)
     TabLayout mTabLayout;
     @BindView(R.id.appBar)
@@ -55,9 +55,16 @@ public class WorkRoomManageActivity extends BasicActivity {
     @Override
     public void refreshUI() {
         appBar.setLeftText("退出");
+        appBar.setRightText("分配");
         super.refreshUI();
     }
 
+    @Override
+    protected void appBarRightTvClicked() {
+        super.appBarRightTvClicked();
+        Intent intent = new Intent(this, DistributionActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_DISTRIBUTION_ROOM);
+    }
 
     @Override
     protected int getLayoutId() {

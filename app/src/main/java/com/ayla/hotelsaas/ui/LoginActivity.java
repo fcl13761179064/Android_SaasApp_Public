@@ -94,10 +94,10 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                     public void run() {
                         if (Constance.isNetworkDebug) {
                             tvSwitch.setText("测");
-                            CustomToast.makeText(getBaseContext(), "切换到测试网络", R.drawable.ic_toast_success).show();
+                            CustomToast.makeText(getBaseContext(), "切换到测试网络", R.drawable.ic_success).show();
                         } else {
                             tvSwitch.setText("正");
-                            CustomToast.makeText(getBaseContext(), "切换到正式网络环境", R.drawable.ic_toast_success).show();
+                            CustomToast.makeText(getBaseContext(), "切换到正式网络环境", R.drawable.ic_success).show();
                         }
                         hideProgress();
                     }

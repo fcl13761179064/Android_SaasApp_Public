@@ -46,6 +46,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private final int REQUEST_CODE_SELECT_ACTION = 0X11;
     private final int REQUEST_CODE_SELECT_ICON = 0X12;
     private final int REQUEST_CODE_SELECT_CONDITION_TYPE = 0X13;
+    private final int REQUEST_CODE_SELECT_ENABLE_TIME = 0X14;
     @BindView(R.id.rv_condition)
     public RecyclerView mConditionRecyclerView;
     @BindView(R.id.rv_action)
@@ -358,7 +359,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @Override
     public void saveSuccess() {
-        CustomToast.makeText(this, "创建成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "创建成功", R.drawable.ic_success).show();
         setResult(RESULT_OK);
         finish();
     }
@@ -374,7 +375,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @Override
     public void deleteSuccess() {
-        CustomToast.makeText(this, "删除成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "删除成功", R.drawable.ic_success).show();
         setResult(RESULT_OK);
         finish();
     }
@@ -516,5 +517,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
                     }
                 });
+    }
+
+    @OnClick(R.id.rl_enable_time)
+    public void handleJumpEnableTime() {
+        Intent intent = new Intent(this, SceneSettingEnableTimeActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SELECT_ENABLE_TIME);
     }
 }
