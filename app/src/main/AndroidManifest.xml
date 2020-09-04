@@ -208,6 +208,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".ui.ForgitPassWordActivity" />
 
         <meta-data
             android:name="design_width_in_dp"

@@ -81,6 +81,22 @@ public class RequestModel {
     }
 
 
+    public Observable<BaseResult<Boolean>> modifyforgit(String user_name, String yanzhengma) {
+        JsonObject body = new JsonObject();
+        body.addProperty("userName", user_name);
+        body.addProperty("yanzhengma", yanzhengma);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().register(new_body);
+    }
+
+
+    public Observable<BaseResult<Boolean>> send_sms(String user_name) {
+        JsonObject body = new JsonObject();
+        body.addProperty("userName", user_name);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().register(new_body);
+    }
+
     public Observable<BaseResult<User>> refreshToken(String refreshToken) {
         JsonObject body = new JsonObject();
         body.addProperty("refreshToken", refreshToken);

@@ -22,6 +22,8 @@ public class WorkOrderAdapter extends BaseQuickAdapter<WorkOrderBean.ResultListB
                 .setText(R.id.item_work_srart_date, TimeUtils.getYestoday(workOrder.getStartDate()))
                 .setText(R.id.item_work_end_date, TimeUtils.getYestoday(workOrder.getEndDate()));
 
+        workOrder.setStartDate(TimeUtils.getYestoday(workOrder.getStartDate()));
+        workOrder.setEndDate(TimeUtils.getYestoday(workOrder.getEndDate()));
         if (workOrder.getConstructionStatus() == 1) {
             helper.setText(R.id.item_work_status, "待施工");
         } else if (workOrder.getConstructionStatus() == 2) {
