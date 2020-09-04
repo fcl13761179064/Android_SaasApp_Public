@@ -91,8 +91,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     }
 
     @Override
-    protected void appBarRightIvClicked() {
-        super.appBarRightIvClicked();
+    protected void appBarRightTvClicked() {
+        super.appBarRightTvClicked();
         Intent intent = new Intent(MainActivity.this, RoomMoreActivity.class);
         intent.putExtras(getIntent());
         startActivityForResult(intent, REQUEST_CODE_TO_MORE);

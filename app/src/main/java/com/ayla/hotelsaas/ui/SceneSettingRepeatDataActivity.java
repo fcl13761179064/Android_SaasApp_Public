@@ -37,8 +37,8 @@ public class SceneSettingRepeatDataActivity extends BaseMvpActivity {
     }
 
     @Override
-    protected void appBarRightIvClicked() {
-        super.appBarRightIvClicked();
+    protected void appBarRightTvClicked() {
+        super.appBarRightTvClicked();
         finish();
     }
 
