@@ -170,14 +170,9 @@ public abstract class BasicActivity extends AppCompatActivity {
     }
 
     protected void appBarLeftTvClicked() {
-        mExitApp();
     }
 
     protected void appBarRightTvClicked() {
-
-    }
-
-    protected void mExitApp() {
 
     }
 
