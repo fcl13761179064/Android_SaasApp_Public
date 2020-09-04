@@ -85,8 +85,8 @@ public class WorkRoomManageActivity extends BasicActivity {
     }
 
     @Override
-    protected void mExitApp() {
-
+    protected void appBarLeftTvClicked() {
+        super.appBarLeftTvClicked();
         CustomAlarmDialog
                 .newInstance(new CustomAlarmDialog.Callback() {
                     @Override
