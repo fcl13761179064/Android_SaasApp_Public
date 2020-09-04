@@ -89,7 +89,7 @@ public class AutoRunFragment extends BaseMvpFragment<AutoRunView, AutoRunFragmen
 
     @Override
     public void changeSuccess() {
-        CustomToast.makeText(getContext(), "修改成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(getContext(), "修改成功", R.drawable.ic_success).show();
         Fragment parentFragment = getParentFragment();
         if (parentFragment instanceof RuleEngineFragment) {
             ((RuleEngineFragment) parentFragment).notifyRefresh();

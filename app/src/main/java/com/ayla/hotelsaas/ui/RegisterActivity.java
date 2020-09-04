@@ -160,7 +160,7 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
 
     @Override
     public void RegistSuccess(Boolean data) {
-        CustomToast.makeText(this, "注册成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "注册成功", R.drawable.ic_success).show();
         finish();
     }
 

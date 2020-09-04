@@ -140,14 +140,14 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
 
     @Override
     public void operateSuccess(Boolean is_rename) {
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
         setResult(RESULT_OK);
         finish();
     }
 
     @Override
     public void operateRemoveSuccess(Boolean is_rename) {
-        CustomToast.makeText(this, "移除成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "移除成功", R.drawable.ic_success).show();
         setResult(RESULT_OK);
         finish();
     }

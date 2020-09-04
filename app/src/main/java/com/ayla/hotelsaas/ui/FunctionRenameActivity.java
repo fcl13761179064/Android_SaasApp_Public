@@ -115,7 +115,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
 
     @Override
     public void renameSuccess() {
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
         loadData();
     }
 

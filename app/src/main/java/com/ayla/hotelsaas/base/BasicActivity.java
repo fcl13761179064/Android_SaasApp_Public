@@ -137,7 +137,7 @@ public abstract class BasicActivity extends AppCompatActivity {
                     }
                 });
             }
-            View rightIV = appbarRoot.findViewById(R.id.tv_right);
+            View rightIV = appbarRoot.findViewById(R.id.iv_right);
             if (rightIV != null && !rightIV.hasOnClickListeners()) {
                 ClickUtils.applySingleDebouncing(rightIV, new View.OnClickListener() {
                     @Override
