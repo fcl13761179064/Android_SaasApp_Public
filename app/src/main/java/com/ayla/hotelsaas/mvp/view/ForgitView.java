@@ -23,4 +23,7 @@ public interface ForgitView extends BaseView {
 
     //发送验证码成功
     void sendCodeSuccess(Boolean data);
+
+    //重置密码
+    String resetPassword();
 }

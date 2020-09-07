@@ -26,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class ForgitPresenter extends BasePresenter<ForgitView> {
 
-    public void modifyforgit() {
+    public void modifyPassword() {
         String userName = mView.getUserName();
         String yanzhengma = mView.getYanzhengMa();
         if (TextUtils.isEmpty(userName)) {
@@ -100,6 +100,48 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
 
     private void send_sms(String iphone_youxiang) {
         RequestModel.getInstance().send_sms(iphone_youxiang)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(@NonNull Disposable disposable) throws Exception {
+                        mView.showProgress("发送中...");
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new RxjavaObserver<Boolean>() {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addSubscrebe(d);
+                    }
+
+                    @Override
+                    public void _onNext(Boolean data) {
+                        mView.sendCodeSuccess(data);
+                    }
+
+                    @Override
+                    public void _onError(String code, String msg) {
+                        CustomToast.makeText(MyApplication.getInstance(), msg, R.drawable.ic_success).show();
+
+                    }
+                });
+    }
+
+
+    public void resetPassword() {
+        String new_password = mView.resetPassword();
+        reset_Password(new_password);
+    }
+
+    private void reset_Password(String new_password) {
+        RequestModel.getInstance().resert_passwoed(new_password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

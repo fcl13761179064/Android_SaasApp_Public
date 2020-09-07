@@ -10,6 +10,7 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
@@ -38,10 +39,16 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     AppBar appBar;
     @BindView(R.id.tv_error_show)
     TextView tv_error_show;
-
+    @BindView(R.id.et_new_password)
+    EditText et_new_password;
+    @BindView(R.id.ll_forgit_password)
+    LinearLayout ll_forgit_password;
+    @BindView(R.id.ll_new_password)
+    LinearLayout ll_new_password;
 
     private TranslateAnimation mShakeAnimation;
     private CountDownTimer mTimer;
+    private boolean is_forgit_password = false;
 
     @Override
     protected int getLayoutId() {
@@ -71,7 +78,12 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.register_submitBtn:
-                mPresenter.modifyforgit();
+                if (!is_forgit_password) {
+                    mPresenter.modifyPassword();
+                } else {
+                    mPresenter.resetPassword();
+                }
+
                 SoftIntPutUtils.closeKeyboard(ForgitPassWordActivity.this);
                 break;
             default:
@@ -92,7 +104,7 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
                 if (TextUtils.isEmpty(userName)) {
                     CustomToast.makeText(MyApplication.getContext(), "手机号不能为空", R.drawable.ic_toast_warming).show();
                     return;
-                }else if (!PregnancyUtil.checkPhoneNum(userName)){
+                } else if (!PregnancyUtil.checkPhoneNum(userName)) {
                     CustomToast.makeText(MyApplication.getContext(), "手机格式错误", R.drawable.ic_toast_warming).show();
                     return;
                 }
@@ -174,8 +186,15 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
 
     @Override
     public void sendCodeSuccess(Boolean data) {
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
-        finish();
+        is_forgit_password=true;
+        ll_forgit_password.setVisibility(View.GONE);
+        ll_new_password.setVisibility(View.VISIBLE);
+        register_submitBtn.setText("重置密码");
+    }
+
+    @Override
+    public String resetPassword() {
+        return et_new_password.getText().toString();
     }
 
     @Override
