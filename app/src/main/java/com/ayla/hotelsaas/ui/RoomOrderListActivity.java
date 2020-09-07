@@ -108,6 +108,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                     String roomName = room_result.getRoomName();
                     intent.putExtra("roomId", roomId);
                     intent.putExtra("roomName", roomName);
+                    intent.putExtra("removeEnable", true);
                     startActivityForResult(intent, REQUEST_CODE_TO_ROOM);
                 }
             }
