@@ -20,4 +20,7 @@ public interface ForgitView extends BaseView {
 
     //注册成功
     void RegistSuccess(Boolean data);
+
+    //发送验证码成功
+    void sendCodeSuccess(Boolean data);
 }

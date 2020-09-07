@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -12,10 +13,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.ForgitPresenter;
 import com.ayla.hotelsaas.mvp.view.ForgitView;
 import com.ayla.hotelsaas.utils.AppManager;
+import com.ayla.hotelsaas.utils.PregnancyUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 
@@ -38,6 +41,7 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
 
 
     private TranslateAnimation mShakeAnimation;
+    private CountDownTimer mTimer;
 
     @Override
     protected int getLayoutId() {
@@ -47,6 +51,19 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     @Override
     protected void initView() {
         appBar.setAppBarlineHider(false);
+        mTimer = new CountDownTimer(60 * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                tv_send_code.setText("重新发送" + millisUntilFinished / 1000 + "秒");
+            }
+
+            @Override
+            public void onFinish() {
+                tv_send_code.setText("发送验证码");
+                tv_send_code.setClickable(true);
+                mTimer.cancel();
+            }
+        };
     }
 
 
@@ -70,6 +87,17 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
         tv_send_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SoftIntPutUtils.closeKeyboard(ForgitPassWordActivity.this);
+                String userName = getUserName();
+                if (TextUtils.isEmpty(userName)) {
+                    CustomToast.makeText(MyApplication.getContext(), "手机号不能为空", R.drawable.ic_toast_warming).show();
+                    return;
+                }else if (!PregnancyUtil.checkPhoneNum(userName)){
+                    CustomToast.makeText(MyApplication.getContext(), "手机格式错误", R.drawable.ic_toast_warming).show();
+                    return;
+                }
+                tv_send_code.setClickable(false);
+                mTimer.start();
                 mPresenter.send_sms();
             }
         });
@@ -114,12 +142,6 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
 
 
     @Override
-    public void RegistSuccess(Boolean data) {
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
-        finish();
-    }
-
-    @Override
     public void errorShake(int type, int CycleTimes, String code) {
         tv_error_show.setVisibility(View.VISIBLE);
         if ("171000".equals(code)) {
@@ -141,15 +163,30 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
             et_user_name.startAnimation(mShakeAnimation);
         } else if (type == 2) {
             rt_yanzhengma.startAnimation(mShakeAnimation);
-        } else {
-            et_user_name.startAnimation(mShakeAnimation);
-            rt_yanzhengma.startAnimation(mShakeAnimation);
         }
+    }
+
+    @Override
+    public void RegistSuccess(Boolean data) {
+        CustomToast.makeText(this, "注册成功", R.drawable.ic_success).show();
+        finish();
+    }
+
+    @Override
+    public void sendCodeSuccess(Boolean data) {
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
+        finish();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         AppManager.getAppManager().AppExit(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTimer.cancel();
     }
 }

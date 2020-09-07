@@ -41,7 +41,7 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
             return;
         }
         if (yanzhengma.length() != 6) {
-            CustomToast.makeText(MyApplication.getContext(), "验证码输入错误", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "验证码错误", R.drawable.ic_toast_warming).show();
             mView.errorShake(2, 2, "");
             return;
         }
@@ -94,17 +94,7 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
 
     public void send_sms() {
         String iphone_youxiang = mView.getUserName();
-        if (TextUtils.isEmpty(iphone_youxiang)) {
-            CustomToast.makeText(MyApplication.getContext(), "手机号不能为空", R.drawable.ic_toast_warming).show();
-            mView.errorShake(1, 2, "");
-            return;
-        }
-
-        if (PregnancyUtil.checkEmail(iphone_youxiang)) {
-            send_sms(iphone_youxiang);
-        } else {
-            CustomToast.makeText(MyApplication.getContext(), R.string.account_error, R.drawable.ic_toast_warming).show();
-        }
+        send_sms(iphone_youxiang);
     }
 
 
@@ -133,12 +123,12 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
 
                     @Override
                     public void _onNext(Boolean data) {
-                        mView.RegistSuccess(data);
+                        mView.sendCodeSuccess(data);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
-                        mView.errorShake(0, 2, code);
+                        CustomToast.makeText(MyApplication.getInstance(), msg, R.drawable.ic_success).show();
 
                     }
                 });
