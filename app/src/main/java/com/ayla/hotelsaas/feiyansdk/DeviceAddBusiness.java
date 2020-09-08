@@ -142,7 +142,7 @@ public class DeviceAddBusiness {
 
         IoTRequest request = new IoTRequestBuilder()
                 .setPath("/awss/enrollee/product/filter")
-                .setApiVersion("1.0.2")
+                .setApiVersion("1.0.7")
                 .addParam("iotDevices", devices)
                 .setAuthType("iotAuth")
                 .build();
