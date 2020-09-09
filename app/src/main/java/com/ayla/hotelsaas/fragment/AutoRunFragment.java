@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.AutoRunRuleEngineAdapter;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
-import com.ayla.hotelsaas.bean.RuleEngineBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.AutoRunFragmentPresenter;
 import com.ayla.hotelsaas.mvp.view.AutoRunView;
 import com.ayla.hotelsaas.ui.CustomToast;
@@ -52,7 +52,7 @@ public class AutoRunFragment extends BaseMvpFragment<AutoRunView, AutoRunFragmen
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked, int position) {
                 Log.d("wyj", "onCheckedChanged: " + isChecked + " " + position);
-                RuleEngineBean ruleEngineBean = mAdapter.getItem(position);
+                BaseSceneBean ruleEngineBean = mAdapter.getItem(position);
                 mPresenter.changeSceneStatus(ruleEngineBean, isChecked);
             }
         });
@@ -61,7 +61,7 @@ public class AutoRunFragment extends BaseMvpFragment<AutoRunView, AutoRunFragmen
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
                     case R.id.tv_edit:
-                        RuleEngineBean ruleEngineBean = (RuleEngineBean) adapter.getItem(position);
+                        BaseSceneBean ruleEngineBean = (BaseSceneBean) adapter.getItem(position);
                         Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
                         intent.putExtra("sceneBean", ruleEngineBean);
                         if (getParentFragment() != null) {
@@ -83,7 +83,7 @@ public class AutoRunFragment extends BaseMvpFragment<AutoRunView, AutoRunFragmen
         return new AutoRunFragmentPresenter();
     }
 
-    public void showData(List<RuleEngineBean> data) {
+    public void showData(List<BaseSceneBean> data) {
         mAdapter.setNewData(data);
     }
 
@@ -97,11 +97,11 @@ public class AutoRunFragment extends BaseMvpFragment<AutoRunView, AutoRunFragmen
     }
 
     @Override
-    public void changeFailed(RuleEngineBean ruleEngineBean) {
+    public void changeFailed(BaseSceneBean ruleEngineBean) {
         CustomToast.makeText(getContext(), "修改失败", R.drawable.ic_toast_warming).show();
         for (int i = 0; i < mAdapter.getData().size(); i++) {
-            RuleEngineBean bean = mAdapter.getData().get(i);
-            if (bean.getRuleId().equals(ruleEngineBean.getRuleId())) {
+            BaseSceneBean bean = mAdapter.getData().get(i);
+            if (bean.getRuleId() == ruleEngineBean.getRuleId()) {
                 mAdapter.notifyItemChanged(i);
                 break;
             }

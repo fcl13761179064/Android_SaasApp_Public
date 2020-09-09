@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -22,6 +21,8 @@ import butterknife.BindView;
  * 进入时必须带入参数
  * 1.{@link DeviceTemplateBean.AttributesBean} attributeBean
  * 2.{@link DeviceListBean.DevicesBean} deviceBean
+ * 返回：
+ * result {@link ISceneSettingFunctionDatumSet.CallBackBean}
  */
 public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
     @BindView(R.id.appBar)
@@ -61,7 +62,7 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
             public void onClick(View v) {
                 Fragment contentFragment = getSupportFragmentManager().findFragmentByTag("content");
                 if (contentFragment instanceof ISceneSettingFunctionDatumSet) {
-                    SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = ((ISceneSettingFunctionDatumSet) contentFragment).getDatum();
+                    ISceneSettingFunctionDatumSet.CallBackBean datumBean = ((ISceneSettingFunctionDatumSet) contentFragment).getDatum();
 
                     Intent data = new Intent();
                     data.putExtra("result", datumBean);

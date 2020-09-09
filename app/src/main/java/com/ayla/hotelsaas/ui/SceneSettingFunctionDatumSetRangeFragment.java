@@ -84,13 +84,13 @@ public class SceneSettingFunctionDatumSetRangeFragment extends BaseMvpFragment i
     }
 
     @Override
-    public SceneSettingFunctionDatumSetAdapter.DatumBean getDatum() {
+    public CallBackBean getDatum() {
         DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
         DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getArguments().getSerializable("deviceBean");
 
         String targetValue = String.valueOf(mAppCompatSeekBar.getProgress());
 
-        SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = new SceneSettingFunctionDatumSetAdapter.DatumBean();
+        CallBackBean datumBean = new CallBackBean();
 
         datumBean.setFunctionName(attributesBean.getDisplayName());
         datumBean.setValueName(targetValue);

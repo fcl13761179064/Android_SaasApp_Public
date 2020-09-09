@@ -14,6 +14,7 @@ import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
