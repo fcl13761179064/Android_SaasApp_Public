@@ -1,11 +1,11 @@
 package com.ayla.hotelsaas.mvp.view;
 
 import com.ayla.hotelsaas.base.BaseView;
-import com.ayla.hotelsaas.bean.RuleEngineBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 
 public interface AutoRunView extends BaseView {
 
     void changeSuccess();
 
-    void changeFailed(RuleEngineBean ruleEngineBean);
+    void changeFailed(BaseSceneBean ruleEngineBean);
 }

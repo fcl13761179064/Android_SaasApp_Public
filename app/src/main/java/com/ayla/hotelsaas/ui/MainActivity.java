@@ -35,6 +35,7 @@ import butterknife.BindView;
  * @描述 首页
  * @作者 fanchunlei
  * @时间 2020/7/20
+ * removeEnable ,标记是否支持删除
  */
 public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements RadioGroup.OnCheckedChangeListener, MainView {
     private static final int REQUEST_CODE_TO_MORE = 0x10;

@@ -84,6 +84,7 @@
                     android:textSize="17sp" />
 
                 <TextView
+                    android:id="@+id/tv_start_time"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="16dp"
@@ -116,6 +117,7 @@
                     android:textSize="17sp" />
 
                 <TextView
+                    android:id="@+id/tv_end_time"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="16dp"
@@ -131,10 +133,11 @@
             <LinearLayout
                 android:id="@+id/ll_repeat_data"
                 android:layout_width="match_parent"
-                android:layout_height="57dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="#FFFFFF"
                 android:gravity="center_vertical"
+                android:minHeight="57dp"
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
@@ -148,14 +151,16 @@
                     android:textSize="17sp" />
 
                 <TextView
+                    android:id="@+id/tv_repeat_day"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_weight="1"
-                    android:ellipsize="end"
                     android:gravity="center|end"
-                    android:maxLines="1"
+                    android:minHeight="57dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:text="每天"
                     android:textColor="#91909A"
                     android:textSize="17sp" />

@@ -101,6 +101,7 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                     String roomName = recordsBean.getContentName();
                     intent.putExtra("roomId", roomId);
                     intent.putExtra("roomName", roomName);
+                    intent.putExtra("removeEnable",false);
                     startActivityForResult(intent, REQUEST_CODE_TO_ROOM);
                 }
             }

@@ -107,7 +107,8 @@ public class RetrofitHelper {
                 final String sava_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
                 if (sava_token != null) {
                     Request request = chain.request().newBuilder()
-                            .header("Authorization", sava_token).build();
+//                            .header("Authorization", sava_token).build();
+                            .header("Authorization", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjk4NDU3NDI2NjQ2ODQ3NTc5IiwidXNlck5hbWUiOiLkvZXng6jlnaoiLCJ0eXBlIjoiYXV0aF90b2tlbiIsImlhdCI6MTU5OTU0NzM2OX0.RLOkS--QvKgd4vm8Xnj881ADiTL8sEEhM_DwITuJeCs").build();
                     return chain.proceed(request);
                 }
             }
