@@ -6,6 +6,7 @@
 <resources>
     <declare-styleable name="AppBar">
         <attr name="left_iv" format="reference" /><!-- 左侧图标 -->
+        <attr name="left_person_center_iv" format="reference" /><!-- 个人中心左侧图标 -->
         <attr name="left_tv" format="string" /><!-- 左侧文字 -->
         <attr name="right_iv" format="reference" /><!-- 右侧图标 -->
         <attr name="right_tv" format="string" /><!-- 右侧文字 -->

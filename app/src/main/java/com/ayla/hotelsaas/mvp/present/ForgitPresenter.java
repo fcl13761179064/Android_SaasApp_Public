@@ -50,13 +50,13 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
         } else if (PregnancyUtil.checkPhoneNum(userName)) {
             modifyforgit(userName, yanzhengma);
         } else {
-            CustomToast.makeText(MyApplication.getContext(), R.string.account_error, R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), R.string.account_forgit_password, R.drawable.ic_toast_warming).show();
         }
     }
 
 
     private void modifyforgit(String user_name, String yanzhengma) {
-        RequestModel.getInstance().modifyforgit(user_name, yanzhengma)
+        RequestModel.getInstance().modifyForgitPassword(user_name, yanzhengma)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -147,7 +147,7 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(@NonNull Disposable disposable) throws Exception {
-                        mView.showProgress("发送中...");
+                        mView.showProgress("重置中...");
                     }
                 })
                 .doFinally(new Action() {

@@ -81,28 +81,28 @@ public class RequestModel {
     }
 
 
-    public Observable<BaseResult<Boolean>> modifyforgit(String user_name, String yanzhengma) {
+    public Observable<BaseResult<Boolean>> modifyForgitPassword(String user_name, String yanzhengma) {
         JsonObject body = new JsonObject();
-        body.addProperty("userName", user_name);
-        body.addProperty("yanzhengma", yanzhengma);
+        body.addProperty("iphone", user_name);
+        body.addProperty("code", yanzhengma);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().register(new_body);
+        return getApiService().modifyForgitPassword(new_body);
     }
 
 
     public Observable<BaseResult<Boolean>> send_sms(String user_name) {
         JsonObject body = new JsonObject();
-        body.addProperty("userName", user_name);
+        body.addProperty("phone", user_name);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().register(new_body);
+        return getApiService().sendSmsCode(new_body);
     }
 
 
     public Observable<BaseResult<Boolean>> resert_passwoed(String new_password) {
         JsonObject body = new JsonObject();
-        body.addProperty("userName", new_password);
+        body.addProperty("password", new_password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().register(new_body);
+        return getApiService().modifyOldPassword(new_body);
     }
 
     public Observable<BaseResult<User>> refreshToken(String refreshToken) {
@@ -605,5 +605,17 @@ public class RequestModel {
         jsonObject.addProperty("scopeType", scopeType);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().removeDevice(body111);
+    }
+
+
+    /**
+     * 获取用户信息
+     *
+     * @return
+     */
+    public Observable<BaseResult<Boolean>> getUserInfo(String ueserInfo) {
+        JsonObject jsonObject = new JsonObject();
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().getUserInfo(body111);
     }
 }

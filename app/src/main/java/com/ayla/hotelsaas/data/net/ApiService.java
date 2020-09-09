@@ -54,6 +54,21 @@ public interface ApiService {
     @PUT("api/v1/construction/user/register")
     Observable<BaseResult<Boolean>> register(@Body RequestBody body);
 
+
+    @POST("api/v1/construction/appuser/sendcode")
+    Observable<BaseResult<Boolean>> sendSmsCode(@Body RequestBody body);
+
+    @POST("api/v1/construction/appuser/verificationcode")
+    Observable<BaseResult<Boolean>> modifyForgitPassword(@Body RequestBody body);
+
+    @POST("api/v1/construction/appuser/newpassword")
+    Observable<BaseResult<Boolean>> modifyOldPassword(@Body RequestBody body);
+
+
+    @POST("/api/v1/construction/appuser/mybaseinfo")
+    Observable<BaseResult<Boolean>> getUserInfo(@Body RequestBody body);
+
+
     @POST("api/v2/sso/refresh")
     Observable<BaseResult<User>> refreshToken(@Body RequestBody body);
 

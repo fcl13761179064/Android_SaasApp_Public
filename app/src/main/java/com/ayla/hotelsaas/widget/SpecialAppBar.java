@@ -30,6 +30,7 @@ public class SpecialAppBar extends FrameLayout {
     private final String TAG = this.getClass().getSimpleName();
     private ImageView leftImageView;
     private ImageView rightImageView;
+    private ImageView iv_person_center;
     private TextView leftTextView;
     public TextView rightTextView;
     private LinearLayout leftLinearLayout;
@@ -65,6 +66,7 @@ public class SpecialAppBar extends FrameLayout {
         leftLinearLayout = findViewById(R.id.left_ll);
         rightLinearLayout = findViewById(R.id.right_ll);
         bottom_line = findViewById(R.id.bottom_line);
+        iv_person_center = findViewById(R.id.iv_person_center);
 
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AppBar, defStyleAttr, 0);
         left_iv = ta.getResourceId(R.styleable.AppBar_left_iv, 0);
@@ -151,6 +153,11 @@ public class SpecialAppBar extends FrameLayout {
         adjustContent();
     }
 
+    public void setLeftImageView(int drawableImage) {
+        left_iv = drawableImage;
+        adjustContent();
+    }
+
     public void setRightText(String text) {
         right_tv = text;
         adjustContent();
@@ -158,6 +165,12 @@ public class SpecialAppBar extends FrameLayout {
 
     public void setCenterText(String text) {
         center_tv = text;
+        adjustContent();
+    }
+
+    public void setShowPersionCenter() {
+        leftImageView.setVisibility(GONE);
+        iv_person_center.setVisibility(VISIBLE);
         adjustContent();
     }
 

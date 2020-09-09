@@ -17,6 +17,7 @@
             android:id="@+id/left_ll"
             android:layout_width="80dp"
             android:layout_height="match_parent"
+            android:visibility="visible"
             android:orientation="horizontal">
 
             <ImageView
@@ -44,12 +45,22 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/iv_person_center"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:scaleType="centerInside"
+            android:src="@mipmap/personal_center" />
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl_tabs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginRight="64dp"
             android:layout_toEndOf="@id/left_ll"
+            android:layout_marginRight="80dp"
             app:tabSelectedTextColor="@color/loginLogoColor"
             app:tabTextAppearance="@style/TabLayoutTextStyle"
             app:tabTextColor="@color/color_333333" />
@@ -74,6 +85,7 @@
                 android:maxWidth="100dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
+                android:layout_marginRight="@dimen/dp_16"
                 android:text="left"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/color_333333"

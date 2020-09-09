@@ -9,7 +9,7 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:left_tv="@string/exit"
+        app:left_person_center_iv="@mipmap/personal_center"
         />
 
     <androidx.viewpager.widget.ViewPager
