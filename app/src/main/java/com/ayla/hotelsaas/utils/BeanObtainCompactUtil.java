@@ -165,13 +165,13 @@ public class BeanObtainCompactUtil {
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < ruleEngineBean.getCondition().getItems().size(); i++) {
-                if(i == 0){
+                if (i == 0) {
                     sb.append("(");
                 }
                 RuleEngineBean.Condition.ConditionItem conditionItem = ruleEngineBean.getCondition().getItems().get(i);
                 sb.append(conditionItem.getJoinType() == 1 ? " && " : conditionItem.getJoinType() == 2 ? " || " : "");
-                sb.append(String.format("func.get('%s','%s','%s') == %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getRightValue()));
-                if(i == ruleEngineBean.getCondition().getItems().size()-1){
+                sb.append(String.format("func.get('%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
+                if (i == ruleEngineBean.getCondition().getItems().size() - 1) {
                     sb.append(")");
                     sb.append(" && ");
                 }
