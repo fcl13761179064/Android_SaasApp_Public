@@ -155,6 +155,16 @@ public abstract class BasicActivity extends AppCompatActivity {
                     }
                 });
             }
+            View iv_person_center = appbarRoot.findViewById(R.id.iv_person_center);
+            if (iv_person_center != null && !iv_person_center.hasOnClickListeners()) {
+                ClickUtils.applySingleDebouncing(iv_person_center, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        appBarShowPersonCenter();
+                    }
+                });
+            }
+
         }
     }
 
@@ -173,6 +183,11 @@ public abstract class BasicActivity extends AppCompatActivity {
     }
 
     protected void appBarRightTvClicked() {
+
+    }
+
+
+    protected void appBarShowPersonCenter() {
 
     }
 

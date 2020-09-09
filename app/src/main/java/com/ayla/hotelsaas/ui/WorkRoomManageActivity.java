@@ -21,6 +21,7 @@ import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.WorkOrderPresenter;
+import com.ayla.hotelsaas.mvp.view.PersonCenterView;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
@@ -54,7 +55,7 @@ public class WorkRoomManageActivity extends BasicActivity {
 
     @Override
     public void refreshUI() {
-        appBar.setLeftText("退出");
+        appBar.setShowPersionCenter();
         appBar.setRightText("分配");
         super.refreshUI();
     }
@@ -85,26 +86,9 @@ public class WorkRoomManageActivity extends BasicActivity {
     }
 
     @Override
-    protected void appBarLeftTvClicked() {
-        super.appBarLeftTvClicked();
-        CustomAlarmDialog
-                .newInstance(new CustomAlarmDialog.Callback() {
-                    @Override
-                    public void onDone(CustomAlarmDialog dialog) {
-                        dialog.dismissAllowingStateLoss();
-                        SharePreferenceUtils.remove(WorkRoomManageActivity.this, Constance.SP_Login_Token);
-                        SharePreferenceUtils.remove(WorkRoomManageActivity.this, Constance.SP_Refresh_Token);
-                        Intent intent = new Intent(WorkRoomManageActivity.this, LoginActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onCancel(CustomAlarmDialog dialog) {
-                        dialog.dismissAllowingStateLoss();
-                    }
-                })
-                .setContent(getResources().getString(R.string.sing_out))
-                .show(getSupportFragmentManager(), "");
+    protected void appBarShowPersonCenter() {
+        super.appBarShowPersonCenter();
+        Intent intent = new Intent(WorkRoomManageActivity.this, PersonCenterActivity.class);
+        startActivity(intent);
     }
 }

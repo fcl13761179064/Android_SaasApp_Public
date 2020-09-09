@@ -19,9 +19,11 @@ public class WorkOrderAdapter extends BaseQuickAdapter<WorkOrderBean.ResultListB
     @Override
     protected void convert(BaseViewHolder helper, WorkOrderBean.ResultListBean workOrder) {
         helper.setText(R.id.item_tv_name, workOrder.getTitle())
-                .setText(R.id.item_work_srart_date, TimeUtils.getYestoday(workOrder.getStartDate()))
-                .setText(R.id.item_work_end_date, TimeUtils.getYestoday(workOrder.getEndDate()));
+                .setText(R.id.item_work_srart_date, TimeUtils.getYYMMdd(workOrder.getStartDate()))
+                .setText(R.id.item_work_end_date, TimeUtils.getYYMMdd(workOrder.getEndDate()));
 
+        workOrder.setStartDate(TimeUtils.getYYMMdd(workOrder.getStartDate()));
+        workOrder.setEndDate(TimeUtils.getYYMMdd(workOrder.getEndDate()));
         if (workOrder.getConstructionStatus() == 1) {
             helper.setText(R.id.item_work_status, "待施工");
         } else if (workOrder.getConstructionStatus() == 2) {

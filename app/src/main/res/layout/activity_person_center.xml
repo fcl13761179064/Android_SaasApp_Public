@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:left_iv="@mipmap/icon_back_black"
+        app:center_tv=""/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:layout_gravity="center"
+        android:background="@mipmap/default_user_img"/>
+
+    <TextView
+        android:id="@+id/tv_default_username"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="username"
+        android:layout_marginTop="@dimen/dp_16"
+        android:textColor="#333333"
+        android:textSize="17sp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_help_center"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/appBar"
+        android:layout_marginTop="69dp"
+        android:background="#FFFFFF"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/tv_function_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="帮助文档"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+
+        <ImageView
+            android:id="@+id/tv_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_menu_item_arrow_right" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_log_out"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/appBar"
+        android:layout_marginTop="16dp"
+        android:background="#FFFFFF"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="退出登录"
+            android:textColor="@color/login_error_show"
+            android:textSize="17sp" />
+
+    </RelativeLayout>
+</LinearLayout>

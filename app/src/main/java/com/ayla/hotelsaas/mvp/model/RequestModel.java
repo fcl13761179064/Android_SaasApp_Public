@@ -82,6 +82,30 @@ public class RequestModel {
     }
 
 
+    public Observable<BaseResult<Boolean>> modifyForgitPassword(String user_name, String yanzhengma) {
+        JsonObject body = new JsonObject();
+        body.addProperty("iphone", user_name);
+        body.addProperty("code", yanzhengma);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().modifyForgitPassword(new_body);
+    }
+
+
+    public Observable<BaseResult<Boolean>> send_sms(String user_name) {
+        JsonObject body = new JsonObject();
+        body.addProperty("phone", user_name);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().sendSmsCode(new_body);
+    }
+
+
+    public Observable<BaseResult<Boolean>> resert_passwoed(String new_password) {
+        JsonObject body = new JsonObject();
+        body.addProperty("password", new_password);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().modifyOldPassword(new_body);
+    }
+
     public Observable<BaseResult<User>> refreshToken(String refreshToken) {
         JsonObject body = new JsonObject();
         body.addProperty("refreshToken", refreshToken);
@@ -582,5 +606,17 @@ public class RequestModel {
         jsonObject.addProperty("scopeType", scopeType);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().removeDevice(body111);
+    }
+
+
+    /**
+     * 获取用户信息
+     *
+     * @return
+     */
+    public Observable<BaseResult<Boolean>> getUserInfo(String ueserInfo) {
+        JsonObject jsonObject = new JsonObject();
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().getUserInfo(body111);
     }
 }
