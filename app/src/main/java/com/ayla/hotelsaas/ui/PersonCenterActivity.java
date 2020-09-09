@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -14,6 +15,7 @@ import com.ayla.hotelsaas.mvp.view.PersonCenterView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
+
 import butterknife.BindView;
 
 public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, PersonCenterPresenter> implements PersonCenterView {
@@ -26,7 +28,6 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
     RelativeLayout rl_log_out;
     @BindView(R.id.rl_help_center)
     RelativeLayout rl_help_center;
-
 
 
     @Override
@@ -56,6 +57,9 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
         rl_help_center.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(PersonCenterActivity.this, HelpCenterActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
 
             }
         });

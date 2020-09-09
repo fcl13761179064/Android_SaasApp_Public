@@ -84,7 +84,7 @@ public class RequestModel {
 
     public Observable<BaseResult<Boolean>> modifyForgitPassword(String user_name, String yanzhengma) {
         JsonObject body = new JsonObject();
-        body.addProperty("iphone", user_name);
+        body.addProperty("phone", user_name);
         body.addProperty("code", yanzhengma);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().modifyForgitPassword(new_body);
@@ -99,8 +99,9 @@ public class RequestModel {
     }
 
 
-    public Observable<BaseResult<Boolean>> resert_passwoed(String new_password) {
+    public Observable<BaseResult<Boolean>> resert_passwoed(String phone, String new_password) {
         JsonObject body = new JsonObject();
+        body.addProperty("phone", phone);
         body.addProperty("password", new_password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().modifyOldPassword(new_body);

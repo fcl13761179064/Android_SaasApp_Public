@@ -66,7 +66,7 @@ public interface ApiService {
     Observable<BaseResult<Boolean>> modifyOldPassword(@Body RequestBody body);
 
 
-    @POST("/api/v1/construction/appuser/mybaseinfo")
+    @GET("api/v1/construction/user/mybaseinfo")
     Observable<BaseResult<PersonCenter>> getUserInfo();
 
 

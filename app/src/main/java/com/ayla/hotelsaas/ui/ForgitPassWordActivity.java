@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -48,7 +49,7 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
 
     private TranslateAnimation mShakeAnimation;
     private CountDownTimer mTimer;
-    private boolean is_forgit_password = false;
+    private boolean is_forgit_password = true;
 
     @Override
     protected int getLayoutId() {
@@ -72,6 +73,7 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
             }
         };
     }
+
     @Override
     protected void appBarLeftTvClicked() {
         finish();
@@ -82,10 +84,10 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.register_submitBtn:
-                if (!is_forgit_password) {
+                if (is_forgit_password) {
                     mPresenter.modifyPassword();
                 } else {
-                    mPresenter.resetPassword();
+                    mPresenter.resetPassword(getUserName());
                 }
 
                 SoftIntPutUtils.closeKeyboard(ForgitPassWordActivity.this);
@@ -158,15 +160,9 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
 
 
     @Override
-    public void errorShake(int type, int CycleTimes, String code) {
+    public void errorShake(int type, int CycleTimes, String msg) {
         tv_error_show.setVisibility(View.VISIBLE);
-        if ("171000".equals(code)) {
-            tv_error_show.setText("用户已存在");
-        } else if (TextUtils.isEmpty(code)) {
-
-        } else {
-            tv_error_show.setText("服务异常");
-        }
+        tv_error_show.setText(msg);
 
         // CycleTimes动画重复的次数
         if (null == mShakeAnimation) {
@@ -182,18 +178,26 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
         }
     }
 
-    @Override
-    public void RegistSuccess(Boolean data) {
-        CustomToast.makeText(this, "注册成功", R.drawable.ic_success).show();
-        finish();
-    }
 
     @Override
     public void sendCodeSuccess(Boolean data) {
-        is_forgit_password=true;
+        CustomToast.makeText(MyApplication.getInstance(), "发送成功", R.drawable.ic_success).show();
+    }
+
+    @Override
+    public void modifyPasswordSuccess(Boolean data) {
+        is_forgit_password = false;
         ll_forgit_password.setVisibility(View.GONE);
         ll_new_password.setVisibility(View.VISIBLE);
         register_submitBtn.setText("重置密码");
+    }
+
+    @Override
+    public void resertPasswordSuccess(Boolean data) {
+        CustomToast.makeText(MyApplication.getInstance(), "重置密码成功", R.drawable.ic_success).show();
+        final Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
