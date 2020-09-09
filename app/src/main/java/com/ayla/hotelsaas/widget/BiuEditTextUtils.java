@@ -147,7 +147,7 @@ public class BiuEditTextUtils extends AppCompatEditText implements View.OnFocusC
             mClearDrawable = getResources().getDrawable(R.drawable.delete_selector);
         }
         //设置图片的固有宽高
-            mClearDrawable.setBounds(0, 0, (int) (mClearDrawable.getIntrinsicWidth()/1.1f), (int) (mClearDrawable.getIntrinsicHeight()/1.1f));
+            mClearDrawable.setBounds(0, 0, (int) (mClearDrawable.getIntrinsicWidth()/1f), (int) (mClearDrawable.getIntrinsicHeight()/1f));
         //默认设置隐藏图标
         setClearIconVisible(false);
         //设置焦点改变的监听

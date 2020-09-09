@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,8 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.aliyun.iot.aep.sdk.login.ILoginCallback;
-import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -53,6 +50,8 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     RelativeLayout rl_root_view;
     @BindView(R.id.ll_content_view)
     LinearLayout ll_content_view;
+    @BindView(R.id.tv_forgit)
+    TextView tv_forgit;
     @BindView(R.id.tv_register)
     TextView tv_register;
 
@@ -106,11 +105,19 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             default:
                 break;
         }
+
     }
 
 
     @Override
     protected void initListener() {
+        tv_forgit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainActivity = new Intent(LoginActivity.this, ForgitPassWordActivity.class);
+                startActivity(mainActivity);
+            }
+        });
         keepLoginBtnNotOver(rl_root_view, ll_content_view);
         //触摸外部，键盘消失
         rl_root_view.setOnTouchListener(new View.OnTouchListener() {
