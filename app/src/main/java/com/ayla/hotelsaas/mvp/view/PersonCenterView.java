@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.mvp.view;
 
 import com.ayla.hotelsaas.base.BaseView;
+import com.ayla.hotelsaas.bean.PersonCenter;
 
 public interface PersonCenterView extends BaseView {
 
@@ -8,5 +9,5 @@ public interface PersonCenterView extends BaseView {
     void getUserInfoFail(String code,String msg);
 
     //操作成功
-    void getUserInfoFailSuccess(boolean success);
+    void getUserInfoFailSuccess(PersonCenter personCenter);
 }

@@ -8,6 +8,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.mvp.present.PersonCenterPresenter;
 import com.ayla.hotelsaas.mvp.view.PersonCenterView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
@@ -46,7 +47,7 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
 
     @Override
     protected void initView() {
-        mPresenter.getUserInfo("111");
+        mPresenter.getUserInfo();
 
     }
 
@@ -91,8 +92,8 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
     }
 
     @Override
-    public void getUserInfoFailSuccess(boolean success) {
-        tv_default_username.setText("22222");
+    public void getUserInfoFailSuccess(PersonCenter personCenter) {
+        tv_default_username.setText(personCenter.getFamilyName());
 
     }
 }

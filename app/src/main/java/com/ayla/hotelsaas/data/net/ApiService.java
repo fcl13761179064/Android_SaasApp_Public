@@ -5,6 +5,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
@@ -66,7 +67,7 @@ public interface ApiService {
 
 
     @POST("/api/v1/construction/appuser/mybaseinfo")
-    Observable<BaseResult<Boolean>> getUserInfo(@Body RequestBody body);
+    Observable<BaseResult<PersonCenter>> getUserInfo();
 
 
     @POST("api/v2/sso/refresh")

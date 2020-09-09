@@ -6,6 +6,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
@@ -14,7 +15,6 @@ import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
-import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -614,9 +614,7 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> getUserInfo(String ueserInfo) {
-        JsonObject jsonObject = new JsonObject();
-        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().getUserInfo(body111);
+    public Observable<BaseResult<PersonCenter>> getUserInfo() {
+        return getApiService().getUserInfo();
     }
 }

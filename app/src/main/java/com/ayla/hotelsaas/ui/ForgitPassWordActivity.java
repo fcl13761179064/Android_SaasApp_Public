@@ -72,6 +72,10 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
             }
         };
     }
+    @Override
+    protected void appBarLeftTvClicked() {
+        finish();
+    }
 
 
     @OnClick({R.id.register_submitBtn})
