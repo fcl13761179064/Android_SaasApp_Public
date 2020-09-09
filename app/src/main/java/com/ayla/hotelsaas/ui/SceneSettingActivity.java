@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -446,7 +445,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 //        }
 //        return result.toString();
 //    }
-
     @Override
     public void saveSuccess() {
         CustomToast.makeText(this, "创建成功", R.drawable.ic_success).show();

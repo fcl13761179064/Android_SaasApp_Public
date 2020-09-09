@@ -5,14 +5,19 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.bean.TransferRoomListBean;
+import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
+
 import java.util.List;
 import java.util.Map;
+
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -73,7 +78,7 @@ public interface ApiService {
     Observable<BaseResult<User>> refreshToken(@Body RequestBody body);
 
     @PUT("api/v1/construction/hotelcontent/approom/{id}")
-    Observable<BaseResult<String>> roomRename(@Path("id") long roomId,@Body RequestBody body);
+    Observable<BaseResult<String>> roomRename(@Path("id") long roomId, @Body RequestBody body);
 
     @DELETE("api/v1/construction/hotelcontent/approom/{id}")
     Observable<BaseResult<String>> deleteRoomNum(@Path("id") long roomId);
@@ -132,11 +137,34 @@ public interface ApiService {
     @POST("api/v1/device/unregister")
     Observable<BaseResult<Boolean>> removeDevice(@Body RequestBody body);
 
-
     @POST("/api/v1/construction/device/deviceProperties")
     Observable<BaseResult<Boolean>> tourchPanelRenameAndIcon(@Body RequestBody body);
 
     @GET("/api/v1/device/deviceProperties/{cuId}/{deviceId}")
     Observable<BaseResult<List<TouchPanelDataBean>>> touchpanelALlDevice(@Path("cuId") int oemModel, @Path("deviceId") String ss);
+
+    /**
+     * 房间分配，获取酒店列表
+     *
+     * @return
+     */
+    @GET("/api/v1/construction/device/transfer/hotellist")
+    Observable<BaseResult<HotelListBean>> fetchTransferHotelList(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
+
+    /**
+     * 房间分配，获取房间树形结构列表 ,返回 层+房间 的层级关系
+     *
+     * @return
+     */
+    @GET("/api/v1/construction/device/transfer/treelist")
+    Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(@Query("hotelId") String hotelId);
+
+    /**
+     * 房间分配，获取房间列表 ,返回酒店下面的所有房间
+     *
+     * @return
+     */
+    @GET("/api/v1/construction/device/transfer/roomlist")
+    Observable<BaseResult<TransferRoomListBean>> fetchTransferRoomList(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("hotelId") String hotelId);
 
 }

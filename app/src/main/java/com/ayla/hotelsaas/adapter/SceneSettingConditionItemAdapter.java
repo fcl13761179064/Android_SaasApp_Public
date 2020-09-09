@@ -34,7 +34,11 @@ public class SceneSettingConditionItemAdapter extends BaseMultiItemQuickAdapter<
     protected void convert(BaseViewHolder helper, ConditionItem item) {
         BaseSceneBean.Condition condition = item.condition;
         if (condition instanceof BaseSceneBean.DeviceCondition) {
-            helper.setText(R.id.tv_function_name, String.format("%s:%s", condition.getFunctionName(), condition.getValueName()));
+            String option = ((BaseSceneBean.DeviceCondition) condition).getOperator();
+            if (TextUtils.equals("==", option)) {
+                option = ":";
+            }
+            helper.setText(R.id.tv_function_name, String.format("%s%s%s", condition.getFunctionName(), option, condition.getValueName()));
 
             DeviceListBean.DevicesBean devicesBean = null;
             for (DeviceListBean.DevicesBean bean : MyApplication.getInstance().getDevicesBean()) {

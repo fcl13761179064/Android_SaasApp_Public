@@ -34,6 +34,12 @@ public class SceneSettingEnableTimeActivity extends BaseMvpActivity {
     TextView mRepeatDayTextView;
     @BindView(R.id.sc_enable)
     SwitchCompat mSwitchCompat;
+    @BindView(R.id.ll_start_time)
+    View startTimeView;
+    @BindView(R.id.ll_end_time)
+    View endTimeView;
+
+
     private final int REQUEST_CODE_REPEAT_DATA = 0X10;
 
     @Override
@@ -51,6 +57,7 @@ public class SceneSettingEnableTimeActivity extends BaseMvpActivity {
         mStartTimeTextView.setText(formatTime(enableTime.getStartHour(), enableTime.getStartMinute()));
         mEndTimeTextView.setText(formatTime(enableTime.getEndHour(), enableTime.getEndMinute()));
         mRepeatDayTextView.setText(formatRepeatDay(enableTime.getEnableWeekDay()));
+        syncTimeClickAble(!enableTime.isAllDay());
     }
 
     @Override
@@ -59,10 +66,7 @@ public class SceneSettingEnableTimeActivity extends BaseMvpActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 enableTime.setAllDay(isChecked);
-                View l_start = findViewById(R.id.ll_start_time);
-                View l_end = findViewById(R.id.ll_end_time);
-                l_start.setClickable(!isChecked);
-                l_end.setClickable(!isChecked);
+                syncTimeClickAble(!isChecked);
             }
         });
     }
@@ -175,5 +179,10 @@ public class SceneSettingEnableTimeActivity extends BaseMvpActivity {
             }
         }
         return sb.toString();
+    }
+
+    private void syncTimeClickAble(boolean enable) {
+        startTimeView.setClickable(enable);
+        endTimeView.setClickable(enable);
     }
 }
