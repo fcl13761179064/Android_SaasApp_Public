@@ -6,15 +6,17 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.bean.TransferRoomListBean;
+import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
-import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -618,5 +620,26 @@ public class RequestModel {
         JsonObject jsonObject = new JsonObject();
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().getUserInfo(body111);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult<HotelListBean>> fetchTransferHotelList() {
+        return getApiService().fetchTransferHotelList(1, Integer.MAX_VALUE);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(String hotelId) {
+        return getApiService().fetchTransferTreeList(hotelId);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult<TransferRoomListBean>> fetchTransferRoomList(String hotelId) {
+        return getApiService().fetchTransferRoomList(1, Integer.MAX_VALUE, hotelId);
     }
 }

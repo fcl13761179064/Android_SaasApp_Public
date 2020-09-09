@@ -2,11 +2,9 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.RoomManageBean;
+import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.mvp.view.DistributionView;
-
-import java.util.List;
+import com.ayla.hotelsaas.mvp.view.DistributionHotelSelectView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -15,14 +13,18 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class DistributionPresenter extends BasePresenter<DistributionView> {
-    public void loadSelfRooms() {
-        Disposable subscribe = RequestModel.getInstance()
-                .getCreateRoomOrder(1, Integer.MAX_VALUE)
-                .map(new Function<BaseResult<RoomManageBean>, List<RoomManageBean.RecordsBean>>() {
+/**
+ * @描述
+ * @作者 fanchunlei
+ * @时间 2017/8/2
+ */
+public class DistributionHotelSelectPresenter extends BasePresenter<DistributionHotelSelectView> {
+    public void fetchTransferHotelList(){
+        Disposable subscribe = RequestModel.getInstance().fetchTransferHotelList()
+                .map(new Function<BaseResult<HotelListBean>, HotelListBean>() {
                     @Override
-                    public List<RoomManageBean.RecordsBean> apply(BaseResult<RoomManageBean> roomManageBeanBaseResult) throws Exception {
-                        return roomManageBeanBaseResult.data.getRecords();
+                    public HotelListBean apply(BaseResult<HotelListBean> hotelListBeanBaseResult) throws Exception {
+                        return hotelListBeanBaseResult.data;
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -39,10 +41,10 @@ public class DistributionPresenter extends BasePresenter<DistributionView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<List<RoomManageBean.RecordsBean>>() {
+                .subscribe(new Consumer<HotelListBean>() {
                     @Override
-                    public void accept(List<RoomManageBean.RecordsBean> roomManageBean) throws Exception {
-                        mView.hotelLoadSuccess(roomManageBean);
+                    public void accept(HotelListBean hotelListBean) throws Exception {
+mView.showData(hotelListBean.getRecords());
                     }
                 }, new Consumer<Throwable>() {
                     @Override

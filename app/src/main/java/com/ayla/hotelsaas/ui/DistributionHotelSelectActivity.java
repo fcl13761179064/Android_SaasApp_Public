@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
@@ -9,15 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.CheckableSupport;
 import com.ayla.hotelsaas.adapter.DistributionHotelAdapter;
-import com.ayla.hotelsaas.adapter.DistributionRoomAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.RoomManageBean;
+import com.ayla.hotelsaas.bean.HotelListBean;
+import com.ayla.hotelsaas.mvp.present.DistributionHotelSelectPresenter;
+import com.ayla.hotelsaas.mvp.view.DistributionHotelSelectView;
 import com.blankj.utilcode.util.SizeUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,12 +25,11 @@ import butterknife.BindView;
 /**
  * 分配房间,酒店选择页面
  */
-public class DistributionHotelSelectActivity extends BaseMvpActivity   {
+public class DistributionHotelSelectActivity extends BaseMvpActivity<DistributionHotelSelectView, DistributionHotelSelectPresenter> implements DistributionHotelSelectView {
     @BindView(R.id.rv_rooms)
     RecyclerView mRecyclerView;
 
     private DistributionHotelAdapter mAdapter;
-
 
     @Override
     protected int getLayoutId() {
@@ -56,26 +55,31 @@ public class DistributionHotelSelectActivity extends BaseMvpActivity   {
 
     @Override
     protected void initListener() {
-
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                HotelListBean.RecordsBean recordsBean = mAdapter.getItem(position);
+                Intent intent = new Intent(DistributionHotelSelectActivity.this, DistributionStructSelectActivity.class);
+                intent.putExtra("hotelId",recordsBean.getId());
+                intent.putExtra("hotelName",recordsBean.getHotelName());
+                startActivityForResult(intent, 0);
+            }
+        });
     }
 
     @Override
-    protected BasePresenter initPresenter() {
-        return null;
+    protected DistributionHotelSelectPresenter initPresenter() {
+        return new DistributionHotelSelectPresenter();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter.fetchTransferHotelList();
+    }
 
-        List<CheckableSupport<RoomManageBean.RecordsBean>> data = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            RoomManageBean.RecordsBean recordsBean = new RoomManageBean.RecordsBean();
-            recordsBean.setContentName("room" + i);
-            CheckableSupport<RoomManageBean.RecordsBean> recordsBeanCheckableSupport = new CheckableSupport<>(recordsBean);
-            recordsBeanCheckableSupport.setChecked(i == 5);
-            data.add(recordsBeanCheckableSupport);
-        }
-        mAdapter.setNewData(data);
+    @Override
+    public void showData(List<HotelListBean.RecordsBean> records) {
+        mAdapter.setNewData(records);
     }
 }
