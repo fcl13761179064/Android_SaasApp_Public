@@ -18,13 +18,13 @@
         android:textColor="#ff333333"
         android:textSize="15sp" />
 
-    <CheckBox
+    <ImageView
         android:id="@+id/cb"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="8dp"
+        android:layout_height="14dp"
         android:layout_alignParentEnd="true"
         android:layout_marginLeft="16dp"
-        android:background="@drawable/bg_checkbox_selector"
+        android:background="@drawable/ic_menu_item_arrow_right"
         android:button="@null"
         android:checked="true"
         android:clickable="false"

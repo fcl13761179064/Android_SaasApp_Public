@@ -8,5 +8,5 @@ import java.util.List;
 
 
 public interface DistributionView extends BaseView {
-    void hotelLoadSuccess(List<CheckableSupport<RoomManageBean.RecordsBean>> hotels);
+    void hotelLoadSuccess(List<RoomManageBean.RecordsBean> rooms);
 }

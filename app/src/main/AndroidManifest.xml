@@ -207,6 +207,10 @@
             android:name=".ui.DistributionHotelSelectActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.DistributionStructSelectActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".ui.ForgitPassWordActivity"
             android:launchMode="singleTask"

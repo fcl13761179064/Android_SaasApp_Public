@@ -84,10 +84,13 @@
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_menu_item_arrow_right" />
 
-                <TextView
+                <EditText
                     android:id="@+id/tv_scene_name"
                     android:layout_width="wrap_content"
+                    android:editable="false"
+                    android:hint="输入场景名称"
                     android:layout_height="match_parent"
+                    android:background="@null"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="16dp"
