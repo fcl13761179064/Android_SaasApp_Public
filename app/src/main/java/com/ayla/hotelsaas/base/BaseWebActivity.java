@@ -1,38 +1,59 @@
 package com.ayla.hotelsaas.base;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.MyApplication;
+import com.ayla.hotelsaas.utils.NetworkUtils;
+import com.ayla.hotelsaas.widget.AppBar;
+import com.blankj.utilcode.util.BarUtils;
+import com.blankj.utilcode.util.ScreenUtils;
 
 import butterknife.BindView;
 
 public abstract class BaseWebActivity extends AppCompatActivity {
 
     private WebView webView;
-    @BindView(R.id.root_webview)
-    LinearLayout root_webview;
-    @BindView(R.id.web_error)
-    View web_error;
+    RelativeLayout mWeb_error;
+    private AppBar mAppBar;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!ScreenUtils.isFullScreen(this)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                BarUtils.setStatusBarColor(this, Color.TRANSPARENT);
+                BarUtils.setStatusBarLightMode(this, true);
+            } else {
+                BarUtils.setStatusBarColor(this, ContextCompat.getColor(this, R.color.color_statusbar_compare_color));
+            }
+        }
         setContentView(R.layout.activity_base_vebview);
         //获得控件
         webView = (WebView) findViewById(R.id.wb_webview);
-        //访问网页
-        webView.loadUrl(getUrl());
+        mAppBar = (AppBar) findViewById(R.id.appBar);
+        mWeb_error = (RelativeLayout) findViewById(R.id.web_error);
+
+        initWebSetting(webView);
+        supportCache(webView);
         //系统默认会通过手机浏览器打开网页，为了能够直接通过WebView显示网页，则必须设置
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -46,6 +67,10 @@ public abstract class BaseWebActivity extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+                if (!NetworkUtils.isNetworkAvailable(MyApplication.getContext())) {
+                    mWeb_error.setVisibility(View.VISIBLE);
+                    webView.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -56,14 +81,43 @@ public abstract class BaseWebActivity extends AppCompatActivity {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                web_error.setVisibility(View.GONE);
-                root_webview.setVisibility(View.VISIBLE);
-
+                mWeb_error.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
             }
         });
-        initWebSetting(webView);
-        supportCache(webView);
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                // TODO Auto-generated method stub
+                if (newProgress == 100) {
+                    // 网页加载完成
 
+                } else {
+                    // 加载中
+
+                }
+
+            }
+
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                if (!TextUtils.isEmpty(title)) {
+                    mAppBar.setCenterText(title);
+                }
+            }
+        });
+
+        mAppBar.leftImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
+        //访问网页
+        webView.loadUrl(getUrl());
     }
 
     protected void supportCache(WebView webView) {
@@ -107,23 +161,10 @@ public abstract class BaseWebActivity extends AppCompatActivity {
         webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //激活WebView为活跃状态，能正常执行网页的响应
-        webView.onResume();
-    }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        webView.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        root_webview.removeView(webView);
-        webView.destroy();
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

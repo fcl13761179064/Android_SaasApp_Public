@@ -97,7 +97,7 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
 
     @Override
     public void getUserInfoFailSuccess(PersonCenter personCenter) {
-        tv_default_username.setText(personCenter.getFamilyName());
+        tv_default_username.setText(personCenter.getFullName());
 
     }
 }

@@ -213,7 +213,6 @@
             />
 
         <activity android:name=".ui.HelpCenterActivity"
-            android:launchMode="singleTask"
             />
 
         <activity android:name=".ui.PersonCenterActivity" />

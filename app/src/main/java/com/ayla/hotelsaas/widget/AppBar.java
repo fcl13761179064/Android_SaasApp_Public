@@ -28,7 +28,7 @@ import com.ayla.hotelsaas.R;
 
 public class AppBar extends FrameLayout {
     private final String TAG = this.getClass().getSimpleName();
-    private ImageView leftImageView;
+    public ImageView leftImageView;
     private ImageView rightImageView;
     private TextView leftTextView;
     public TextView rightTextView;
