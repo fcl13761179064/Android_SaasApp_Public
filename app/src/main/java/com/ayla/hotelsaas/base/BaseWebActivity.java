@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -12,13 +13,12 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.utils.NetworkUtils;
@@ -26,7 +26,6 @@ import com.ayla.hotelsaas.widget.AppBar;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 
-import butterknife.BindView;
 
 public abstract class BaseWebActivity extends AppCompatActivity {
 
@@ -81,8 +80,16 @@ public abstract class BaseWebActivity extends AppCompatActivity {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                mWeb_error.setVisibility(View.VISIBLE);
-                webView.setVisibility(View.GONE);
+                final View emptyLayout = LayoutInflater.from(getApplicationContext()).inflate(R.layout.widget_empty_view, null);
+                TextView empty_back_btn = (TextView) emptyLayout.findViewById(R.id.empty_back_btn);
+                setContentView(emptyLayout);
+
+                empty_back_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
             }
         });
         webView.setWebChromeClient(new WebChromeClient() {
@@ -115,9 +122,9 @@ public abstract class BaseWebActivity extends AppCompatActivity {
             }
         });
 
-
         //访问网页
-        webView.loadUrl(getUrl());
+        webView.loadUrl("http://mozilla.github.io/pdf.js/web/viewer.html?file=" + getUrl());
+
     }
 
     protected void supportCache(WebView webView) {
@@ -135,6 +142,13 @@ public abstract class BaseWebActivity extends AppCompatActivity {
 
 
     private void initWebSetting(WebView webView) {
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.requestFocus();
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         //声明WebSettings子类
         WebSettings webSettings = webView.getSettings();
 
