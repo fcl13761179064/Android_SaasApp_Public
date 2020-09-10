@@ -28,6 +28,7 @@ import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
 import com.ayla.hotelsaas.utils.AppManager;
+import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
@@ -75,6 +76,9 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @OnClick({R.id.submitBtn, R.id.tv_switch})
     public void onViewClicked(View v) {
+        if (FastClickUtils.isDoubleClick()){
+            return;
+        }
         switch (v.getId()) {
             case R.id.submitBtn:
                 if ("aylatest".equals(edite_count.getText().toString())) {

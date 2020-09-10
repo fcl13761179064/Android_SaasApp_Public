@@ -20,6 +20,7 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.ForgitPresenter;
 import com.ayla.hotelsaas.mvp.view.ForgitView;
 import com.ayla.hotelsaas.utils.AppManager;
+import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.PregnancyUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
 import com.ayla.hotelsaas.widget.AppBar;
@@ -84,6 +85,9 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.register_submitBtn:
+                if (FastClickUtils.isDoubleClick()){
+                    return;
+                }
                 if (is_forgit_password) {
                     mPresenter.modifyPassword();
                 } else {
@@ -105,6 +109,9 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
         tv_send_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (FastClickUtils.isDoubleClick()){
+                    return;
+                }
                 SoftIntPutUtils.closeKeyboard(ForgitPassWordActivity.this);
                 String userName = getUserName();
                 if (TextUtils.isEmpty(userName)) {
