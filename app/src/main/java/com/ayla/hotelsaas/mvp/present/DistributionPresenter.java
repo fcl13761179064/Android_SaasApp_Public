@@ -52,4 +52,97 @@ public class DistributionPresenter extends BasePresenter<DistributionView> {
                 });
         addSubscrebe(subscribe);
     }
+
+    public void transferToHotel(String hotelId, String[] roomIdList) {
+        Disposable subscribe = RequestModel.getInstance()
+                .transferToHotel(hotelId, roomIdList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<BaseResult>() {
+                    @Override
+                    public void accept(BaseResult baseResult) throws Exception {
+                        mView.doSuccess(roomIdList);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.doFailed();
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
+
+    public void transferToStruct(String hotelId, String sourceRoomId, String[] roomIdList) {
+        Disposable subscribe = RequestModel.getInstance()
+                .transferToStruct(hotelId, sourceRoomId, roomIdList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<BaseResult>() {
+                    @Override
+                    public void accept(BaseResult baseResult) throws Exception {
+                        mView.doSuccess(roomIdList);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.doFailed();
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
+
+    public void transferToRoom(String hotelId, String sourceRoomId, String targetRoomId) {
+        Disposable subscribe = RequestModel.getInstance()
+                .transferToRoom(hotelId, sourceRoomId, targetRoomId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<BaseResult>() {
+                    @Override
+                    public void accept(BaseResult baseResult) throws Exception {
+                        mView.doSuccess(new String[]{targetRoomId});
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.doFailed();
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
 }

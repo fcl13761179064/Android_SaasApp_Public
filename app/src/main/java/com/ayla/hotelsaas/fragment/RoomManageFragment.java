@@ -21,7 +21,6 @@ import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.MainActivity;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
-import com.ayla.hotelsaas.utils.ToastUtil;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -101,7 +100,7 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                     String roomName = recordsBean.getContentName();
                     intent.putExtra("roomId", roomId);
                     intent.putExtra("roomName", roomName);
-                    intent.putExtra("removeEnable",false);
+                    intent.putExtra("removeEnable", false);
                     startActivityForResult(intent, REQUEST_CODE_TO_ROOM);
                 }
             }
@@ -131,12 +130,11 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                 }
             }
         });
-        mRefreshLayout.autoRefresh();//自动刷新
     }
 
     @Override
-    protected void initData() {
-
+    public void initData() {
+        mRefreshLayout.autoRefresh();//自动刷新
     }
 
     @Override
