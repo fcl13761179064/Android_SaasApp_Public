@@ -80,12 +80,12 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
 
                     @Override
                     public void _onNext(Boolean data) {
-                        mView.RegistSuccess(data);
+                        mView.modifyPasswordSuccess(data);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
-                        mView.errorShake(0, 2, code);
+                        mView.errorShake(0, 2, msg);
 
                     }
                 });
@@ -105,7 +105,7 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(@NonNull Disposable disposable) throws Exception {
-                        mView.showProgress("发送中...");
+                        mView.showProgress("稍等...");
                     }
                 })
                 .doFinally(new Action() {
@@ -135,13 +135,20 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
     }
 
 
-    public void resetPassword() {
+    public void resetPassword(String phone) {
         String new_password = mView.resetPassword();
-        reset_Password(new_password);
+        if (TextUtils.isEmpty(new_password)) {
+            CustomToast.makeText(MyApplication.getContext(), "密码不能为空", R.drawable.ic_toast_warming).show();
+            return;
+        } else if (new_password.length() < 6) {
+            CustomToast.makeText(MyApplication.getContext(), "密码至少为6位", R.drawable.ic_toast_warming).show();
+            return;
+        }
+        reset_Password(phone,new_password);
     }
 
-    private void reset_Password(String new_password) {
-        RequestModel.getInstance().resert_passwoed(new_password)
+    private void reset_Password(String phone, String new_password) {
+        RequestModel.getInstance().resert_passwoed(phone,new_password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -165,7 +172,7 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
 
                     @Override
                     public void _onNext(Boolean data) {
-                        mView.sendCodeSuccess(data);
+                        mView.resertPasswordSuccess(data);
                     }
 
                     @Override

@@ -212,7 +212,12 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.ForgitPassWordActivity" />
+        <activity android:name=".ui.ForgitPassWordActivity"
+            android:launchMode="singleTask"
+            />
+
+        <activity android:name=".ui.HelpCenterActivity"
+            />
 
         <activity android:name=".ui.PersonCenterActivity" />
 

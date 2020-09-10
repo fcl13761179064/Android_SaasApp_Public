@@ -5,6 +5,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
@@ -14,10 +15,8 @@ import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-
 import java.util.List;
 import java.util.Map;
-
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -70,8 +69,8 @@ public interface ApiService {
     Observable<BaseResult<Boolean>> modifyOldPassword(@Body RequestBody body);
 
 
-    @POST("/api/v1/construction/appuser/mybaseinfo")
-    Observable<BaseResult<Boolean>> getUserInfo(@Body RequestBody body);
+    @GET("api/v1/construction/user/mybaseinfo")
+    Observable<BaseResult<PersonCenter>> getUserInfo();
 
 
     @POST("api/v2/sso/refresh")

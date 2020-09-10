@@ -18,11 +18,15 @@ public interface ForgitView extends BaseView {
     //错误提示
     void errorShake(int type, int CycleTimes, String code);
 
-    //注册成功
-    void RegistSuccess(Boolean data);
 
     //发送验证码成功
     void sendCodeSuccess(Boolean data);
+
+    //修改密码
+    void modifyPasswordSuccess(Boolean data);
+
+    //重置密码
+    void resertPasswordSuccess(Boolean data);
 
     //重置密码
     String resetPassword();

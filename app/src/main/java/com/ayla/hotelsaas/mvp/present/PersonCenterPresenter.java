@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
@@ -18,8 +19,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class PersonCenterPresenter extends BasePresenter<PersonCenterView> {
 
-    public void getUserInfo(String deviceId) {
-        RequestModel.getInstance().getUserInfo(deviceId)
+    public void getUserInfo() {
+        RequestModel.getInstance().getUserInfo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -27,7 +28,7 @@ public class PersonCenterPresenter extends BasePresenter<PersonCenterView> {
                     public void accept(Disposable disposable) throws Exception {
                     }
                 })
-                .subscribe(new RxjavaObserver<Boolean>() {
+                .subscribe(new RxjavaObserver<PersonCenter>() {
 
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -36,7 +37,7 @@ public class PersonCenterPresenter extends BasePresenter<PersonCenterView> {
                     }
 
                     @Override
-                    public void _onNext(Boolean data) {
+                    public void _onNext(PersonCenter data) {
                         mView.getUserInfoFailSuccess(data);
                     }
 

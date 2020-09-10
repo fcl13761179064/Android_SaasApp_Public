@@ -25,7 +25,7 @@
         android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="username"
+        android:hint="userName"
         android:layout_marginTop="@dimen/dp_16"
         android:textColor="#333333"
         android:textSize="17sp" />

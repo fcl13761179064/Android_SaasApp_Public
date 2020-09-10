@@ -78,6 +78,10 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
         });
     }
 
+    @Override
+    protected void appBarLeftTvClicked() {
+        finish();
+    }
 
     @OnClick({R.id.tv_also_account, R.id.register_submitBtn})
     public void onViewClicked(View v) {
