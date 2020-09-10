@@ -2,12 +2,16 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DistributionView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
@@ -24,7 +28,42 @@ public class DistributionPresenter extends BasePresenter<DistributionView> {
                     public List<RoomManageBean.RecordsBean> apply(BaseResult<RoomManageBean> roomManageBeanBaseResult) throws Exception {
                         return roomManageBeanBaseResult.data.getRecords();
                     }
-                })
+                })//首先找出自定义的房间列表
+                .flatMap(new Function<List<RoomManageBean.RecordsBean>, ObservableSource<List<RoomManageBean.RecordsBean>>>() {
+                    @Override
+                    public ObservableSource<List<RoomManageBean.RecordsBean>> apply(List<RoomManageBean.RecordsBean> recordsBeans) throws Exception {
+                        List<Observable<Integer>> jobs = new ArrayList<>();
+                        for (RoomManageBean.RecordsBean recordsBean : recordsBeans) {
+                            Observable<Integer> getCountObservable = RequestModel.getInstance()
+                                    .getDeviceList(recordsBean.getId(), 1, Integer.MAX_VALUE)
+                                    .map(new Function<BaseResult<DeviceListBean>, Integer>() {
+                                        @Override
+                                        public Integer apply(BaseResult<DeviceListBean> deviceListBeanBaseResult) throws Exception {
+                                            return deviceListBeanBaseResult.data.getDevices().size();
+                                        }
+                                    });
+                            jobs.add(getCountObservable);
+                        }
+                        if (jobs.size() == 0) {
+                            return Observable.just(recordsBeans);
+                        } else {
+                            return Observable
+                                    .zip(jobs, new Function<Object[], List<RoomManageBean.RecordsBean>>() {
+                                        @Override
+                                        public List<RoomManageBean.RecordsBean> apply(Object[] objects) throws Exception {
+                                            List<RoomManageBean.RecordsBean> data = new ArrayList<>();
+                                            for (int i = 0; i < recordsBeans.size(); i++) {
+                                                int count = (int) objects[i];
+                                                if (count != 0) {
+                                                    data.add(recordsBeans.get(i));
+                                                }
+                                            }
+                                            return data;
+                                        }
+                                    });
+                        }
+                    }
+                })//根据每个自定义房间的设备数量，排除掉数量为0的房间。
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

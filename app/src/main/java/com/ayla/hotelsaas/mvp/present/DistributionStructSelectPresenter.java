@@ -69,7 +69,7 @@ public class DistributionStructSelectPresenter extends BasePresenter<Distributio
                                     continue s2;
                                 }
                             }
-                            treeListBeans.remove(treeListBean);
+                            iterator.remove();
                         }
                     }
                 })
@@ -95,7 +95,7 @@ public class DistributionStructSelectPresenter extends BasePresenter<Distributio
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        throwable.printStackTrace();
                     }
                 });
         addSubscrebe(subscribe);
