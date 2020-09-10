@@ -15,12 +15,15 @@ import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
+
 import java.util.List;
 import java.util.Map;
+
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -165,5 +168,29 @@ public interface ApiService {
      */
     @GET("/api/v1/construction/device/transfer/roomlist")
     Observable<BaseResult<TransferRoomListBean>> fetchTransferRoomList(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("hotelId") String hotelId);
+
+    /**
+     * 自定义房间到酒店房间的 设备转移
+     *
+     * @return
+     */
+    @POST("/api/v1/construction/device/transfer/room")
+    Observable<BaseResult> transferToRoom(@Body RequestBody body);
+
+    /**
+     * 自定义房间到酒店的 房间转移
+     *
+     * @return
+     */
+    @POST("/api/v1/construction/device/transfer/hotel")
+    Observable<BaseResult> transferToHotel(@Body RequestBody body);
+
+    /**
+     * 自定义房间到酒店楼层的 房间转移
+     *
+     * @return
+     */
+    @POST("/api/v1/construction/device/transfer/struct")
+    Observable<BaseResult> transferToStruct(@Body RequestBody body);
 
 }

@@ -12,5 +12,5 @@ import java.util.List;
  * @时间 2017/8/2
  */
 public interface DistributionStructSelectView extends BaseView {
-    void showData(List<TreeListBean> treeListBeans, List<TransferRoomListBean.RecordsBean> recordsBeans);
+    void showData(List<TreeListBean> treeListBeans);
 }

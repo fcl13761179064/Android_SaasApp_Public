@@ -3,12 +3,15 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.WorkRoomManagePagerAdapter;
 import com.ayla.hotelsaas.base.BasicActivity;
+import com.ayla.hotelsaas.fragment.RoomManageFragment;
 import com.ayla.hotelsaas.widget.SpecialAppBar;
 import com.google.android.material.tabs.TabLayout;
 
@@ -61,5 +64,17 @@ public class WorkRoomManageActivity extends BasicActivity {
         super.appBarShowPersonCenter();
         Intent intent = new Intent(WorkRoomManageActivity.this, PersonCenterActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_DISTRIBUTION_ROOM && resultCode == RESULT_OK) {
+            String[] rooms = data.getStringArrayExtra("rooms");
+            Fragment fragment = mMAdapter.getItem(0);
+            if (fragment instanceof RoomManageFragment) {
+                ((RoomManageFragment) fragment).initData();
+            }
+        }
     }
 }
