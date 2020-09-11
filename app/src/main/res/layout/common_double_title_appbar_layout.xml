@@ -53,7 +53,7 @@
             android:layout_centerVertical="true"
             android:visibility="gone"
             android:scaleType="centerInside"
-            android:src="@mipmap/personal_center" />
+            android:src="@mipmap/person_center" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl_tabs"

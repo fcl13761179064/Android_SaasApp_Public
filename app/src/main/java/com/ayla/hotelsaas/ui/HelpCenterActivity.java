@@ -1,12 +1,10 @@
 package com.ayla.hotelsaas.ui;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.webview.LarkWebView;
@@ -27,7 +25,7 @@ public class HelpCenterActivity extends BasicActivity implements LarkWebView.Loa
         super.refreshUI();
         mAppBar.setCenterText("帮助中心");
         mWebView.registerLoadCallBack(this);
-        mWebView.loadUrl("https://www.baidu.com");
+        mWebView.loadUrl("https://smarthotel-h5.ayla.com.cn/trainingPage.html");
     }
 
     @Override
