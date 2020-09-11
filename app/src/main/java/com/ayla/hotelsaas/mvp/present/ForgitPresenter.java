@@ -105,7 +105,7 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(@NonNull Disposable disposable) throws Exception {
-                        mView.showProgress("稍等...");
+                        mView.showProgress("发送中...");
                     }
                 })
                 .doFinally(new Action() {
@@ -128,8 +128,7 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
 
                     @Override
                     public void _onError(String code, String msg) {
-                        CustomToast.makeText(MyApplication.getInstance(), msg, R.drawable.ic_success).show();
-
+                        mView.errorShake(-1,2,msg);
                     }
                 });
     }

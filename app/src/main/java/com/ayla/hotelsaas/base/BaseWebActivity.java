@@ -123,7 +123,7 @@ public abstract class BaseWebActivity extends AppCompatActivity {
         });
 
         //访问网页
-        webView.loadUrl("http://mozilla.github.io/pdf.js/web/viewer.html?file=" + getUrl());
+        webView.loadUrl(getUrl());
 
     }
 

@@ -14,7 +14,7 @@
 
         <LinearLayout
             android:id="@+id/left_ll"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
@@ -24,7 +24,7 @@
                 android:layout_height="@dimen/dp_16"
                 android:layout_gravity="right|center"
                 android:layout_marginLeft="@dimen/dp_16"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="3dp"
                 android:src="@mipmap/icon_back_black" />
 
             <TextView
@@ -43,11 +43,10 @@
 
         <LinearLayout
             android:id="@+id/appbar_center_container"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toStartOf="@id/right_ll"
-            android:layout_toEndOf="@id/left_ll"
-            android:gravity="center">
+            android:gravity="center"
+            >
 
             <TextView
                 android:id="@+id/tv_title"
@@ -66,7 +65,7 @@
 
         <LinearLayout
             android:id="@+id/right_ll"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:gravity="end"
