@@ -35,7 +35,7 @@ public class BeanObtainCompactUtil {
         sceneBean.setRuleDescription(ruleEngineBean.getRuleDescription());
         sceneBean.setRuleName(ruleEngineBean.getRuleName());
 
-        if (sceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.ONE_KEY) {//当是一键执行时，就要解析生效时间段
+        if (sceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//当是自动化时，就要解析生效时间段
             BaseSceneBean.EnableTime enableTime = new BaseSceneBean.EnableTime();
             if (ruleEngineBean.getCondition() != null) {
                 if (ruleEngineBean.getCondition().getItems() != null) {
