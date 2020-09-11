@@ -16,7 +16,7 @@ public interface ForgitView extends BaseView {
     String getYanzhengMa();
 
     //错误提示
-    void errorShake(int type, int CycleTimes, String code);
+    void errorShake(int type, int CycleTimes, String msg);
 
 
     //发送验证码成功

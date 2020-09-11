@@ -78,10 +78,6 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
         });
     }
 
-    @Override
-    protected void appBarLeftTvClicked() {
-        finish();
-    }
 
     @OnClick({R.id.tv_also_account, R.id.register_submitBtn})
     public void onViewClicked(View v) {
@@ -195,13 +191,6 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
             registerPass.startAnimation(mShakeAnimation);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        AppManager.getAppManager().AppExit(this);
-    }
-
 
     /**
      * 保持登录按钮始终不会被覆盖

@@ -75,17 +75,12 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
         };
     }
 
-    @Override
-    protected void appBarLeftTvClicked() {
-        finish();
-    }
-
 
     @OnClick({R.id.register_submitBtn})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.register_submitBtn:
-                if (FastClickUtils.isDoubleClick()){
+                if (FastClickUtils.isDoubleClick()) {
                     return;
                 }
                 if (is_forgit_password) {
@@ -109,7 +104,7 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
         tv_send_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (FastClickUtils.isDoubleClick()){
+                if (FastClickUtils.isDoubleClick()) {
                     return;
                 }
                 SoftIntPutUtils.closeKeyboard(ForgitPassWordActivity.this);
@@ -168,6 +163,11 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
 
     @Override
     public void errorShake(int type, int CycleTimes, String msg) {
+        if (type == -1) {
+            tv_send_code.setText("发送验证码");
+            tv_send_code.setClickable(true);
+            mTimer.cancel();
+        }
         tv_error_show.setVisibility(View.VISIBLE);
         tv_error_show.setText(msg);
 
@@ -212,11 +212,6 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
         return et_new_password.getText().toString();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        AppManager.getAppManager().AppExit(this);
-    }
 
     @Override
     protected void onDestroy() {

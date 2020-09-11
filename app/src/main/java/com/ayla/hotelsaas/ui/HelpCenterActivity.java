@@ -25,7 +25,7 @@ public class HelpCenterActivity extends BasicActivity implements LarkWebView.Loa
         super.refreshUI();
         mAppBar.setCenterText("帮助中心");
         mWebView.registerLoadCallBack(this);
-        mWebView.loadUrl("https://smarthotel-h5.ayla.com.cn/trainingPage.html");
+        mWebView.loadUrl("https://smarthotel-h5-test.ayla.com.cn/trainingPage.html");
     }
 
     @Override

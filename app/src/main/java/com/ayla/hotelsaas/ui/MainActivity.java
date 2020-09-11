@@ -247,6 +247,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     @Override
     public void getAuthCodeSuccess(String data) {
         if (!TextUtils.isEmpty(data)) {
+            Log.d("onLoginSuccess",data);
             LoginBusiness.authCodeLogin(data, new ILoginCallback() {
                 @Override
                 public void onLoginSuccess() {

@@ -157,7 +157,9 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                 if (mAdapter.getData().isEmpty()) {
                     mAdapter.setEmptyView(R.layout.empty_room_order);
                 }
-                mAdapter.setFooterView(mFoot_view);
+                if (mAdapter.getData().size() >= 10) {
+                    mAdapter.setFooterView(mFoot_view);
+                }
                 mRefreshLayout.setEnableLoadMore(false);
 
             } else {

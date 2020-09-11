@@ -128,6 +128,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     @Override
     public void getAuthCodeSuccess(String data) {
         if (!TextUtils.isEmpty(data)) {
+            Log.d("onLoginSuccess",data);
             LoginBusiness.authCodeLogin(data, new ILoginCallback() {
                 @Override
                 public void onLoginSuccess() {
@@ -220,7 +221,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             }
         } else if (1 == subBean.getNetworkType()) {
-            if (gatewayCount ==0) {//没有网关
+            if (gatewayCount == 0) {//没有网关
                 //跳转到阿里云的鸿雁网关设备
                 Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
                 mainActivity.putExtra("cuId", subBean.getCuId());

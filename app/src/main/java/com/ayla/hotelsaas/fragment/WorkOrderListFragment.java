@@ -147,8 +147,11 @@ public class WorkOrderListFragment extends BaseMvpFragment<WorkOrderView, WorkOr
                 if (mAdapter.getData().isEmpty()) {
                     mAdapter.setEmptyView(R.layout.empty_work_order);
                 }
-                final View inflate = LayoutInflater.from(getContext()).inflate(R.layout.room_root_view, null);
-                mAdapter.setFooterView(inflate);
+
+                if (mAdapter.getData().size() > 10) {
+                    final View inflate = LayoutInflater.from(getContext()).inflate(R.layout.room_root_view, null);
+                    mAdapter.setFooterView(inflate);
+                }
                 mRefreshLayout.setEnableLoadMore(false);
             } else {
                 mAdapter.addData(resultList);

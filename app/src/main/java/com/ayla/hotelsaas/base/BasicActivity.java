@@ -119,21 +119,12 @@ public abstract class BasicActivity extends AppCompatActivity {
     public void refreshUI() {
         final View appbarRoot = findViewById(R.id.appbar_root_rl_ff91090);
         if (appbarRoot != null) {
-            View leftIV = appbarRoot.findViewById(R.id.iv_left);
+            View leftIV = appbarRoot.findViewById(R.id.left_ll);
             if (leftIV != null && !leftIV.hasOnClickListeners()) {
                 ClickUtils.applySingleDebouncing(leftIV, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         appBarLeftIvClicked();
-                    }
-                });
-            }
-            View leftTV = appbarRoot.findViewById(R.id.tv_left);
-            if (leftTV != null && !leftTV.hasOnClickListeners()) {
-                ClickUtils.applySingleDebouncing(leftTV, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        appBarLeftTvClicked();
                     }
                 });
             }
@@ -177,9 +168,6 @@ public abstract class BasicActivity extends AppCompatActivity {
 
     protected void appBarRightIvClicked() {
 
-    }
-
-    protected void appBarLeftTvClicked() {
     }
 
     protected void appBarRightTvClicked() {
