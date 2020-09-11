@@ -36,6 +36,6 @@
     <string name="sing_out">确定退出当前账号</string>
     <string name="remove_device_title">确定是否移除</string>
     <string name="remove_device_content">移除设备后将不可恢复，您是否移除该设备</string>
-    <string name="Network_load_failure">加载失败</string>
+    <string name="Network_load_failure">请检查您的网络，并重试</string>
 
 </resources>

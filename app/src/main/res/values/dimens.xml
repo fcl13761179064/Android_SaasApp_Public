@@ -13,4 +13,5 @@
     <dimen name="dp_14">14dp</dimen>
     <dimen name="dp_1">1dp</dimen>
     <dimen name="dp_32">32</dimen>
+    <dimen name="sp_18">18sp</dimen>
 </resources>
