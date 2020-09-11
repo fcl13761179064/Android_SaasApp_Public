@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.mvp.present;
 
+import android.text.TextUtils;
+
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
@@ -7,6 +9,7 @@ import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DistributionStructSelectView;
 
+import java.util.Iterator;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -41,10 +44,33 @@ public class DistributionStructSelectPresenter extends BasePresenter<Distributio
                     }
                 });
         Disposable subscribe = Observable
-                .zip(fetchTree, fetchRoom, new BiFunction<List<TreeListBean>, TransferRoomListBean, Object[]>() {
+                .zip(fetchTree, fetchRoom, new BiFunction<List<TreeListBean>, TransferRoomListBean, List<TreeListBean>>() {
                     @Override
-                    public Object[] apply(List<TreeListBean> treeListBeans, TransferRoomListBean transferRoomListBean) throws Exception {
-                        return new Object[]{treeListBeans, transferRoomListBean};
+                    public List<TreeListBean> apply(List<TreeListBean> treeListBeans, TransferRoomListBean transferRoomListBean) throws Exception {
+                        //treeListBeans 所有的结构、房间的层级关系
+                        //transferRoomListBean 下面没有设备的结构、房间
+                        //需要把treeListBeans中过滤掉有设备的房间，剩下就是：
+                        //酒店中，不包含设备的 结构和房间的层级关系。
+                        //分配时，直接用transformRoom接口
+                        ss(treeListBeans, transferRoomListBean);
+
+                        return treeListBeans;
+                    }
+
+                    private void ss(List<TreeListBean> treeListBeans, TransferRoomListBean transferRoomListBean) {
+                        Iterator<TreeListBean> iterator = treeListBeans.iterator();
+                        s2:
+                        while (iterator.hasNext()) {
+                            TreeListBean treeListBean = iterator.next();
+                            String id_1 = treeListBean.getId();
+                            for (TransferRoomListBean.RecordsBean record : transferRoomListBean.getRecords()) {
+                                if (TextUtils.equals(id_1, record.getId())) {//这个结构没有设备，可以保留
+                                    ss(treeListBean.getChildren(), transferRoomListBean);
+                                    continue s2;
+                                }
+                            }
+                            iterator.remove();
+                        }
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -61,17 +87,15 @@ public class DistributionStructSelectPresenter extends BasePresenter<Distributio
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<Object[]>() {
+                .subscribe(new Consumer<List<TreeListBean>>() {
                     @Override
-                    public void accept(Object[] objects) throws Exception {
-                        List<TreeListBean> treeListBeans = (List<TreeListBean>) objects[0];
-                        TransferRoomListBean transferRoomListBean = (TransferRoomListBean) objects[1];
-                        mView.showData(treeListBeans, transferRoomListBean.getRecords());
+                    public void accept(List<TreeListBean> treeListBeans) throws Exception {
+                        mView.showData(treeListBeans);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        throwable.printStackTrace();
                     }
                 });
         addSubscrebe(subscribe);

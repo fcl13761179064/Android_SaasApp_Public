@@ -172,7 +172,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         currentFragment = (BasicFragment) getSupportFragmentManager().findFragmentByTag(tag);
         if (currentFragment == null) {
             currentFragment = createBaseFragment(type);
-            ft.add(R.id.fl_container, currentFragment, tag).addToBackStack(null);
+            ft.add(R.id.fl_container, currentFragment, tag);
         }
         ft.show(currentFragment);
         ft.commitAllowingStateLoss();

@@ -3,17 +3,16 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DistributionStructAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.mvp.present.DistributionStructSelectPresenter;
 import com.ayla.hotelsaas.mvp.view.DistributionStructSelectView;
@@ -34,6 +33,7 @@ import butterknife.BindView;
  * 1.{@link String hotelName}
  */
 public class DistributionStructSelectActivity extends BaseMvpActivity<DistributionStructSelectView, DistributionStructSelectPresenter> implements DistributionStructSelectView {
+    private final int REQUEST_CODE_DO_TRANSFER = 0x10;
     @BindView(R.id.rv_rooms)
     RecyclerView mRecyclerView;
 
@@ -75,17 +75,13 @@ public class DistributionStructSelectActivity extends BaseMvpActivity<Distributi
                 if (children != null && !children.isEmpty()) {
                     stackMap.push(mAdapter.getData());
                     mAdapter.setNewData(children);
-                } else {//下面没有节点了，就要判断是否是房间类型
-                    if (structIsRoom(treeListBean.getId())) {
-                        Intent intent = new Intent(DistributionStructSelectActivity.this, DistributionActivity.class);
-                        intent.putExtra("names", getHistoryRote());
-                        intent.putExtra("isRoom", true);
-                        intent.putExtras(getIntent());
-                        startActivityForResult(intent, 0);
-                        historyMap.pop();
-                    } else {
-                        jumpEmpty();
-                    }
+                } else {//下面没有节点了
+                    Intent intent = new Intent(DistributionStructSelectActivity.this, DistributionActivity.class);
+                    intent.putExtra("names", getHistoryRote());
+                    intent.putExtra("targetId", treeListBean.getId());
+                    intent.putExtras(getIntent());
+                    startActivityForResult(intent, REQUEST_CODE_DO_TRANSFER);
+                    historyMap.pop();
                 }
             }
         });
@@ -96,7 +92,6 @@ public class DistributionStructSelectActivity extends BaseMvpActivity<Distributi
         return new DistributionStructSelectPresenter();
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,11 +99,9 @@ public class DistributionStructSelectActivity extends BaseMvpActivity<Distributi
         mPresenter.fetchTransferTreeList(hotelId);
     }
 
-    List<TransferRoomListBean.RecordsBean> roomListBean;
 
     @Override
-    public void showData(List<TreeListBean> treeListBeans, List<TransferRoomListBean.RecordsBean> recordsBeans) {
-        this.roomListBean = recordsBeans;
+    public void showData(List<TreeListBean> treeListBeans) {
         if (treeListBeans != null && !treeListBeans.isEmpty()) {
             mAdapter.setNewData(treeListBeans);
         } else {
@@ -117,7 +110,7 @@ public class DistributionStructSelectActivity extends BaseMvpActivity<Distributi
     }
 
     @Override
-    protected void onBackPress() {
+    public void onBackPressed() {
         if (!historyMap.empty()) {
             historyMap.pop();
         }
@@ -125,20 +118,33 @@ public class DistributionStructSelectActivity extends BaseMvpActivity<Distributi
             List<TreeListBean> pop = stackMap.pop();
             mAdapter.setNewData(pop);
         } else {
-            super.onBackPress();
+            super.onBackPressed();
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_DO_TRANSFER && resultCode == RESULT_OK) {
+            setResult(RESULT_OK, data);
+            finish();
+        }
+    }
+
+    /**
+     *
+     */
     private void jumpEmpty() {
         mAdapter.setNewData(null);
         mAdapter.setEmptyView(R.layout.empty_distruction_struct_select);
         mAdapter.getEmptyView().findViewById(R.id.bt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(DistributionStructSelectActivity.this, DistributionActivity.class);
                 intent.putExtras(getIntent());
                 intent.putExtra("names", getHistoryRote());
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, REQUEST_CODE_DO_TRANSFER);
             }
         });
     }
@@ -155,18 +161,5 @@ public class DistributionStructSelectActivity extends BaseMvpActivity<Distributi
             }
         }
         return sb.toString();
-    }
-
-    private boolean structIsRoom(String structId) {
-        boolean isRoom = false;
-        if (roomListBean != null) {
-            for (TransferRoomListBean.RecordsBean recordsBean : roomListBean) {
-                if (TextUtils.equals(recordsBean.getId(), structId)) {
-                    isRoom = true;
-                    break;
-                }
-            }
-        }
-        return isRoom;
     }
 }
