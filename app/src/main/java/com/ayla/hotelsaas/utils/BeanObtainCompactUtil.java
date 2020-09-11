@@ -34,7 +34,8 @@ public class BeanObtainCompactUtil {
         sceneBean.setRuleType(ruleEngineBean.getRuleType() == 1 ? BaseSceneBean.RULE_TYPE.AUTO : BaseSceneBean.RULE_TYPE.ONE_KEY);
         sceneBean.setRuleDescription(ruleEngineBean.getRuleDescription());
         sceneBean.setRuleName(ruleEngineBean.getRuleName());
-        {//生效时间段赋值
+
+        if (sceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.ONE_KEY) {//当是一键执行时，就要解析生效时间段
             BaseSceneBean.EnableTime enableTime = new BaseSceneBean.EnableTime();
             if (ruleEngineBean.getCondition() != null) {
                 if (ruleEngineBean.getCondition().getItems() != null) {
@@ -134,7 +135,7 @@ public class BeanObtainCompactUtil {
             ruleEngineBean.setTargetGateway(((LocalSceneBean) baseSceneBean).getTargetGateway());
             ruleEngineBean.setTargetGatewayType(((LocalSceneBean) baseSceneBean).getTargetGatewayType().code);
         }
-        {
+        {//构建条件集合
             RuleEngineBean.Condition _condition = new RuleEngineBean.Condition();
             ruleEngineBean.setCondition(_condition);
             _condition.setItems(new ArrayList<>());
@@ -173,23 +174,25 @@ public class BeanObtainCompactUtil {
                 sb.append(String.format("func.get('%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
                 if (i == ruleEngineBean.getCondition().getItems().size() - 1) {
                     sb.append(")");
-                    sb.append(" && ");
                 }
             }
 
             BaseSceneBean.EnableTime enableTime = baseSceneBean.getEnableTime();
-            String cronExpression = calculateCronExpression(enableTime);
-            RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
-            conditionItem.setCronExpression("1 " + cronExpression);
-            _condition.getItems().add(conditionItem);
+            if (baseSceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//如果是自动化场景，就把生效时间段传进去
+                String cronExpression = calculateCronExpression(enableTime);
+                RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
+                conditionItem.setCronExpression("1 " + cronExpression);
+                _condition.getItems().add(conditionItem);
 
-            sb.append(String.format("func.parseCronExpression('%s')", conditionItem.getCronExpression()));
+                sb.append(" && ");
+                sb.append(String.format("func.parseCronExpression('%s')", conditionItem.getCronExpression()));
+            }
             _condition.setExpression(sb.toString());
 
             ruleEngineBean.setCondition(_condition);
         }
 
-        {
+        {//构建动作集合
             RuleEngineBean.Action _action = new RuleEngineBean.Action();
             ruleEngineBean.setAction(_action);
             _action.setItems(new ArrayList<>());
