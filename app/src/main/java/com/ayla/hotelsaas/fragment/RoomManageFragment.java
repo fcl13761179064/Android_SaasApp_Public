@@ -32,6 +32,9 @@ import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * 自定义房间管理页面
+ */
 public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomManagePresenter> implements RoomManageView {
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
@@ -100,7 +103,7 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                     String roomName = recordsBean.getContentName();
                     intent.putExtra("roomId", roomId);
                     intent.putExtra("roomName", roomName);
-                    intent.putExtra("removeEnable", false);
+                    intent.putExtra("removeEnable", true);
                     startActivityForResult(intent, REQUEST_CODE_TO_ROOM);
                 }
             }
