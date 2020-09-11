@@ -74,6 +74,12 @@ public class SceneSettingEnableTimeActivity extends BaseMvpActivity {
     @Override
     protected void appBarRightTvClicked() {
         super.appBarRightTvClicked();
+        if (!enableTime.isAllDay()) {
+            if (enableTime.getStartHour() == enableTime.getEndHour() && enableTime.getStartMinute() == enableTime.getEndMinute()) {
+                CustomToast.makeText(this,"开始时间和结束时间不能相同",R.drawable.ic_toast_warming).show();
+                return;
+            }
+        }
         setResult(RESULT_OK, new Intent().putExtra("enableTime", enableTime));
         finish();
     }
