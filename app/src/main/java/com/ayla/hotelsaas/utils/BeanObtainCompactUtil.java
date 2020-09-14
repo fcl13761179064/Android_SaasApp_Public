@@ -35,8 +35,8 @@ public class BeanObtainCompactUtil {
         sceneBean.setRuleDescription(ruleEngineBean.getRuleDescription());
         sceneBean.setRuleName(ruleEngineBean.getRuleName());
 
+        BaseSceneBean.EnableTime enableTime = new BaseSceneBean.EnableTime();
         if (sceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//当是自动化时，就要解析生效时间段
-            BaseSceneBean.EnableTime enableTime = new BaseSceneBean.EnableTime();
             if (ruleEngineBean.getCondition() != null) {
                 if (ruleEngineBean.getCondition().getItems() != null) {
                     for (RuleEngineBean.Condition.ConditionItem conditionItem : ruleEngineBean.getCondition().getItems()) {
@@ -78,8 +78,9 @@ public class BeanObtainCompactUtil {
                     }
                 }
             }
-            sceneBean.setEnableTime(enableTime);
         }
+        sceneBean.setEnableTime(enableTime);
+
         {//赋值条件集合
             if (ruleEngineBean.getCondition() != null) {
                 if (ruleEngineBean.getCondition().getItems() != null) {
@@ -177,8 +178,8 @@ public class BeanObtainCompactUtil {
                 }
             }
 
-            BaseSceneBean.EnableTime enableTime = baseSceneBean.getEnableTime();
             if (baseSceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//如果是自动化场景，就把生效时间段传进去
+                BaseSceneBean.EnableTime enableTime = baseSceneBean.getEnableTime();
                 String cronExpression = calculateCronExpression(enableTime);
                 RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
                 conditionItem.setCronExpression("1 " + cronExpression);
