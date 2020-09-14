@@ -136,7 +136,7 @@ public class BeanObtainCompactUtil {
             ruleEngineBean.setTargetGateway(((LocalSceneBean) baseSceneBean).getTargetGateway());
             ruleEngineBean.setTargetGatewayType(((LocalSceneBean) baseSceneBean).getTargetGatewayType().code);
         }
-        {//构建条件集合
+        if (baseSceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//构建条件集合，只有当自动化联动才传入conditions。
             RuleEngineBean.Condition _condition = new RuleEngineBean.Condition();
             ruleEngineBean.setCondition(_condition);
             _condition.setItems(new ArrayList<>());
@@ -189,8 +189,6 @@ public class BeanObtainCompactUtil {
                 sb.append(String.format("func.parseCronExpression('%s')", conditionItem.getCronExpression()));
             }
             _condition.setExpression(sb.toString());
-
-            ruleEngineBean.setCondition(_condition);
         }
 
         {//构建动作集合
@@ -218,7 +216,6 @@ public class BeanObtainCompactUtil {
                 }
             }
             _action.setExpression(sb.toString());
-            ruleEngineBean.setAction(_action);
         }
         return ruleEngineBean;
     }
