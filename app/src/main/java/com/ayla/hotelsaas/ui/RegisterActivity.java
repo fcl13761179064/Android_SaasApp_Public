@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
@@ -47,10 +48,6 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
     Button register_submitBtn;
     @BindView(R.id.tv_also_account)
     TextView tv_also_account;
-    @BindView(R.id.rl_root_view)
-    RelativeLayout rl_root_view;
-    @BindView(R.id.ll_content_view)
-    LinearLayout ll_content_view;
     @BindView(R.id.appBar)
     AppBar appBar;
     @BindView(R.id.tv_error_show)
@@ -67,15 +64,6 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
     @Override
     protected void initView() {
         appBar.setAppBarlineHider(false);
-        keepLoginBtnNotOver(rl_root_view, ll_content_view);
-        //触摸外部，键盘消失
-        rl_root_view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                SoftIntPutUtils.closeKeyboard(RegisterActivity.this);
-                return false;
-            }
-        });
     }
 
 
