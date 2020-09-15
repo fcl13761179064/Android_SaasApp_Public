@@ -185,7 +185,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 }
             }
         }
-        if (2 == subBean.getNetworkType()) {//顺舟和ayla-插网线网关配网
+        if (2 == subBean.getNetworkType()) {//顺舟网关配网
             if (gatewayCount == 0) {//没有网关
                 Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
                 mainActivity.putExtra("cuId", subBean.getCuId());
@@ -200,17 +200,21 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             if (gatewayCount == 0) {//没有网关
                 CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
             } else if (gatewayCount == 1) {//一个网关
-                if (TempUtils.isDeviceOnline(gateway)) {//网关在线
-                    Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
-                    mainActivity.putExtra("deviceId", gateway.getDeviceId());
-                    mainActivity.putExtra("cuId", gateway.getCuId());
-                    mainActivity.putExtras(getIntent());
-                    mainActivity.putExtra("deviceCategory", subBean.getOemModel());
-                    mainActivity.putExtra("deviceName", subBean.getDeviceName());
-                    mainActivity.putExtra("categoryId", subBean.getId());
-                    startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
-                } else {
-                    CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
+                if (gateway.getCuId() == 0) {//艾拉网关
+                    if (TempUtils.isDeviceOnline(gateway)) {//网关在线
+                        Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
+                        mainActivity.putExtra("deviceId", gateway.getDeviceId());
+                        mainActivity.putExtra("cuId", gateway.getCuId());
+                        mainActivity.putExtras(getIntent());
+                        mainActivity.putExtra("deviceCategory", subBean.getOemModel());
+                        mainActivity.putExtra("deviceName", subBean.getDeviceName());
+                        mainActivity.putExtra("categoryId", subBean.getId());
+                        startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+                    } else {
+                        CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
+                    }
+                }else{
+                    CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming).show();
                 }
             } else {//多个网关
                 Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
@@ -220,9 +224,8 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 mainActivity.putExtra("categoryId", subBean.getId());
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             }
-        } else if (1 == subBean.getNetworkType()) {
+        } else if (1 == subBean.getNetworkType()) {//跳转到阿里云的鸿雁网关设备
             if (gatewayCount == 0) {//没有网关
-                //跳转到阿里云的鸿雁网关设备
                 Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
                 mainActivity.putExtra("cuId", subBean.getCuId());
                 mainActivity.putExtras(getIntent());
@@ -234,21 +237,21 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             } else {
                 CustomToast.makeText(this, "只能绑定一个网关", R.drawable.ic_toast_warming).show();
             }
-
         } else if (4 == subBean.getNetworkType()) {//跳转鸿雁节点添加
             if (gatewayCount == 0) {//没有网关
                 CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
-            } else if (gatewayCount == 1 && gateway.getCuId()==1) {//一个网关
-                if (TempUtils.isDeviceOnline(gateway)) {//网关在线
-                    this.mSubBean = subBean;
-                    HongyanZigBeeAddGuideActivity(subBean.getOemModel());
-                } else {
-                    CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
+            } else if (gatewayCount == 1) {//一个网关
+                if (gateway.getCuId() == 1) {//鸿雁网关
+                    if (TempUtils.isDeviceOnline(gateway)) {//网关在线
+                        this.mSubBean = subBean;
+                        HongyanZigBeeAddGuideActivity(subBean.getOemModel());
+                    } else {
+                        CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
+                    }
+                }else{
+                    CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming).show();
                 }
-            }else {
-                CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming).show();
             }
-
         }
     }
 
