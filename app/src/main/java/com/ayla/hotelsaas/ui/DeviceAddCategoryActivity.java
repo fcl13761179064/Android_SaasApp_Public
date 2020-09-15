@@ -238,13 +238,15 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         } else if (4 == subBean.getNetworkType()) {//跳转鸿雁节点添加
             if (gatewayCount == 0) {//没有网关
                 CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
-            } else if (gatewayCount == 1) {//一个网关
+            } else if (gatewayCount == 1 && gateway.getCuId()==1) {//一个网关
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
                     this.mSubBean = subBean;
                     HongyanZigBeeAddGuideActivity(subBean.getOemModel());
                 } else {
                     CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
                 }
+            }else {
+                CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming).show();
             }
 
         }
