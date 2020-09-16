@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
@@ -66,6 +67,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     protected void initView() {
+        MyApplication.is_regist_login=true;
         if (Constance.isNetworkDebug) {
             tvSwitch.setText("测");
         } else {
