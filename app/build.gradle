@@ -105,6 +105,7 @@ dependencies {
     implementation rootProject.libraries.utilcode
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     implementation 'com.xw.repo:bubbleseekbar:3.20'
+    implementation 'com.tencent.bugly:crashreport:3.1.9'
 
     api('com.aliyun.alink.linksdk:iot-linkkit:1.7.0')
     implementation('com.aliyun.alink.linksdk:ilop-devicecenter:1.7.7.1') {

@@ -12,6 +12,7 @@ import com.aliyun.iot.aep.sdk.log.ALog;
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.blankj.utilcode.util.ProcessUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -20,6 +21,7 @@ import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.List;
 
@@ -72,6 +74,9 @@ public class MyApplication extends AApplication {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "version name: " + BuildConfig.VERSION_NAME + ", version code: " + BuildConfig.VERSION_CODE);
+        if (ProcessUtils.isMainProcess()) {
+            CrashReport.initCrashReport(getApplicationContext(), "8863fabcca", BuildConfig.DEBUG);
+        }
         mInstance = this;
         initAutoSize();
         //初始化飞燕sdk

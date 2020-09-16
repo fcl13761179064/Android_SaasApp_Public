@@ -5,12 +5,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.ayla.hotelsaas.widget.SpecialAppBar
+    <com.ayla.hotelsaas.widget.AppBar
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:left_person_center_iv="@mipmap/person_center"
-        />
+        app:left_iv="@mipmap/person_center"
+        app:center_tv="分配">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:tabSelectedTextColor="@color/loginLogoColor"
+            app:tabTextAppearance="@style/TabLayoutTextStyle"
+            app:tabTextColor="@color/color_333333" />
+    </com.ayla.hotelsaas.widget.AppBar>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp_content"

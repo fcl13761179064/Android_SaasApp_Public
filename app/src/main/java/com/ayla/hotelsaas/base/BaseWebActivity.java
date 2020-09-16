@@ -115,13 +115,6 @@ public abstract class BaseWebActivity extends AppCompatActivity {
             }
         });
 
-        mAppBar.leftImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         //访问网页
         webView.loadUrl(getUrl());
 
