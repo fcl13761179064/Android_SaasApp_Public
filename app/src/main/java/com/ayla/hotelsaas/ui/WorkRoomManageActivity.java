@@ -12,7 +12,6 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.WorkRoomManagePagerAdapter;
 import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.fragment.RoomManageFragment;
-import com.ayla.hotelsaas.widget.SpecialAppBar;
 import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
@@ -21,18 +20,9 @@ public class WorkRoomManageActivity extends BasicActivity {
     private final int REQUEST_CODE_DISTRIBUTION_ROOM = 0x10;
     @BindView(R.id.tl_tabs)
     TabLayout mTabLayout;
-    @BindView(R.id.appBar)
-    SpecialAppBar appBar;
     @BindView(R.id.vp_content)
     ViewPager mViewPager;
     private WorkRoomManagePagerAdapter mMAdapter;
-
-    @Override
-    public void refreshUI() {
-        appBar.setShowPersionCenter();
-        appBar.setRightText("分配");
-        super.refreshUI();
-    }
 
     @Override
     protected void appBarRightTvClicked() {
@@ -60,8 +50,7 @@ public class WorkRoomManageActivity extends BasicActivity {
     }
 
     @Override
-    protected void appBarShowPersonCenter() {
-        super.appBarShowPersonCenter();
+    protected void appBarLeftIvClicked() {
         Intent intent = new Intent(WorkRoomManageActivity.this, PersonCenterActivity.class);
         startActivity(intent);
     }
