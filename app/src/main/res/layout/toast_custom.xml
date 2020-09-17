@@ -11,6 +11,7 @@
     <ImageView
         android:id="@+id/iv"
         android:layout_width="34dp"
+        android:src="@drawable/ic_success"
         android:layout_height="34dp"
         android:layout_marginTop="32dp" />
 

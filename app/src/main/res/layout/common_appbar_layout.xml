@@ -22,8 +22,7 @@
                 android:id="@+id/iv_left"
                 android:layout_width="@dimen/appbar_height"
                 android:layout_height="@dimen/appbar_height"
-                android:layout_gravity="right|center"
-                android:padding="@dimen/dp_16"
+                android:padding="16dp"
                 android:src="@mipmap/icon_back_black" />
 
             <TextView
@@ -35,7 +34,7 @@
                 android:gravity="center"
                 android:lines="1"
                 android:maxWidth="100dp"
-                android:paddingLeft="@dimen/dp_10"
+                android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="left"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -68,7 +67,7 @@
 
         <LinearLayout
             android:id="@+id/right_ll"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:gravity="end"
@@ -83,8 +82,9 @@
                 android:gravity="center"
                 android:lines="1"
                 android:maxWidth="100dp"
-                android:paddingRight="@dimen/dp_20"
-                android:text="更多"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="left"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/color_333333"
                 android:textSize="14sp" />
@@ -93,7 +93,6 @@
                 android:id="@+id/iv_right"
                 android:layout_width="@dimen/appbar_height"
                 android:layout_height="@dimen/appbar_height"
-                android:visibility="gone"
                 android:gravity="center_vertical"
                 android:padding="16dp" />
 

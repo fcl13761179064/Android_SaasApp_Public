@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,16 +20,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.aliyun.iot.aep.sdk.login.ILoginCallback;
-import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
 import com.ayla.hotelsaas.utils.AppManager;
+import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
@@ -53,6 +52,8 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     RelativeLayout rl_root_view;
     @BindView(R.id.ll_content_view)
     LinearLayout ll_content_view;
+    @BindView(R.id.tv_forgit)
+    TextView tv_forgit;
     @BindView(R.id.tv_register)
     TextView tv_register;
 
@@ -66,6 +67,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     protected void initView() {
+        MyApplication.is_regist_login=true;
         if (Constance.isNetworkDebug) {
             tvSwitch.setText("测");
         } else {
@@ -76,6 +78,9 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @OnClick({R.id.submitBtn, R.id.tv_switch})
     public void onViewClicked(View v) {
+        if (FastClickUtils.isDoubleClick()){
+            return;
+        }
         switch (v.getId()) {
             case R.id.submitBtn:
                 if ("aylatest".equals(edite_count.getText().toString())) {
@@ -94,10 +99,10 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                     public void run() {
                         if (Constance.isNetworkDebug) {
                             tvSwitch.setText("测");
-                            CustomToast.makeText(getBaseContext(), "切换到测试网络", R.drawable.ic_toast_success).show();
+                            CustomToast.makeText(getBaseContext(), "切换到测试网络", R.drawable.ic_success).show();
                         } else {
                             tvSwitch.setText("正");
-                            CustomToast.makeText(getBaseContext(), "切换到正式网络环境", R.drawable.ic_toast_success).show();
+                            CustomToast.makeText(getBaseContext(), "切换到正式网络环境", R.drawable.ic_success).show();
                         }
                         hideProgress();
                     }
@@ -106,11 +111,19 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             default:
                 break;
         }
+
     }
 
 
     @Override
     protected void initListener() {
+        tv_forgit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainActivity = new Intent(LoginActivity.this, ForgitPassWordActivity.class);
+                startActivity(mainActivity);
+            }
+        });
         keepLoginBtnNotOver(rl_root_view, ll_content_view);
         //触摸外部，键盘消失
         rl_root_view.setOnTouchListener(new View.OnTouchListener() {

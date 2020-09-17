@@ -152,8 +152,13 @@ public class HongyanGatewayAddActivity extends BaseMvpActivity<HongyanGatewayAdd
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            CustomToast.makeTextSize(HongyanGatewayAddActivity.this, "网关已经被绑定，请解绑后在尝试添加", R.drawable.ic_toast_success,12).show();
-                            startBind(mIotId);
+                            if (code == 2064) {
+                                CustomToast.makeTextSize(HongyanGatewayAddActivity.this, "网关已经被绑定，请解绑后在尝试添加", R.drawable.ic_success, 12).show();
+                                startBind(mIotId);
+                            }else {
+                                CustomToast.makeTextSize(HongyanGatewayAddActivity.this, "绑定网关失败:code="+code, R.drawable.ic_success, 12).show();
+                                startBind(mIotId);
+                            }
                         }
                     });
                 }

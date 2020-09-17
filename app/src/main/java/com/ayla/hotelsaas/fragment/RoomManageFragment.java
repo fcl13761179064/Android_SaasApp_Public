@@ -21,7 +21,6 @@ import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.MainActivity;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
-import com.ayla.hotelsaas.utils.ToastUtil;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,6 +32,9 @@ import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * 自定义房间管理页面
+ */
 public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomManagePresenter> implements RoomManageView {
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
@@ -101,6 +103,7 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                     String roomName = recordsBean.getContentName();
                     intent.putExtra("roomId", roomId);
                     intent.putExtra("roomName", roomName);
+                    intent.putExtra("removeEnable", true);
                     startActivityForResult(intent, REQUEST_CODE_TO_ROOM);
                 }
             }
@@ -130,12 +133,11 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                 }
             }
         });
-        mRefreshLayout.autoRefresh();//自动刷新
     }
 
     @Override
-    protected void initData() {
-
+    public void initData() {
+        mRefreshLayout.autoRefresh();//自动刷新
     }
 
     @Override
@@ -146,9 +148,11 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                 if (mAdapter.getData().isEmpty()) {
                     mAdapter.setEmptyView(R.layout.empty_room_manage);
                 }
-                final View inflate = LayoutInflater.from(getContext()).inflate(R.layout.room_root_view, null);
-                mAdapter.setFooterView(inflate);
-                mRefreshLayout.setEnableLoadMore(false);
+                if (mAdapter.getData().size()>10) {
+                    final View inflate = LayoutInflater.from(getContext()).inflate(R.layout.room_root_view, null);
+                    mAdapter.setFooterView(inflate);
+                }
+                    mRefreshLayout.setEnableLoadMore(false);
             } else {
                 mAdapter.addData(records);
             }

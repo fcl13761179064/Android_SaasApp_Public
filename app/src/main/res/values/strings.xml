@@ -13,11 +13,13 @@
     <string name="register_btn">注册</string>
     <string name="phone_or_email">请输入您的施工账号</string>
     <string name="account_error">请输入正确的邮箱或手机号码</string>
+    <string name="account_forgit_password">请输入正确的手机号码</string>
     <string name="take_out">退出登录</string>
     <string name="remove_device">移除设备</string>
     <string name="remove_room">移除房间</string>
     <string name="login_tv_show">登录</string>
     <string name="register_tv_show">注册新用户</string>
+    <string name="forgit_tv_show">忘记密码</string>
     <string name="exit"></string>
 
 
@@ -34,5 +36,6 @@
     <string name="sing_out">确定退出当前账号</string>
     <string name="remove_device_title">确定是否移除</string>
     <string name="remove_device_content">移除设备后将不可恢复，您是否移除该设备</string>
+    <string name="Network_load_failure">请检查您的网络，并重试</string>
 
 </resources>

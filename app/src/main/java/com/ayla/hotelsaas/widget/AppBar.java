@@ -34,7 +34,7 @@ public class AppBar extends FrameLayout {
     public TextView rightTextView;
     private TextView titleTextView;
     private LinearLayout leftLinearLayout;
-    public LinearLayout rightLinearLayout;
+    private LinearLayout rightLinearLayout;
     private View bottom_line;
 
     public AppBar(@NonNull Context context) {
@@ -75,7 +75,7 @@ public class AppBar extends FrameLayout {
         right_tv = ta.getString(R.styleable.AppBar_right_tv);
         center_tv = ta.getString(R.styleable.AppBar_center_tv);
         bottom_line_visibility = ta.getBoolean(R.styleable.AppBar_appbar_bottom_line, true);
-        right_tv_color = ta.getColor(R.styleable.AppBar_right_tv_color, ContextCompat.getColor(getContext(), R.color.loginLogoColor));
+        right_tv_color = ta.getColor(R.styleable.AppBar_right_tv_color, ContextCompat.getColor(getContext(), R.color.color_333333));
         ta.recycle();
 
         adjustContent();
@@ -162,16 +162,9 @@ public class AppBar extends FrameLayout {
         adjustContent();
     }
 
-
     public void setCenterText(String text) {
         center_tv = text;
         adjustContent();
     }
-
-    public void setAppBarlineHider(boolean b) {
-        bottom_line_visibility = b;
-        adjustContent();
-    }
-
 }
 

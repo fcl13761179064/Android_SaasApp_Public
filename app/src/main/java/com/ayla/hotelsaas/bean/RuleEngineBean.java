@@ -189,6 +189,8 @@ public class RuleEngineBean implements Serializable {
             private String sourceDeviceId;
             private int sourceDeviceType;//0:艾拉 1：阿里
 
+            private String cronExpression;//生效时间段表达式，只有当这个ConditionItem类型是生效时间段时才会有值。
+
             public int getJoinType() {
                 return joinType;
             }
@@ -235,6 +237,14 @@ public class RuleEngineBean implements Serializable {
 
             public void setSourceDeviceType(int sourceDeviceType) {
                 this.sourceDeviceType = sourceDeviceType;
+            }
+
+            public String getCronExpression() {
+                return cronExpression;
+            }
+
+            public void setCronExpression(String cronExpression) {
+                this.cronExpression = cronExpression;
             }
         }
     }

@@ -4,7 +4,7 @@ package com.ayla.hotelsaas.adapter;
 import android.widget.CompoundButton;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.bean.RuleEngineBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -14,7 +14,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
  * @作者 fanchunlei
  * @时间 2017/8/7
  */
-public class AutoRunRuleEngineAdapter extends BaseQuickAdapter<RuleEngineBean, BaseViewHolder> {
+public class AutoRunRuleEngineAdapter extends BaseQuickAdapter<BaseSceneBean, BaseViewHolder> {
     private OnEnableChangedListener onEnableChangedListener;
 
     public AutoRunRuleEngineAdapter() {
@@ -26,10 +26,10 @@ public class AutoRunRuleEngineAdapter extends BaseQuickAdapter<RuleEngineBean, B
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, RuleEngineBean ruleEngineBeans) {
+    protected void convert(BaseViewHolder helper, BaseSceneBean ruleEngineBeans) {
         helper.setText(R.id.tv_device_name, ruleEngineBeans.getRuleName());
         helper.addOnClickListener(R.id.tv_edit);
-        helper.setChecked(R.id.sc_enable, ruleEngineBeans.getStatus() == 1);
+        helper.setChecked(R.id.sc_enable, ruleEngineBeans.isEnable());
         helper.setOnCheckedChangeListener(R.id.sc_enable, new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

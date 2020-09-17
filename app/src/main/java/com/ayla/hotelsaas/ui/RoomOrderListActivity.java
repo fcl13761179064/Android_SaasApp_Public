@@ -37,6 +37,9 @@ import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * 施工单房间管理页面
+ */
 public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOrderPresenter> implements RoomOrderView {
     private static final int REQUEST_CODE_TO_ROOM = 0x10;
 
@@ -108,6 +111,7 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                     String roomName = room_result.getRoomName();
                     intent.putExtra("roomId", roomId);
                     intent.putExtra("roomName", roomName);
+                    intent.putExtra("removeEnable", false);
                     startActivityForResult(intent, REQUEST_CODE_TO_ROOM);
                 }
             }
@@ -153,7 +157,9 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                 if (mAdapter.getData().isEmpty()) {
                     mAdapter.setEmptyView(R.layout.empty_room_order);
                 }
-                mAdapter.setFooterView(mFoot_view);
+                if (mAdapter.getData().size() >= 10) {
+                    mAdapter.setFooterView(mFoot_view);
+                }
                 mRefreshLayout.setEnableLoadMore(false);
 
             } else {

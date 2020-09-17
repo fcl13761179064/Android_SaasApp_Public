@@ -35,6 +35,7 @@ import butterknife.BindView;
  * @描述 首页
  * @作者 fanchunlei
  * @时间 2020/7/20
+ * removeEnable ,标记是否支持删除
  */
 public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements RadioGroup.OnCheckedChangeListener, MainView {
     private static final int REQUEST_CODE_TO_MORE = 0x10;
@@ -91,8 +92,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     }
 
     @Override
-    protected void appBarRightIvClicked() {
-        super.appBarRightIvClicked();
+    protected void appBarRightTvClicked() {
+        super.appBarRightTvClicked();
         Intent intent = new Intent(MainActivity.this, RoomMoreActivity.class);
         intent.putExtras(getIntent());
         startActivityForResult(intent, REQUEST_CODE_TO_MORE);
@@ -171,7 +172,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         currentFragment = (BasicFragment) getSupportFragmentManager().findFragmentByTag(tag);
         if (currentFragment == null) {
             currentFragment = createBaseFragment(type);
-            ft.add(R.id.fl_container, currentFragment, tag).addToBackStack(null);
+            ft.add(R.id.fl_container, currentFragment, tag);
         }
         ft.show(currentFragment);
         ft.commitAllowingStateLoss();
@@ -246,6 +247,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     @Override
     public void getAuthCodeSuccess(String data) {
         if (!TextUtils.isEmpty(data)) {
+            Log.d("onLoginSuccess",data);
             LoginBusiness.authCodeLogin(data, new ILoginCallback() {
                 @Override
                 public void onLoginSuccess() {

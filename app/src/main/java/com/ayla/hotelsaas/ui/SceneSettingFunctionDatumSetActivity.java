@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -22,6 +21,9 @@ import butterknife.BindView;
  * 进入时必须带入参数
  * 1.{@link DeviceTemplateBean.AttributesBean} attributeBean
  * 2.{@link DeviceListBean.DevicesBean} deviceBean
+ * 3.type 选择的功能作为条件还是动作。0:条件
+ * 返回：
+ * result {@link ISceneSettingFunctionDatumSet.CallBackBean}
  */
 public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
     @BindView(R.id.appBar)
@@ -49,7 +51,12 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
         if (attributesBean.getValue() != null) {
             fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(deviceBean, attributesBean), "content");
         } else if (attributesBean.getSetup() != null) {
-            fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeFragment.newInstance(deviceBean, attributesBean), "content");
+            int type = getIntent().getIntExtra("type", 0);//0:条件
+            if (type == 0) {
+                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeWithOptionFragment.newInstance(deviceBean, attributesBean), "content");
+            }else{
+                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeFragment.newInstance(deviceBean, attributesBean), "content");
+            }
         }
         fragmentTransaction.commitNowAllowingStateLoss();
     }
@@ -61,7 +68,7 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
             public void onClick(View v) {
                 Fragment contentFragment = getSupportFragmentManager().findFragmentByTag("content");
                 if (contentFragment instanceof ISceneSettingFunctionDatumSet) {
-                    SceneSettingFunctionDatumSetAdapter.DatumBean datumBean = ((ISceneSettingFunctionDatumSet) contentFragment).getDatum();
+                    ISceneSettingFunctionDatumSet.CallBackBean datumBean = ((ISceneSettingFunctionDatumSet) contentFragment).getDatum();
 
                     Intent data = new Intent();
                     data.putExtra("result", datumBean);

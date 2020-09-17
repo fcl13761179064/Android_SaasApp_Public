@@ -14,5 +14,5 @@ public interface SceneSettingView extends BaseView {
 
     void deleteFailed();
 
-    void showData(List<SceneSettingFunctionDatumSetAdapter.DatumBean> datum, List<SceneSettingFunctionDatumSetAdapter.DatumBean> datum1);
+    void showData();
 }

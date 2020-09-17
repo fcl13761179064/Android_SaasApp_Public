@@ -2,15 +2,20 @@ package com.ayla.hotelsaas.mvp.present;
 
 
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.data.net.RxjavaObserver;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.RuleEngineView;
+import com.ayla.hotelsaas.utils.BeanObtainCompactUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -25,24 +30,32 @@ public class RuleEnginePresenter extends BasePresenter<RuleEngineView> {
      * @param resourceRoomId
      */
     public void loadData(long resourceRoomId) {
-        RequestModel.getInstance().fetchRuleEngines(resourceRoomId)
+        Disposable subscribe = RequestModel.getInstance()
+                .fetchRuleEngines(resourceRoomId)
+                .map(new Function<BaseResult<List<RuleEngineBean>>, List<BaseSceneBean>>() {
+                    @Override
+                    public List<BaseSceneBean> apply(BaseResult<List<RuleEngineBean>> listBaseResult) throws Exception {
+                        List<BaseSceneBean> sceneBeans = new ArrayList<>();
+                        for (RuleEngineBean ruleEngineBean : listBaseResult.data) {
+                            BaseSceneBean sceneBean = BeanObtainCompactUtil.obtainSceneBean(ruleEngineBean);
+                            sceneBeans.add(sceneBean);
+                        }
+                        return sceneBeans;
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new RxjavaObserver<List<RuleEngineBean>>() {
+                .subscribe(new Consumer<List<BaseSceneBean>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
+                    public void accept(List<BaseSceneBean> baseSceneBeans) throws Exception {
+                        mView.loadDataSuccess(baseSceneBeans);
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void _onNext(List<RuleEngineBean> data) {
-                        mView.loadDataSuccess(data);
-                    }
-
-                    @Override
-                    public void _onError(String code, String msg) {
+                    public void accept(Throwable throwable) throws Exception {
                         mView.loadDataFinish();
                     }
                 });
+        addSubscrebe(subscribe);
     }
 }

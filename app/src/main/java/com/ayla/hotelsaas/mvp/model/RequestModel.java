@@ -6,15 +6,20 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.HotelListBean;
+import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.bean.TransferRoomListBean;
+import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -80,6 +85,31 @@ public class RequestModel {
         return getApiService().register(new_body);
     }
 
+
+    public Observable<BaseResult<Boolean>> modifyForgitPassword(String user_name, String yanzhengma) {
+        JsonObject body = new JsonObject();
+        body.addProperty("phone", user_name);
+        body.addProperty("code", yanzhengma);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().modifyForgitPassword(new_body);
+    }
+
+
+    public Observable<BaseResult<Boolean>> send_sms(String user_name) {
+        JsonObject body = new JsonObject();
+        body.addProperty("phone", user_name);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().sendSmsCode(new_body);
+    }
+
+
+    public Observable<BaseResult<Boolean>> resert_passwoed(String phone, String new_password) {
+        JsonObject body = new JsonObject();
+        body.addProperty("phone", phone);
+        body.addProperty("password", new_password);
+        RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().modifyOldPassword(new_body);
+    }
 
     public Observable<BaseResult<User>> refreshToken(String refreshToken) {
         JsonObject body = new JsonObject();
@@ -581,5 +611,82 @@ public class RequestModel {
         jsonObject.addProperty("scopeType", scopeType);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().removeDevice(body111);
+    }
+
+
+    /**
+     * 获取用户信息
+     *
+     * @return
+     */
+    public Observable<BaseResult<PersonCenter>> getUserInfo() {
+        return getApiService().getUserInfo();
+    }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult<HotelListBean>> fetchTransferHotelList() {
+        return getApiService().fetchTransferHotelList(1, Integer.MAX_VALUE);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(String hotelId) {
+        return getApiService().fetchTransferTreeList(hotelId);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult<TransferRoomListBean>> fetchTransferRoomList(String hotelId) {
+        return getApiService().fetchTransferRoomList(1, Integer.MAX_VALUE, hotelId);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult> transferToHotel(String hotelId, String[] roomIdList) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("hotelId", hotelId);
+        JsonArray roomIdListJsonArray = new JsonArray();
+        for (String s : roomIdList) {
+            roomIdListJsonArray.add(s);
+        }
+        jsonObject.add("roomIdList",roomIdListJsonArray);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().transferToHotel(body111);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult> transferToStruct(String hotelId, String structId, String[] roomIdList) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("hotelId", hotelId);
+        jsonObject.addProperty("structId", structId);
+        JsonArray roomIdListJsonArray = new JsonArray();
+        for (String s : roomIdList) {
+            roomIdListJsonArray.add(s);
+        }
+        jsonObject.add("roomIdList",roomIdListJsonArray);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().transferToStruct(body111);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult> transferToRoom(String hotelId, String sourceRoomId, String targetRoomId) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("hotelId", hotelId);
+        jsonObject.addProperty("sourceRoomId", sourceRoomId);
+        jsonObject.addProperty("targetRoomId", targetRoomId);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().transferToRoom(body111);
     }
 }

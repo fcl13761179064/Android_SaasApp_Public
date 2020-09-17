@@ -2,9 +2,10 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.RuleEngineBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.AutoRunView;
+import com.ayla.hotelsaas.utils.BeanObtainCompactUtil;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -14,9 +15,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AutoRunFragmentPresenter extends BasePresenter<AutoRunView> {
 
-    public void changeSceneStatus(RuleEngineBean ruleEngineBean, boolean isChecked) {
-        ruleEngineBean.setStatus(isChecked ? 1 : 0);
-        Disposable subscribe = RequestModel.getInstance().updateRuleEngine(ruleEngineBean)
+    public void changeSceneStatus(BaseSceneBean ruleEngineBean, boolean isChecked) {
+        ruleEngineBean.setEnable(isChecked);
+        Disposable subscribe = RequestModel.getInstance().updateRuleEngine(BeanObtainCompactUtil.obtainRuleEngineBean(ruleEngineBean))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -39,7 +40,7 @@ public class AutoRunFragmentPresenter extends BasePresenter<AutoRunView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        ruleEngineBean.setStatus(isChecked ? 0 : 1);
+                        ruleEngineBean.setEnable(!isChecked);
                         mView.changeFailed(ruleEngineBean);
                     }
                 });

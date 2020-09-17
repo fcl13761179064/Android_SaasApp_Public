@@ -89,10 +89,22 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
     }
 
     @Override
-    public SceneSettingFunctionDatumSetAdapter.DatumBean getDatum() {
+    public CallBackBean getDatum() {
         for (CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> datum : mAdapter.getData()) {
             if (datum.isChecked()) {
-                return datum.getData();
+                SceneSettingFunctionDatumSetAdapter.DatumBean data = datum.getData();
+                CallBackBean datumBean = new CallBackBean();
+
+                datumBean.setFunctionName(data.getFunctionName());
+                datumBean.setValueName(data.getValueName());
+                datumBean.setLeftValue(data.getLeftValue());
+                datumBean.setOperator(data.getOperator());
+                datumBean.setRightValue(data.getRightValue());
+                datumBean.setRightValueType(data.getRightValueType());
+                datumBean.setDeviceType(data.getDeviceType());
+                datumBean.setDeviceId(data.getDeviceId());
+                datumBean.setIconUrl(data.getIconUrl());
+                return datumBean;
             }
         }
         return null;

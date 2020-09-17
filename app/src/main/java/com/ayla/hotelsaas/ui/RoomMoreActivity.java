@@ -20,6 +20,9 @@ import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import butterknife.BindView;
 
+/**
+ * removeEnable ,标记是否支持删除
+ */
 public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePresenter> implements RoomMoreView {
     public static final int RESULT_CODE_REMOVED = 0X10;
     public static final int RESULT_CODE_RENAMED = 0X11;
@@ -56,6 +59,8 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
         mRoom_name = getIntent().getStringExtra("roomName");
         tv_room_name.setText(mRoom_name);
+        boolean removeEnable = getIntent().getBooleanExtra("removeEnable", false);
+        btn_remove_room.setVisibility(removeEnable?View.VISIBLE:View.GONE);
     }
 
     @Override
@@ -122,13 +127,13 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
 
     @Override
     public void operateSuccess(String newName) {
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
         setResult(RESULT_CODE_RENAMED, new Intent().putExtra("newName", newName));
     }
 
     @Override
     public void operateRemoveSuccess(String is_rename) {
-        CustomToast.makeText(this, "移除成功", R.drawable.ic_toast_success).show();
+        CustomToast.makeText(this, "移除成功", R.drawable.ic_success).show();
         setResult(RESULT_CODE_REMOVED);
         finish();
     }

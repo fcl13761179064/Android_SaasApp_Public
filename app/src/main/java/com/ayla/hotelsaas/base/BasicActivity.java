@@ -137,7 +137,7 @@ public abstract class BasicActivity extends AppCompatActivity {
                     }
                 });
             }
-            View rightIV = appbarRoot.findViewById(R.id.tv_right);
+            View rightIV = appbarRoot.findViewById(R.id.iv_right);
             if (rightIV != null && !rightIV.hasOnClickListeners()) {
                 ClickUtils.applySingleDebouncing(rightIV, new View.OnClickListener() {
                     @Override
@@ -162,27 +162,19 @@ public abstract class BasicActivity extends AppCompatActivity {
      * appbar左侧图标点击事件
      */
     protected void appBarLeftIvClicked() {
-        onBackPress();
+        onBackPressed();
+    }
+
+    protected void appBarLeftTvClicked() {
+        onBackPressed();
     }
 
     protected void appBarRightIvClicked() {
 
     }
 
-    protected void appBarLeftTvClicked() {
-        mExitApp();
-    }
-
     protected void appBarRightTvClicked() {
 
-    }
-
-    protected void mExitApp() {
-
-    }
-
-    protected void onBackPress() {
-        finish();
     }
 
     @Override

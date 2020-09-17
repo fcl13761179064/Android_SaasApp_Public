@@ -1,8 +1,11 @@
 package com.ayla.hotelsaas.adapter;
 
+import android.text.TextUtils;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.utils.ImageLoader;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -23,62 +26,49 @@ public class SceneSettingConditionItemAdapter extends BaseMultiItemQuickAdapter<
      */
     public SceneSettingConditionItemAdapter(List<ConditionItem> data) {
         super(data);
-        addItemType(0,R.layout.item_scene_setting_action_device);
-        addItemType(1,R.layout.item_scene_setting_condition_one_key);
+        addItemType(0, R.layout.item_scene_setting_action_device);
+        addItemType(1, R.layout.item_scene_setting_condition_one_key);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, ConditionItem item) {
-        if (item instanceof DeviceConditionItem) {
-            String dsn = ((DeviceConditionItem) item).getDatumBean().getDeviceId();
-            ImageLoader.loadImg(helper.getView(R.id.left_iv), ((DeviceConditionItem) item).getDatumBean().getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
-            helper.setText(R.id.tv_function_name, String.format("%s:%s", ((DeviceConditionItem) item).getDatumBean().getFunctionName(), ((DeviceConditionItem) item).getDatumBean().getValueName()));
-            List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
-            helper.setText(R.id.tv_name, dsn);
-            if (devicesBean != null) {
-                for (DeviceListBean.DevicesBean bean : devicesBean) {
-                    if (bean.getDeviceId().equals(dsn)) {
-                        helper.setText(R.id.tv_name, bean.getNickname());
-                        break;
-                    }
+        BaseSceneBean.Condition condition = item.condition;
+        if (condition instanceof BaseSceneBean.DeviceCondition) {
+            String option = ((BaseSceneBean.DeviceCondition) condition).getOperator();
+            if (TextUtils.equals("==", option)) {
+                option = ":";
+            }
+            helper.setText(R.id.tv_function_name, String.format("%s%s%s", condition.getFunctionName(), option, condition.getValueName()));
+
+            DeviceListBean.DevicesBean devicesBean = null;
+            for (DeviceListBean.DevicesBean bean : MyApplication.getInstance().getDevicesBean()) {
+                if (TextUtils.equals(bean.getDeviceId(), ((BaseSceneBean.DeviceCondition) condition).getSourceDeviceId())) {
+                    devicesBean = bean;
                 }
             }
+            if (devicesBean != null) {
+                ImageLoader.loadImg(helper.getView(R.id.left_iv), devicesBean.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
+                helper.setText(R.id.tv_name, TextUtils.isEmpty(devicesBean.getNickname()) ? devicesBean.getDeviceId() : devicesBean.getNickname());
+            } else {
+                helper.setImageResource(R.id.left_iv, R.drawable.ic_empty_device);
+                helper.setText(R.id.tv_name, ((BaseSceneBean.DeviceCondition) condition).getSourceDeviceId());
+            }
+
         }
         helper.addOnClickListener(R.id.tv_delete);
     }
 
-    public interface ConditionItem extends MultiItemEntity {
+    public static class ConditionItem implements MultiItemEntity {
+        public BaseSceneBean.Condition condition;
 
-    }
-
-    /**
-     * 设备类型的条件项目
-     */
-    public static class DeviceConditionItem implements ConditionItem {
-        private SceneSettingFunctionDatumSetAdapter.DatumBean datumBean;
+        public ConditionItem(BaseSceneBean.Condition condition) {
+            this.condition = condition;
+        }
 
         @Override
         public int getItemType() {
-            return 0;
-        }
-
-        public DeviceConditionItem(SceneSettingFunctionDatumSetAdapter.DatumBean datumBean) {
-            this.datumBean = datumBean;
-        }
-
-        public SceneSettingFunctionDatumSetAdapter.DatumBean getDatumBean() {
-            return datumBean;
+            return (condition instanceof BaseSceneBean.DeviceCondition) ? 0 : 1;
         }
     }
 
-    /**
-     * 一键执行类型的条件项目
-     */
-    public static class OneKeyConditionItem implements ConditionItem {
-
-        @Override
-        public int getItemType() {
-            return 1;
-        }
-    }
 }

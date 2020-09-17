@@ -11,7 +11,7 @@ import com.ayla.hotelsaas.adapter.OneKeyRuleEngineAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.bean.RuleEngineBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.OneKeyPresenter;
 import com.ayla.hotelsaas.mvp.view.OneKeyView;
 import com.ayla.hotelsaas.ui.CustomToast;
@@ -54,30 +54,30 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                RuleEngineBean ruleEngineBean = (RuleEngineBean) adapter.getItem(position);
+                BaseSceneBean ruleEngineBean = (BaseSceneBean) adapter.getItem(position);
                 boolean needWarming = false;
                 s1:
-                for (RuleEngineBean.Action.ActionItem actionItem : ruleEngineBean.getAction().getItems()) {
+                for (BaseSceneBean.Action actionItem : ruleEngineBean.getActions()) {
                     String targetDeviceId = actionItem.getTargetDeviceId();
                     for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
                         if (devicesBean.getDeviceId().equals(targetDeviceId)) {
                             continue s1;
                         }
                     }
-                    if (ruleEngineBean.getAction().getItems().size() == 1) {
+                    if (ruleEngineBean.getActions().size() == 1) {
                         CustomToast.makeText(getContext(), "执行失败，设备已移除", R.drawable.ic_toast_warming).show();
                         return;
                     } else {
                         needWarming = true;
                     }
                 }
-                mPresenter.runRuleEngine(ruleEngineBean, needWarming);
+                mPresenter.runRuleEngine(ruleEngineBean.getRuleId(), needWarming);
             }
         });
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                RuleEngineBean ruleEngineBean = (RuleEngineBean) adapter.getItem(position);
+                BaseSceneBean ruleEngineBean = (BaseSceneBean) adapter.getItem(position);
                 Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
                 intent.putExtra("sceneBean", ruleEngineBean);
                 if (getParentFragment() != null) {
@@ -92,13 +92,13 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
 
     }
 
-    public void showData(List<RuleEngineBean> data) {
+    public void showData(List<BaseSceneBean> data) {
         mAdapter.setNewData(data);
     }
 
     @Override
     public void runSceneSuccess(boolean needWarming) {
-        CustomToast.makeText(getContext(), String.format("%s%s", "执行成功", needWarming ? "，有设备已移除请检查" : ""), R.drawable.ic_toast_success).show();
+        CustomToast.makeText(getContext(), String.format("%s%s", "执行成功", needWarming ? "，有设备已移除请检查" : ""), R.drawable.ic_success).show();
     }
 
     @Override

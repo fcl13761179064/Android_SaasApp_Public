@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -9,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionSelectAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -34,7 +34,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  * 3.{@link DeviceListBean.DevicesBean} deviceBean
  * 4.int type  ，0：condition  1：action
  * 可选参数
- * 1.datums {@link ArrayList<com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter.DatumBean>} 已选择的栏目
+ * 1.selectedDatum {@link ArrayList<String>} 已选择的栏目
  * 2.ruleSetMode  ALL(2,"多条条件全部命中")   ANY(3,"多条条件任一命中")
  */
 public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSettingFunctionSelectView, SceneSettingFunctionSelectPresenter> implements SceneSettingFunctionSelectView {
@@ -83,11 +83,15 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
                 }
 
                 if (nest) {
-                    ArrayList<SceneSettingFunctionDatumSetAdapter.DatumBean> datums = getIntent().getParcelableArrayListExtra("datums");
-                    if (datums != null) {
-                        for (SceneSettingFunctionDatumSetAdapter.DatumBean datumBean : datums) {
-                            if (deviceBean.getDeviceId().equals(datumBean.getDeviceId())) {
-                                if (attributesBean.getCode().equals(datumBean.getLeftValue())) {
+                    ArrayList<String> selectedDatum = getIntent().getStringArrayListExtra("selectedDatum");
+                    if (selectedDatum != null) {
+                        for (String s : selectedDatum) {
+                            String[] split = s.split(" ");
+                            String dsn = split[0];
+                            String property = split[1];
+
+                            if (TextUtils.equals(deviceBean.getDeviceId(), dsn)) {
+                                if (TextUtils.equals(attributesBean.getCode(), property)) {
                                     CustomToast.makeText(getBaseContext(), "不可重复添加", R.drawable.ic_toast_warming).show();
                                     return;
                                 }
@@ -99,6 +103,7 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
                 Intent mainActivity = new Intent(SceneSettingFunctionSelectActivity.this, SceneSettingFunctionDatumSetActivity.class);
                 mainActivity.putExtra("deviceBean", deviceBean);
                 mainActivity.putExtra("attributeBean", attributesBean);
+                mainActivity.putExtra("type", type);
                 startActivityForResult(mainActivity, 0);
             }
         });

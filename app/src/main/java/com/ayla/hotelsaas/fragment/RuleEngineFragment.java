@@ -17,8 +17,7 @@ import com.ayla.hotelsaas.adapter.RuleEnginePagerAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.bean.RoomOrderBean;
-import com.ayla.hotelsaas.bean.RuleEngineBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.RuleEnginePresenter;
 import com.ayla.hotelsaas.mvp.view.RuleEngineView;
 import com.ayla.hotelsaas.ui.CustomToast;
@@ -141,15 +140,15 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
     }
 
     @Override
-    public void loadDataSuccess(List<RuleEngineBean> data) {
-        List<RuleEngineBean> oneKeys = new ArrayList<>();
-        List<RuleEngineBean> autoRuns = new ArrayList<>();
+    public void loadDataSuccess(List<BaseSceneBean> data) {
+        List<BaseSceneBean> oneKeys = new ArrayList<>();
+        List<BaseSceneBean> autoRuns = new ArrayList<>();
 
-        for (RuleEngineBean ruleEngineBean : data) {
-            if (ruleEngineBean.getRuleType() == 2) {//一键执行
+        for (BaseSceneBean ruleEngineBean : data) {
+            if (ruleEngineBean.getRuleType() == BaseSceneBean.RULE_TYPE.ONE_KEY) {//一键执行
                 oneKeys.add(ruleEngineBean);
             }
-            if (ruleEngineBean.getRuleType() == 1) {//自动化
+            if (ruleEngineBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//自动化
                 autoRuns.add(ruleEngineBean);
             }
         }

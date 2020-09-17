@@ -43,7 +43,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/tv_device_show_name"
             android:gravity="right"
             android:paddingRight="@dimen/dp_16">
 
@@ -53,6 +52,7 @@
                 android:layout_height="match_parent"
                 android:ellipsize="middle"
                 android:gravity="center"
+                android:text=""
                 android:paddingRight="9dp"
                 android:singleLine="true"
                 android:textColor="#999999"
