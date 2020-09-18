@@ -49,3 +49,4 @@ captures/
 app/target
 app/debug
 app/release
+gradlew
