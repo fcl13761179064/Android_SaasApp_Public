@@ -119,12 +119,21 @@ public abstract class BasicActivity extends AppCompatActivity {
     public void refreshUI() {
         final View appbarRoot = findViewById(R.id.appbar_root_rl_ff91090);
         if (appbarRoot != null) {
-            View leftIV = appbarRoot.findViewById(R.id.left_ll);
+            View leftIV = appbarRoot.findViewById(R.id.iv_left);
             if (leftIV != null && !leftIV.hasOnClickListeners()) {
                 ClickUtils.applySingleDebouncing(leftIV, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         appBarLeftIvClicked();
+                    }
+                });
+            }
+            View leftTV = appbarRoot.findViewById(R.id.tv_left);
+            if (leftTV != null && !leftTV.hasOnClickListeners()) {
+                ClickUtils.applySingleDebouncing(leftTV, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        appBarLeftTvClicked();
                     }
                 });
             }
@@ -146,16 +155,6 @@ public abstract class BasicActivity extends AppCompatActivity {
                     }
                 });
             }
-            View iv_person_center = appbarRoot.findViewById(R.id.iv_person_center);
-            if (iv_person_center != null && !iv_person_center.hasOnClickListeners()) {
-                ClickUtils.applySingleDebouncing(iv_person_center, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        appBarShowPersonCenter();
-                    }
-                });
-            }
-
         }
     }
 
@@ -166,22 +165,16 @@ public abstract class BasicActivity extends AppCompatActivity {
         onBackPressed();
     }
 
+    protected void appBarLeftTvClicked() {
+        onBackPressed();
+    }
+
     protected void appBarRightIvClicked() {
 
     }
 
     protected void appBarRightTvClicked() {
 
-    }
-
-
-    protected void appBarShowPersonCenter() {
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override
