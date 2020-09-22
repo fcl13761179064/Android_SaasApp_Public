@@ -162,7 +162,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         }
         if (2 == subBean.getNetworkType()) {//艾拉网关
             if (gatewayCount == 0) {//没有网关
-                Intent mainActivity = new Intent(this, GatewayAddGuideActivity.class);
+                Intent mainActivity = new Intent(this, AylaGatewayAddGuideActivity.class);
                 mainActivity.putExtra("cuId", subBean.getCuId());
                 mainActivity.putExtras(getIntent());
                 mainActivity.putExtra("deviceCategory", subBean.getOemModel());

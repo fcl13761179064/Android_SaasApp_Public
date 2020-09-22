@@ -15,7 +15,7 @@ import butterknife.OnClick;
  * 网关添加引导页面
  * 进入时必须带上cuId 、scopeId 、deviceName、deviceCategory。
  */
-public class GatewayAddGuideActivity extends BaseMvpActivity {
+public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
     private final int REQUEST_CODE_FOR_ADD = 0X10;
     private final int REQUEST_CODE_FOR_DSN_INPUT = 0X11;
     private final int REQUEST_CODE_FOR_DSN_SCAN = 0X12;
@@ -56,7 +56,7 @@ public class GatewayAddGuideActivity extends BaseMvpActivity {
                         dsn = dsn.substring(9, dsn.length() - 2).trim();
                     }
                     if (!TextUtils.isEmpty(dsn)) {
-                        Intent mainActivity = new Intent(this, GatewayAddActivity.class);
+                        Intent mainActivity = new Intent(this, AylaGatewayAddActivity.class);
                         mainActivity.putExtra("dsn", dsn);
                         mainActivity.putExtras(getIntent());
                         startActivityForResult(mainActivity, REQUEST_CODE_FOR_ADD);

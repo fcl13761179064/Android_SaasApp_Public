@@ -1,26 +1,18 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.AylaWifiAddView;
 import com.sunseaiot.larkairkiss.LarkConfigCallback;
 import com.sunseaiot.larkairkiss.LarkConfigDefines;
 import com.sunseaiot.larkairkiss.LarkSmartConfigManager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
@@ -34,12 +26,12 @@ public class AylaWifiAddPresenter extends BasePresenter<AylaWifiAddView> {
      */
     public void bindZigBeeNodeWithGatewayDSN(String wifiName, String wifiPassword, long cuId, long scopeId, String deviceCategory, String deviceName) {
         final LarkSmartConfigManager[] configManager = new LarkSmartConfigManager[1];
-        Observable.just(LarkSmartConfigManager.initWithSmartConfigType(LarkConfigDefines.LarkSmartConfigType.LarkSmartConfigTypeForAirkissEasy))
+        Disposable subscribe = Observable.just(LarkSmartConfigManager.initWithSmartConfigType(LarkConfigDefines.LarkSmartConfigType.LarkSmartConfigTypeForAirkissEasy))
                 .doOnNext(new Consumer<LarkSmartConfigManager>() {
                     @Override
                     public void accept(LarkSmartConfigManager larkSmartConfigManager) throws Exception {
                         configManager[0] = larkSmartConfigManager;
-                        mView.gatewayConnectStart();
+                        mView.startAirkiss();
                     }
                 })//准备阶段
                 .observeOn(Schedulers.io())
@@ -74,8 +66,8 @@ public class AylaWifiAddPresenter extends BasePresenter<AylaWifiAddView> {
                 .doOnNext(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        mView.gatewayConnectSuccess();
-                        mView.bindZigBeeDeviceStart();
+                        mView.airkissSuccess();
+                        mView.startBind();
                     }
                 })//设备airkiss过程完成
                 .observeOn(Schedulers.io())
@@ -83,34 +75,18 @@ public class AylaWifiAddPresenter extends BasePresenter<AylaWifiAddView> {
                     @Override
                     public ObservableSource<?> apply(String[] strings) throws Exception {
                         String dsn = strings[0];
-                        long startTime = System.currentTimeMillis();
+                        // TODO: 2020/9/22 测试
+                        dsn = "AC000W013771338";
                         return RequestModel.getInstance()
                                 .bindDeviceWithDSN(dsn, cuId, scopeId, 2,
-                                        deviceCategory, deviceName, deviceName)
-                                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
-                                    @Override
-                                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
-                                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
-                                            @Override
-                                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
-                                                long currentTime = System.currentTimeMillis();
-                                                long s = currentTime - startTime;
-                                                if (s > 60_000) {
-                                                    return Observable.error(throwable);
-                                                } else {
-                                                    return Observable.timer(3, TimeUnit.SECONDS);
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
+                                        deviceCategory, deviceName, deviceName);
                     }
                 })//绑定设备
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        mView.bindZigBeeDeviceSuccess();
+                        mView.bindSuccess();
                     }
                 })//通知子节点绑定成功
                 .observeOn(AndroidSchedulers.mainThread())
@@ -126,25 +102,17 @@ public class AylaWifiAddPresenter extends BasePresenter<AylaWifiAddView> {
                         mView.progressFailed(throwable);
                     }
                 })
-                .subscribe(new Observer<Object>() {
+                .subscribe(new Consumer<Object>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
-                    }
-
-                    @Override
-                    public void onNext(Object o) {
+                    public void accept(Object o) throws Exception {
 
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onComplete() {
+                    public void accept(Throwable throwable) throws Exception {
 
                     }
                 });
+        addSubscrebe(subscribe);
     }
 }

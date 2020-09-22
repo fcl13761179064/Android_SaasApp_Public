@@ -76,12 +76,12 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startBind();
+        progressStart();
     }
 
     private int bindProgress;//记录进度
 
-    private void startBind() {
+    private void progressStart() {
         mPresenter.bindZigBeeNodeWithGatewayDSN(
                 getIntent().getStringExtra("wifiName"),
                 getIntent().getStringExtra("wifiPassword"),
@@ -91,12 +91,70 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
                 getIntent().getStringExtra("deviceName"));
     }
 
+    @Override
+    public void startAirkiss() {
+        bindProgress = 0;
+        refreshBindShow();
+    }
+
+    @Override
+    public void airkissSuccess() {
+        bindProgress = 1;
+        refreshBindShow();
+    }
+
+    @Override
+    public void startBind() {
+        bindProgress = 2;
+        refreshBindShow();
+    }
+
+    @Override
+    public void bindSuccess() {
+        bindProgress = 3;
+        refreshBindShow();
+    }
+
+    @Override
+    public void progressSuccess() {
+        setResult(RESULT_OK);
+        bindProgress = 6;
+        refreshBindShow();
+    }
+
+    @Override
+    public void progressFailed(Throwable throwable) {
+        Log.d(TAG, "zigBeeDeviceBindFailed: " + throwable);
+        mImageView.setImageResource(R.drawable.ic_device_bind_failed);
+        mLoadingTextView.setVisibility(View.INVISIBLE);
+        mProgressView.setVisibility(View.VISIBLE);
+        mProgressTextView.setText("设备绑定失败，请确认设备状态后重试");
+        mFinishButton.setVisibility(View.VISIBLE);
+        mFinishButton.setText("重试");
+
+        switch (bindProgress) {
+            case 0:
+                mP1View.setImageResource(R.drawable.ic_progress_dot_error);
+                mP1TextView.setTextColor(ContextCompat.getColor(this, R.color.color_bind_logding_tips_failed));
+                break;
+            case 1:
+            case 2:
+                mP2View.setImageResource(R.drawable.ic_progress_dot_error);
+                mP2TextView.setTextColor(ContextCompat.getColor(this, R.color.color_bind_logding_tips_failed));
+                break;
+            default:
+                mP3View.setImageResource(R.drawable.ic_progress_dot_error);
+                mP3TextView.setTextColor(ContextCompat.getColor(this, R.color.color_bind_logding_tips_failed));
+                break;
+        }
+    }
+
     @OnClick(R.id.bt_bind)
     public void handleButton() {
         if (bindProgress == 6) {
             finish();
         } else {
-            startBind();
+            progressStart();
         }
     }
 
@@ -147,82 +205,5 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
                 mFinishButton.setText("完成");
                 break;
         }
-    }
-
-    @Override
-    public void progressSuccess() {
-        setResult(RESULT_OK);
-        Log.d(TAG, "zigBeeDeviceBindFinished: ");
-        bindProgress = 6;
-        refreshBindShow();
-    }
-
-    @Override
-    public void progressFailed(Throwable throwable) {
-        Log.d(TAG, "zigBeeDeviceBindFailed: " + throwable);
-        mImageView.setImageResource(R.drawable.ic_device_bind_failed);
-        mLoadingTextView.setVisibility(View.INVISIBLE);
-        mProgressView.setVisibility(View.VISIBLE);
-        mProgressTextView.setText("设备绑定失败，请确认设备状态后重试");
-        mFinishButton.setVisibility(View.VISIBLE);
-        mFinishButton.setText("重试");
-
-        switch (bindProgress) {
-            case 0:
-                mP1View.setImageResource(R.drawable.ic_progress_dot_error);
-                mP1TextView.setTextColor(ContextCompat.getColor(this, R.color.color_bind_logding_tips_failed));
-                break;
-            case 1:
-            case 2:
-                mP2View.setImageResource(R.drawable.ic_progress_dot_error);
-                mP2TextView.setTextColor(ContextCompat.getColor(this, R.color.color_bind_logding_tips_failed));
-                break;
-            default:
-                mP3View.setImageResource(R.drawable.ic_progress_dot_error);
-                mP3TextView.setTextColor(ContextCompat.getColor(this, R.color.color_bind_logding_tips_failed));
-                break;
-        }
-    }
-
-    @Override
-    public void bindZigBeeDeviceSuccess() {
-        Log.d(TAG, "bindZigBeeDeviceSuccess: ");
-        bindProgress = 5;
-        refreshBindShow();
-    }
-
-    @Override
-    public void bindZigBeeDeviceStart() {
-        Log.d(TAG, "bindZigBeeDeviceStart: ");
-        bindProgress = 4;
-        refreshBindShow();
-    }
-//
-//    @Override
-//    public void fetchCandidatesSuccess() {
-//        Log.d(TAG, "fetchCandidatesSuccess: ");
-//        bindProgress = 3;
-//        refreshBindShow();
-//    }
-//
-//    @Override
-//    public void fetchCandidatesStart() {
-//        Log.d(TAG, "fetchCandidatesStart: ");
-//        bindProgress = 2;
-//        refreshBindShow();
-//    }
-
-    @Override
-    public void gatewayConnectSuccess() {
-        Log.d(TAG, "gatewayConnectSuccess: ");
-        bindProgress = 1;
-        refreshBindShow();
-    }
-
-    @Override
-    public void gatewayConnectStart() {
-        Log.d(TAG, "gatewayConnectStart: " + Thread.currentThread().getName());
-        bindProgress = 0;
-        refreshBindShow();
     }
 }

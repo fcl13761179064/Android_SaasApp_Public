@@ -187,14 +187,14 @@ public class HongYanZigBeeAddActivity extends BaseMvpActivity<HongYanZigBeeAddVi
     @Override
     public void bindZigBeeDeviceSuccess() {
         Log.d(TAG, "bindZigBeeDeviceSuccess: ");
-        bindProgress = 5;
+        bindProgress = 3;
         refreshBindShow();
     }
 
     @Override
     public void bindZigBeeDeviceStart() {
         Log.d(TAG, "bindZigBeeDeviceStart: ");
-        bindProgress = 4;
+        bindProgress = 2;
         refreshBindShow();
     }
 

@@ -1,11 +1,28 @@
 package com.ayla.hotelsaas.ui;
 
+import android.Manifest;
 import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.aliyun.iot.aep.sdk.page.LocationUtil;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
+import com.ayla.hotelsaas.utils.WifiUtil;
+import com.ayla.hotelsaas.widget.CustomAlarmDialog;
+import com.blankj.utilcode.constant.PermissionConstants;
+import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.util.IntentUtils;
+import com.blankj.utilcode.util.NetworkUtils;
+import com.blankj.utilcode.util.PermissionUtils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -15,6 +32,7 @@ import butterknife.OnClick;
  * 进入时必须带上cuId 、scopeId 、deviceName。
  */
 public class AylaWiFiAddInputActivity extends BaseMvpActivity {
+    private final int REQUEST_CODE_START_ADD = 0x10;
     @BindView(R.id.et_wifi)
     public EditText mWiFiNameEditText;
     @BindView(R.id.et_pwd)
@@ -39,6 +57,77 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
 
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!NetworkUtils.isWifiConnected()) {
+            CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
+                @Override
+                public void onDone(CustomAlarmDialog dialog) {
+                    dialog.dismissAllowingStateLoss();
+                    Intent intent = new Intent();
+                    intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onCancel(CustomAlarmDialog dialog) {
+                    dialog.dismissAllowingStateLoss();
+                }
+            }).setTitle("未连接WiFi").setContent("检查到当前手机未连接 Wi-Fi，请进行连接").show(getSupportFragmentManager(), "wifi dialog");
+        }
+    }
+
+    private boolean permissionHasAsked;//标记是否已经提示授权位置信息
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (TextUtils.isEmpty(mWiFiNameEditText.getText().toString())) {
+            String connectWifiSsid = WifiUtil.getConnectWifiSsid();
+            mWiFiNameEditText.setText(connectWifiSsid);
+
+            if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
+                if (PermissionUtils.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
+                        CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning).show();
+                    }
+                } else {//定位权限没有
+                    if (!permissionHasAsked) {
+                        CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
+                            @Override
+                            public void onDone(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                                PermissionUtils.permission(PermissionConstants.LOCATION).callback(new PermissionUtils.FullCallback() {
+                                    @Override
+                                    public void onGranted(@NonNull List<String> granted) {
+                                        String connectWifiSsid = WifiUtil.getConnectWifiSsid();
+                                        mWiFiNameEditText.setText(connectWifiSsid);
+                                    }
+
+                                    @Override
+                                    public void onDenied(@NonNull List<String> deniedForever, @NonNull List<String> denied) {
+                                        if (deniedForever.size() > 0) {
+                                            Intent settingsIntent = IntentUtils.getLaunchAppDetailsSettingsIntent(AppUtils.getAppPackageName());
+                                            startActivity(settingsIntent);
+//                                            CustomToast.makeText(getApplicationContext(), "你拒绝了访问位置信息的授权，无法自动填充WiFi名称", R.drawable.ic_warning).show();
+                                        }
+                                    }
+                                }).request();
+                            }
+
+                            @Override
+                            public void onCancel(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                            }
+                        }).setTitle("无法自动获取WiFi名称").setContent("授权程序访问位置信息后，将可以自动填入连接的WiFi名").show(getSupportFragmentManager(), "wifi dialog");
+                    }
+                    permissionHasAsked = true;
+                }
+            }
+        }
+    }
+
     @OnClick(R.id.bt_start_add)
     public void handleJump() {
         String name = mWiFiNameEditText.getText().toString();
@@ -47,10 +136,19 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
             CustomToast.makeText(this, "WiFi名输入不能为空", R.drawable.ic_toast_warming).show();
         } else {
             Intent intent = new Intent(this, AylaWifiAddActivity.class);
-            intent.putExtra("wifiName",name);
-            intent.putExtra("wifiPassword",pwd);
+            intent.putExtra("wifiName", name);
+            intent.putExtra("wifiPassword", pwd);
             intent.putExtras(getIntent());
-            startActivityForResult(intent, 0);
+            startActivityForResult(intent, REQUEST_CODE_START_ADD);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_START_ADD && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
         }
     }
 }

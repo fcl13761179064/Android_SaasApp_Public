@@ -221,16 +221,16 @@ public class RequestModel {
                         List<DeviceCategoryBean> data = listBaseResult.data;
                         DeviceCategoryBean bean = new DeviceCategoryBean();
                         bean.setId(100);
-                        bean.setName("WiFi");
+                        bean.setName("WiFi设备");
                         ArrayList<DeviceCategoryBean.SubBean> objects = new ArrayList<>();
                         DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
                         subBean.setId(100);
-                        subBean.setDeviceName("wifi deviceName");
-                        subBean.setName("wifi name");
+                        subBean.setDeviceName("AY008RTK1");
+                        subBean.setName("智能插座");
                         subBean.setDeviceConnectType(3);
                         subBean.setNetworkType(5);
                         subBean.setCuId(1);
-                        subBean.setOemModel("wifi oemmodel");
+                        subBean.setOemModel("SP0-01-0-001");
 
                         objects.add(subBean);
                         bean.setSub(objects);

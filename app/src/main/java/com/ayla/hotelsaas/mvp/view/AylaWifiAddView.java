@@ -4,35 +4,34 @@ import com.ayla.hotelsaas.base.BaseView;
 
 public interface AylaWifiAddView extends BaseView {
     /**
-     * 节点绑定流程结束
+     * 流程结束
      */
     void progressSuccess();
 
     /**
-     * 节点绑定流程失败
+     * 流程失败
      *
      * @param throwable
      */
     void progressFailed(Throwable throwable);
 
     /**
-     * 5.绑定节点成功
+     * 步骤二 完成
      */
-    void bindZigBeeDeviceSuccess();
+    void bindSuccess();
 
     /**
-     * 5.开始绑定节点
+     * 步骤二 开始
      */
-    void bindZigBeeDeviceStart();
+    void startBind();
 
     /**
-     * 2.连接网关成功
+     * 步骤一 完成
      */
-    void gatewayConnectSuccess();
+    void airkissSuccess();
 
     /**
-     * 1.开始连接网关
+     * 步骤一 开始
      */
-    void gatewayConnectStart();
-
+    void startAirkiss();
 }

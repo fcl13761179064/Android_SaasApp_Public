@@ -16,14 +16,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <ImageView
             android:id="@+id/iv_01"
             android:layout_width="170dp"
             android:layout_height="170dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="60dp"
-            android:src="@drawable/ic_device_add_start_2" />
+            android:src="@drawable/ic_device_add_start_2_wifi" />
 
         <LinearLayout
             android:id="@+id/step_2_view"
@@ -38,44 +37,75 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="当前设备只支持2.4G WiFi"
-                android:textColor="#ff648c1a"
-                android:textSize="12sp" />
-
-            <EditText
-                android:id="@+id/et_wifi"
-                android:layout_width="300dp"
-                android:layout_height="46dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/transparent"
-                android:gravity="center"
-                android:hint="输入设备WiFi名称"
-                android:inputType="text"
-                android:maxLines="1"
                 android:textColor="#ff333333"
                 android:textSize="14sp" />
 
-            <View
-                android:layout_width="300dp"
-                android:layout_height="1dp"
-                android:background="#DFE4EB" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/bg_device_item"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
 
-            <EditText
-                android:id="@+id/et_pwd"
-                android:layout_width="300dp"
-                android:layout_height="46dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/transparent"
-                android:gravity="center"
-                android:hint="输入设备WiFi密码"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textColor="#ff333333"
-                android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="账号"
+                    android:textColor="#ff333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-            <View
-                android:layout_width="300dp"
-                android:layout_height="1dp"
-                android:background="#DFE4EB" />
+                <EditText
+                    android:id="@+id/et_wifi"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:background="@android:color/transparent"
+                    android:gravity="right|center_vertical"
+                    android:hint="输入设备WiFi名称"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="#ff333333"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/bg_device_item"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="账号"
+                    android:textColor="#ff333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_pwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical|right"
+                    android:hint="输入设备WiFi密码"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:textColor="#ff333333"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <Button
@@ -84,9 +114,9 @@
             android:layout_height="50dp"
             android:layout_below="@id/iv_01"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="210dp"
+            android:layout_marginTop="300dp"
             android:background="@drawable/bg_bt_gateway_add_start_next"
-            android:text="下一步"
+            android:text="开始添加设备"
             android:textColor="#ff648c1a"
             android:textSize="14sp" />
     </RelativeLayout>

@@ -19,11 +19,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.MyApplication;
-import com.ayla.hotelsaas.utils.NetworkUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.blankj.utilcode.util.BarUtils;
+import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 
 
@@ -66,7 +66,7 @@ public abstract class BaseWebActivity extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                if (!NetworkUtils.isNetworkAvailable(MyApplication.getContext())) {
+                if (!NetworkUtils.isConnected()) {
                     mWeb_error.setVisibility(View.VISIBLE);
                     webView.setVisibility(View.GONE);
                 }
