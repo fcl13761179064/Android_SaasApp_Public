@@ -214,7 +214,30 @@ public class RequestModel {
     }
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
-        return getApiService().fetchDeviceCategory();
+        return getApiService().fetchDeviceCategory()
+                .map(new Function<BaseResult<List<DeviceCategoryBean>>, BaseResult<List<DeviceCategoryBean>>>() {
+                    @Override
+                    public BaseResult<List<DeviceCategoryBean>> apply(BaseResult<List<DeviceCategoryBean>> listBaseResult) throws Exception {
+                        List<DeviceCategoryBean> data = listBaseResult.data;
+                        DeviceCategoryBean bean = new DeviceCategoryBean();
+                        bean.setId(100);
+                        bean.setName("WiFi");
+                        ArrayList<DeviceCategoryBean.SubBean> objects = new ArrayList<>();
+                        DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
+                        subBean.setId(100);
+                        subBean.setDeviceName("wifi deviceName");
+                        subBean.setName("wifi name");
+                        subBean.setDeviceConnectType(3);
+                        subBean.setNetworkType(5);
+                        subBean.setCuId(1);
+                        subBean.setOemModel("wifi oemmodel");
+
+                        objects.add(subBean);
+                        bean.setSub(objects);
+                        data.add(bean);
+                        return listBaseResult;
+                    }
+                });
     }
 
     /**

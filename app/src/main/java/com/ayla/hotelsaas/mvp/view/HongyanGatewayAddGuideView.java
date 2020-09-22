@@ -7,8 +7,4 @@ public interface HongyanGatewayAddGuideView extends BaseView {
     void bindSuccess();
 
     void bindFailed();
-
-    void removeReleteSuccess(String data);
-
-    void removeReleteFail(String code, String msg);
 }

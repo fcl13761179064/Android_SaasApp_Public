@@ -22,7 +22,9 @@ import butterknife.BindView;
 
 /**
  * ZigBee添加引导页面，嵌套H5
- * 进入时必须带入网关deviceId 、cuId 、scopeId 、deviceName、deviceCategory、categoryId
+ * 进入时必须带入int networkType 。
+ * networkType == 3、4 时 ，需要带入：网关deviceId 、cuId 、scopeId 、deviceName、deviceCategory、categoryId
+ * networkType == 5 时 ，需要带入：scopeId 、deviceName、deviceCategory、categoryId
  */
 public class ZigBeeAddGuideActivity extends BaseMvpActivity {
     private static final String TAG = "wyj";
@@ -108,9 +110,20 @@ public class ZigBeeAddGuideActivity extends BaseMvpActivity {
 
 
     private void handleJump() {
-        Intent mainActivity = new Intent(this, ZigBeeAddActivity.class);
-        mainActivity.putExtras(getIntent());
-        startActivityForResult(mainActivity, 0);
+        int networkType = getIntent().getIntExtra("networkType", 0);
+        if (networkType == 3) {//艾拉节点设备配网
+            Intent mainActivity = new Intent(this, ZigBeeAddActivity.class);
+            mainActivity.putExtras(getIntent());
+            startActivityForResult(mainActivity, 0);
+        } if (networkType == 4) {//鸿雁节点设备配网
+            Intent mainActivity = new Intent(this, HongYanZigBeeAddActivity.class);
+            mainActivity.putExtras(getIntent());
+            startActivityForResult(mainActivity, 0);
+        } else if (networkType == 5) {//艾拉WiFi设备配网
+            Intent mainActivity = new Intent(this, AylaWiFiAddInputActivity.class);
+            mainActivity.putExtras(getIntent());
+            startActivityForResult(mainActivity, 0);
+        }
     }
 
     @Override

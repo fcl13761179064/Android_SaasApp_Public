@@ -222,6 +222,9 @@
             />
 
         <activity android:name=".ui.PersonCenterActivity" />
+        <activity android:name=".ui.AylaWifiAddActivity" />
+        <activity android:name=".ui.HongYanZigBeeAddActivity" />
+        <activity android:name=".ui.AylaWiFiAddInputActivity" />
 
         <meta-data
             android:name="design_width_in_dp"

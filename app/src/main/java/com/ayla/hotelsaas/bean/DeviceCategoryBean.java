@@ -49,9 +49,9 @@ public class DeviceCategoryBean {
         private long id;
         private String name;
         private String deviceName;
-        private long cuId;
-        private int deviceConnectType;//1、网关设备 2、节点设备
-        private int networkType;//1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉zigbee配网
+        private int cuId;
+        private int deviceConnectType;//1、网关设备 2、节点设备 3、wifi设备
+        private int networkType;//1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉zigbee配网 4、鸿雁节点 5、艾拉wifi设备
         private String icon;
         private String oemModel;
 
@@ -87,11 +87,11 @@ public class DeviceCategoryBean {
             this.deviceName = deviceName;
         }
 
-        public long getCuId() {
+        public int getCuId() {
             return cuId;
         }
 
-        public void setCuId(long cuId) {
+        public void setCuId(int cuId) {
             this.cuId = cuId;
         }
 
