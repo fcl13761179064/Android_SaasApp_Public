@@ -1,4 +1,3 @@
 include ':lib_device_add'
-include ':mvp_lib'
 include ':app'
 rootProject.name='Android_SaasApp_Public'
