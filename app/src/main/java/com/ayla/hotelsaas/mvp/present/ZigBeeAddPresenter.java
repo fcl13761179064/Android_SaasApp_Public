@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.mvp.present;
 
 import android.util.Log;
 
+import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -12,9 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import carlwu.top.lib_device_add.NodeHelper;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
@@ -23,17 +26,12 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
-    /**
-     * 通过网关DSN注册一个ZigBee设备
-     *
-     * @param dsn
-     */
-    public void bindZigBeeNodeWithGatewayDSN(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
-        Observable.just(dsn)
+    public void bindAylaNode(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
+        Disposable subscribe = Observable.just(dsn)
                 .doOnNext(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
-                        mView.gatewayConnectStart();
+                        mView.step1Start();
                     }
                 })//通知开始连接网关
                 .observeOn(Schedulers.io())
@@ -48,8 +46,8 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                 .doOnNext(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        mView.gatewayConnectSuccess();
-                        mView.fetchCandidatesStart();
+                        mView.step1Finish();
+                        mView.step2Start();
                     }
                 })//通知网关连接成功
                 .observeOn(Schedulers.io())
@@ -88,27 +86,33 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                 .doOnNext(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        mView.fetchCandidatesSuccess();
-                        mView.bindZigBeeDeviceStart();
+                        mView.step2Finish();
+                        mView.step3Start();
                     }
                 })//通知候选节点查找成功
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<List<DeviceListBean.DevicesBean>, ObservableSource<?>>() {
+                .flatMap(new Function<List<DeviceListBean.DevicesBean>, ObservableSource<DeviceListBean.DevicesBean>>() {
                     @Override
-                    public ObservableSource<?> apply(List<DeviceListBean.DevicesBean> devices) throws Exception {
-                        List<Observable<?>> tasks = new ArrayList<>();
+                    public ObservableSource<DeviceListBean.DevicesBean> apply(List<DeviceListBean.DevicesBean> devices) throws Exception {
+                        List<Observable<DeviceListBean.DevicesBean>> tasks = new ArrayList<>();
                         for (DeviceListBean.DevicesBean device : devices) {
-                            Observable<?> task = RequestModel.getInstance()
+                            Observable<DeviceListBean.DevicesBean> task = RequestModel.getInstance()
                                     .bindDeviceWithDSN(device.getDeviceId(), cuId, scopeId, 2, deviceCategory, deviceName, deviceName)
+                                    .map(new Function<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
+                                        @Override
+                                        public DeviceListBean.DevicesBean apply(BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
+                                            return devicesBeanBaseResult.data;
+                                        }
+                                    })
                                     .doOnError(new Consumer<Throwable>() {
                                         @Override
                                         public void accept(Throwable throwable) throws Exception {
                                             Log.d("候选节点绑定失败", "accept: " + throwable + " " + device.getDeviceId());
                                         }
                                     })
-                                    .doOnNext(new Consumer<BaseResult>() {
+                                    .doOnNext(new Consumer<DeviceListBean.DevicesBean>() {
                                         @Override
-                                        public void accept(BaseResult baseResult) throws Exception {
+                                        public void accept(DeviceListBean.DevicesBean baseResult) throws Exception {
                                             Log.d("候选节点绑定成功", "accept: " + device.getDeviceId());
                                         }
                                     });
@@ -117,105 +121,210 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         if (tasks.size() == 0) {
                             return Observable.error(new Throwable("没有候选节点"));
                         } else {
-                            return Observable.zip(tasks, new Function<Object[], Object>() {
+                            return Observable.zip(tasks, new Function<Object[], DeviceListBean.DevicesBean>() {
                                 @Override
-                                public Object apply(Object[] objects) throws Exception {
-                                    return objects;
+                                public DeviceListBean.DevicesBean apply(Object[] objects) throws Exception {
+                                    return (DeviceListBean.DevicesBean) objects[0];
                                 }
                             });
                         }
                     }
-                })//绑定候选节点
+                })//绑定候选节点，只返回出来第一个绑定的节点
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        mView.bindZigBeeDeviceSuccess();
+                        mView.step3Finish();
                     }
                 })//通知子节点绑定成功
                 .observeOn(Schedulers.io())
-                .onErrorResumeNext(new Function<Throwable, ObservableSource<?>>() {
+                .doOnError(new Consumer<Throwable>() {
                     @Override
-                    public ObservableSource<?> apply(Throwable throwable) throws Exception {
-                        return RequestModel.getInstance()
+                    public void accept(Throwable throwable) throws Exception {
+                        Disposable subscribe1 = RequestModel.getInstance()
                                 .updateProperty(dsn, "zb_join_enable", "0")
-                                .flatMap(new Function<BaseResult<Boolean>, ObservableSource<?>>() {
+                                .subscribeOn(Schedulers.io())
+                                .subscribe(new Consumer<BaseResult<Boolean>>() {
                                     @Override
-                                    public ObservableSource<?> apply(BaseResult<Boolean> booleanBaseResult) throws Exception {
-                                        return Observable.error(throwable);
+                                    public void accept(BaseResult<Boolean> booleanBaseResult) throws Exception {
+
+                                    }
+                                }, new Consumer<Throwable>() {
+                                    @Override
+                                    public void accept(Throwable throwable) throws Exception {
+
                                     }
                                 });
                     }
-                })//前面步骤遇错时，通知网关退出配网模式，然后重新抛出错误。
-                .flatMap(new Function<Object, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(Object o) throws Exception {
-                        return RequestModel.getInstance()
-                                .updateProperty(dsn, "zb_join_enable", "0");
-                    }
-                })//前面步骤正常时，通知网关退出配网模式。
+                })//前面步骤遇错时，通知网关退出配网模式。
                 .doOnDispose(new Action() {
                     @Override
                     public void run() throws Exception {
-                        RequestModel.getInstance()
+                        Disposable subscribe1 = RequestModel.getInstance()
                                 .updateProperty(dsn, "zb_join_enable", "0")
                                 .subscribeOn(Schedulers.io())
-                                .subscribe(new Observer<BaseResult<Boolean>>() {
+                                .subscribe(new Consumer<BaseResult<Boolean>>() {
                                     @Override
-                                    public void onSubscribe(Disposable d) {
+                                    public void accept(BaseResult<Boolean> booleanBaseResult) throws Exception {
 
                                     }
-
+                                }, new Consumer<Throwable>() {
                                     @Override
-                                    public void onNext(BaseResult<Boolean> booleanBaseResult) {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-
-                                    @Override
-                                    public void onComplete() {
+                                    public void accept(Throwable throwable) throws Exception {
 
                                     }
                                 });
                     }
                 })//当直接退出时，通知网关退出配网模式。
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<Object>() {
+                .concatMap(new Function<DeviceListBean.DevicesBean, ObservableSource<DeviceListBean.DevicesBean>>() {
                     @Override
-                    public void accept(Object o) throws Exception {
-                        mView.progressSuccess();
+                    public ObservableSource<DeviceListBean.DevicesBean> apply(DeviceListBean.DevicesBean bean) throws Exception {
+                        return RequestModel.getInstance()
+                                .updateProperty(dsn, "zb_join_enable", "0")
+                                .map(new Function<BaseResult<Boolean>, DeviceListBean.DevicesBean>() {
+                                    @Override
+                                    public DeviceListBean.DevicesBean apply(BaseResult<Boolean> booleanBaseResult) throws Exception {
+                                        return bean;
+                                    }
+                                })
+                                .onErrorReturnItem(bean);
                     }
-                })//通知子节点绑定成功
-                .doOnError(new Consumer<Throwable>() {
+                })//前面步骤正常时，通知网关退出配网模式。
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
+                    @Override
+                    public void accept(DeviceListBean.DevicesBean bean) throws Exception {
+                        mView.bindSuccess(bean.getDeviceId(), deviceName);
+                    }
+                }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         mView.progressFailed(throwable);
                     }
+                });
+        addSubscrebe(subscribe);
+    }
+
+    public void bindHongYanNode(AApplication application, String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
+        final NodeHelper[] nodeHelper = new NodeHelper[1];
+        Disposable subscribe = RequestModel.getInstance()
+                .getAuthCode(String.valueOf(scopeId))
+                .map(new Function<BaseResult<String>, String>() {
+                    @Override
+                    public String apply(BaseResult<String> stringBaseResult) throws Exception {
+                        return stringBaseResult.data;
+                    }
                 })
-                .subscribe(new Observer<Object>() {
+                .flatMap(new Function<String, ObservableSource<String>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
+                    public ObservableSource<String> apply(String authCode) throws Exception {
+                        return Observable.create(new ObservableOnSubscribe<String>() {
+                            @Override
+                            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                                nodeHelper[0] = new NodeHelper(application, new NodeHelper.BindCallback() {
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        emitter.onError(e);
+                                    }
+
+                                    @Override
+                                    public void onSuccess(String iotId) {
+                                        emitter.onNext(iotId);
+                                        emitter.onComplete();
+                                    }
+                                });
+                                nodeHelper[0].start(authCode, dsn, deviceCategory, 60);
+                            }
+                        });
                     }
-
+                })
+                .doFinally(new Action() {
                     @Override
-                    public void onNext(Object o) {
-
+                    public void run() throws Exception {
+                        NodeHelper helper = nodeHelper[0];
+                        if (helper != null) {
+                            helper.stop();
+                        }
                     }
-
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
-                    public void onError(Throwable e) {
-
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.step1Start();
                     }
-
+                })//通知开始连接网关
+                .doOnNext(new Consumer<Object>() {
                     @Override
-                    public void onComplete() {
-
+                    public void accept(Object o) throws Exception {
+                        mView.step1Finish();
+                        mView.step2Start();
+                    }
+                })//通知网关连接成功
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<String, ObservableSource<DeviceListBean.DevicesBean>>() {
+                    @Override
+                    public ObservableSource<DeviceListBean.DevicesBean> apply(String s) throws Exception {
+                        return RequestModel.getInstance()
+                                .bindDeviceWithDSN(s, cuId, scopeId, 2, deviceCategory, deviceName, deviceName)
+                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
+                                    @Override
+                                    public DeviceListBean.DevicesBean apply(BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
+                                        return devicesBeanBaseResult.data;
+                                    }
+                                });
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        mView.step2Finish();
+                    }
+                })//通知子节点绑定成功
+                .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
+                    @Override
+                    public void accept(DeviceListBean.DevicesBean bean) throws Exception {
+                        mView.bindSuccess(bean.getDeviceId(), deviceName);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.progressFailed(throwable);
                     }
                 });
+        addSubscrebe(subscribe);
+
+    }
+
+    public void deviceRenameMethod(String dsn, String nickName) {
+        Disposable subscribe = RequestModel.getInstance().deviceRename(dsn, nickName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress("修改中...");
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<BaseResult<Boolean>>() {
+                    @Override
+                    public void accept(BaseResult<Boolean> booleanBaseResult) throws Exception {
+                        mView.renameSuccess();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.renameFailed();
+                    }
+                });
+        addSubscrebe(subscribe);
     }
 }

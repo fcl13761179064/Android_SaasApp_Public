@@ -7,6 +7,7 @@ import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -25,6 +26,12 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
                         mView.showProgress("修改中...");
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
                     }
                 })
                 .subscribe(new RxjavaObserver<Boolean>() {

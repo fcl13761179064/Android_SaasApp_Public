@@ -12,7 +12,7 @@ import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
 import butterknife.OnClick;
 
 /**
- * 网关添加引导页面
+ * Ayla网关添加引导页面
  * 进入时必须带上cuId 、scopeId 、deviceName、deviceCategory。
  */
 public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
@@ -56,7 +56,8 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
                         dsn = dsn.substring(9, dsn.length() - 2).trim();
                     }
                     if (!TextUtils.isEmpty(dsn)) {
-                        Intent mainActivity = new Intent(this, AylaGatewayAddActivity.class);
+                        Intent mainActivity = new Intent(this, GatewayAddActivity.class);
+                        mainActivity.putExtra("networkType",2);
                         mainActivity.putExtra("dsn", dsn);
                         mainActivity.putExtras(getIntent());
                         startActivityForResult(mainActivity, REQUEST_CODE_FOR_ADD);

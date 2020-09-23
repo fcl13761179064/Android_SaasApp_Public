@@ -1,10 +1,10 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
+    <item android:width="16dp" android:height="16dp">
         <shape android:shape="oval">
             <solid android:color="@color/colorAccent" />
         </shape>
     </item>
-    <item>
+    <item android:width="16dp" android:height="16dp">
         <inset
             android:drawable="@drawable/ic_success"
             android:insetLeft="4dp"

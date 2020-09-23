@@ -5,6 +5,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
@@ -38,10 +39,6 @@ import retrofit2.http.Query;
  * @时间 2017/8/2
  */
 public interface ApiService {
-
-    @FormUrlEncoded
-    @POST("rest")
-    Observable<String> BaseRequest(@FieldMap Map<String, String> params);
 
     @POST("api/v2/sso/login")
     Observable<BaseResult<User>> login(@Body RequestBody body);
@@ -101,7 +98,7 @@ public interface ApiService {
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
     @POST("api/v1/construction/device/bind")
-    Observable<BaseResult> bindDeviceWithDSN(@Body RequestBody body);
+    Observable<BaseResult<DeviceListBean.DevicesBean>> bindDeviceWithDSN(@Body RequestBody body);
 
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
@@ -193,4 +190,11 @@ public interface ApiService {
     @POST("/api/v1/construction/device/transfer/struct")
     Observable<BaseResult> transferToStruct(@Body RequestBody body);
 
+    /**
+     * 获取品类的配网引导信息
+     *
+     * @return
+     */
+    @GET("/api/v1/comstruction/{categoryId}/networkguide")
+    Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(@Path("categoryId") String categoryId);
 }

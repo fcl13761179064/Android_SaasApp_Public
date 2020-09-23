@@ -39,7 +39,6 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  */
 public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView, DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
     private final int REQUEST_CODE_ADD_DEVICE = 0X10;
-    private final int REQUEST_CODE_HONEYAN_ROUTE = 0X11;
     @BindView(R.id.rv_left)
     RecyclerView leftRecyclerView;
 
@@ -177,7 +176,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             } else if (gatewayCount == 1) {//一个网关
                 if (gateway.getCuId() == 0) {//艾拉网关
                     if (TempUtils.isDeviceOnline(gateway)) {//网关在线
-                        Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
+                        Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
                         mainActivity.putExtra("networkType", subBean.getNetworkType());
                         mainActivity.putExtra("deviceId", gateway.getDeviceId());
                         mainActivity.putExtra("cuId", gateway.getCuId());
@@ -219,7 +218,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 if (gateway.getCuId() == 1) {//鸿雁网关
                     if (TempUtils.isDeviceOnline(gateway)) {//网关在线
 //                        this.mSubBean = subBean;
-                        Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
+                        Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
                         mainActivity.putExtra("networkType", subBean.getNetworkType());
                         mainActivity.putExtra("deviceId", gateway.getDeviceId());
                         mainActivity.putExtra("cuId", gateway.getCuId());
@@ -236,7 +235,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 }
             }
         } else if (5 == subBean.getNetworkType()) {//跳转艾拉wifi
-            Intent mainActivity = new Intent(this, ZigBeeAddGuideActivity.class);
+            Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
             mainActivity.putExtra("networkType", subBean.getNetworkType());
             mainActivity.putExtras(getIntent());
             mainActivity.putExtra("deviceCategory", subBean.getOemModel());
@@ -250,33 +249,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     // 接收配网结果
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_HONEYAN_ROUTE && resultCode == RESULT_OK) {
-            final Bundle extras = data.getExtras();
-            Set<String> strings = extras.keySet();
-            for (String keyStr : strings) {
-                if (extras.get(keyStr) instanceof Integer) {
-                    Log.v("onResponse_HONGYAN", "intent extras(int) :" + keyStr + ":" + extras.get(keyStr));
-                } else if (extras.get(keyStr) instanceof String) {
-                    Log.v("onResponse_HONGYAN", "intent extras(String) :" + keyStr + ":" + extras.get(keyStr));
-                } else {
-                    Log.v("onResponse_HONGYAN", "intent extras() :" + keyStr + ":" + extras.get(keyStr));
-                }
-            }
-            String productKey = data.getStringExtra("productKey");
-            String deviceName = data.getStringExtra("deviceName");
-            // 配网成功
-            Log.d("onResponse_HONGYAN_four", "productKey:" + productKey + "  deviceName:" + deviceName);
-            if (!TextUtils.isEmpty(productKey) && !TextUtils.isEmpty(deviceName)) {
-                Intent intent = new Intent(DeviceAddCategoryActivity.this, HongyanGatewayAddActivity.class);
-                intent.putExtra("HongyanproductKey", productKey);
-                intent.putExtra("HongyandeviceName", deviceName);
-                intent.putExtra("deviceCategory", mSubBean.getOemModel());
-                intent.putExtra("deviceName", mSubBean.getDeviceName());
-                intent.putExtra("cuId", mSubBean.getCuId());
-                intent.putExtras(getIntent());
-                startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
-            }
-        }
         if (requestCode == REQUEST_CODE_ADD_DEVICE && resultCode == RESULT_OK) {
             setResult(RESULT_OK);
             finish();

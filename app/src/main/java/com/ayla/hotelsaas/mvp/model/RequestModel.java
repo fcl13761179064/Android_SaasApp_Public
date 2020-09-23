@@ -7,6 +7,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
+import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
@@ -255,8 +256,8 @@ public class RequestModel {
      * @param scopeId
      * @return
      */
-    public Observable<BaseResult> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
-                                                    int scopeType, String deviceCategory, String deviceName, String nickName) {
+    public Observable<BaseResult<DeviceListBean.DevicesBean>> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
+                                                                                int scopeType, String deviceCategory, String deviceName, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("scopeId", scopeId);
@@ -711,5 +712,11 @@ public class RequestModel {
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().transferToRoom(body111);
+    }
+    /**
+     * @return
+     */
+    public Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(String categoryId) {
+        return getApiService().getNetworkConfigGuide(categoryId);
     }
 }
