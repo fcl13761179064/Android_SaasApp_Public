@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="212dp"
         android:layout_below="@id/appBar"
+        android:src="#f8f8f8"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp" />
@@ -41,7 +42,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:text="短按四次，第五次长按 5-10 秒松开"
         android:textColor="#ff999999"
         android:textSize="14sp" />
 

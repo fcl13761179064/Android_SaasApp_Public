@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
+import com.ayla.hotelsaas.mvp.present.GatewayAddPresenter;
 
 import butterknife.OnClick;
 
@@ -21,7 +21,7 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
     private final int REQUEST_CODE_FOR_DSN_SCAN = 0X12;
 
     @Override
-    protected GatewayAddGuidePresenter initPresenter() {
+    protected GatewayAddPresenter initPresenter() {
         return null;
     }
 

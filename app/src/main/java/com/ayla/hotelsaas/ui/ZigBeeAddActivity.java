@@ -93,7 +93,6 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         int networkType = getIntent().getIntExtra("networkType", 0);
         if (networkType == 4) {//鸿雁节点
             mPresenter.bindHongYanNode(
-                    (AApplication) getApplication(),
                     getIntent().getStringExtra("deviceId"),
                     getIntent().getIntExtra("cuId", 0),
                     getIntent().getLongExtra("scopeId", 0),

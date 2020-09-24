@@ -205,7 +205,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
         addSubscrebe(subscribe);
     }
 
-    public void bindHongYanNode(AApplication application, String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
+    public void bindHongYanNode(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
         final NodeHelper[] nodeHelper = new NodeHelper[1];
         Disposable subscribe = RequestModel.getInstance()
                 .getAuthCode(String.valueOf(scopeId))
@@ -221,7 +221,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         return Observable.create(new ObservableOnSubscribe<String>() {
                             @Override
                             public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-                                nodeHelper[0] = new NodeHelper(application, new NodeHelper.BindCallback() {
+                                nodeHelper[0] = new NodeHelper(new NodeHelper.BindCallback() {
                                     @Override
                                     public void onFailure(Exception e) {
                                         emitter.onError(e);

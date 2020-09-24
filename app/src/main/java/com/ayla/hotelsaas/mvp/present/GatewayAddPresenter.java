@@ -6,7 +6,7 @@ import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.mvp.view.GatewayAddGuideView;
+import com.ayla.hotelsaas.mvp.view.GatewayAddView;
 
 import carlwu.top.lib_device_add.GatewayHelper;
 import io.reactivex.Observable;
@@ -20,7 +20,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView> {
+public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
     /**
      * 通过DSN注册一个设备
      *
@@ -46,21 +46,21 @@ public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView>
 
                     @Override
                     public void _onError(String code, String msg) {
-                        mView.bindFailed();
+                        mView.bindFailed(null);
                     }
                 });
     }
 
     public void bindHongYanGateway(AApplication application, long cuId, long scopeId, String deviceCategory, String deviceName, String HYproductkey, String HYdeviceName) {
         final GatewayHelper.BindHelper[] bindHelper = new GatewayHelper.BindHelper[1];
-        Disposable subscribe = RequestModel.getInstance().getAuthCode(String.valueOf(scopeId))
+        Disposable subscribe = RequestModel.getInstance()
+                .getAuthCode(String.valueOf(scopeId))
                 .map(new Function<BaseResult<String>, String>() {
                     @Override
                     public String apply(BaseResult<String> stringBaseResult) throws Exception {
                         return stringBaseResult.data;
                     }
                 })
-                .subscribeOn(Schedulers.io())
                 .flatMap(new Function<String, ObservableSource<String>>() {
                     @Override
                     public ObservableSource<String> apply(String authCode) throws Exception {
@@ -98,7 +98,6 @@ public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView>
                         }
                     }
                 })
-                .observeOn(Schedulers.io())
                 .flatMap(new Function<String, ObservableSource<DeviceListBean.DevicesBean>>() {
                     @Override
                     public ObservableSource<DeviceListBean.DevicesBean> apply(String s) throws Exception {
@@ -112,6 +111,7 @@ public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView>
                                 });
                     }
                 })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
                     @Override
@@ -121,7 +121,11 @@ public class GatewayAddGuidePresenter extends BasePresenter<GatewayAddGuideView>
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.bindFailed();
+                        if (throwable instanceof GatewayHelper.AlreadyBoundException) {
+                            mView.bindFailed("该设备已在别处绑定，请先解绑后再重试");
+                        } else {
+                            mView.bindFailed(null);
+                        }
                     }
                 });
         addSubscrebe(subscribe);

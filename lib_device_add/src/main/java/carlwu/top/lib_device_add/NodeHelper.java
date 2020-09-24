@@ -27,7 +27,7 @@ public class NodeHelper {
     private String TAG = "NodeHelper";
     private boolean status;//工作状态
 
-    public NodeHelper(AApplication application, BindCallback bindCallback) {
+    public NodeHelper(BindCallback bindCallback) {
         this.bindCallback = bindCallback;
     }
 
@@ -37,6 +37,7 @@ public class NodeHelper {
 
         void onSuccess(String iotId);
     }
+
     private int time_second = 60;//超时时间
     private String authCode;
     private String Gateway_IotId;

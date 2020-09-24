@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -13,7 +12,7 @@ import androidx.annotation.Nullable;
 import com.aliyun.iot.aep.sdk.page.LocationUtil;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
+import com.ayla.hotelsaas.mvp.present.GatewayAddPresenter;
 import com.ayla.hotelsaas.utils.WifiUtil;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.blankj.utilcode.constant.PermissionConstants;
@@ -39,7 +38,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
     public EditText mWiFiPasswordEditText;
 
     @Override
-    protected GatewayAddGuidePresenter initPresenter() {
+    protected GatewayAddPresenter initPresenter() {
         return null;
     }
 

@@ -13,8 +13,8 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
-import com.ayla.hotelsaas.mvp.view.GatewayAddGuideView;
+import com.ayla.hotelsaas.mvp.present.GatewayAddPresenter;
+import com.ayla.hotelsaas.mvp.view.GatewayAddView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -29,7 +29,7 @@ import butterknife.OnClick;
  * 鸿雁网关添加时，
  * 进入时必须带上cuId 、scopeId、deviceName、deviceCategory、HYproductKey、HYdeviceName。
  */
-public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, GatewayAddGuidePresenter> implements GatewayAddGuideView {
+public class GatewayAddActivity extends BaseMvpActivity<GatewayAddView, GatewayAddPresenter> implements GatewayAddView {
     @BindView(R.id.iv_01)
     public ImageView mImageView;
     @BindView(R.id.tv_loading)
@@ -44,8 +44,8 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
     EditText mEditText;
 
     @Override
-    protected GatewayAddGuidePresenter initPresenter() {
-        return new GatewayAddGuidePresenter();
+    protected GatewayAddPresenter initPresenter() {
+        return new GatewayAddPresenter();
     }
 
     @Override
@@ -107,8 +107,11 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
         refreshBindShow();
     }
 
+    private String errorMsg;
+
     @Override
-    public void bindFailed() {
+    public void bindFailed(String msg) {
+        errorMsg = msg;
         bindTag = -1;
         refreshBindShow();
     }
@@ -159,7 +162,7 @@ public class GatewayAddActivity extends BaseMvpActivity<GatewayAddGuideView, Gat
                 mLoadingTextView.setVisibility(View.INVISIBLE);
                 mBindProgressTextView.setVisibility(View.VISIBLE);
                 ll_success_name_input.setVisibility(View.INVISIBLE);
-                mBindProgressTextView.setText("设备绑定失败\n请再检查设备状态与设备ID号后重试");
+                mBindProgressTextView.setText(TextUtils.isEmpty(errorMsg) ? "设备绑定失败\n请再检查设备状态后重试" : errorMsg);
                 mFinishButton.setVisibility(View.VISIBLE);
                 mFinishButton.setText("重试");
                 break;

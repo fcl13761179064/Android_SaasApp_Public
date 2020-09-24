@@ -85,6 +85,12 @@ public final class GatewayHelper {
         private String deviceName;
         private String deviceToken;
 
+        /**
+         * @param authCode
+         * @param productKey
+         * @param deviceName  鸿雁体系的设备名称
+         * @param time_second
+         */
         public void startBind(final String authCode, final String productKey, final String deviceName, int time_second) {
             status = true;
             this.authCode = authCode;
@@ -189,7 +195,7 @@ public final class GatewayHelper {
 
                 @Override
                 public void onResponse(IoTRequest ioTRequest, IoTResponse ioTResponse) {
-                    Log.d(TAG, "bind onResponse:" + ioTResponse);
+                    Log.d(TAG, "bind onResponse:" + ioTResponse.getCode() + " data:" + ioTResponse.getData());
                     final int code = ioTResponse.getCode();
                     if (code == 200) {
                         JSONObject data = (JSONObject) ioTResponse.getData();
@@ -203,7 +209,11 @@ public final class GatewayHelper {
                             e.printStackTrace();
                         }
                     } else {
-                        handleFailure(new Exception("绑定阶段失败,code=" + ioTResponse.getCode() + " data:" + ioTResponse.getData()));
+                        if (code == 2064) {//已被绑定错误
+                            handleFailure(new AlreadyBoundException());
+                        } else {
+                            handleFailure(new Exception("绑定阶段失败,code=" + ioTResponse.getCode() + " data:" + ioTResponse.getData()));
+                        }
                     }
                 }
             });
@@ -220,5 +230,11 @@ public final class GatewayHelper {
         void onFailure(Exception e);
 
         void onBindSuccess(String iotId);
+    }
+
+    /**
+     * 设备已被绑定异常
+     */
+    public static class AlreadyBoundException extends Exception {
     }
 }
