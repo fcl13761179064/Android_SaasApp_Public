@@ -59,7 +59,6 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
 
     @Override
     protected void initView() {
-        MyApplication.is_regist_login=true;
         mTimer = new CountDownTimer(60 * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {

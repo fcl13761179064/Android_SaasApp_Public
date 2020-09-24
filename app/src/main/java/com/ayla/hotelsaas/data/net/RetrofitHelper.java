@@ -111,10 +111,6 @@ public class RetrofitHelper {
                     return chain.proceed(request);
                 }
             }
-            if (MyApplication.is_regist_login) {
-                Request request = chain.request().newBuilder().header("userId", "123232432423").build();
-                return chain.proceed(request);
-            }
             return chain.proceed(chain.request());
         }
     };
