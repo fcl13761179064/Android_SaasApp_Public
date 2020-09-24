@@ -195,6 +195,6 @@ public interface ApiService {
      *
      * @return
      */
-    @GET("/api/v1/comstruction/{categoryId}/networkguide")
+    @GET("/api/v1/construction/devicetypes/{categoryId}/networkguide")
     Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(@Path("categoryId") String categoryId);
 }

@@ -92,7 +92,7 @@ public class RetrofitHelper {
         builder.addInterceptor(ReloginInterceptor);
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         builder.addInterceptor(httpLoggingInterceptor);
-
+        builder.retryOnConnectionFailure(true);
         return builder.build();
     }
 

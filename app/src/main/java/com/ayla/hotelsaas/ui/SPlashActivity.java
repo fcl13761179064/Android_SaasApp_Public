@@ -6,12 +6,12 @@ import android.text.TextUtils;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.base.BasicActivity;
+import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.ayla.hotelsaas.utils.StatusBarUtil;
 
-public class SPlashActivity extends BasicActivity {
+public class SPlashActivity extends BaseMvpActivity {
     @Override
     protected int getLayoutId() {
         return R.layout.activity_splash;
@@ -45,5 +45,10 @@ public class SPlashActivity extends BasicActivity {
     public void onBackPressed() {
         super.onBackPressed();
         AppManager.getAppManager().AppExit(this);
+    }
+
+    @Override
+    protected BasePresenter initPresenter() {
+        return null;
     }
 }

@@ -5,14 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
+
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.base.BasicActivity;
+import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.webview.LarkWebView;
 import com.ayla.hotelsaas.widget.AppBar;
 
 import butterknife.BindView;
 
-public class HelpCenterActivity extends BasicActivity implements LarkWebView.LoadCallBack {
+public class HelpCenterActivity extends BaseMvpActivity implements LarkWebView.LoadCallBack {
 
     @BindView(R.id.web_view)
     LarkWebView mWebView;
@@ -66,6 +68,11 @@ public class HelpCenterActivity extends BasicActivity implements LarkWebView.Loa
                 finish();
             }
         });
+    }
+
+    @Override
+    protected BasePresenter initPresenter() {
+        return null;
     }
 }
 
