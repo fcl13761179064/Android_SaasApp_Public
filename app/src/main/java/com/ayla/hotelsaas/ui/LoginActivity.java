@@ -67,7 +67,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     protected void initView() {
-        MyApplication.is_regist_login=true;
         if (Constance.isNetworkDebug) {
             tvSwitch.setText("测");
         } else {

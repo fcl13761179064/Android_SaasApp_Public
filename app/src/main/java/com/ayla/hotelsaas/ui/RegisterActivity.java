@@ -63,7 +63,6 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
 
     @Override
     protected void initView() {
-        MyApplication.is_regist_login=true;
     }
 
 
