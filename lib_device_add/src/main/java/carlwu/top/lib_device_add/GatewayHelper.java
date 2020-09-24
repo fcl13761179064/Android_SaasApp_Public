@@ -113,9 +113,6 @@ public final class GatewayHelper {
                 @Override
                 public void onSuccess(GetTokenResult getTokenResult) {
                     Log.d(TAG, "getDeviceToken onSuccess: " + getTokenResult.token);
-                    if (callback != null) {
-                        callback.onGetTokenSuccess();
-                    }
                     deviceToken = getTokenResult.token;
                     authCodeLogin();
                 }
@@ -225,8 +222,6 @@ public final class GatewayHelper {
     }
 
     public interface BindCallback {
-        void onGetTokenSuccess();
-
         void onFailure(Exception e);
 
         void onBindSuccess(String iotId);

@@ -69,11 +69,6 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                             public void subscribe(ObservableEmitter<String> emitter) throws Exception {
                                 bindHelper[0] = new GatewayHelper.BindHelper(application, new GatewayHelper.BindCallback() {
                                     @Override
-                                    public void onGetTokenSuccess() {
-
-                                    }
-
-                                    @Override
                                     public void onFailure(Exception e) {
                                         emitter.onError(e);
                                     }

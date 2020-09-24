@@ -2,8 +2,6 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
@@ -83,9 +81,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         mFragments.add(new DeviceListFragment(mRoom_ID));
         mFragments.add(new RuleEngineFragment(mRoom_ID));
         mFragments.add(new TestFragment());
-        if (mPresenter != null) {
-            mPresenter.getAuthCode(mRoom_ID + "");
-        }
     }
 
     @Override
@@ -235,13 +230,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
             }
         }
     }
-
-    @Override
-    public void getAuthCodeFail(String code,String msg) {
-    }
-
-    @Override
-    public void getAuthCodeSuccess(String data) {}
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
