@@ -130,13 +130,13 @@ public interface ApiService {
     @GET("api/v1/construction/device/queryModelTemplate/{oemModel}")
     Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("oemModel") String oemModel);
 
-    @PUT("api/v1/device/{deviceId}/info")
+    @PUT("api/v1/construction/device/{deviceId}/info")
     Observable<BaseResult<Boolean>> deviceRename(@Path("deviceId") String deviceId, @Body RequestBody body);
 
-    @POST("api/v1/device/unregister")
+    @POST("api/v1/construction/device/unregister")
     Observable<BaseResult<Boolean>> removeDevice(@Body RequestBody body);
 
-    @POST("/api/v1/construction/device/deviceProperties")
+    @POST("/api/v1/construction/construction/device/deviceProperties")
     Observable<BaseResult<Boolean>> tourchPanelRenameAndIcon(@Body RequestBody body);
 
     @GET("/api/v1/device/deviceProperties/{cuId}/{deviceId}")
