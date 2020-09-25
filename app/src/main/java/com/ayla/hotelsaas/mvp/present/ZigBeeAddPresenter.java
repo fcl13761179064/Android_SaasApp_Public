@@ -10,6 +10,7 @@ import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import carlwu.top.lib_device_add.NodeHelper;
@@ -222,6 +223,19 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                             @Override
                             public void subscribe(ObservableEmitter<String> emitter) throws Exception {
                                 nodeHelper[0] = new NodeHelper(new NodeHelper.BindCallback() {
+                                    @Override
+                                    public Future<Boolean> isUnbindRelation(String subIotId, String subProductKey, String subDeviceName) {
+                                        return RequestModel.getInstance()
+                                                .removeDeviceAllReleate(subProductKey, subDeviceName)
+                                                .map(new Function<BaseResult<String>, Boolean>() {
+                                                    @Override
+                                                    public Boolean apply(BaseResult<String> stringBaseResult) throws Exception {
+                                                        return true;
+                                                    }
+                                                })
+                                                .toFuture();
+                                    }
+
                                     @Override
                                     public void onFailure(Exception e) {
                                         emitter.onError(e);
