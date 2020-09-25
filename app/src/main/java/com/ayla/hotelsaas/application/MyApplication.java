@@ -36,7 +36,6 @@ public class MyApplication extends AApplication {
     private final String TAG = this.getClass().getSimpleName();
     private List<DeviceListBean.DevicesBean> mDevicesBean;
     private static MyApplication mInstance = null;
-    public static Boolean is_regist_login = false;
 
     public static MyApplication getInstance() {
         return mInstance;
