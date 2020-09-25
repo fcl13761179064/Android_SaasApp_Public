@@ -177,7 +177,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
             case -1:
                 mImageView.setImageResource(R.drawable.ic_device_bind_failed);
                 mLoadingTextView.setVisibility(View.INVISIBLE);
-                mProgressTextView.setText("设备绑定失败，请确认设备状态后重试");
+                mProgressTextView.setText(TextUtils.isEmpty(errorMsg) ? "设备绑定失败\n请再检查设备状态后重试" : errorMsg);
                 mFinishButton.setVisibility(View.VISIBLE);
                 mFinishButton.setText("重试");
                 break;
@@ -198,9 +198,11 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         refreshBindShow();
     }
 
+    private String errorMsg;
+
     @Override
-    public void progressFailed(Throwable throwable) {
-        Log.d(TAG, "zigBeeDeviceBindFailed: " + throwable);
+    public void bindFailed(String msg) {
+        Log.d(TAG, "zigBeeDeviceBindFailed: " + msg);
         switch (bindProgress) {
             case 0:
                 mP1View.setImageResource(R.drawable.ic_progress_dot_error);
@@ -216,6 +218,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                 mP3TextView.setTextColor(ContextCompat.getColor(this, R.color.color_bind_logding_tips_failed));
                 break;
         }
+        errorMsg = msg;
         bindProgress = -1;
         refreshBindShow();
     }

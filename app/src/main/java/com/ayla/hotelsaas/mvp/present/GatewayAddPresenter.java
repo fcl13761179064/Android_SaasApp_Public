@@ -9,6 +9,7 @@ import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.GatewayAddView;
 
 import carlwu.top.lib_device_add.GatewayHelper;
+import carlwu.top.lib_device_add.exceptions.AlreadyBoundException;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -116,7 +117,7 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (throwable instanceof GatewayHelper.AlreadyBoundException) {
+                        if (throwable instanceof AlreadyBoundException) {
                             mView.bindFailed("该设备已在别处绑定，请先解绑后再重试");
                         } else {
                             mView.bindFailed(null);

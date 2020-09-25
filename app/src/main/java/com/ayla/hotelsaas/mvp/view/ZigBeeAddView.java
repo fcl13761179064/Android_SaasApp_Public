@@ -11,9 +11,9 @@ public interface ZigBeeAddView extends BaseView {
     /**
      * 节点绑定流程失败
      *
-     * @param throwable
+     * @param msg
      */
-    void progressFailed(Throwable throwable);
+    void bindFailed(String msg);
 
     /**
      * 5.绑定节点成功

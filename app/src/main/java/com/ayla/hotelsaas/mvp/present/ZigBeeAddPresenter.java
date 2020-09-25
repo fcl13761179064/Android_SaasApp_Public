@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.mvp.present;
 
 import android.util.Log;
 
-import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import carlwu.top.lib_device_add.NodeHelper;
+import carlwu.top.lib_device_add.exceptions.AlreadyBoundException;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -199,7 +199,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.progressFailed(throwable);
+                        mView.bindFailed(null);
                     }
                 });
         addSubscrebe(subscribe);
@@ -233,7 +233,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                         emitter.onComplete();
                                     }
                                 });
-                                nodeHelper[0].start(authCode, dsn, deviceCategory, 60);
+                                nodeHelper[0].startBind(authCode, dsn, deviceCategory, 60);
                             }
                         });
                     }
@@ -243,7 +243,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void run() throws Exception {
                         NodeHelper helper = nodeHelper[0];
                         if (helper != null) {
-                            helper.stop();
+                            helper.stopBind();
                         }
                     }
                 })
@@ -291,7 +291,11 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.progressFailed(throwable);
+                        if (throwable instanceof AlreadyBoundException) {
+                            mView.bindFailed("该设备已在别处绑定，请先解绑后再重试");
+                        } else {
+                            mView.bindFailed(null);
+                        }
                     }
                 });
         addSubscrebe(subscribe);
