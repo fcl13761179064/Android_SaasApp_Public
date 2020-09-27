@@ -20,6 +20,7 @@ import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.IntentUtils;
 import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.PermissionUtils;
+import com.blankj.utilcode.util.SPUtils;
 
 import java.util.List;
 
@@ -85,6 +86,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
         if (TextUtils.isEmpty(mWiFiNameEditText.getText().toString())) {
             String connectWifiSsid = WifiUtil.getConnectWifiSsid();
             mWiFiNameEditText.setText(connectWifiSsid);
+            mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
 
             if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
                 if (PermissionUtils.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
@@ -102,6 +104,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
                                     public void onGranted(@NonNull List<String> granted) {
                                         String connectWifiSsid = WifiUtil.getConnectWifiSsid();
                                         mWiFiNameEditText.setText(connectWifiSsid);
+                                        mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
                                     }
 
                                     @Override
@@ -134,6 +137,8 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
         if (name.length() == 0) {
             CustomToast.makeText(this, "WiFi名输入不能为空", R.drawable.ic_toast_warming).show();
         } else {
+            saveWifiPwd(name, pwd);
+
             Intent intent = new Intent(this, AylaWifiAddActivity.class);
             intent.putExtra("wifiName", name);
             intent.putExtra("wifiPassword", pwd);
@@ -149,5 +154,27 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
             setResult(RESULT_OK);
             finish();
         }
+    }
+
+    /**
+     * 保存wifi信息
+     *
+     * @param ssid
+     * @param pwd
+     */
+    private void saveWifiPwd(String ssid, String pwd) {
+        SPUtils instance = SPUtils.getInstance("wifi_info");
+        instance.put(ssid, pwd, true);//保存wifi密码
+    }
+
+    private String getWifiPwd(String ssid) {
+        SPUtils instance = SPUtils.getInstance("wifi_info");
+        String pwd = "";
+        try {
+            pwd = instance.getString(ssid);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        return pwd;
     }
 }
