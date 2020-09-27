@@ -100,7 +100,7 @@
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical|right"
                     android:hint="输入设备WiFi密码"
-                    android:inputType="textPassword"
+                    android:inputType="textVisiblePassword"
                     android:maxLines="1"
                     android:textColor="#ff333333"
                     android:textSize="14sp" />

@@ -1,9 +1,11 @@
 package com.ayla.hotelsaas.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,11 +13,10 @@ import androidx.core.content.ContextCompat;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.GlideApp;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.AylaWifiAddPresenter;
-import com.ayla.hotelsaas.mvp.present.ZigBeeAddPresenter;
 import com.ayla.hotelsaas.mvp.view.AylaWifiAddView;
-import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -42,7 +43,8 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
     public ImageView mP1View;
     @BindView(R.id.tv_p1)
     public TextView mP1TextView;
-
+    @BindView(R.id.et_input)
+    EditText mEditText;
 
     @BindView(R.id.iv_p2)
     public ImageView mP2View;
@@ -94,39 +96,54 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
     }
 
     @Override
-    public void startAirkiss() {
+    public void step1Start() {
         bindProgress = 0;
         refreshBindShow();
     }
 
     @Override
-    public void airkissSuccess() {
+    public void renameSuccess() {
+        finish();
+    }
+
+    @Override
+    public void renameFailed() {
+        CustomToast.makeText(MyApplication.getContext(), "更新设备名称失败", R.drawable.ic_toast_warming).show();
+    }
+
+    @Override
+    public void step1Finish() {
         bindProgress = 1;
         refreshBindShow();
     }
 
     @Override
-    public void startBind() {
+    public void step2Start() {
         bindProgress = 2;
         refreshBindShow();
     }
 
     @Override
-    public void bindSuccess() {
+    public void step2Finish() {
         bindProgress = 3;
         refreshBindShow();
     }
 
+    private String bondDeviceName;
+    private String bondDeviceId;
+
     @Override
-    public void progressSuccess() {
+    public void bindSuccess(String deviceId, String deviceName) {
         setResult(RESULT_OK);
+        bondDeviceId = deviceId;
+        bondDeviceName = deviceName;
+        mEditText.setText(deviceName);
         bindProgress = 6;
         refreshBindShow();
     }
 
     @Override
-    public void progressFailed(Throwable throwable) {
-        Log.d(TAG, "zigBeeDeviceBindFailed: " + throwable);
+    public void bindFailed(String msg) {
         mImageView.setImageResource(R.drawable.ic_device_bind_failed);
         mLoadingTextView.setVisibility(View.INVISIBLE);
         mProgressView.setVisibility(View.VISIBLE);
@@ -154,7 +171,16 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
     @OnClick(R.id.bt_bind)
     public void handleButton() {
         if (bindProgress == 6) {
-            finish();
+            String newName = mEditText.getText().toString();
+            if (TextUtils.isEmpty(newName)) {
+                CustomToast.makeText(MyApplication.getContext(), "设备名称不能为空", R.drawable.ic_toast_warming).show();
+                return;
+            }
+            if (TextUtils.equals(newName, bondDeviceName)) {
+                finish();
+                return;
+            }
+            mPresenter.deviceRenameMethod(bondDeviceId, newName);
         } else {
             progressStart();
         }

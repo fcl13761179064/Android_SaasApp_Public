@@ -6,32 +6,36 @@ public interface AylaWifiAddView extends BaseView {
     /**
      * 流程结束
      */
-    void progressSuccess();
+    void bindSuccess(String deviceId, String deviceName);
 
     /**
      * 流程失败
      *
-     * @param throwable
+     * @param msg
      */
-    void progressFailed(Throwable throwable);
+    void bindFailed(String msg);
 
     /**
      * 步骤二 完成
      */
-    void bindSuccess();
+    void step2Finish();
 
     /**
      * 步骤二 开始
      */
-    void startBind();
+    void step2Start();
 
     /**
      * 步骤一 完成
      */
-    void airkissSuccess();
+    void step1Finish();
 
     /**
      * 步骤一 开始
      */
-    void startAirkiss();
+    void step1Start();
+
+    void renameSuccess();
+
+    void renameFailed();
 }

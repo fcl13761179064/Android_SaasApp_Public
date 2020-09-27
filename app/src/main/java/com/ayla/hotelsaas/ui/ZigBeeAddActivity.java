@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
-import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -116,11 +115,11 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                 CustomToast.makeText(MyApplication.getContext(), "设备名称不能为空", R.drawable.ic_toast_warming).show();
                 return;
             }
-            if (TextUtils.equals(newName, bindedDeviceName)) {
+            if (TextUtils.equals(newName, bondDeviceName)) {
                 finish();
                 return;
             }
-            mPresenter.deviceRenameMethod(bindedDeviceId, newName);
+            mPresenter.deviceRenameMethod(bondDeviceId, newName);
         } else if (bindProgress == -1) {
             startBind();
         }
@@ -184,14 +183,14 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         }
     }
 
-    private String bindedDeviceName;
-    private String bindedDeviceId;
+    private String bondDeviceName;
+    private String bondDeviceId;
 
     @Override
     public void bindSuccess(String deviceId, String deviceName) {
         Log.d(TAG, "zigBeeDeviceBindFinished: ");
-        bindedDeviceId = deviceId;
-        bindedDeviceName = deviceName;
+        bondDeviceId = deviceId;
+        bondDeviceName = deviceName;
         bindProgress = 6;
         mEditText.setText(deviceName);
         setResult(RESULT_OK);
