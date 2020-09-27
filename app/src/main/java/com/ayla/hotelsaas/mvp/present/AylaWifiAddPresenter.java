@@ -75,8 +75,6 @@ public class AylaWifiAddPresenter extends BasePresenter<AylaWifiAddView> {
                     @Override
                     public ObservableSource<?> apply(String[] strings) throws Exception {
                         String dsn = strings[0];
-                        // TODO: 2020/9/22 测试
-                        dsn = "AC000W013771338";
                         return RequestModel.getInstance()
                                 .bindDeviceWithDSN(dsn, cuId, scopeId, 2,
                                         deviceCategory, deviceName, deviceName);
@@ -89,28 +87,15 @@ public class AylaWifiAddPresenter extends BasePresenter<AylaWifiAddView> {
                         mView.bindSuccess();
                     }
                 })//通知子节点绑定成功
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<Object>() {
+                .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
                         mView.progressSuccess();
                     }
-                })//通知子节点绑定成功
-                .doOnError(new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        mView.progressFailed(throwable);
-                    }
-                })
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-
-                    }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        mView.progressFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);

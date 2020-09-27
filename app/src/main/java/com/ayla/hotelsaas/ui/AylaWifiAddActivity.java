@@ -34,6 +34,8 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
     public TextView mProgressTextView;
     @BindView(R.id.ll_progress)
     public View mProgressView;
+    @BindView(R.id.ll_success_name_input)
+    public View ll_success_name_input;
     @BindView(R.id.bt_bind)
     public Button mFinishButton;
     @BindView(R.id.iv_p1)
@@ -167,6 +169,7 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
                 GlideApp.with(mImageView).load(R.drawable.ic_device_bind_loading).into(mImageView);
                 mLoadingTextView.setVisibility(View.VISIBLE);
                 mProgressTextView.setText("最长可能需要1分钟，请耐心等待");
+                ll_success_name_input.setVisibility(View.INVISIBLE);
                 mProgressView.setVisibility(View.VISIBLE);
                 mP1View.setImageResource(R.drawable.ic_progress_dot_loading);
                 mP1TextView.setTextColor(ContextCompat.getColor(this, R.color.color_333333));
@@ -203,6 +206,7 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
                 mProgressTextView.setText("设备绑定成功");
                 mFinishButton.setVisibility(View.VISIBLE);
                 mFinishButton.setText("完成");
+                ll_success_name_input.setVisibility(View.VISIBLE);
                 break;
         }
     }
