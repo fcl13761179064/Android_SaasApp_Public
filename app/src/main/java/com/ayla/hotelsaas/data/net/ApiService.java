@@ -139,7 +139,7 @@ public interface ApiService {
     @POST("/api/v1/construction/construction/device/deviceProperties")
     Observable<BaseResult<Boolean>> tourchPanelRenameAndIcon(@Body RequestBody body);
 
-    @GET("/api/v1/device/deviceProperties/{cuId}/{deviceId}")
+    @GET("/api/v1/construction/device/deviceProperties/{cuId}/{deviceId}")
     Observable<BaseResult<List<TouchPanelDataBean>>> touchpanelALlDevice(@Path("cuId") int oemModel, @Path("deviceId") String ss);
 
     /**
