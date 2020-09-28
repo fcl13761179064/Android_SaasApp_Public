@@ -76,7 +76,7 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                             .newInstance(new ValueChangeDialog.DoneCallback() {
                                 @Override
                                 public void onDone(DialogFragment dialog, String txt) {
-                                    if (TextUtils.isEmpty(txt)) {
+                                    if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
                                         CustomToast.makeText(getContext(), "修改房间名称不能为空", R.drawable.ic_toast_warming).show();
                                         return;
                                     } else {

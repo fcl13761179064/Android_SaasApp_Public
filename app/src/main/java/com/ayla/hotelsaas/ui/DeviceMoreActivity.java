@@ -113,7 +113,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                         .newInstance(new ValueChangeDialog.DoneCallback() {
                             @Override
                             public void onDone(DialogFragment dialog, String txt) {
-                                if (TextUtils.isEmpty(txt)) {
+                                if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
                                     CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming).show();
                                     return;
                                 } else {
