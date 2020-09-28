@@ -137,7 +137,7 @@ public interface ApiService {
     @POST("api/v1/construction/device/unregister")
     Observable<BaseResult<Boolean>> removeDevice(@Body RequestBody body);
 
-    @POST("/api/v1/construction/construction/device/deviceProperties")
+    @POST("/api/v1/construction/device/deviceProperties")
     Observable<BaseResult<Boolean>> tourchPanelRenameAndIcon(@Body RequestBody body);
 
     @GET("/api/v1/construction/device/deviceProperties/{cuId}/{deviceId}")
