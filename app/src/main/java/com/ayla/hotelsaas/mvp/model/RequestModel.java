@@ -74,7 +74,7 @@ public class RequestModel {
         body.addProperty("account", account);
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().login(new_body);
+        return getApiService().login(1, new_body);
     }
 
     public Observable<BaseResult<Boolean>> register(String user_name, String account, String password) {
@@ -678,7 +678,7 @@ public class RequestModel {
         for (String s : roomIdList) {
             roomIdListJsonArray.add(s);
         }
-        jsonObject.add("roomIdList",roomIdListJsonArray);
+        jsonObject.add("roomIdList", roomIdListJsonArray);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().transferToHotel(body111);
@@ -695,7 +695,7 @@ public class RequestModel {
         for (String s : roomIdList) {
             roomIdListJsonArray.add(s);
         }
-        jsonObject.add("roomIdList",roomIdListJsonArray);
+        jsonObject.add("roomIdList", roomIdListJsonArray);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().transferToStruct(body111);
@@ -713,6 +713,7 @@ public class RequestModel {
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().transferToRoom(body111);
     }
+
     /**
      * @return
      */
