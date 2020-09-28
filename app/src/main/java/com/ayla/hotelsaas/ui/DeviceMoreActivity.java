@@ -115,6 +115,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                             public void onDone(DialogFragment dialog, String txt) {
                                 if (TextUtils.isEmpty(txt)) {
                                     CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming).show();
+                                    return;
                                 } else {
                                     tv_device_name.setText(txt);
                                     if (mDevicesBean != null) {

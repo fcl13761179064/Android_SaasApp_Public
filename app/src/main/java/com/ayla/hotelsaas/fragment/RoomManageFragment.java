@@ -78,6 +78,7 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                                 public void onDone(DialogFragment dialog, String txt) {
                                     if (TextUtils.isEmpty(txt)) {
                                         CustomToast.makeText(getContext(), "修改房间名称不能为空", R.drawable.ic_toast_warming).show();
+                                        return;
                                     } else {
                                         mPresenter.createRoomNum(txt);
                                     }
@@ -148,11 +149,11 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                 if (mAdapter.getData().isEmpty()) {
                     mAdapter.setEmptyView(R.layout.empty_room_manage);
                 }
-                if (mAdapter.getData().size()>10) {
+                if (mAdapter.getData().size() > 10) {
                     final View inflate = LayoutInflater.from(getContext()).inflate(R.layout.room_root_view, null);
                     mAdapter.setFooterView(inflate);
                 }
-                    mRefreshLayout.setEnableLoadMore(false);
+                mRefreshLayout.setEnableLoadMore(false);
             } else {
                 mAdapter.addData(records);
             }

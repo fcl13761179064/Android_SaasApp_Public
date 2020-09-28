@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -442,6 +443,10 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 .newInstance(new ValueChangeDialog.DoneCallback() {
                     @Override
                     public void onDone(DialogFragment dialog, String txt) {
+                        if (TextUtils.isEmpty(txt)) {
+                            CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming).show();
+                            return;
+                        }
                         mSceneNameTextView.setText(txt);
                         mRuleEngineBean.setRuleName(txt);
                         dialog.dismissAllowingStateLoss();
