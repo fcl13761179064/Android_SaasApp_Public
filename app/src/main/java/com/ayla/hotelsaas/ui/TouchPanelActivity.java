@@ -10,7 +10,8 @@ import androidx.annotation.Nullable;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.TouchPanelAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
-import com.ayla.hotelsaas.base.BasicActivity;
+import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.TouchPanelBean;
 import com.ayla.hotelsaas.utils.ToastUtils;
 import com.ayla.hotelsaas.widget.AppBar;
@@ -23,7 +24,7 @@ import butterknife.BindView;
 /**
  * 触控面板页面
  */
-public class TouchPanelActivity extends BasicActivity {
+public class TouchPanelActivity extends BaseMvpActivity {
     @BindView(R.id.gridView)
     GridView mGridView;
 
@@ -86,5 +87,10 @@ public class TouchPanelActivity extends BasicActivity {
             setResult(RESULT_OK);
             finish();
         }
+    }
+
+    @Override
+    protected BasePresenter initPresenter() {
+        return null;
     }
 }

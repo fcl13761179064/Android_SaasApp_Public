@@ -3,11 +3,9 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.widget.EditText;
 
-import androidx.annotation.Nullable;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
+import com.ayla.hotelsaas.mvp.present.GatewayAddPresenter;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -21,7 +19,7 @@ public class GatewayAddDsnInputActivity extends BaseMvpActivity {
     public EditText mDSNEditText;
 
     @Override
-    protected GatewayAddGuidePresenter initPresenter() {
+    protected GatewayAddPresenter initPresenter() {
         return null;
     }
 

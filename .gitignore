@@ -49,3 +49,8 @@ captures/
 app/target
 app/debug
 app/release
+h5demo
+lib_annotation
+lib_processor
+gradlew
+mvp_lib

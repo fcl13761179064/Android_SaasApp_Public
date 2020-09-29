@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.utils.AppManager;
 import com.ayla.hotelsaas.utils.ClickUtils;
 import com.ayla.hotelsaas.widget.LoadingDialog;
 import com.blankj.utilcode.util.BarUtils;
@@ -26,7 +25,7 @@ import butterknife.Unbinder;
  * BaseActivity
  * 基础Activity
  */
-public abstract class BasicActivity extends AppCompatActivity {
+abstract class BasicActivity extends AppCompatActivity {
 
     private Unbinder unbinder;
 
@@ -37,11 +36,9 @@ public abstract class BasicActivity extends AppCompatActivity {
         setContentView(getLayoutId());
         unbinder = ButterKnife.bind(this);
         initSaveInstace(savedInstanceState);
-        setStatusBar();
         refreshUI();
         initView();
         initListener();
-        AppManager.getAppManager().addActivity(this);
         if (!ScreenUtils.isFullScreen(this)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 BarUtils.setStatusBarColor(this, Color.TRANSPARENT);
@@ -50,22 +47,6 @@ public abstract class BasicActivity extends AppCompatActivity {
                 BarUtils.setStatusBarColor(this, ContextCompat.getColor(this, R.color.color_statusbar_compare_color));
             }
         }
-    }
-
-
-    protected void setStatusBar() {
-      /*  //沉浸式代码配置
-        //当FitsSystemWindows设置 true 时，会在屏幕最上方预留出状态栏高度的 padding
-        StatusBarToolUlti.setRootViewFitsSystemWindows(this, true);
-        //设置状态栏透明
-        StatusBarToolUlti.setTranslucentStatus(this);
-        //一般的手机的状态栏文字和图标都是白色的, 可如果你的应用也是纯白色的, 或导致状态栏文字看不清
-        //所以如果你是这种情况,请使用以下代码, 设置状态使用深色文字图标风格, 否则你可以选择性注释掉这个if内容
-        if (!StatusBarToolUlti.setStatusBarDarkTheme(this, true)) {
-            //如果不支持设置深色风格 为了兼容总不能让状态栏白白的看不清, 于是设置一个状态栏颜色为半透明,
-            //这样半透明+白=灰, 状态栏的文字能看得清
-            StatusBarToolUlti.setStatusBarColor(this, 0x55000000);
-        }*/
     }
 
     /**
@@ -181,14 +162,6 @@ public abstract class BasicActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
-    }
-
-    /**
-     * 统计提供方法监听Framgnt function
-     *
-     * @param tag
-     */
-    public void setFunctionsForFragment(String tag) {
     }
 }
 

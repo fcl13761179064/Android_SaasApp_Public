@@ -6,42 +6,45 @@ public interface ZigBeeAddView extends BaseView {
     /**
      * 节点绑定流程结束
      */
-    void progressSuccess();
+    void bindSuccess(String deviceId, String deviceName);
 
     /**
      * 节点绑定流程失败
      *
-     * @param throwable
+     * @param msg
      */
-    void progressFailed(Throwable throwable);
+    void bindFailed(String msg);
 
     /**
      * 5.绑定节点成功
      */
-    void bindZigBeeDeviceSuccess();
+    void step3Finish();
 
     /**
      * 5.开始绑定节点
      */
-    void bindZigBeeDeviceStart();
+    void step3Start();
     /**
      * 4.候选节点查找成功
      */
-    void fetchCandidatesSuccess();
+    void step2Finish();
 
     /**
      * 3.开始查找候选节点
      */
-    void fetchCandidatesStart();
+    void step2Start();
 
     /**
      * 2.连接网关成功
      */
-    void gatewayConnectSuccess();
+    void step1Finish();
 
     /**
      * 1.开始连接网关
      */
-    void gatewayConnectStart();
+    void step1Start();
 
+    void renameSuccess();
+
+    void renameFailed();
 }
