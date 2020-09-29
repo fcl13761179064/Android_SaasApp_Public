@@ -80,7 +80,7 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                                         emitter.onComplete();
                                     }
                                 });
-                                bindHelper[0].startBind(authCode, HYproductkey, HYdeviceName, 60);
+                                bindHelper[0].startBind(authCode, HYproductkey, HYdeviceName, 100);
                             }
                         });
                     }

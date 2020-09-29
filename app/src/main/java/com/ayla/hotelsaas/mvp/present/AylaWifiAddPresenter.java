@@ -43,7 +43,7 @@ public class AylaWifiAddPresenter extends BasePresenter<AylaWifiAddView> {
                         return Observable.create(new ObservableOnSubscribe<String[]>() {
                             @Override
                             public void subscribe(ObservableEmitter<String[]> emitter) throws Exception {
-                                configManager[0].start((Context) mView, wifiName, wifiPassword, 60_000, new LarkConfigCallback() {
+                                configManager[0].start((Context) mView, wifiName, wifiPassword, 100_000, new LarkConfigCallback() {
                                     @Override
                                     public void configSuccess(int i, String s, String s1) {
                                         emitter.onNext(new String[]{s, s1});
