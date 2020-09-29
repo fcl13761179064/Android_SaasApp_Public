@@ -38,7 +38,9 @@ public class HelpCenterActivity extends BaseMvpActivity {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                emptyView.setVisibility(View.VISIBLE);
+                if (mWebView.getVisibility() != View.VISIBLE) {
+                    emptyView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -82,6 +84,12 @@ public class HelpCenterActivity extends BaseMvpActivity {
     @OnClick(R.id.bt_refresh)
     void handleRefreshClick(){
         mWebView.reload();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mWebView.destroy();
+        super.onDestroy();
     }
 }
 
