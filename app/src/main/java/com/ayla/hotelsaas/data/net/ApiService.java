@@ -5,6 +5,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
@@ -27,6 +28,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -39,12 +41,8 @@ import retrofit2.http.Query;
  */
 public interface ApiService {
 
-    @FormUrlEncoded
-    @POST("rest")
-    Observable<String> BaseRequest(@FieldMap Map<String, String> params);
-
     @POST("api/v2/sso/login")
-    Observable<BaseResult<User>> login(@Body RequestBody body);
+    Observable<BaseResult<User>> login(@Header("loginSource") int loginSource, @Body RequestBody body);
 
     @GET("api/v2/sso/{resourceId}")
     Observable<BaseResult<String>> authCode(@Path("resourceId") String scopeId);
@@ -101,7 +99,7 @@ public interface ApiService {
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
     @POST("api/v1/construction/device/bind")
-    Observable<BaseResult> bindDeviceWithDSN(@Body RequestBody body);
+    Observable<BaseResult<DeviceListBean.DevicesBean>> bindDeviceWithDSN(@Body RequestBody body);
 
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
@@ -193,4 +191,11 @@ public interface ApiService {
     @POST("/api/v1/construction/device/transfer/struct")
     Observable<BaseResult> transferToStruct(@Body RequestBody body);
 
+    /**
+     * 获取品类的配网引导信息
+     *
+     * @return
+     */
+    @GET("/api/v1/construction/devicetypes/{categoryId}/networkguide")
+    Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(@Path("categoryId") String categoryId);
 }

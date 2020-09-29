@@ -2,8 +2,6 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
@@ -14,8 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.aliyun.iot.aep.sdk.login.ILoginCallback;
-import com.aliyun.iot.aep.sdk.login.LoginBusiness;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasicFragment;
@@ -63,7 +59,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     public final static int GO_HOME_TYPE = 0;
     public final static int GO_THREE_TYPE = 2;
     public final static int GO_SECOND_TYPE = 1;
-    public static  boolean mAuthCode=false;
 
     @Override
     protected int getLayoutId() {
@@ -86,9 +81,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         mFragments.add(new DeviceListFragment(mRoom_ID));
         mFragments.add(new RuleEngineFragment(mRoom_ID));
         mFragments.add(new TestFragment());
-        if (mPresenter != null) {
-            mPresenter.getAuthCode(mRoom_ID + "");
-        }
     }
 
     @Override
@@ -236,34 +228,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
                 changeFragment(GO_THREE_TYPE);
                 break;
             }
-        }
-    }
-
-    @Override
-    public void getAuthCodeFail(String code,String msg) {
-        mAuthCode = false;
-    }
-
-    @Override
-    public void getAuthCodeSuccess(String data) {
-        if (!TextUtils.isEmpty(data)) {
-            Log.d("onLoginSuccess",data);
-            LoginBusiness.authCodeLogin(data, new ILoginCallback() {
-                @Override
-                public void onLoginSuccess() {
-                    mAuthCode = true;
-                    Log.d("onLoginSuccess", "成功");
-                }
-
-                @Override
-                public void onLoginFailed(int i, String s) {
-                    mAuthCode = false;
-                    Log.d("onLoginSuccess", "code: " + i + ", str: " + s);
-
-                }
-            });
-        } else {
-            Log.d("aliyun_auth_code", "authCode为空");
         }
     }
 

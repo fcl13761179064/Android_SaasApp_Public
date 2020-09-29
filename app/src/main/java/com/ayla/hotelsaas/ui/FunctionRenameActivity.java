@@ -75,8 +75,9 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
                         .newInstance(new ValueChangeDialog.DoneCallback() {
                             @Override
                             public void onDone(DialogFragment dialog, String txt) {
-                                if (TextUtils.isEmpty(txt)) {
-                                    CustomToast.makeText(getBaseContext(), "不能为空", R.drawable.ic_toast_warming).show();
+                                if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
+                                    CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming).show();
+                                    return;
                                 } else {
                                     if (mDevicesBean != null) {
                                         for (int i = 0; i < mAdapter.getData().size(); i++) {

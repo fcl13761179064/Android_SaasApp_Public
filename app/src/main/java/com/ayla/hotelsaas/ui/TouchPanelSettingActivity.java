@@ -97,7 +97,7 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
                         .newInstance(new ValueChangeDialog.DoneCallback() {
                             @Override
                             public void onDone(DialogFragment dialog, String txt) {
-                                if (TextUtils.isEmpty(txt)) {
+                                if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
                                     CustomToast.makeText(getBaseContext(), "修改场景名称不能为空", R.drawable.ic_toast_warming).show();
                                 } else {
                                     tv_touchpanel_rename.setText(txt);

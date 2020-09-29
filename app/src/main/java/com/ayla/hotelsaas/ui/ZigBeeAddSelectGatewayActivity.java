@@ -56,11 +56,11 @@ public class ZigBeeAddSelectGatewayActivity extends BaseMvpActivity<ZigBeeAddSel
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 DeviceListBean.DevicesBean device = (DeviceListBean.DevicesBean) adapter.getItem(position);
                 if (TempUtils.isDeviceOnline(device)) {
-                    Intent mainActivity = new Intent(ZigBeeAddSelectGatewayActivity.this, ZigBeeAddGuideActivity.class);
-                    mainActivity.putExtra("deviceId", device.getDeviceId());
-                    mainActivity.putExtra("cuId", device.getCuId());
-                    mainActivity.putExtras(getIntent());
-                    startActivityForResult(mainActivity, 0);
+//                    Intent mainActivity = new Intent(ZigBeeAddSelectGatewayActivity.this, ZigBeeAddGuideActivity.class);
+//                    mainActivity.putExtra("deviceId", device.getDeviceId());
+//                    mainActivity.putExtra("cuId", device.getCuId());
+//                    mainActivity.putExtras(getIntent());
+//                    startActivityForResult(mainActivity, 0);
                 }
             }
         });

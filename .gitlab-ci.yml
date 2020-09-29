@@ -53,7 +53,7 @@ job_publish:
     - prod
   script:
     - echo "开始上传APP到蒲公英"
-    - curl -F 'file=@app/build/outputs/apk/release/app-release.apk' -F '_api_key=5777f19839fbacffeecd974818b88517' https://www.pgyer.com/apiv2/app/upload
+    - curl -F 'file=@app/build/outputs/apk/release/app-release.apk' -F '_api_key=76e04e812ccbf2cf9b501dfbc278dda5' https://www.pgyer.com/apiv2/app/upload
     - echo "上传APP到蒲公英结束"
   tags:
     - docker

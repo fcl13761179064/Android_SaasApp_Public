@@ -37,32 +37,33 @@
             android:textSize="18sp" />
 
 
-        <TextView
-            android:id="@+id/tv_progress"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/ll_progress"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_01"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="68dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginRight="68dp"
+            android:layout_marginTop="68dp"
+            android:visibility="visible"
             android:gravity="center"
-            android:text="设备绑定失败，请确认设备状态后重试"
-            android:textColor="#ff333333"
-            android:textSize="14sp" />
-
-        <LinearLayout
-            android:id="@+id/ll_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_progress"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="68dp"
+                android:layout_marginRight="68dp"
+                android:gravity="center"
+                android:text="设备绑定失败，请确认设备状态后重试"
+                android:textColor="#ff333333"
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -129,13 +130,67 @@
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_success_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_01"
+            android:layout_marginTop="68dp"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="绑定成功"
+                android:textColor="#ff333333"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/bg_device_item"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="设备名称"
+                    android:textColor="#ff333333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:background="@android:color/transparent"
+                    android:gravity="right|center_vertical"
+                    android:hint="输入设备名称"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="#ff333333"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
         <Button
             android:id="@+id/bt_bind"
             android:layout_width="238dp"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="100dp"
             android:background="@drawable/bg_bt_gateway_add_start_next"
             android:text="完成"
             android:textColor="#ff648c1a"

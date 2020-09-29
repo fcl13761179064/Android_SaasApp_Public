@@ -7,6 +7,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
+import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
@@ -73,7 +74,7 @@ public class RequestModel {
         body.addProperty("account", account);
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().login(new_body);
+        return getApiService().login(1, new_body);
     }
 
     public Observable<BaseResult<Boolean>> register(String user_name, String account, String password) {
@@ -215,6 +216,29 @@ public class RequestModel {
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
         return getApiService().fetchDeviceCategory();
+//                .map(new Function<BaseResult<List<DeviceCategoryBean>>, BaseResult<List<DeviceCategoryBean>>>() {
+//                    @Override
+//                    public BaseResult<List<DeviceCategoryBean>> apply(BaseResult<List<DeviceCategoryBean>> listBaseResult) throws Exception {
+//                        List<DeviceCategoryBean> data = listBaseResult.data;
+//                        DeviceCategoryBean bean = new DeviceCategoryBean();
+//                        bean.setId(100);
+//                        bean.setName("WiFi设备");
+//                        ArrayList<DeviceCategoryBean.SubBean> objects = new ArrayList<>();
+//                        DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
+//                        subBean.setId(100);
+//                        subBean.setDeviceName("AY008RTK1");
+//                        subBean.setName("智能插座");
+//                        subBean.setDeviceConnectType(3);
+//                        subBean.setNetworkType(5);
+//                        subBean.setCuId(1);
+//                        subBean.setOemModel("SP0-01-0-001");
+//
+//                        objects.add(subBean);
+//                        bean.setSub(objects);
+//                        data.add(bean);
+//                        return listBaseResult;
+//                    }
+//                });
     }
 
     /**
@@ -232,8 +256,8 @@ public class RequestModel {
      * @param scopeId
      * @return
      */
-    public Observable<BaseResult> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
-                                                    int scopeType, String deviceCategory, String deviceName, String nickName) {
+    public Observable<BaseResult<DeviceListBean.DevicesBean>> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
+                                                                                int scopeType, String deviceCategory, String deviceName, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("scopeId", scopeId);
@@ -654,7 +678,7 @@ public class RequestModel {
         for (String s : roomIdList) {
             roomIdListJsonArray.add(s);
         }
-        jsonObject.add("roomIdList",roomIdListJsonArray);
+        jsonObject.add("roomIdList", roomIdListJsonArray);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().transferToHotel(body111);
@@ -671,7 +695,7 @@ public class RequestModel {
         for (String s : roomIdList) {
             roomIdListJsonArray.add(s);
         }
-        jsonObject.add("roomIdList",roomIdListJsonArray);
+        jsonObject.add("roomIdList", roomIdListJsonArray);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().transferToStruct(body111);
@@ -688,5 +712,12 @@ public class RequestModel {
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().transferToRoom(body111);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(String categoryId) {
+        return getApiService().getNetworkConfigGuide(categoryId);
     }
 }

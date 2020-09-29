@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,8 +59,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     public RecyclerView mActionRecyclerView;
     @BindView(R.id.tv_scene_name)
     public TextView mSceneNameTextView;
-    @BindView(R.id.appBar)
-    AppBar appBar;
     @BindView(R.id.tv_delete)
     View mDeleteView;
     @BindView(R.id.v_add_action)
@@ -293,40 +292,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 showData();
             }
         });
-        appBar.rightTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null == mRuleEngineBean.getRuleName() || mRuleEngineBean.getRuleName().length() == 0) {
-                    CustomToast.makeText(SceneSettingActivity.this, "名称不能为空", R.drawable.ic_warning).show();
-                    return;
-                }
-                if (mRuleEngineBean.getConditions().size() == 0) {
-                    CustomToast.makeText(SceneSettingActivity.this, "请添加条件", R.drawable.ic_warning).show();
-                    return;
-                }
-                if (mRuleEngineBean.getActions().size() == 0) {
-                    CustomToast.makeText(SceneSettingActivity.this, "请添加动作", R.drawable.ic_warning).show();
-                    return;
-                }
-                if (mRuleEngineBean.getRuleSetMode() == BaseSceneBean.RULE_SET_MODE.ALL) {//满足所有条件时
-                    List<String> exist = new ArrayList<>();
-                    for (BaseSceneBean.Condition condition : mRuleEngineBean.getConditions()) {
-                        if (condition instanceof BaseSceneBean.DeviceCondition) {
-                            String deviceId = ((BaseSceneBean.DeviceCondition) condition).getSourceDeviceId();
-                            String leftValue = ((BaseSceneBean.DeviceCondition) condition).getLeftValue();
-                            String value = deviceId + leftValue;
-                            if (exist.contains(value)) {
-                                CustomToast.makeText(getBaseContext(), "选择满足所有条件时，条件中不可以添加多个同一设备的同一功能", R.drawable.ic_toast_warming).show();
-                                return;
-                            } else {
-                                exist.add(value);
-                            }
-                        }
-                    }
-                }
-                mPresenter.saveOrUpdateRuleEngine(mRuleEngineBean);
-            }
-        });
     }
 
     @Override
@@ -383,51 +348,39 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         }
     }
 
-    /**
-     * 计算condition表达式 ，并且修改了每个condition's item 的joinType。
-     *
-     * @param joinAll
-     * @param conditionItems
-     * @return
-     */
-//    private String calculateConditionExpression(boolean joinAll, List<RuleEngineBean.Condition.ConditionItem> conditionItems) {
-//        StringBuilder result = new StringBuilder();
-//        int cronIndex = -1;//记录生效时间段条件的下标。
-//        for (int i = 0; i < conditionItems.size(); i++) {
-//            RuleEngineBean.Condition.ConditionItem conditionItem = conditionItems.get(i);
-//            if (!TextUtils.isEmpty(conditionItem.getCronExpression())) {//生效时间段条件
-//                cronIndex = i;
-//            } else {//其他条件
-//                result.append(String.format("func.get('%s','%s','%s') == %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getRightValue()));
-//                if (i < conditionItems.size() - 1) {
-//                    result.append(joinAll ? " && " : " || ");
-//                }
-//                if (i == 0) {
-//                    conditionItem.setJoinType(0);
-//                } else {
-//                    conditionItem.setJoinType(joinAll ? 1 : 2);
-//                }
-//            }
-//        }
-//        if (cronIndex != -1) {
-//            RuleEngineBean.Condition.ConditionItem conditionItem = conditionItems.get(cronIndex);
-//            result.insert(0, "(").append(")").append(" && ");
-//            result.append(String.format("func.parseCronExpression('%s')", conditionItem.getCronExpression()));
-//        }
-//        return result.toString();
-//    }
+    @Override
+    protected void appBarRightTvClicked() {
+        if (null == mRuleEngineBean.getRuleName() || mRuleEngineBean.getRuleName().length() == 0 || mRuleEngineBean.getRuleName().trim().isEmpty()) {
+            CustomToast.makeText(SceneSettingActivity.this, "名称不能为空", R.drawable.ic_warning).show();
+            return;
+        }
+        if (mRuleEngineBean.getConditions().size() == 0) {
+            CustomToast.makeText(SceneSettingActivity.this, "请添加条件", R.drawable.ic_warning).show();
+            return;
+        }
+        if (mRuleEngineBean.getActions().size() == 0) {
+            CustomToast.makeText(SceneSettingActivity.this, "请添加动作", R.drawable.ic_warning).show();
+            return;
+        }
+        if (mRuleEngineBean.getRuleSetMode() == BaseSceneBean.RULE_SET_MODE.ALL) {//满足所有条件时
+            List<String> exist = new ArrayList<>();
+            for (BaseSceneBean.Condition condition : mRuleEngineBean.getConditions()) {
+                if (condition instanceof BaseSceneBean.DeviceCondition) {
+                    String deviceId = ((BaseSceneBean.DeviceCondition) condition).getSourceDeviceId();
+                    String leftValue = ((BaseSceneBean.DeviceCondition) condition).getLeftValue();
+                    String value = deviceId + leftValue;
+                    if (exist.contains(value)) {
+                        CustomToast.makeText(getBaseContext(), "选择满足所有条件时，条件中不可以添加多个同一设备的同一功能", R.drawable.ic_toast_warming).show();
+                        return;
+                    } else {
+                        exist.add(value);
+                    }
+                }
+            }
+        }
+        mPresenter.saveOrUpdateRuleEngine(mRuleEngineBean);
+    }
 
-//    private String calculateActionExpression(List<RuleEngineBean.Action.ActionItem> actionItems) {
-//        StringBuilder result = new StringBuilder();
-//        for (int i = 0; i < actionItems.size(); i++) {
-//            RuleEngineBean.Action.ActionItem actionItem = actionItems.get(i);
-//            result.append(String.format("func.execute('%s','%s','%s')", actionItem.getTargetDeviceType(), actionItem.getTargetDeviceId(), actionItem.getLeftValue()));
-//            if (i < actionItems.size() - 1) {
-//                result.append(" && ");
-//            }
-//        }
-//        return result.toString();
-//    }
     @Override
     public void saveSuccess() {
         CustomToast.makeText(this, "创建成功", R.drawable.ic_success).show();
@@ -490,6 +443,10 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 .newInstance(new ValueChangeDialog.DoneCallback() {
                     @Override
                     public void onDone(DialogFragment dialog, String txt) {
+                        if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
+                            CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming).show();
+                            return;
+                        }
                         mSceneNameTextView.setText(txt);
                         mRuleEngineBean.setRuleName(txt);
                         dialog.dismissAllowingStateLoss();
@@ -516,7 +473,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     public void jumpAddActions() {
         Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
         mainActivity.putExtra("type", 1);
-
 
         ArrayList<String> selectedDatum = new ArrayList<>();
         for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {

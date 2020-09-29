@@ -18,9 +18,9 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
+import com.ayla.hotelsaas.ui.DeviceDetailH5Activity;
 import com.ayla.hotelsaas.ui.DeviceMoreActivity;
 import com.ayla.hotelsaas.ui.TouchPanelActivity;
-import com.ayla.hotelsaas.ui.TouchPanelSelectActivity;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -82,17 +82,12 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     intent.putExtra("scopeId", room_id);
                     intent.putExtra("pannel_type", "1");
                     startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
-                }/* else if (devicesBean.getCuId() == 1 && "a1dnviXyhqx".equals(devicesBean.getDeviceCategory())) {
-                    Intent intent = new Intent(getContext(), TouchPanelSelectActivity.class);
-                    intent.putExtra("scopeId", room_id);
-                    intent.putExtra("devicesBean", devicesBean);
-                    intent.putExtra("pannel_type", "2");
-                    startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
-                }*/ else {
+                } else {
                     Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("scopeId", room_id);
                     startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
+//                    startActivity(new Intent(getContext(), DeviceDetailH5Activity.class));
                 }
             }
         });
@@ -127,7 +122,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                 }
                 Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
                 intent.putExtra("scopeId", room_id);
-                startActivityForResult(intent,REQUEST_CODE_DEVICE_EDIT);
+                startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
             }
         });
 

@@ -1,22 +1,30 @@
 package com.ayla.hotelsaas.ui;
 
 import android.graphics.Bitmap;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.TextView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.base.BasicActivity;
-import com.ayla.hotelsaas.webview.LarkWebView;
+import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.widget.AppBar;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import wendu.dsbridge.DWebView;
 
-public class HelpCenterActivity extends BasicActivity implements LarkWebView.LoadCallBack {
+public class HelpCenterActivity extends BaseMvpActivity {
 
     @BindView(R.id.web_view)
-    LarkWebView mWebView;
+    DWebView mWebView;
 
+    @BindView(R.id.empty_layout)
+    View emptyView;
     @BindView(R.id.appBar)
     AppBar mAppBar;
 
@@ -24,7 +32,32 @@ public class HelpCenterActivity extends BasicActivity implements LarkWebView.Loa
     public void refreshUI() {
         super.refreshUI();
         mAppBar.setCenterText("帮助中心");
-        mWebView.registerLoadCallBack(this);
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        mWebView.getSettings().setAppCacheEnabled(true);
+        mWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                if (mWebView.getVisibility() != View.VISIBLE) {
+                    emptyView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                showProgress();
+                emptyView.setVisibility(View.INVISIBLE);
+                mWebView.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                hideProgress();
+                mWebView.setVisibility(View.VISIBLE);
+            }
+        });
         mWebView.loadUrl("https://smarthotel-h5-test.ayla.com.cn/trainingPage.html");
     }
 
@@ -44,28 +77,19 @@ public class HelpCenterActivity extends BasicActivity implements LarkWebView.Loa
     }
 
     @Override
-    public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        showProgress();
+    protected BasePresenter initPresenter() {
+        return null;
+    }
 
+    @OnClick(R.id.bt_refresh)
+    void handleRefreshClick(){
+        mWebView.reload();
     }
 
     @Override
-    public void onPageFinished(WebView view, String url) {
-        hideProgress();
-    }
-
-    @Override
-    public void onPageError(WebView view, int errorCode, String description, String failingUrl) {
-        final View emptyLayout = LayoutInflater.from(this).inflate(R.layout.widget_empty_view, null);
-        TextView empty_back_btn = (TextView) emptyLayout.findViewById(R.id.empty_back_btn);
-        setContentView(emptyLayout);
-
-        empty_back_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    protected void onDestroy() {
+        mWebView.destroy();
+        super.onDestroy();
     }
 }
 

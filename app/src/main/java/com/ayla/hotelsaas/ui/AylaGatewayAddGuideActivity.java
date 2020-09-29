@@ -7,21 +7,21 @@ import androidx.annotation.Nullable;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.GatewayAddGuidePresenter;
+import com.ayla.hotelsaas.mvp.present.GatewayAddPresenter;
 
 import butterknife.OnClick;
 
 /**
- * 网关添加引导页面
+ * Ayla网关添加引导页面
  * 进入时必须带上cuId 、scopeId 、deviceName、deviceCategory。
  */
-public class GatewayAddGuideActivity extends BaseMvpActivity {
+public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
     private final int REQUEST_CODE_FOR_ADD = 0X10;
     private final int REQUEST_CODE_FOR_DSN_INPUT = 0X11;
     private final int REQUEST_CODE_FOR_DSN_SCAN = 0X12;
 
     @Override
-    protected GatewayAddGuidePresenter initPresenter() {
+    protected GatewayAddPresenter initPresenter() {
         return null;
     }
 
@@ -57,6 +57,7 @@ public class GatewayAddGuideActivity extends BaseMvpActivity {
                     }
                     if (!TextUtils.isEmpty(dsn)) {
                         Intent mainActivity = new Intent(this, GatewayAddActivity.class);
+                        mainActivity.putExtra("networkType",2);
                         mainActivity.putExtra("dsn", dsn);
                         mainActivity.putExtras(getIntent());
                         startActivityForResult(mainActivity, REQUEST_CODE_FOR_ADD);

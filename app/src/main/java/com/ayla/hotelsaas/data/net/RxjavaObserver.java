@@ -6,7 +6,7 @@ import android.util.Log;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.utils.NetworkUtils;
+import com.blankj.utilcode.util.NetworkUtils;
 
 import io.reactivex.Observer;
 
@@ -34,14 +34,14 @@ public abstract class RxjavaObserver<T> implements Observer<BaseResult<T>> {
             RxjavaFlatmapThrowable throwable = (RxjavaFlatmapThrowable) t;
             _onFlatmap(throwable);
             _onError(throwable.getCode(), throwable.getMsg());
-        } else if (!NetworkUtils.isNetworkAvailable(MyApplication.getContext())) {
+        } else if (!NetworkUtils.isConnected()) {
             _onError("", MyApplication.getResource().getString(R.string.request_not_connect));
         } else {
             _onError("", MyApplication.getResource().getString(R.string.request_error));
         }
     }
 
-   // http://192.168.1.224:8080/api/v1/construction/device/list (844ms)
+    // http://192.168.1.224:8080/api/v1/construction/device/list (844ms)
     @Override
     public void onComplete() {
     }
