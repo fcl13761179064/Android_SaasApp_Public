@@ -13,6 +13,8 @@
         <!--消除启动时白屏问题   windowDisablePreview 禁用窗口的预览动画 -->
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">false</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
