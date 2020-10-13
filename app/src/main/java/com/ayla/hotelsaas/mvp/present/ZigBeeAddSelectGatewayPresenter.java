@@ -11,12 +11,12 @@ import java.util.List;
 
 public class ZigBeeAddSelectGatewayPresenter extends BasePresenter<ZigBeeAddSelectGatewayView> {
 
-    public void loadGateway() {
+    public void loadGateway(int cuId) {
         List<DeviceListBean.DevicesBean> gateways = new ArrayList<>();
         List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
         if (devicesBean != null) {
             for (DeviceListBean.DevicesBean device : devicesBean) {
-                if (TempUtils.isDeviceGateway(device)) {
+                if (TempUtils.isDeviceGateway(device) && device.getCuId() == cuId) {
                     gateways.add(device);
                 }
             }
