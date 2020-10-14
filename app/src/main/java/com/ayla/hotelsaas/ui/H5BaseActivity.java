@@ -7,7 +7,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -18,6 +17,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import wendu.dsbridge.DWebView;
 
+/**
+ * H5页面
+ * pageTitle 标题
+ */
 public class H5BaseActivity extends BaseMvpActivity {
 
     @BindView(R.id.web_view)
@@ -35,7 +38,7 @@ public class H5BaseActivity extends BaseMvpActivity {
 
     @Override
     protected void initView() {
-        mAppBar.setCenterText("帮助中心");
+        mAppBar.setCenterText(getIntent().getStringExtra("pageTitle"));
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         mWebView.getSettings().setAppCacheEnabled(true);
         mWebView.setWebViewClient(new WebViewClient() {
@@ -76,7 +79,7 @@ public class H5BaseActivity extends BaseMvpActivity {
     }
 
     @OnClick(R.id.bt_refresh)
-    void handleRefreshClick(){
+    void handleRefreshClick() {
         mWebView.reload();
     }
 

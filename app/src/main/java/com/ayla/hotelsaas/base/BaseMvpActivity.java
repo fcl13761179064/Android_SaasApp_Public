@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.base;
 
+import android.os.Bundle;
+
 /**
  * MVP基础Activity
  */
@@ -8,6 +10,12 @@ public abstract class BaseMvpActivity<V extends BaseView, T extends BasePresente
     public T mPresenter;
 
     protected abstract T initPresenter();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        mPresenter = initPresenter();
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void onResume() {

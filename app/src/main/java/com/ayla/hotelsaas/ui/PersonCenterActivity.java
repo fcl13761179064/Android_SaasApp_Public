@@ -52,9 +52,8 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PersonCenterActivity.this, H5BaseActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("pageTitle", "帮助中心");
                 startActivity(intent);
-
             }
         });
         rl_log_out.setOnClickListener(new View.OnClickListener() {

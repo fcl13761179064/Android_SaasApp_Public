@@ -205,7 +205,9 @@
             android:name=".ui.ForgitPassWordActivity"
             android:launchMode="singleTask" />
 
-        <activity android:name=".ui.H5BaseActivity" />
+        <activity
+            android:name=".ui.H5BaseActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.DeviceAddGuideActivity" />
 
         <activity android:name=".ui.PersonCenterActivity" />

@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -127,21 +126,6 @@ abstract class BasicActivity extends AppCompatActivity {
             progressDialog.dismissAllowingStateLoss();
         }
         progressDialog = null;
-    }
-
-    /**
-     * 设备标题栏文案
-     *
-     * @param text
-     */
-    protected void appBarCenterTitle(String text) {
-        final View appbarRoot = findViewById(R.id.appbar_root_rl_ff91090);
-        if (appbarRoot != null) {
-            TextView titleTextView = appbarRoot.findViewById(R.id.tv_title);
-            if (titleTextView != null) {
-                titleTextView.setText(text);
-            }
-        }
     }
 
     /**
