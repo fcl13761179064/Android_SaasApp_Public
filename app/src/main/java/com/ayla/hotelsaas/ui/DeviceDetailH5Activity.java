@@ -17,6 +17,8 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.BarUtils;
+import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.SizeUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +43,8 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWebView.loadUrl("http://222.212.97.101:9797");
+        Log.d(TAG, "onCreate: "
+                + SizeUtils.px2dp(ScreenUtils.getScreenHeight()));
     }
 
     @Override
@@ -153,7 +157,7 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
         try {
             jsonObject.put("token", "111");
             jsonObject.put("refreshToken", "2222");
-            jsonObject.put("marginTop", BarUtils.getStatusBarHeight());
+            jsonObject.put("marginTop", SizeUtils.px2dp(BarUtils.getStatusBarHeight()));
             JSONObject deviceJsonObject = new JSONObject();
             deviceJsonObject.put("nickName", "nickName");
             deviceJsonObject.put("deviceName", "deviceName");
