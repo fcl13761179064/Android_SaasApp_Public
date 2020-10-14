@@ -12,8 +12,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.BarUtils;
 
 import org.json.JSONException;
@@ -38,7 +40,7 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mWebView.loadUrl("http://222.212.97.76:9797/#/demo");
+        mWebView.loadUrl("http://222.212.97.101:9797");
     }
 
     @Override
@@ -94,17 +96,15 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
             }
 
             @JavascriptInterface
-            public void sysTextColor(Object msg) throws JSONException {
-                Log.d(TAG, "sysTextColor: " + msg);
-                String state = new JSONObject(msg.toString()).getString("state");
-                switch (state) {
-                    case "heightlight":
-                        BarUtils.setStatusBarLightMode(DeviceDetailH5Activity.this, true);
-                        break;
-                    case "dark":
-                        BarUtils.setStatusBarLightMode(DeviceDetailH5Activity.this, false);
-                        break;
-                }
+            public void isLightMode(Object msg) throws JSONException {
+                Log.d(TAG, "isLightMode: " + msg);
+                boolean isLightMode = new JSONObject(msg.toString()).getBoolean("state");
+                mWebView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        BarUtils.setStatusBarLightMode(DeviceDetailH5Activity.this, isLightMode);
+                    }
+                });
             }
         }, "miya.h5.webview");
         mWebView.addJavascriptObject(new Object() {
@@ -115,8 +115,10 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
             }
 
             @JavascriptInterface
-            public void token(Object msg) {
+            public void token(Object msg) throws JSONException {
                 Log.d(TAG, "token: " + msg);
+                String token = new JSONObject(msg.toString()).getString("state");
+                SharePreferenceUtils.saveString(getApplicationContext(), Constance.SP_Login_Token, token);
             }
         }, "miya.h5.dataShare");
     }
@@ -137,16 +139,34 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
         super.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+            return;
+        }
+        super.onBackPressed();
+    }
+
     private void miya_native_dataShare_init() {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("token", "111");
             jsonObject.put("refreshToken", "2222");
-            jsonObject.put("marginTop", "600");
-            mWebView.callHandler("miya.native.dataShare.init", new Object[]{jsonObject.toString()});
+            jsonObject.put("marginTop", BarUtils.getStatusBarHeight());
+            JSONObject deviceJsonObject = new JSONObject();
+            deviceJsonObject.put("nickName", "nickName");
+            deviceJsonObject.put("deviceName", "deviceName");
+            deviceJsonObject.put("deviceStatus", "ONLINE");
+            deviceJsonObject.put("cuId", 0);
+            deviceJsonObject.put("deviceCategory", "ZB-NODE-LN1-001");
+            deviceJsonObject.put("deviceId", "AC000W013055718");
+            jsonObject.put("device", deviceJsonObject);
+            JSONObject state = new JSONObject().put("state", jsonObject);
+            mWebView.callHandler("miya.native.dataShare.init", new Object[]{state});
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
 }

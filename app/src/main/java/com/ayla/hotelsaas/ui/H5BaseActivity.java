@@ -84,6 +84,15 @@ public class H5BaseActivity extends BaseMvpActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onDestroy() {
         mWebView.destroy();
         super.onDestroy();

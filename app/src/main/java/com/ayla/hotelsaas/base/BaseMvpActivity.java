@@ -14,13 +14,8 @@ public abstract class BaseMvpActivity<V extends BaseView, T extends BasePresente
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mPresenter = initPresenter();
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         attachView();
+        super.onCreate(savedInstanceState);
     }
 
     private void attachView() {
@@ -32,8 +27,8 @@ public abstract class BaseMvpActivity<V extends BaseView, T extends BasePresente
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         detachView();
+        super.onDestroy();
     }
 
     private void detachView() {
