@@ -39,20 +39,6 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     private Long mScopeId;
 
     @Override
-    public void refreshUI() {
-        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
-        mScopeId = getIntent().getLongExtra("scopeId", 0);
-        appBar.setCenterText("更多");
-        if (mDevicesBean != null && !TextUtils.isEmpty(mDevicesBean.getNickname())) {
-            tv_device_name.setText(mDevicesBean.getNickname());
-        }
-        if (TempUtils.isDeviceGateway(mDevicesBean)) {
-            rl_function_rename.setVisibility(View.GONE);
-        }
-        super.refreshUI();
-    }
-
-    @Override
     protected DeviceMorePresenter initPresenter() {
         return new DeviceMorePresenter();
     }
@@ -64,8 +50,15 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
 
     @Override
     protected void initView() {
-
-
+        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
+        mScopeId = getIntent().getLongExtra("scopeId", 0);
+        appBar.setCenterText("更多");
+        if (mDevicesBean != null && !TextUtils.isEmpty(mDevicesBean.getNickname())) {
+            tv_device_name.setText(mDevicesBean.getNickname());
+        }
+        if (TempUtils.isDeviceGateway(mDevicesBean)) {
+            rl_function_rename.setVisibility(View.GONE);
+        }
     }
 
     @Override

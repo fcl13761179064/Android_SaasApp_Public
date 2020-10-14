@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import wendu.dsbridge.DWebView;
 
-public class HelpCenterActivity extends BaseMvpActivity {
+public class H5BaseActivity extends BaseMvpActivity {
 
     @BindView(R.id.web_view)
     DWebView mWebView;
@@ -29,8 +29,12 @@ public class HelpCenterActivity extends BaseMvpActivity {
     AppBar mAppBar;
 
     @Override
-    public void refreshUI() {
-        super.refreshUI();
+    protected int getLayoutId() {
+        return R.layout.activity_help_center;
+    }
+
+    @Override
+    protected void initView() {
         mAppBar.setCenterText("帮助中心");
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         mWebView.getSettings().setAppCacheEnabled(true);
@@ -59,16 +63,6 @@ public class HelpCenterActivity extends BaseMvpActivity {
             }
         });
         mWebView.loadUrl("https://smarthotel-h5-test.ayla.com.cn/trainingPage.html");
-    }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_help_center;
-    }
-
-    @Override
-    protected void initView() {
-
     }
 
     @Override

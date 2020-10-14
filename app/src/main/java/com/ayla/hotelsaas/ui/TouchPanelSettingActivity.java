@@ -47,15 +47,6 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
     private TouchPanelBean mTouchPanelBean;
 
     @Override
-    public void refreshUI() {
-        super.refreshUI();
-        appBar.setCenterText("场景按键设置");
-        mTouchPanelBean = (TouchPanelBean) getIntent().getSerializableExtra("touchpanel");
-        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
-        tv_touchpanel_rename.setText(mTouchPanelBean.getWords());
-    }
-
-    @Override
     protected TourchPanelPresenter initPresenter() {
         return new TourchPanelPresenter();
     }
@@ -67,6 +58,11 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
 
     @Override
     protected void initView() {
+        appBar.setCenterText("场景按键设置");
+        mTouchPanelBean = (TouchPanelBean) getIntent().getSerializableExtra("touchpanel");
+        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
+        tv_touchpanel_rename.setText(mTouchPanelBean.getWords());
+
         iv_scene_icon.setImageResource(mTouchPanelBean.getIconRes());
     }
 

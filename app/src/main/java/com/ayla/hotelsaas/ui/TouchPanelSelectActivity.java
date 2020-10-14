@@ -40,12 +40,6 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
     private DeviceListBean.DevicesBean mDevicesBean;
 
     @Override
-    public void refreshUI() {
-        appBar.setCenterText("场景按键设置");
-        super.refreshUI();
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.touch_panel_select_layout;
     }
@@ -53,6 +47,8 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
 
     @Override
     protected void initView() {
+        appBar.setCenterText("场景按键设置");
+
         mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
         mPresenter.getTouchPanelData(1, mDevicesBean.getDeviceId());
         int pannel_type = getIntent().getIntExtra("pannel_type", 0);

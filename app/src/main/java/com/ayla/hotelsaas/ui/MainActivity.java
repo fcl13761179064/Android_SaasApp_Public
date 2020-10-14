@@ -66,17 +66,12 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     }
 
     @Override
-    public void refreshUI() {
+    protected void initView() {
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
         mRoom_name = getIntent().getStringExtra("roomName");
         appBar.setCenterText(mRoom_name);
         appBar.setRightText("更多");
-        super.refreshUI();
-    }
 
-
-    @Override
-    protected void initView() {
         mFragments = new ArrayList<>();
         mFragments.add(new DeviceListFragment(mRoom_ID));
         mFragments.add(new RuleEngineFragment(mRoom_ID));

@@ -38,11 +38,6 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
     private long mRoom_ID;
     private String mRoom_name;
 
-    @Override
-    public void refreshUI() {
-        appBar.setCenterText("更多");
-        super.refreshUI();
-    }
 
     @Override
     protected RoomMorePresenter initPresenter() {
@@ -56,6 +51,8 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
 
     @Override
     protected void initView() {
+        appBar.setCenterText("更多");
+
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
         mRoom_name = getIntent().getStringExtra("roomName");
         tv_room_name.setText(mRoom_name);

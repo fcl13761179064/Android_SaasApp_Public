@@ -22,25 +22,18 @@ public class DeviceDetailActivity extends BaseMvpActivity {
     private DeviceListBean.DevicesBean mDevicesBean;
 
     @Override
-    public void refreshUI() {
-        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
-        appBar.setCenterText("设备详情");
-
-        super.refreshUI();
-    }
-
-
-    @Override
     protected int getLayoutId() {
         return R.layout.device_detail_activity;
     }
 
     @Override
     protected void initView() {
+        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
+        appBar.setCenterText("设备详情");
+
         if (mDevicesBean != null)
             tv_device_id.setText(mDevicesBean.getDeviceId());
         tv_device_type.setText(mDevicesBean.getDeviceName());
-
     }
 
     @Override

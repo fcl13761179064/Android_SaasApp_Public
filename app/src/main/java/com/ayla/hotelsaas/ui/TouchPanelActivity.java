@@ -34,18 +34,14 @@ public class TouchPanelActivity extends BaseMvpActivity {
     private TouchPanelAdapter mAdapter;
 
     @Override
-    public void refreshUI() {
-        appBar.setCenterText("触控面板");
-        super.refreshUI();
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.touch_panel_layout;
     }
 
     @Override
     protected void initView() {
+        appBar.setCenterText("触控面板");
+
         dataList = new ArrayList<>();
         dataList.add(new TouchPanelBean(R.mipmap.go_home, "场景", 1));
         dataList.add(new TouchPanelBean(R.mipmap.back_home, "地暖", 2));

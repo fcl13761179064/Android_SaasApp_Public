@@ -29,13 +29,6 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
     @BindView(R.id.rl_help_center)
     RelativeLayout rl_help_center;
 
-
-    @Override
-    public void refreshUI() {
-        appBar.setCenterText("个人中心");
-        super.refreshUI();
-    }
-
     @Override
     protected PersonCenterPresenter initPresenter() {
         return new PersonCenterPresenter();
@@ -48,8 +41,9 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
 
     @Override
     protected void initView() {
-        mPresenter.getUserInfo();
+        appBar.setCenterText("个人中心");
 
+        mPresenter.getUserInfo();
     }
 
     @Override
@@ -57,7 +51,7 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
         rl_help_center.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PersonCenterActivity.this, HelpCenterActivity.class);
+                Intent intent = new Intent(PersonCenterActivity.this, H5BaseActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
 
