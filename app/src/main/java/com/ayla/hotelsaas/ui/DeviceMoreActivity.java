@@ -105,14 +105,14 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                 ValueChangeDialog
                         .newInstance(new ValueChangeDialog.DoneCallback() {
                             @Override
-                            public void onDone(DialogFragment dialog, String txt) {
-                                if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
+                            public void onDone(DialogFragment dialog, String newName) {
+                                if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
                                     CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming).show();
                                     return;
                                 } else {
-                                    tv_device_name.setText(txt);
+                                    tv_device_name.setText(newName);
                                     if (mDevicesBean != null) {
-                                        mPresenter.deviceRenameMethod(mDevicesBean.getDeviceId(), txt);
+                                        mPresenter.deviceRenameMethod(mDevicesBean.getDeviceId(), newName);
                                     }
                                 }
                                 dialog.dismissAllowingStateLoss();
