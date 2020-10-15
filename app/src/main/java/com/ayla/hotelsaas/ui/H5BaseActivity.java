@@ -51,6 +51,15 @@ public class H5BaseActivity extends BaseMvpActivity {
             }
 
             @Override
+            // 加载主框架出错时会被回调的方法 API<23
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                if (mWebView.getVisibility() != View.VISIBLE) {
+                    emptyView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 showProgress();

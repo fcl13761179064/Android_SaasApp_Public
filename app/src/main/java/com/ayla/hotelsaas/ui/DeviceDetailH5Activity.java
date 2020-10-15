@@ -62,6 +62,16 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
         mWebView.getSettings().setAppCacheEnabled(false);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
+            // 加载主框架出错时会被回调的方法 API<23
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                Log.d(TAG, "onReceivedError: "+description);
+                if (mWebView.getVisibility() != View.VISIBLE) {
+                    emptyView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
                 Log.d(TAG, "onReceivedError: ");
