@@ -61,8 +61,8 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
         switch (v.getId()) {
             case R.id.tv_also_account:
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-                finish();
                 break;
             case R.id.register_submitBtn:
                 mPresenter.register();

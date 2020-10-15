@@ -1,7 +1,9 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -15,6 +17,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.ScreenUtils;
@@ -28,7 +31,10 @@ import butterknife.OnClick;
 import wendu.dsbridge.DWebView;
 
 /**
- * 设备单孔页面
+ * 设备单控页面
+ * 参数
+ * DeviceListBean.DevicesBean devicesBean
+ * long scopeId
  */
 public class DeviceDetailH5Activity extends BaseMvpActivity {
 
@@ -52,8 +58,13 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
         return R.layout.activity_device_detail;
     }
 
+    private long scopeId;
+    private DeviceListBean.DevicesBean devicesBean;
+
     @Override
     protected void initView() {
+        scopeId = getIntent().getLongExtra("scopeId", 0);
+        devicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
     }
 
     @Override
@@ -65,7 +76,7 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
             // 加载主框架出错时会被回调的方法 API<23
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
-                Log.d(TAG, "onReceivedError: "+description);
+                Log.d(TAG, "onReceivedError: " + description);
                 if (mWebView.getVisibility() != View.VISIBLE) {
                     emptyView.setVisibility(View.VISIBLE);
                 }
@@ -107,6 +118,16 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
             @JavascriptInterface
             public void navigationTo(Object msg) {
                 Log.d(TAG, "navigationTo: " + msg);
+                if (TextUtils.equals("more", msg.toString())) {
+                    if (devicesBean != null) {
+                        Intent intent = new Intent(DeviceDetailH5Activity.this, DeviceMoreActivity.class);
+                        intent.putExtra("devicesBean", devicesBean);
+                        intent.putExtra("scopeId", scopeId);
+                        startActivity(intent);// TODO: 2020/10/15 修改后通知变更显示
+                    }
+                } else if (TextUtils.equals("login", msg.toString())) {
+
+                }
             }
 
             @JavascriptInterface

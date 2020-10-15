@@ -30,6 +30,7 @@ public class SPlashActivity extends BaseMvpActivity {
                 final String sava_token = SharePreferenceUtils.getString(SPlashActivity.this, Constance.SP_Login_Token, null);
                 if (sava_token == null || TextUtils.isEmpty(sava_token)) {
                     Intent intent = new Intent(SPlashActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(SPlashActivity.this, WorkRoomManageActivity.class);

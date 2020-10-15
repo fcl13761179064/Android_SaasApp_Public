@@ -84,10 +84,10 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
                 } else {
                     Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
+//                    Intent intent = new Intent(getContext(), DeviceDetailH5Activity.class);
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("scopeId", room_id);
                     startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
-//                    startActivity(new Intent(getContext(), DeviceDetailH5Activity.class));
                 }
             }
         });

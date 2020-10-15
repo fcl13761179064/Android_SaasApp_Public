@@ -11,17 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.WorkOrderAdapter;
-import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.WorkOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
-import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.ui.RoomOrderListActivity;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
-import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
