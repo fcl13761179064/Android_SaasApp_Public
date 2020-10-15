@@ -15,6 +15,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingDeviceSelectPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
+import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ import butterknife.BindView;
 public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSettingDeviceSelectView, SceneSettingDeviceSelectPresenter> implements SceneSettingDeviceSelectView {
     @BindView(R.id.rv)
     public RecyclerView mRecyclerView;
+    @BindView(R.id.appBar)
+    AppBar appBar;
 
     private SceneSettingDeviceSelectAdapter mAdapter;
 
@@ -46,6 +49,7 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
 
     @Override
     protected void initView() {
+        appBar.setCenterText("选择设备");
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new SceneSettingDeviceSelectAdapter(R.layout.item_scene_action_device_select);
         mAdapter.bindToRecyclerView(mRecyclerView);

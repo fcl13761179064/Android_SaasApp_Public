@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.ZigBeeAddSelectGatewayPresenter;
 import com.ayla.hotelsaas.mvp.view.ZigBeeAddSelectGatewayView;
 import com.ayla.hotelsaas.utils.TempUtils;
+import com.ayla.hotelsaas.widget.AppBar;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
@@ -32,6 +33,8 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 public class ZigBeeAddSelectGatewayActivity extends BaseMvpActivity<ZigBeeAddSelectGatewayView, ZigBeeAddSelectGatewayPresenter> implements ZigBeeAddSelectGatewayView {
     @BindView(R.id.rv)
     public RecyclerView mRecyclerView;
+    @BindView(R.id.appBar)
+    AppBar appBar;
 
     private ZigBeeAddSelectGatewayAdapter mAdapter;
 
@@ -47,6 +50,7 @@ public class ZigBeeAddSelectGatewayActivity extends BaseMvpActivity<ZigBeeAddSel
 
     @Override
     protected void initView() {
+        appBar.setCenterText("选择网关");
         mAdapter = new ZigBeeAddSelectGatewayAdapter(R.layout.item_zigbee_add_select_gateway);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
