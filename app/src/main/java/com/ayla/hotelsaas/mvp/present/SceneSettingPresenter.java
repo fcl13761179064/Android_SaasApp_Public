@@ -146,7 +146,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         for (DeviceListBean.DevicesBean enableDevice : enableDevices) {
                             for (DeviceCategoryDetailBean deviceCategoryDetailBean : deviceCategoryDetailBeans) {
                                 if (enableDevice.getCuId() == deviceCategoryDetailBean.getCuId()
-                                        && TextUtils.equals(deviceCategoryDetailBean.getDeviceName(), enableDevice.getDeviceName())) {
+                                        && TextUtils.equals(deviceCategoryDetailBean.getOemModel(), enableDevice.getDeviceCategory())) {
                                     Observable<DeviceTemplateBean> task = RequestModel.getInstance()
                                             .fetchDeviceTemplate(deviceCategoryDetailBean.getOemModel())
                                             .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {

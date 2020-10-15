@@ -30,7 +30,6 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  * 场景创建，选择功能菜单的页面
  * 进入时，必须带上:
  * 1.支持的条件或者功能的propertiesName集合 。{@link java.util.ArrayList<String>}    properties 。
- * 2.{@link String} oemModel
  * 3.{@link DeviceListBean.DevicesBean} deviceBean
  * 4.int type  ，0：condition  1：action
  * 可选参数
@@ -112,10 +111,9 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String oemModel = getIntent().getStringExtra("oemModel");
         ArrayList<String> properties = getIntent().getStringArrayListExtra("properties");
         DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("deviceBean");
-        mPresenter.loadFunction(deviceBean.getCuId(), deviceBean.getDeviceId(), oemModel, properties);
+        mPresenter.loadFunction(deviceBean.getCuId(), deviceBean.getDeviceId(), deviceBean.getDeviceCategory(), properties);
     }
 
     @Override

@@ -35,32 +35,29 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                     public Object[] apply(List<DeviceCategoryDetailBean> deviceCategoryDetailBeans) throws Exception {
                         List<DeviceListBean.DevicesBean> enableDevices = new ArrayList<>();//可以显示在列表里面的设备
                         List<List<String>> others = new ArrayList<>();
-                        List<String> oemModels = new ArrayList<>();
                         List<DeviceListBean.DevicesBean> devicesBeans = MyApplication.getInstance().getDevicesBean();
                         for (DeviceListBean.DevicesBean devicesBean : devicesBeans) {
                             for (DeviceCategoryDetailBean categoryDetailBean : deviceCategoryDetailBeans) {
                                 if (categoryDetailBean.getCuId() == devicesBean.getCuId()
-                                        && categoryDetailBean.getDeviceName().equals(devicesBean.getDeviceName())) {//找到已绑定的设备的条件、动作描述信息
+                                        && categoryDetailBean.getOemModel().equals(devicesBean.getDeviceCategory())) {//找到已绑定的设备的条件、动作描述信息
                                     if (condition) {
                                         List<String> conditionProperties = categoryDetailBean.getConditionProperties();
                                         if (conditionProperties != null && conditionProperties.size() != 0) {
                                             enableDevices.add(devicesBean);
                                             others.add(categoryDetailBean.getConditionProperties());
-                                            oemModels.add(categoryDetailBean.getOemModel());
                                         }
                                     } else {
                                         List<String> actionProperties = categoryDetailBean.getActionProperties();
                                         if (actionProperties != null && actionProperties.size() != 0) {
                                             enableDevices.add(devicesBean);
                                             others.add(categoryDetailBean.getActionProperties());
-                                            oemModels.add(categoryDetailBean.getOemModel());
                                         }
                                     }
                                     break;
                                 }
                             }
                         }
-                        return new Object[]{enableDevices, others, oemModels};
+                        return new Object[]{enableDevices, others};
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -79,12 +76,12 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                 .subscribe(new Consumer<Object[]>() {
                     @Override
                     public void accept(Object[] data) throws Exception {
-                        mView.showDevices((List<DeviceListBean.DevicesBean>) data[0], (List<List<String>>) data[1], (List<String>) data[2]);
+                        mView.showDevices((List<DeviceListBean.DevicesBean>) data[0], (List<List<String>>) data[1]);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.showDevices(null, null, null);
+                        mView.showDevices(null, null);
                     }
                 });
         addSubscrebe(subscribe);

@@ -60,7 +60,6 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
                 DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) adapter.getItem(position);
                 Intent mainActivity = new Intent(SceneSettingDeviceSelectActivity.this, SceneSettingFunctionSelectActivity.class);
                 mainActivity.putExtra("deviceBean", deviceBean);
-                mainActivity.putExtra("oemModel", oemModels.get(position));
                 mainActivity.putStringArrayListExtra("properties", new ArrayList<>(properties.get(position)));
                 mainActivity.putExtras(getIntent());
                 startActivityForResult(mainActivity, 0);
@@ -76,13 +75,11 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     }
 
     private List<List<String>> properties;//支持的条件或者动作的描述信息
-    private List<String> oemModels;
 
     @Override
-    public void showDevices(List<DeviceListBean.DevicesBean> devices, List<List<String>> properties, List<String> oemModels) {
+    public void showDevices(List<DeviceListBean.DevicesBean> devices, List<List<String>> properties) {
         mAdapter.setNewData(devices);
         this.properties = properties;
-        this.oemModels = oemModels;
     }
 
     @Override

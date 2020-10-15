@@ -34,7 +34,7 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                     @Override
                     public DeviceCategoryDetailBean apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
                         for (DeviceCategoryDetailBean deviceCategoryDetailBean : listBaseResult.data) {
-                            if (cuId == deviceCategoryDetailBean.getCuId() && TextUtils.equals(deviceName, deviceCategoryDetailBean.getDeviceName())) {
+                            if (cuId == deviceCategoryDetailBean.getCuId() && TextUtils.equals(deviceName, deviceCategoryDetailBean.getOemModel())) {
                                 return deviceCategoryDetailBean;
                             }
                         }
