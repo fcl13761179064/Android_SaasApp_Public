@@ -126,7 +126,9 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
                         startActivity(intent);// TODO: 2020/10/15 修改后通知变更显示
                     }
                 } else if (TextUtils.equals("login", msg.toString())) {
-
+                    final Intent intent = new Intent(DeviceDetailH5Activity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
             }
 
