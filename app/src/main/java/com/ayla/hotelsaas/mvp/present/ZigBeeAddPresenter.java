@@ -255,7 +255,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                         emitter.onComplete();
                                     }
                                 });
-                                nodeHelper[0].startBind(authCode, dsn, deviceCategory, 100);
+                                nodeHelper[0].startBind(authCode, dsn, deviceCategory, 60);
                             }
                         });
                     }
