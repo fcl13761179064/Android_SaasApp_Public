@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.graphics.Rect;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,7 +23,6 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
-import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
@@ -41,8 +39,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     EditText edite_count;
     @BindView(R.id.editPass)
     EditText edit_password;
-    @BindView(R.id.tv_switch)
-    TextView tvSwitch;
     @BindView(R.id.submitBtn)
     Button submitBtn;
     @BindView(R.id.tv_error_show)
@@ -66,52 +62,17 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     protected void initView() {
-        if (Constance.isNetworkDebug) {
-            tvSwitch.setText("测");
-        } else {
-            tvSwitch.setText("正");
-        }
+
     }
 
-
-    @OnClick({R.id.submitBtn, R.id.tv_switch})
+    @OnClick({R.id.submitBtn})
     public void onViewClicked(View v) {
         if (FastClickUtils.isDoubleClick()) {
             return;
         }
-        switch (v.getId()) {
-            case R.id.submitBtn:
-                if ("aylatest".equals(edite_count.getText().toString())) {
-                    tvSwitch.setVisibility(tvSwitch.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                } else {
-                    mPresenter.login();
-                    SoftInputUtil.hideSysSoftInput(LoginActivity.this);
-                }
-                break;
-            case R.id.tv_switch:
-                showProgress("切换环境中");
-                Constance.isNetworkDebug = !Constance.isNetworkDebug;
-                RetrofitHelper.reset();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (Constance.isNetworkDebug) {
-                            tvSwitch.setText("测");
-                            CustomToast.makeText(getBaseContext(), "切换到测试网络", R.drawable.ic_success).show();
-                        } else {
-                            tvSwitch.setText("正");
-                            CustomToast.makeText(getBaseContext(), "切换到正式网络环境", R.drawable.ic_success).show();
-                        }
-                        hideProgress();
-                    }
-                }, 1000);
-                break;
-            default:
-                break;
-        }
-
+        mPresenter.login();
+        SoftInputUtil.hideSysSoftInput(LoginActivity.this);
     }
-
 
     @Override
     protected void initListener() {

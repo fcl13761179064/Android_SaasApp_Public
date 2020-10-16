@@ -53,6 +53,7 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
             public void onClick(View v) {
                 Intent intent = new Intent(PersonCenterActivity.this, H5BaseActivity.class);
                 intent.putExtra("pageTitle", "帮助中心");
+                intent.putExtra("url", Constance.getAssistantBaseUrl()+"/trainingPage.html");
                 startActivity(intent);
             }
         });

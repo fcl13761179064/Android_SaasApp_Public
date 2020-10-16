@@ -20,6 +20,7 @@ import wendu.dsbridge.DWebView;
 /**
  * H5页面
  * pageTitle 标题
+ * url 页面地址
  */
 public class H5BaseActivity extends BaseMvpActivity {
 
@@ -74,7 +75,7 @@ public class H5BaseActivity extends BaseMvpActivity {
                 mWebView.setVisibility(View.VISIBLE);
             }
         });
-        mWebView.loadUrl("https://smarthotel-h5-test.ayla.com.cn/trainingPage.html");
+        mWebView.loadUrl(getIntent().getStringExtra("url"));
     }
 
     @Override
