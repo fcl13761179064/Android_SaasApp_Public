@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -15,10 +16,11 @@ import com.ayla.hotelsaas.adapter.DeviceListAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
-import com.ayla.hotelsaas.ui.DeviceDetailH5Activity;
 import com.ayla.hotelsaas.ui.DeviceMoreActivity;
 import com.ayla.hotelsaas.ui.TouchPanelActivity;
 import com.ayla.hotelsaas.utils.FastClickUtils;
@@ -27,6 +29,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -48,6 +54,18 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
 
     public DeviceListFragment(Long room_id) {
         this.room_id = room_id;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     @Override
@@ -87,7 +105,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
 //                    Intent intent = new Intent(getContext(), DeviceDetailH5Activity.class);
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("scopeId", room_id);
-                    startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
+                    startActivity(intent);
                 }
             }
         });
@@ -162,5 +180,15 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         if (requestCode == REQUEST_CODE_DEVICE_EDIT && resultCode == Activity.RESULT_OK) {
             mRefreshLayout.autoRefresh();
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleDeviceRemoved(DeviceRemovedEvent event) {
+        mRefreshLayout.autoRefresh();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleDeviceChangedEvent(DeviceChangedEvent event) {
+        mRefreshLayout.autoRefresh();
     }
 }

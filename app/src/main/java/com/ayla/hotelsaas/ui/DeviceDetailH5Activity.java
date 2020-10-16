@@ -18,11 +18,15 @@ import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.BarUtils;
-import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,9 +52,8 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         mWebView.loadUrl("http://222.212.97.101:9797");
-        Log.d(TAG, "onCreate: "
-                + SizeUtils.px2dp(ScreenUtils.getScreenHeight()));
     }
 
     @Override
@@ -123,7 +126,7 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
                         Intent intent = new Intent(DeviceDetailH5Activity.this, DeviceMoreActivity.class);
                         intent.putExtra("devicesBean", devicesBean);
                         intent.putExtra("scopeId", scopeId);
-                        startActivity(intent);// TODO: 2020/10/15 修改后通知变更显示
+                        startActivity(intent);
                     }
                 } else if (TextUtils.equals("login", msg.toString())) {
                     final Intent intent = new Intent(DeviceDetailH5Activity.this, LoginActivity.class);
@@ -172,6 +175,7 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
 
     @Override
     protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
         mWebView.destroy();
         super.onDestroy();
     }
@@ -206,4 +210,14 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
         }
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleDeviceRemoved(DeviceRemovedEvent event) {
+        finish();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleDeviceChangedEvent(DeviceChangedEvent event) {
+        miya_native_dataShare_init();
+    }
 }

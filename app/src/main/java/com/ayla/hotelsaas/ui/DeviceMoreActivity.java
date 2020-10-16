@@ -5,10 +5,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.fragment.app.DialogFragment;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
@@ -16,6 +20,9 @@ import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
+
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -136,6 +143,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     public void operateSuccess(Boolean is_rename) {
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
         setResult(RESULT_OK);
+        EventBus.getDefault().post(new DeviceChangedEvent(mDevicesBean.getDeviceId()));
         finish();
     }
 
@@ -143,6 +151,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     public void operateRemoveSuccess(Boolean is_rename) {
         CustomToast.makeText(this, "移除成功", R.drawable.ic_success).show();
         setResult(RESULT_OK);
+        EventBus.getDefault().post(new DeviceRemovedEvent(mDevicesBean.getDeviceId()));
         finish();
     }
 
