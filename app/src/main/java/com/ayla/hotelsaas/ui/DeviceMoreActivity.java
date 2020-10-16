@@ -26,6 +26,11 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+/**
+ * 参数
+ * DeviceListBean.DevicesBean devicesBean
+ * long scopeId
+ */
 public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMorePresenter> implements DeviceMoreView {
 
     @BindView(R.id.appBar)

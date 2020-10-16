@@ -3,7 +3,6 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -15,6 +14,7 @@ import android.webkit.WebViewClient;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -53,7 +53,8 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        mWebView.loadUrl("http://222.212.97.101:9797");
+        mWebView.loadUrl("http://222.212.97.101:9797/#/demo");
+
     }
 
     @Override
@@ -119,19 +120,23 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
             }
 
             @JavascriptInterface
-            public void navigationTo(Object msg) {
+            public void navigationTo(Object msg) throws Exception {
                 Log.d(TAG, "navigationTo: " + msg);
-                if (TextUtils.equals("more", msg.toString())) {
-                    if (devicesBean != null) {
-                        Intent intent = new Intent(DeviceDetailH5Activity.this, DeviceMoreActivity.class);
-                        intent.putExtra("devicesBean", devicesBean);
-                        intent.putExtra("scopeId", scopeId);
+                String code = new JSONObject(msg.toString()).getString("state");
+                switch (code) {
+                    case "more":
+                        if (devicesBean != null) {
+                            Intent intent = new Intent(DeviceDetailH5Activity.this, DeviceMoreActivity.class);
+                            intent.putExtra("devicesBean", devicesBean);
+                            intent.putExtra("scopeId", scopeId);
+                            startActivity(intent);
+                        }
+                        break;
+                    case "login":
+                        final Intent intent = new Intent(DeviceDetailH5Activity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                    }
-                } else if (TextUtils.equals("login", msg.toString())) {
-                    final Intent intent = new Intent(DeviceDetailH5Activity.this, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                        break;
                 }
             }
 
@@ -192,19 +197,23 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
     private void miya_native_dataShare_init() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("token", "111");
-            jsonObject.put("refreshToken", "2222");
+            final String token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
+            final String refreshToken = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
+            jsonObject.put("token", token);
+            jsonObject.put("refreshToken", refreshToken);
             jsonObject.put("marginTop", SizeUtils.px2dp(BarUtils.getStatusBarHeight()));
             JSONObject deviceJsonObject = new JSONObject();
-            deviceJsonObject.put("nickName", "nickName");
-            deviceJsonObject.put("deviceName", "deviceName");
-            deviceJsonObject.put("deviceStatus", "ONLINE");
-            deviceJsonObject.put("cuId", 0);
+            deviceJsonObject.put("nickName", devicesBean.getNickname());
+            deviceJsonObject.put("deviceName", devicesBean.getDeviceName());
+            deviceJsonObject.put("deviceStatus", devicesBean.getDeviceStatus());
+            deviceJsonObject.put("cuId", devicesBean.getCuId());
+            deviceJsonObject.put("deviceCategory", devicesBean.getDeviceCategory());
             deviceJsonObject.put("deviceCategory", "ZB-NODE-LN1-001");
-            deviceJsonObject.put("deviceId", "AC000W013055718");
+            deviceJsonObject.put("deviceId", devicesBean.getDeviceId());
             jsonObject.put("device", deviceJsonObject);
             JSONObject state = new JSONObject().put("state", jsonObject);
             mWebView.callHandler("miya.native.dataShare.init", new Object[]{state});
+            Log.d(TAG, "miya_native_dataShare_init: " + state);
         } catch (Exception e) {
             e.printStackTrace();
         }

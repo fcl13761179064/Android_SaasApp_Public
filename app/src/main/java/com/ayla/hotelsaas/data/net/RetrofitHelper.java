@@ -172,6 +172,7 @@ public class RetrofitHelper {
                         }
                         break;
                         case 121002://authToken不正确
+                        case 120000://Token parse failed
                         {
                             jump2Main();
                         }
