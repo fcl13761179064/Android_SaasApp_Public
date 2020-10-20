@@ -12,7 +12,6 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.SceneSettingDeviceSelectAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingDeviceSelectPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
 import com.ayla.hotelsaas.widget.AppBar;
@@ -27,7 +26,7 @@ import butterknife.BindView;
  * 场景创建，选择设备的页面
  * 进入时必须带入参数： int type  ，0：condition  1：action
  * 可选参数：selectedDatum {@link ArrayList<String>} 已经选择了的栏目。"dsn propertyName" 格式
- *          ruleSetMode 条件组合方式。 ALL(2,"多条条件全部命中")   ANY(3,"多条条件任一命中")
+ * ruleSetMode 条件组合方式。 ALL(2,"多条条件全部命中")   ANY(3,"多条条件任一命中")
  */
 public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSettingDeviceSelectView, SceneSettingDeviceSelectPresenter> implements SceneSettingDeviceSelectView {
     @BindView(R.id.rv)
@@ -64,7 +63,9 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
                 DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) adapter.getItem(position);
                 Intent mainActivity = new Intent(SceneSettingDeviceSelectActivity.this, SceneSettingFunctionSelectActivity.class);
                 mainActivity.putExtra("deviceBean", deviceBean);
-                mainActivity.putStringArrayListExtra("properties", new ArrayList<>(properties.get(position)));
+                if (properties.get(position) != null) {
+                    mainActivity.putStringArrayListExtra("properties", new ArrayList<>(properties.get(position)));
+                }
                 mainActivity.putExtras(getIntent());
                 startActivityForResult(mainActivity, 0);
             }

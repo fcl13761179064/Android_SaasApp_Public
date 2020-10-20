@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.mvp.present;
 
+import android.text.TextUtils;
+
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
@@ -10,6 +12,7 @@ import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -37,9 +40,14 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                         List<List<String>> others = new ArrayList<>();
                         List<DeviceListBean.DevicesBean> devicesBeans = MyApplication.getInstance().getDevicesBean();
                         for (DeviceListBean.DevicesBean devicesBean : devicesBeans) {
+                            if (devicesBean.getDeviceUseType() == 1 && !condition) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
+                                enableDevices.add(devicesBean);
+                                others.add(null);
+                                continue;
+                            }
                             for (DeviceCategoryDetailBean categoryDetailBean : deviceCategoryDetailBeans) {
                                 if (categoryDetailBean.getCuId() == devicesBean.getCuId()
-                                        && categoryDetailBean.getOemModel().equals(devicesBean.getDeviceCategory())) {//找到已绑定的设备的条件、动作描述信息
+                                        && TextUtils.equals(categoryDetailBean.getOemModel(), devicesBean.getDeviceCategory())) {//找到已绑定的设备的条件、动作描述信息
                                     if (condition) {
                                         List<String> conditionProperties = categoryDetailBean.getConditionProperties();
                                         if (conditionProperties != null && conditionProperties.size() != 0) {

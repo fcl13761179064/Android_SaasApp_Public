@@ -110,7 +110,6 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
 
     public void loadFunctionDetail(List<BaseSceneBean.DeviceCondition> conditionItems, List<BaseSceneBean.Action> actionItems) {
         Set<DeviceListBean.DevicesBean> enableDevices = new HashSet<>();//条件动作里面用到了的设备集合
-        List<DeviceCategoryDetailBean> categoryDetailBeans = new ArrayList<>();//记录品类描述信息
         for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
             for (BaseSceneBean.Action actionItem : actionItems) {
                 if (TextUtils.equals(devicesBean.getDeviceId(), actionItem.getTargetDeviceId())) {
@@ -132,7 +131,6 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                     .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, List<DeviceCategoryDetailBean>>() {
                         @Override
                         public List<DeviceCategoryDetailBean> apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
-                            categoryDetailBeans.addAll(listBaseResult.data);
                             return listBaseResult.data;
                         }
                     });//获取品类中心描述
@@ -144,6 +142,18 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                     public ObservableSource<DeviceTemplateBean[]> apply(List<DeviceCategoryDetailBean> deviceCategoryDetailBeans) throws Exception {
                         List<Observable<DeviceTemplateBean>> tasks = new ArrayList<>();
                         for (DeviceListBean.DevicesBean enableDevice : enableDevices) {
+                            if (enableDevice.getDeviceUseType() == 1) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
+                                tasks.add(RequestModel.getInstance()
+                                        .fetchDeviceTemplate(enableDevice.getDeviceCategory())
+                                        .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
+                                            @Override
+                                            public DeviceTemplateBean apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
+                                                return deviceTemplateBeanBaseResult.data;
+                                            }
+                                        })
+                                );
+                                continue;
+                            }
                             for (DeviceCategoryDetailBean deviceCategoryDetailBean : deviceCategoryDetailBeans) {
                                 if (enableDevice.getCuId() == deviceCategoryDetailBean.getCuId()
                                         && TextUtils.equals(deviceCategoryDetailBean.getOemModel(), enableDevice.getDeviceCategory())) {
@@ -156,7 +166,8 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                 }
                                             })
                                             .zipWith(RequestModel.getInstance()
-                                                    .getALlTouchPanelDeviceInfo(enableDevice.getCuId(), enableDevice.getDeviceId()).map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
+                                                    .getALlTouchPanelDeviceInfo(enableDevice.getCuId(), enableDevice.getDeviceId())
+                                                    .map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
                                                         @Override
                                                         public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
                                                             return listBaseResult.data;
