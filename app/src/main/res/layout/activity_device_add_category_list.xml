@@ -13,6 +13,7 @@
         app:left_iv="@mipmap/icon_back_black" />
 
     <LinearLayout
+        android:id="@+id/ll_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -31,4 +32,6 @@
 
             />
     </LinearLayout>
+
+    <include layout="@layout/widget_empty_view" android:visibility="gone" />
 </LinearLayout>

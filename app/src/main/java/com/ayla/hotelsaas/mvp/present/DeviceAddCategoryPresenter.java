@@ -46,7 +46,7 @@ public class DeviceAddCategoryPresenter extends BasePresenter<DeviceAddCategoryV
 
                     @Override
                     public void _onError(String code, String msg) {
-
+                        mView.categoryLoadFail();
                     }
                 });
     }

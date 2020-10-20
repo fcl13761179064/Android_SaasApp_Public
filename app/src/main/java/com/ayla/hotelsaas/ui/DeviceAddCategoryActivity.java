@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
@@ -44,10 +45,13 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
     @BindView(R.id.rv_right)
     RecyclerView rightRecyclerView;
+    @BindView(R.id.empty_layout)
+    View mEmptyView;
+    @BindView(R.id.ll_content)
+    View mContentView;
 
     private DeviceCategoryListLeftAdapter mLeftAdapter;
     private DeviceCategoryListRightAdapter mRightAdapter;
-    private DeviceCategoryBean.SubBean mSubBean;
 
     @Override
     protected int getLayoutId() {
@@ -56,10 +60,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
     @Override
     protected void initView() {
-//        if (mPresenter != null && !mAuthCode) {
-//            String mRoom_ID = getIntent().getStringExtra("scopeId");
-//            mPresenter.getAuthCode(mRoom_ID + "");
-//        }
         leftRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mLeftAdapter = new DeviceCategoryListLeftAdapter(R.layout.item_device_add_category);
         mLeftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -115,17 +115,16 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
     @Override
     public void showCategory(List<DeviceCategoryBean> deviceCategoryBeans) {
+        mContentView.setVisibility(View.VISIBLE);
+        mEmptyView.setVisibility(View.GONE);
         mLeftAdapter.setNewData(deviceCategoryBeans);
         adjustData(0);
     }
 
     @Override
-    public void getAuthCodeSuccess(String data) {
-    }
-
-    @Override
-    public void getAuthCodeFail(String code, String msg) {
-        Log.d("aliyun_auth_code", "authCode授权失败");
+    public void categoryLoadFail() {
+        mContentView.setVisibility(View.GONE);
+        mEmptyView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -244,7 +243,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -256,5 +254,12 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             mainActivity.putExtras(data);
             startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
         }
+    }
+
+    @OnClick(R.id.bt_refresh)
+    void handleRefresh() {
+        mContentView.setVisibility(View.VISIBLE);
+        mEmptyView.setVisibility(View.GONE);
+        mPresenter.loadCategory();
     }
 }
