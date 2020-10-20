@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.data.net;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
+import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
@@ -130,6 +131,9 @@ public interface ApiService {
 
     @GET("api/v1/construction/device/queryModelTemplate/{oemModel}")
     Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("oemModel") String oemModel);
+
+    @GET("api/v1/construction/device/{deviceId}")
+    Observable<BaseResult<DeviceFirmwareVersionBean>> fetchDeviceDetail(@Path("deviceId") String deviceId);
 
     @PUT("api/v1/construction/device/{deviceId}/info")
     Observable<BaseResult<Boolean>> deviceRename(@Path("deviceId") String deviceId, @Body RequestBody body);

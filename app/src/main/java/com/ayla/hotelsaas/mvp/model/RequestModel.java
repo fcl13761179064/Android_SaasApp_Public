@@ -4,6 +4,7 @@ package com.ayla.hotelsaas.mvp.model;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
+import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
@@ -277,6 +278,11 @@ public class RequestModel {
      */
     public Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(long scopeId) {
         return getApiService().fetchRuleEngines(scopeId);
+    }
+
+
+    public Observable<BaseResult<DeviceFirmwareVersionBean>> fetchDeviceDetail(String deviceId) {
+        return getApiService().fetchDeviceDetail(deviceId);
     }
 
     /**

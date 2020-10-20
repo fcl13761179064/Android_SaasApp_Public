@@ -1,9 +1,11 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +17,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingDeviceSelectPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
 import com.ayla.hotelsaas.widget.AppBar;
+import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
@@ -50,9 +53,19 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     protected void initView() {
         appBar.setCenterText("选择设备");
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new SceneSettingDeviceSelectAdapter(R.layout.item_scene_action_device_select);
+        mAdapter = new SceneSettingDeviceSelectAdapter(R.layout.item_device_categorylist);
         mAdapter.bindToRecyclerView(mRecyclerView);
         mAdapter.setEmptyView(R.layout.empty_device_order);
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int size = SizeUtils.dp2px(10);
+                int position = parent.getChildAdapterPosition(view);
+
+                outRect.set(0, (position == 0) ? size : 0, 0, size);
+            }
+        });
     }
 
     @Override

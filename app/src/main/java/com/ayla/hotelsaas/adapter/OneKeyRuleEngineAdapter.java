@@ -20,6 +20,6 @@ public class OneKeyRuleEngineAdapter extends BaseQuickAdapter<BaseSceneBean, Bas
     @Override
     protected void convert(BaseViewHolder helper, BaseSceneBean ruleEngineBeans) {
         helper.setText(R.id.tv_device_name, ruleEngineBeans.getRuleName());
-        helper.addOnClickListener(R.id.rl_edit_btn);
+        helper.addOnClickListener(R.id.tv_edit);
     }
 }

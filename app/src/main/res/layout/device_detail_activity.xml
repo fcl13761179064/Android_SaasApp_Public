@@ -86,6 +86,30 @@
             android:textColor="#333333"
             android:textSize="17sp" />
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:background="@drawable/room_num_shape">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_16"
+            android:text="固件版本号"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/tv_device_firmware_version"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="22dp"
+            android:gravity="center"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+    </RelativeLayout>
 </LinearLayout>
 
 
