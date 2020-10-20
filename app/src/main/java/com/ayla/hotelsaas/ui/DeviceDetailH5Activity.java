@@ -53,7 +53,7 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        mWebView.loadUrl("http://222.212.97.101:9797/#/demo");
+        mWebView.loadUrl(Constance.getDeviceControlBaseUrl());
 
     }
 

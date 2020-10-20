@@ -28,6 +28,15 @@ public class Constance {
         return isNetworkDebug ? "https://smarthotel-h5-test.ayla.com.cn" : "https://smarthotel-h5.ayla.com.cn";
     }
 
+    /**
+     * 设备单控页面URL
+     *
+     * @return
+     */
+    public static String getDeviceControlBaseUrl() {
+        return isNetworkDebug ? "https://miya-h5-test.ayla.com.cn" : "https://miya-h5.ayla.com.cn";
+    }
+
     //登录保存key
     public static String SP_Login_Token = "login_token";
 

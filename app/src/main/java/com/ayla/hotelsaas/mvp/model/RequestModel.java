@@ -43,9 +43,6 @@ import okhttp3.RequestBody;
  */
 public class RequestModel {
 
-    public static final String APP_key = "vrmandroid";
-    public static final String APP_SECRET = "92bAH6hNF4Q9RHymVGqYCdn58Zr3FPTU";
-
     private volatile static RequestModel instance = null;
 
     private RequestModel() {
@@ -216,29 +213,6 @@ public class RequestModel {
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
         return getApiService().fetchDeviceCategory();
-//                .map(new Function<BaseResult<List<DeviceCategoryBean>>, BaseResult<List<DeviceCategoryBean>>>() {
-//                    @Override
-//                    public BaseResult<List<DeviceCategoryBean>> apply(BaseResult<List<DeviceCategoryBean>> listBaseResult) throws Exception {
-//                        List<DeviceCategoryBean> data = listBaseResult.data;
-//                        DeviceCategoryBean bean = new DeviceCategoryBean();
-//                        bean.setId(100);
-//                        bean.setName("WiFi设备");
-//                        ArrayList<DeviceCategoryBean.SubBean> objects = new ArrayList<>();
-//                        DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
-//                        subBean.setId(100);
-//                        subBean.setDeviceName("AY008RTK1");
-//                        subBean.setName("智能插座");
-//                        subBean.setDeviceConnectType(3);
-//                        subBean.setNetworkType(5);
-//                        subBean.setCuId(1);
-//                        subBean.setOemModel("SP0-01-0-001");
-//
-//                        objects.add(subBean);
-//                        bean.setSub(objects);
-//                        data.add(bean);
-//                        return listBaseResult;
-//                    }
-//                });
     }
 
     /**
