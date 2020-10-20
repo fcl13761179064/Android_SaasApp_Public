@@ -82,6 +82,7 @@ public class DeviceListBean implements Serializable {
         private String deviceStatus;
         private int connectTypeId;//1-网关设备、2-节点设备
         private String iconUrl;
+        private boolean hasH5;
 
         public String getDeviceCategory() {
             return deviceCategory;
@@ -145,6 +146,10 @@ public class DeviceListBean implements Serializable {
 
         public void setIconUrl(String iconUrl) {
             this.iconUrl = iconUrl;
+        }
+
+        public boolean isHasH5() {
+            return hasH5;
         }
     }
 }

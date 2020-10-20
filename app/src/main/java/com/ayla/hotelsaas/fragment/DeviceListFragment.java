@@ -21,6 +21,7 @@ import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
+import com.ayla.hotelsaas.ui.DeviceDetailH5Activity;
 import com.ayla.hotelsaas.ui.DeviceMoreActivity;
 import com.ayla.hotelsaas.ui.TouchPanelActivity;
 import com.ayla.hotelsaas.utils.FastClickUtils;
@@ -100,9 +101,13 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                     intent.putExtra("scopeId", room_id);
                     intent.putExtra("pannel_type", "1");
                     startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
+                } else if (devicesBean.isHasH5()) {
+                    Intent intent = new Intent(getContext(), DeviceDetailH5Activity.class);
+                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("scopeId", room_id);
+                    startActivity(intent);
                 } else {
                     Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
-//                    Intent intent = new Intent(getContext(), DeviceDetailH5Activity.class);
                     intent.putExtra("devicesBean", devicesBean);
                     intent.putExtra("scopeId", room_id);
                     startActivity(intent);

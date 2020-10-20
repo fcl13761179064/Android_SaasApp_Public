@@ -208,7 +208,7 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
             deviceJsonObject.put("deviceStatus", devicesBean.getDeviceStatus());
             deviceJsonObject.put("cuId", devicesBean.getCuId());
             deviceJsonObject.put("deviceCategory", devicesBean.getDeviceCategory());
-            deviceJsonObject.put("deviceCategory", "ZB-NODE-LN1-001");
+//            deviceJsonObject.put("deviceCategory", "ZB-NODE-LN1-001");
             deviceJsonObject.put("deviceId", devicesBean.getDeviceId());
             jsonObject.put("device", deviceJsonObject);
             JSONObject state = new JSONObject().put("state", jsonObject);
