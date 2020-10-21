@@ -199,6 +199,8 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
         try {
             final String token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
             final String refreshToken = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
+            jsonObject.put("api", "construction");
+            jsonObject.put("scopeId", String.valueOf(scopeId));
             jsonObject.put("token", token);
             jsonObject.put("refreshToken", refreshToken);
             jsonObject.put("marginTop", SizeUtils.px2dp(BarUtils.getStatusBarHeight()));
@@ -208,7 +210,6 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
             deviceJsonObject.put("deviceStatus", devicesBean.getDeviceStatus());
             deviceJsonObject.put("cuId", devicesBean.getCuId());
             deviceJsonObject.put("deviceCategory", devicesBean.getDeviceCategory());
-//            deviceJsonObject.put("deviceCategory", "ZB-NODE-LN1-001");
             deviceJsonObject.put("deviceId", devicesBean.getDeviceId());
             jsonObject.put("device", deviceJsonObject);
             JSONObject state = new JSONObject().put("state", jsonObject);
