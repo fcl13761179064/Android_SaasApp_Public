@@ -94,7 +94,7 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
                 Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
                 intent.putExtra("sceneBean", ruleEngineBean);
                 if (getParentFragment() != null) {
-                    getParentFragment().startActivityForResult(intent, 0);
+                    getParentFragment().startActivityForResult(intent, RuleEngineFragment.REQUEST_CODE_SETTING);
                 }
             }
         });

@@ -41,7 +41,7 @@ import butterknife.BindView;
  */
 public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEnginePresenter> implements RuleEngineView {
     private final long mRoom_ID;
-    private final int REQUEST_CODE_SETTING = 0X10;
+    public static final int REQUEST_CODE_SETTING = 0X10;
     private final int REQUEST_CODE_SELECT_GATEWAY = 0X11;
     @BindView(R.id.tl_tabs)
     TabLayout mTabLayout;

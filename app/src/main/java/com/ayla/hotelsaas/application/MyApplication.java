@@ -72,7 +72,7 @@ public class MyApplication extends AApplication {
         }
         mInstance = this;
 
-        IoTSmart.init(this, new IoTSmart.InitConfig().setDebug(true));
+        IoTSmart.init(this, new IoTSmart.InitConfig().setDebug(BuildConfig.DEBUG));
     }
 
     public List<DeviceListBean.DevicesBean> getDevicesBean() {
