@@ -4,7 +4,6 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -188,7 +187,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
                 }
             } else {//多个网关
-                Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
+                Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
                 mainActivity.putExtras(getIntent());
                 mainActivity.putExtra("networkType", subBean.getNetworkType());
                 mainActivity.putExtra("cuId", subBean.getCuId());
@@ -223,7 +222,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
                 }
             } else {//多个网关
-                Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
+                Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
                 mainActivity.putExtras(getIntent());
                 mainActivity.putExtra("networkType", subBean.getNetworkType());
                 mainActivity.putExtra("cuId", subBean.getCuId());

@@ -27,9 +27,13 @@ import butterknife.BindView;
 
 /**
  * 场景创建，选择设备的页面
- * 进入时必须带入参数： int type  ，0：condition  1：action
- * 可选参数：selectedDatum {@link ArrayList<String>} 已经选择了的栏目。"dsn propertyName" 格式
+ * 进入时必须带入参数：
+ * long scopeId
+ * int type  ，0：condition  1：action
+ * 可选参数：
+ * selectedDatum {@link ArrayList<String>} 已经选择了的栏目。"dsn propertyName" 格式
  * ruleSetMode 条件组合方式。 ALL(2,"多条条件全部命中")   ANY(3,"多条条件任一命中")
+ * String targetGateway 网关设备的deviceID
  */
 public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSettingDeviceSelectView, SceneSettingDeviceSelectPresenter> implements SceneSettingDeviceSelectView {
     @BindView(R.id.rv)
@@ -89,7 +93,7 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int type = getIntent().getIntExtra("type", 0);
-        mPresenter.loadDevice(type == 0);
+        mPresenter.loadDevice(getIntent().getLongExtra("scopeId", 0), getIntent().getStringExtra("targetGateway"), type == 0);
     }
 
     private List<List<String>> properties;//支持的条件或者动作的描述信息

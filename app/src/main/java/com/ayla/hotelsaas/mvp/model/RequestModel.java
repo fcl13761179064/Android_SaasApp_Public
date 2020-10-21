@@ -7,6 +7,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
@@ -283,6 +284,10 @@ public class RequestModel {
 
     public Observable<BaseResult<DeviceFirmwareVersionBean>> fetchDeviceDetail(String deviceId) {
         return getApiService().fetchDeviceDetail(deviceId);
+    }
+
+    public Observable<BaseResult<List<GatewayNodeBean>>> getGatewayNodes(String deviceId, long scopeId) {
+        return getApiService().getGatewayNodes(deviceId, scopeId);
     }
 
     /**

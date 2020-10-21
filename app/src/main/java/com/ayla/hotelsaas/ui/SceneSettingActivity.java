@@ -473,6 +473,10 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     public void jumpAddActions() {
         Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
         mainActivity.putExtra("type", 1);
+        mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
+        if (mRuleEngineBean instanceof LocalSceneBean) {
+            mainActivity.putExtra("targetGateway", ((LocalSceneBean) mRuleEngineBean).getTargetGateway());
+        }
 
         ArrayList<String> selectedDatum = new ArrayList<>();
         for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
@@ -488,7 +492,10 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private void doJumpAddConditions() {
         Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
         mainActivity.putExtra("type", 0);
-        ArrayList<SceneSettingFunctionDatumSetAdapter.DatumBean> datums = new ArrayList<>();
+        mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
+        if (mRuleEngineBean instanceof LocalSceneBean) {
+            mainActivity.putExtra("targetGateway", ((LocalSceneBean) mRuleEngineBean).getTargetGateway());
+        }
 
         ArrayList<String> selectedDatum = new ArrayList<>();
         for (BaseSceneBean.Condition condition : mRuleEngineBean.getConditions()) {

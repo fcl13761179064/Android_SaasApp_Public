@@ -21,6 +21,7 @@ import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.RuleEnginePresenter;
 import com.ayla.hotelsaas.mvp.view.RuleEngineView;
 import com.ayla.hotelsaas.ui.CustomToast;
+import com.ayla.hotelsaas.ui.GatewaySelectActivity;
 import com.ayla.hotelsaas.ui.SceneSettingActivity;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.CustomSheet;
@@ -40,6 +41,8 @@ import butterknife.BindView;
  */
 public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEnginePresenter> implements RuleEngineView {
     private final long mRoom_ID;
+    private final int REQUEST_CODE_SETTING = 0X10;
+    private final int REQUEST_CODE_SELECT_GATEWAY = 0X11;
     @BindView(R.id.tl_tabs)
     TabLayout mTabLayout;
     @BindView(R.id.float_btn)
@@ -93,21 +96,27 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                             public void callback(int index) {
                                 Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
                                 intent.putExtra("scopeId", mRoom_ID);
-
+                                intent.putExtra("siteType", index == 0 ? 1 : 2);
                                 if (index == 0) {//选择了本地联动
-                                    DeviceListBean.DevicesBean gateway = null;
+                                    List<DeviceListBean.DevicesBean> gateways = new ArrayList<>();
                                     List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
                                     for (DeviceListBean.DevicesBean bean : devicesBean) {
                                         if (TempUtils.isDeviceGateway(bean)) {
-                                            gateway = bean;
-                                            break;
+                                            gateways.add(bean);
                                         }
                                     }
-                                    if (gateway != null) {//存在网关
-                                        if (TempUtils.isDeviceOnline(gateway)) {//网关在线
-                                            intent.putExtra("targetGateway", gateway.getDeviceId());
+                                    if (!gateways.isEmpty()) {//存在网关
+                                        if (gateways.size() == 1) {
+                                            DeviceListBean.DevicesBean gateway = gateways.get(0);
+                                            if (TempUtils.isDeviceOnline(gateway)) {//网关在线
+                                                intent.putExtra("targetGateway", gateway.getDeviceId());
+                                            } else {
+                                                CustomToast.makeText(getContext(), "请确保网关在线", R.drawable.ic_toast_warming).show();
+                                                return;
+                                            }
                                         } else {
-                                            CustomToast.makeText(getContext(), "请确保网关在线", R.drawable.ic_toast_warming).show();
+                                            intent = new Intent(getActivity(), GatewaySelectActivity.class).putExtras(intent);
+                                            startActivityForResult(intent, REQUEST_CODE_SELECT_GATEWAY);
                                             return;
                                         }
                                     } else {
@@ -115,9 +124,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                                         return;
                                     }
                                 }
-
-                                intent.putExtra("siteType", index == 0 ? 1 : 2);
-                                startActivityForResult(intent, 0);
+                                startActivityForResult(intent, REQUEST_CODE_SETTING);
                             }
 
                             @Override
@@ -172,8 +179,13 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE_SETTING && resultCode == Activity.RESULT_OK) {
             mRefreshLayout.autoRefresh();
+        }
+        if (requestCode == REQUEST_CODE_SELECT_GATEWAY && resultCode == Activity.RESULT_OK) {
+            Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
+            intent.putExtras(data).putExtra("targetGateway", data.getStringExtra("deviceId"));
+            startActivityForResult(intent, REQUEST_CODE_SETTING);
         }
     }
 

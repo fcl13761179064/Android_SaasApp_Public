@@ -19,18 +19,17 @@ import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.List;
 
 import butterknife.BindView;
-import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 添加节点，选择所属网关的页面
  * 进入时必须带入cuId
+ * 返回 网关的deviceId
  */
-public class ZigBeeAddSelectGatewayActivity extends BaseMvpActivity<ZigBeeAddSelectGatewayView, ZigBeeAddSelectGatewayPresenter> implements ZigBeeAddSelectGatewayView {
+public class GatewaySelectActivity extends BaseMvpActivity<ZigBeeAddSelectGatewayView, ZigBeeAddSelectGatewayPresenter> implements ZigBeeAddSelectGatewayView {
     @BindView(R.id.rv)
     public RecyclerView mRecyclerView;
     @BindView(R.id.appBar)
@@ -75,7 +74,7 @@ public class ZigBeeAddSelectGatewayActivity extends BaseMvpActivity<ZigBeeAddSel
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
-                    CustomToast.makeText(ZigBeeAddSelectGatewayActivity.this, "当前网关离线", R.drawable.ic_toast_warming).show();
+                    CustomToast.makeText(GatewaySelectActivity.this, "当前网关离线", R.drawable.ic_toast_warming).show();
                 }
             }
         });
