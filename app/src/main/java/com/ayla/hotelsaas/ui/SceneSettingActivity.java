@@ -120,7 +120,17 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         int iconIndex = getIconIndexByPath(mRuleEngineBean.getIconPath());
         mIconImageView.setImageResource(getIconResByIndex(iconIndex));
         refreshJoinTypeShow();
-        mSiteTextView.setText(mRuleEngineBean.getSiteType() == BaseSceneBean.SITE_TYPE.LOCAL ? "网关本地" : "云端");
+        if (mRuleEngineBean instanceof LocalSceneBean) {
+            String targetGateway = ((LocalSceneBean) mRuleEngineBean).getTargetGateway();
+            for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
+                if (devicesBean.getDeviceId().equals(targetGateway)) {
+                    mSiteTextView.setText(devicesBean.getNickname());
+                    break;
+                }
+            }
+        }else{
+            mSiteTextView.setText("云端");
+        }
         mEnableTimeTextView.setText(decodeCronExpression2(mRuleEngineBean.getEnableTime()));
         syncRuleTYpeShow();
     }
