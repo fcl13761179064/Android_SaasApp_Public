@@ -42,7 +42,7 @@ public class DeviceDetailActivity extends BaseMvpActivity<DeviceDetailView, Devi
         appBar.setCenterText("设备详情");
 
         tv_device_id.setText(mDevicesBean.getDeviceId());
-        tv_device_type.setText(mDevicesBean.getDeviceName());
+        tv_device_type.setText(mDevicesBean.getDeviceCategory());
     }
 
     @Override

@@ -126,6 +126,6 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     }
 
     private void loadData() {
-        mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getDeviceName(), mDevicesBean.getDeviceId());
+        mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getDeviceCategory(), mDevicesBean.getDeviceId());
     }
 }
