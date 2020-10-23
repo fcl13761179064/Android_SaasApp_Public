@@ -1,6 +1,5 @@
 package com.ayla.hotelsaas.bean;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +7,7 @@ import java.util.List;
  * @作者 fanchunlei
  * @时间 2020/7/14
  */
-public class DeviceListBean implements Serializable {
+public class DeviceListBean {
 
 
     /**

@@ -37,7 +37,7 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
     AppBar appBar;
     private List<TouchPanelBean> dataList;
     private TouchPanelSelectAdapter mAdapter;
-    private DeviceListBean.DevicesBean mDevicesBean;
+    private String deviceId;
 
     @Override
     protected int getLayoutId() {
@@ -49,8 +49,8 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
     protected void initView() {
         appBar.setCenterText("场景按键设置");
 
-        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
-        mPresenter.getTouchPanelData(1, mDevicesBean.getDeviceId());
+        deviceId = getIntent().getStringExtra("deviceId");
+        mPresenter.getTouchPanelData(1, deviceId);
         int pannel_type = getIntent().getIntExtra("pannel_type", 0);
         if (pannel_type == 1) {
             appBar.rightTextView.setVisibility(View.GONE);
@@ -149,7 +149,7 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1001 && resultCode == RESULT_OK) {
-            mPresenter.getTouchPanelData(1, mDevicesBean.getDeviceId());
+            mPresenter.getTouchPanelData(1, deviceId);
         }else if (requestCode == 1002 && resultCode == RESULT_OK){
             finish();
         }
