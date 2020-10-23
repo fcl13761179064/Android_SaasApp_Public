@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.adapter.FunctionRenameListAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -18,11 +19,12 @@ import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
-import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -34,8 +36,6 @@ import butterknife.OnClick;
  */
 public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMorePresenter> implements DeviceMoreView {
 
-    @BindView(R.id.appBar)
-    AppBar appBar;
     @BindView(R.id.rl_device_rename)
     RelativeLayout rl_device_rename;
     @BindView(R.id.tv_device_name)
@@ -65,12 +65,11 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         deviceId = getIntent().getStringExtra("deviceId");
         DeviceListBean.DevicesBean mDevicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
         mScopeId = getIntent().getLongExtra("scopeId", 0);
-        appBar.setCenterText("更多");
-        if (mDevicesBean != null && !TextUtils.isEmpty(mDevicesBean.getNickname())) {
+        if (mDevicesBean != null) {
             tv_device_name.setText(mDevicesBean.getNickname());
-        }
-        if (TempUtils.isDeviceGateway(mDevicesBean)) {
-            rl_function_rename.setVisibility(View.GONE);
+            if (!TempUtils.isDeviceGateway(mDevicesBean)) {
+                mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getDeviceCategory(), mDevicesBean.getDeviceId());
+            }
         }
     }
 
@@ -161,6 +160,15 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     @Override
     public void removeFailed(String code, String msg) {
         CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
+    }
+
+    @Override
+    public void showFunctions(List<FunctionRenameListAdapter.Bean> attributesBeans) {
+        if (attributesBeans == null || attributesBeans.isEmpty()) {
+            rl_function_rename.setVisibility(View.GONE);
+        } else {
+            rl_function_rename.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.rl_device_function_rename)

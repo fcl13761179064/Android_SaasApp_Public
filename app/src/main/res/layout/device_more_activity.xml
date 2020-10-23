@@ -10,7 +10,7 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:center_tv="@string/exit"
+        app:center_tv="更多"
         app:left_iv="@mipmap/icon_back_black" />
 
 
@@ -35,17 +35,17 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="right"
             android:layout_toRightOf="@+id/tv_device_show_name"
+            android:gravity="right"
             android:paddingRight="@dimen/dp_16">
 
             <TextView
                 android:id="@+id/tv_device_name"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingRight="9dp"
                 android:ellipsize="middle"
                 android:gravity="center"
+                android:paddingRight="9dp"
                 android:singleLine="true"
                 android:text="调光开关"
                 android:textColor="#999999"
@@ -89,7 +89,8 @@
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:layout_marginTop="@dimen/dp_16"
-        android:background="@drawable/room_num_shape">
+        android:background="@drawable/room_num_shape"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
