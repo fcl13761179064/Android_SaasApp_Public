@@ -79,6 +79,15 @@ public class MyApplication extends AApplication {
         return mDevicesBean;
     }
 
+    public DeviceListBean.DevicesBean getDevicesBean(String deviceId){
+        for (DeviceListBean.DevicesBean devicesBean : mDevicesBean) {
+            if (devicesBean.getDeviceId().equals(deviceId)) {
+                return devicesBean;
+            }
+        }
+        return null;
+    };
+
     public void setDevicesBean(List<DeviceListBean.DevicesBean> devicesBean) {
         mDevicesBean = devicesBean;
     }

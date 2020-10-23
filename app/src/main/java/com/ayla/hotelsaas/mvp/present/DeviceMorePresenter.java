@@ -45,13 +45,13 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                     @Override
                     public void _onNext(Boolean data) {
                         mView.hideProgress();
-                        mView.operateSuccess(data);
+                        mView.renameSuccess(nickName);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
                         mView.hideProgress();
-                        mView.operateError(msg);
+                        mView.renameFailed(msg);
                     }
                 });
     }
@@ -78,13 +78,13 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                     @Override
                     public void _onNext(Boolean data) {
                         mView.hideProgress();
-                        mView.operateRemoveSuccess(data);
+                        mView.removeSuccess(data);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
                         mView.hideProgress();
-                        mView.operateMoveFailSuccess(code, msg);
+                        mView.removeFailed(code, msg);
                     }
                 });
     }

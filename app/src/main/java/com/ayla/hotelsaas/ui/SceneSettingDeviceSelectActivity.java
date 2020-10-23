@@ -79,7 +79,7 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) adapter.getItem(position);
                 Intent mainActivity = new Intent(SceneSettingDeviceSelectActivity.this, SceneSettingFunctionSelectActivity.class);
-                mainActivity.putExtra("deviceBean", deviceBean);
+                mainActivity.putExtra("deviceId", deviceBean.getDeviceId());
                 if (properties.get(position) != null) {
                     mainActivity.putStringArrayListExtra("properties", new ArrayList<>(properties.get(position)));
                 }

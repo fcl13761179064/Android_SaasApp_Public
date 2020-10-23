@@ -109,18 +109,18 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
                 if (devicesBean.getCuId() == 1 && "a1UR1BjfznK".equals(devicesBean.getDeviceCategory())) {
                     Intent intent = new Intent(getContext(), TouchPanelActivity.class);
-                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("deviceId", devicesBean.getDeviceId());
                     intent.putExtra("scopeId", room_id);
                     intent.putExtra("pannel_type", "1");
                     startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
                 } else if (devicesBean.isHasH5()) {
                     Intent intent = new Intent(getContext(), DeviceDetailH5Activity.class);
-                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("deviceId", devicesBean.getDeviceId());
                     intent.putExtra("scopeId", room_id);
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
-                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("deviceId", devicesBean.getDeviceId());
                     intent.putExtra("scopeId", room_id);
                     startActivity(intent);
                 }
@@ -206,6 +206,6 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceChangedEvent(DeviceChangedEvent event) {
-        mRefreshLayout.autoRefresh();
+        mAdapter.notifyDataSetChanged();
     }
 }

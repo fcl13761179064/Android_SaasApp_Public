@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.CheckableSupport;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
@@ -30,10 +31,10 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
     public RecyclerView mRecyclerView;
     private SceneSettingFunctionDatumSetAdapter mAdapter;
 
-    public static SceneSettingFunctionDatumSetSingleChooseFragment newInstance(DeviceListBean.DevicesBean devicesBean, DeviceTemplateBean.AttributesBean attributesBean) {
+    public static SceneSettingFunctionDatumSetSingleChooseFragment newInstance(String deviceId, DeviceTemplateBean.AttributesBean attributesBean) {
 
         Bundle args = new Bundle();
-        args.putSerializable("deviceBean", devicesBean);
+        args.putSerializable("deviceId", deviceId);
         args.putSerializable("attributeBean", attributesBean);
         SceneSettingFunctionDatumSetSingleChooseFragment fragment = new SceneSettingFunctionDatumSetSingleChooseFragment();
         fragment.setArguments(args);
@@ -60,7 +61,7 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
         mRecyclerView.setAdapter(mAdapter);
 
         DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
-        DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getArguments().getSerializable("deviceBean");
+        DeviceListBean.DevicesBean deviceBean = MyApplication.getInstance().getDevicesBean(getArguments().getString("deviceId"));
         mPresenter.loadFunction(deviceBean, attributesBean);
     }
 

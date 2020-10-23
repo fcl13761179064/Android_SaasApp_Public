@@ -37,7 +37,7 @@ import wendu.dsbridge.DWebView;
 /**
  * 设备单控页面
  * 参数
- * DeviceListBean.DevicesBean devicesBean
+ * String deviceId
  * long scopeId
  */
 public class DeviceDetailH5Activity extends BaseMvpActivity {
@@ -63,12 +63,12 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
     }
 
     private long scopeId;
-    private DeviceListBean.DevicesBean devicesBean;
+    private String deviceId;
 
     @Override
     protected void initView() {
+        deviceId = getIntent().getStringExtra("deviceId");
         scopeId = getIntent().getLongExtra("scopeId", 0);
-        devicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
     }
 
     @Override
@@ -124,19 +124,19 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
                 Log.d(TAG, "navigationTo: " + msg);
                 String code = new JSONObject(msg.toString()).getString("state");
                 switch (code) {
-                    case "more":
-                        if (devicesBean != null) {
-                            Intent intent = new Intent(DeviceDetailH5Activity.this, DeviceMoreActivity.class);
-                            intent.putExtra("devicesBean", devicesBean);
-                            intent.putExtra("scopeId", scopeId);
-                            startActivity(intent);
-                        }
-                        break;
-                    case "login":
+                    case "more": {
+                        Intent intent = new Intent(DeviceDetailH5Activity.this, DeviceMoreActivity.class);
+                        intent.putExtra("deviceId", deviceId);
+                        intent.putExtra("scopeId", scopeId);
+                        startActivity(intent);
+                    }
+                    break;
+                    case "login": {
                         final Intent intent = new Intent(DeviceDetailH5Activity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                        break;
+                    }
+                    break;
                 }
             }
 
@@ -195,8 +195,12 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
     }
 
     private void miya_native_dataShare_init() {
-        JSONObject jsonObject = new JSONObject();
         try {
+            DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
+            if (devicesBean == null) {
+                return;
+            }
+            JSONObject jsonObject = new JSONObject();
             final String token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
             final String refreshToken = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
             jsonObject.put("api", "construction");
