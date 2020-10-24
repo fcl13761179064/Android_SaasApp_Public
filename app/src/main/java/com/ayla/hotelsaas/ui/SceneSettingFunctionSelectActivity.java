@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionSelectAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
@@ -30,8 +31,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  * 场景创建，选择功能菜单的页面
  * 进入时，必须带上:
  * 1.支持的条件或者功能的propertiesName集合 。{@link java.util.ArrayList<String>}    properties 。
- * 2.{@link String} oemModel
- * 3.{@link DeviceListBean.DevicesBean} deviceBean
+ * 3.String deviceId
  * 4.int type  ，0：condition  1：action
  * 可选参数
  * 1.selectedDatum {@link ArrayList<String>} 已选择的栏目
@@ -53,9 +53,10 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     protected int getLayoutId() {
         return R.layout.activity_zigbee_add_select_gateway;
     }
-
+    private DeviceListBean.DevicesBean deviceBean;
     @Override
     protected void initView() {
+        deviceBean = MyApplication.getInstance().getDevicesBean(getIntent().getStringExtra("deviceId"));
         appBar.setCenterText("选择功能");
         mAdapter = new SceneSettingFunctionSelectAdapter(R.layout.item_scene_setting_function_select);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -70,7 +71,6 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("deviceBean");
                 DeviceTemplateBean.AttributesBean attributesBean = mAdapter.getItem(position);
 
                 boolean nest = true;
@@ -101,7 +101,7 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
                 }
 
                 Intent mainActivity = new Intent(SceneSettingFunctionSelectActivity.this, SceneSettingFunctionDatumSetActivity.class);
-                mainActivity.putExtra("deviceBean", deviceBean);
+                mainActivity.putExtra("deviceId", deviceBean.getDeviceId());
                 mainActivity.putExtra("attributeBean", attributesBean);
                 mainActivity.putExtra("type", type);
                 startActivityForResult(mainActivity, 0);
@@ -112,10 +112,8 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String oemModel = getIntent().getStringExtra("oemModel");
         ArrayList<String> properties = getIntent().getStringArrayListExtra("properties");
-        DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("deviceBean");
-        mPresenter.loadFunction(deviceBean.getCuId(), deviceBean.getDeviceId(), oemModel, properties);
+        mPresenter.loadFunction(deviceBean.getCuId(), deviceBean.getDeviceId(), deviceBean.getDeviceCategory(), properties);
     }
 
     @Override

@@ -21,7 +21,12 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSettingFunctionSelectView> {
-
+    /**
+     * @param cuId
+     * @param deviceId
+     * @param oemModel
+     * @param properties 为null时，表示直接套用物模板
+     */
     public void loadFunction(int cuId, String deviceId, String oemModel, List<String> properties) {
         Disposable subscribe = RequestModel.getInstance()
                 .fetchDeviceTemplate(oemModel)//拉取物模板
@@ -30,8 +35,12 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
                     public List<DeviceTemplateBean.AttributesBean> apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
                         List<DeviceTemplateBean.AttributesBean> data = new ArrayList<>();
                         DeviceTemplateBean deviceTemplateBean = deviceTemplateBeanBaseResult.data;
-                        for (String property : properties) {
-                            for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                        for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                            if (properties == null) {
+                                data.add(attribute);
+                                continue;
+                            }
+                            for (String property : properties) {
                                 if (property.equals(attribute.getCode())) {
                                     data.add(attribute);
                                 }
@@ -55,10 +64,10 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
                                         TextUtils.equals(attributesBean.getCode(), touchPanelDataBean.getPropertyName())) {
                                     attributesBean.setDisplayName(touchPanelDataBean.getPropertyValue());
                                 }
-                                if("Words".equals(touchPanelDataBean.getPropertyType())){
+                                if ("Words".equals(touchPanelDataBean.getPropertyType())) {
                                     if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
                                         for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
-                                            if (TextUtils.equals(valueBean.getValue(),touchPanelDataBean.getPropertyName())) {
+                                            if (TextUtils.equals(valueBean.getValue(), touchPanelDataBean.getPropertyName())) {
                                                 valueBean.setDisplayName(touchPanelDataBean.getPropertyValue());
                                             }
                                         }

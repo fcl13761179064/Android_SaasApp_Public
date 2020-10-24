@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.base;
 
 
 import android.annotation.TargetApi;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,11 +31,9 @@ abstract class BasicActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);// 锁定竖屏
         setContentView(getLayoutId());
         unbinder = ButterKnife.bind(this);
-        initSaveInstace(savedInstanceState);
-        refreshUI();
+        initAppbar();
         initView();
         initListener();
         if (!ScreenUtils.isFullScreen(this)) {
@@ -49,55 +46,13 @@ abstract class BasicActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 需要从savedInstanceState拿数据的调用改方法
-     */
-    public void initSaveInstace(Bundle savedInstanceState) {
-    }
-
-    // 初始化UI，setContentView等
     protected abstract int getLayoutId();
 
     protected abstract void initView();
 
     protected abstract void initListener();
 
-
-    private LoadingDialog progressDialog;
-
-    public void showProgress() {
-        showProgress("加载中...");
-    }
-
-    @TargetApi(17)
-    public boolean isFinished() {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return isDestroyed() || isFinishing();
-        } else {
-            return isFinishing();
-        }
-    }
-
-
-    public void showProgress(String msg) {
-        if (isFinished() || isDestroyed()) {
-            return;
-        }
-        if (null != progressDialog) {
-            return;
-        }
-        progressDialog = LoadingDialog.newInstance(msg);
-        progressDialog.show(getSupportFragmentManager(), "loading");
-    }
-
-    public void hideProgress() {
-        if (null != progressDialog) {
-            progressDialog.dismissAllowingStateLoss();
-        }
-        progressDialog = null;
-    }
-
-    public void refreshUI() {
+    private void initAppbar() {
         final View appbarRoot = findViewById(R.id.appbar_root_rl_ff91090);
         if (appbarRoot != null) {
             View leftIV = appbarRoot.findViewById(R.id.iv_left);
@@ -137,6 +92,40 @@ abstract class BasicActivity extends AppCompatActivity {
                 });
             }
         }
+    }
+
+    private LoadingDialog progressDialog;
+
+    public void showProgress() {
+        showProgress("加载中...");
+    }
+
+    @TargetApi(17)
+    public boolean isFinished() {
+        if (Build.VERSION.SDK_INT >= 16) {
+            return isDestroyed() || isFinishing();
+        } else {
+            return isFinishing();
+        }
+    }
+
+
+    public void showProgress(String msg) {
+        if (isFinished() || isDestroyed()) {
+            return;
+        }
+        if (null != progressDialog) {
+            return;
+        }
+        progressDialog = LoadingDialog.newInstance(msg);
+        progressDialog.show(getSupportFragmentManager(), "loading");
+    }
+
+    public void hideProgress() {
+        if (null != progressDialog) {
+            progressDialog.dismissAllowingStateLoss();
+        }
+        progressDialog = null;
     }
 
     /**

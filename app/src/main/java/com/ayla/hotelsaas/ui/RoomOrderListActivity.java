@@ -60,14 +60,10 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
     }
 
     @Override
-    public void refreshUI() {
+    protected void initView() {
         mWork_order = (WorkOrderBean.ResultListBean) getIntent().getSerializableExtra("work_order");
         appBar.setCenterText(mWork_order.getTitle());
-        super.refreshUI();
-    }
 
-    @Override
-    protected void initView() {
         //是否在刷新的时候禁止列表的操作
         mRefreshLayout.setDisableContentWhenRefresh(true);
         //是否在加载的时候禁止列表的操作

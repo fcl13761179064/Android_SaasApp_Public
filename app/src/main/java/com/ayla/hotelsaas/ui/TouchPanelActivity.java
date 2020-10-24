@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
@@ -12,7 +13,9 @@ import com.ayla.hotelsaas.adapter.TouchPanelAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.TouchPanelBean;
+import com.ayla.hotelsaas.utils.ImageLoader;
 import com.ayla.hotelsaas.utils.ToastUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 
@@ -32,12 +35,8 @@ public class TouchPanelActivity extends BaseMvpActivity {
     AppBar appBar;
     private List<TouchPanelBean> dataList;
     private TouchPanelAdapter mAdapter;
-
-    @Override
-    public void refreshUI() {
-        appBar.setCenterText("触控面板");
-        super.refreshUI();
-    }
+    @BindView(R.id.iv_touch_panel)
+    ImageView mImageView;
 
     @Override
     protected int getLayoutId() {
@@ -46,6 +45,11 @@ public class TouchPanelActivity extends BaseMvpActivity {
 
     @Override
     protected void initView() {
+        appBar.setCenterText("触控面板");
+
+        DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(getIntent().getStringExtra("deviceId"));
+        ImageLoader.loadImg(mImageView, devicesBean.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
+
         dataList = new ArrayList<>();
         dataList.add(new TouchPanelBean(R.mipmap.go_home, "场景", 1));
         dataList.add(new TouchPanelBean(R.mipmap.back_home, "地暖", 2));

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.FunctionRenameListAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.FunctionRenamePresenter;
@@ -27,7 +28,7 @@ import butterknife.BindView;
 
 /**
  * 功能重命名页面
- * 进入必须带上 device
+ * 进入必须带上 deviceId
  */
 public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, FunctionRenamePresenter> implements FunctionRenameView {
     @BindView(R.id.rl)
@@ -38,7 +39,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("device");
+        mDevicesBean = MyApplication.getInstance().getDevicesBean(getIntent().getStringExtra("deviceId"));
         loadData();
     }
 
@@ -94,7 +95,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
                                         attributesBean.setPropertyValue(txt);
                                         mAdapter.notifyItemChanged(position);
                                         mPresenter.renameFunction(mDevicesBean.getCuId(), mDevicesBean.getDeviceId(),
-                                                attributesBean.getId(), attributesBean.getCode(), txt,mDevicesBean.getDeviceCategory());
+                                                attributesBean.getId(), attributesBean.getCode(), txt, mDevicesBean.getDeviceCategory());
                                     }
                                 }
                                 dialog.dismissAllowingStateLoss();
@@ -126,6 +127,6 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     }
 
     private void loadData() {
-        mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getDeviceName(), mDevicesBean.getDeviceId());
+        mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getDeviceCategory(), mDevicesBean.getDeviceId());
     }
 }

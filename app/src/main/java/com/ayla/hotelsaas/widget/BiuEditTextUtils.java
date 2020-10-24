@@ -18,9 +18,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
+
 import androidx.appcompat.widget.AppCompatEditText;
+
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.ui.LoginActivity;
+
 import java.util.Random;
 
 /**
@@ -122,7 +124,7 @@ public class BiuEditTextUtils extends AppCompatEditText implements View.OnFocusC
 
 
     private void init() {
-        contentContainer = (ViewGroup)findViewById(android.R.id.content);
+        contentContainer = (ViewGroup) findViewById(android.R.id.content);
         WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         height = windowManager.getDefaultDisplay().getHeight();
     }
@@ -147,7 +149,7 @@ public class BiuEditTextUtils extends AppCompatEditText implements View.OnFocusC
             mClearDrawable = getResources().getDrawable(R.drawable.delete_selector);
         }
         //设置图片的固有宽高
-            mClearDrawable.setBounds(0, 0, (int) (mClearDrawable.getIntrinsicWidth()/1f), (int) (mClearDrawable.getIntrinsicHeight()/1f));
+        mClearDrawable.setBounds(0, 0, (int) (mClearDrawable.getIntrinsicWidth() / 1f), (int) (mClearDrawable.getIntrinsicHeight() / 1f));
         //默认设置隐藏图标
         setClearIconVisible(false);
         //设置焦点改变的监听

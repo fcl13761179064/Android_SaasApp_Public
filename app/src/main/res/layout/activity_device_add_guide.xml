@@ -18,10 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="212dp"
         android:layout_below="@id/appBar"
-        android:src="#f8f8f8"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp" />
+        android:layout_marginRight="16dp"
+        android:src="#f8f8f8" />
 
     <TextView
         android:id="@+id/iv_title"
@@ -55,6 +55,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="64dp"
         android:background="@drawable/green_btn_bg"
+        android:stateListAnimator="@null"
         android:text="下一步"
         android:textColor="#ffffff"
         android:textSize="14sp" />

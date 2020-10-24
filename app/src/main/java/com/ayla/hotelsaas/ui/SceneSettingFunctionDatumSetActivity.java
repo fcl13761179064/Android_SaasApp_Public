@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -20,7 +21,7 @@ import butterknife.BindView;
  * 场景创建，选择执行功能点的页面
  * 进入时必须带入参数
  * 1.{@link DeviceTemplateBean.AttributesBean} attributeBean
- * 2.{@link DeviceListBean.DevicesBean} deviceBean
+ * 2.String deviceId
  * 3.type 选择的功能作为条件还是动作。0:条件
  * 返回：
  * result {@link ISceneSettingFunctionDatumSet.CallBackBean}
@@ -39,23 +40,25 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
         return R.layout.activity_scene_function_datum_set;
     }
 
+    private DeviceListBean.DevicesBean deviceBean;
+
     @Override
     protected void initView() {
         appBar.setCenterText("选择功能");
         appBar.setRightText("完成");
 
         DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getIntent().getSerializableExtra("attributeBean");
-        DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("deviceBean");
+        deviceBean = MyApplication.getInstance().getDevicesBean(getIntent().getStringExtra("deviceId"));
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (attributesBean.getValue() != null) {
-            fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(deviceBean, attributesBean), "content");
+            fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(deviceBean.getDeviceId(), attributesBean), "content");
         } else if (attributesBean.getSetup() != null) {
             int type = getIntent().getIntExtra("type", 0);//0:条件
             if (type == 0) {
-                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeWithOptionFragment.newInstance(deviceBean, attributesBean), "content");
-            }else{
-                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeFragment.newInstance(deviceBean, attributesBean), "content");
+                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeWithOptionFragment.newInstance(deviceBean.getDeviceId(), attributesBean), "content");
+            } else {
+                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeFragment.newInstance(deviceBean.getDeviceId(), attributesBean), "content");
             }
         }
         fragmentTransaction.commitNowAllowingStateLoss();

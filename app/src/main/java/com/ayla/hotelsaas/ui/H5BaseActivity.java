@@ -7,7 +7,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -18,7 +17,12 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import wendu.dsbridge.DWebView;
 
-public class HelpCenterActivity extends BaseMvpActivity {
+/**
+ * H5页面
+ * pageTitle 标题
+ * url 页面地址
+ */
+public class H5BaseActivity extends BaseMvpActivity {
 
     @BindView(R.id.web_view)
     DWebView mWebView;
@@ -29,15 +33,28 @@ public class HelpCenterActivity extends BaseMvpActivity {
     AppBar mAppBar;
 
     @Override
-    public void refreshUI() {
-        super.refreshUI();
-        mAppBar.setCenterText("帮助中心");
+    protected int getLayoutId() {
+        return R.layout.activity_help_center;
+    }
+
+    @Override
+    protected void initView() {
+        mAppBar.setCenterText(getIntent().getStringExtra("pageTitle"));
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         mWebView.getSettings().setAppCacheEnabled(true);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
+                if (mWebView.getVisibility() != View.VISIBLE) {
+                    emptyView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            // 加载主框架出错时会被回调的方法 API<23
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
                 if (mWebView.getVisibility() != View.VISIBLE) {
                     emptyView.setVisibility(View.VISIBLE);
                 }
@@ -58,17 +75,7 @@ public class HelpCenterActivity extends BaseMvpActivity {
                 mWebView.setVisibility(View.VISIBLE);
             }
         });
-        mWebView.loadUrl("https://smarthotel-h5-test.ayla.com.cn/trainingPage.html");
-    }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_help_center;
-    }
-
-    @Override
-    protected void initView() {
-
+        mWebView.loadUrl(getIntent().getStringExtra("url"));
     }
 
     @Override
@@ -82,8 +89,17 @@ public class HelpCenterActivity extends BaseMvpActivity {
     }
 
     @OnClick(R.id.bt_refresh)
-    void handleRefreshClick(){
+    void handleRefreshClick() {
         mWebView.reload();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override

@@ -172,7 +172,7 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
     public void handleButton() {
         if (bindProgress == 6) {
             String newName = mEditText.getText().toString();
-            if (TextUtils.isEmpty(newName)) {
+            if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
                 CustomToast.makeText(MyApplication.getContext(), "设备名称不能为空", R.drawable.ic_toast_warming).show();
                 return;
             }

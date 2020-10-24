@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_marginLeft="16dp"
-    android:layout_marginTop="@dimen/dp_10"
     android:layout_marginRight="16dp"
     android:background="@drawable/bg_device_item"
     android:foreground="?android:selectableItemBackground">
@@ -60,7 +59,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="编辑"
-            android:textSize="@dimen/sp_12"
-            />
+            android:textSize="@dimen/sp_12" />
     </RelativeLayout>
 </RelativeLayout>

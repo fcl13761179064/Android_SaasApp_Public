@@ -1,16 +1,23 @@
 package com.ayla.hotelsaas.ui;
 
+import android.os.Bundle;
 import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.mvp.present.DeviceDetailPresenter;
+import com.ayla.hotelsaas.mvp.view.DeviceDetailView;
 import com.ayla.hotelsaas.widget.AppBar;
 
 import butterknife.BindView;
 
-public class DeviceDetailActivity extends BaseMvpActivity {
+/**
+ * 参数
+ * String deviceId
+ */
+public class DeviceDetailActivity extends BaseMvpActivity<DeviceDetailView, DeviceDetailPresenter> implements DeviceDetailView {
 
     @BindView(R.id.appBar)
     AppBar appBar;
@@ -18,17 +25,16 @@ public class DeviceDetailActivity extends BaseMvpActivity {
     TextView tv_device_id;
     @BindView(R.id.tv_device_type)
     TextView tv_device_type;
+    @BindView(R.id.tv_device_firmware_version)
+    TextView tv_device_firmware_version;
 
     private DeviceListBean.DevicesBean mDevicesBean;
 
     @Override
-    public void refreshUI() {
-        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
-        appBar.setCenterText("设备详情");
-
-        super.refreshUI();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPresenter.loadFirmwareVersion(mDevicesBean.getDeviceId());
     }
-
 
     @Override
     protected int getLayoutId() {
@@ -37,10 +43,11 @@ public class DeviceDetailActivity extends BaseMvpActivity {
 
     @Override
     protected void initView() {
-        if (mDevicesBean != null)
-            tv_device_id.setText(mDevicesBean.getDeviceId());
-        tv_device_type.setText(mDevicesBean.getDeviceName());
+        mDevicesBean = MyApplication.getInstance().getDevicesBean(getIntent().getStringExtra("deviceId"));
+        appBar.setCenterText("设备详情");
 
+        tv_device_id.setText(mDevicesBean.getDeviceId());
+        tv_device_type.setText(mDevicesBean.getDeviceCategory());
     }
 
     @Override
@@ -49,7 +56,12 @@ public class DeviceDetailActivity extends BaseMvpActivity {
     }
 
     @Override
-    protected BasePresenter initPresenter() {
-        return null;
+    protected DeviceDetailPresenter initPresenter() {
+        return new DeviceDetailPresenter();
+    }
+
+    @Override
+    public void showFirmwareVersion(String firmwareVersion) {
+        tv_device_firmware_version.setText(firmwareVersion);
     }
 }

@@ -11,17 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.WorkOrderAdapter;
-import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.WorkOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.WorkOrderView;
-import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.ui.RoomOrderListActivity;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
-import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -113,30 +109,6 @@ public class WorkOrderListFragment extends BaseMvpFragment<WorkOrderView, WorkOr
     @Override
     protected void initData() {
 
-    }
-
-    @Override
-    protected void mExitApp() {
-
-        CustomAlarmDialog
-                .newInstance(new CustomAlarmDialog.Callback() {
-                    @Override
-                    public void onDone(CustomAlarmDialog dialog) {
-                        dialog.dismissAllowingStateLoss();
-                        SharePreferenceUtils.remove(getContext(), Constance.SP_Login_Token);
-                        SharePreferenceUtils.remove(getContext(), Constance.SP_Refresh_Token);
-                        Intent intent = new Intent(getContext(), LoginActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onCancel(CustomAlarmDialog dialog) {
-                        dialog.dismissAllowingStateLoss();
-                    }
-                })
-                .setContent(getResources().getString(R.string.sing_out))
-                .show(getFragmentManager(), "");
     }
 
     @Override

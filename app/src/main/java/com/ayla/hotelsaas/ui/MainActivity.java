@@ -14,7 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasicFragment;
+import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.fragment.DeviceListFragment;
 import com.ayla.hotelsaas.fragment.RuleEngineFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
@@ -55,7 +55,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     private long mRoom_ID;
     private String mRoom_name;
     private List<Fragment> mFragments;
-    private BasicFragment currentFragment;
+    private BaseMvpFragment currentFragment;
     public final static int GO_HOME_TYPE = 0;
     public final static int GO_THREE_TYPE = 2;
     public final static int GO_SECOND_TYPE = 1;
@@ -66,17 +66,12 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     }
 
     @Override
-    public void refreshUI() {
+    protected void initView() {
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
         mRoom_name = getIntent().getStringExtra("roomName");
         appBar.setCenterText(mRoom_name);
         appBar.setRightText("更多");
-        super.refreshUI();
-    }
 
-
-    @Override
-    protected void initView() {
         mFragments = new ArrayList<>();
         mFragments.add(new DeviceListFragment(mRoom_ID));
         mFragments.add(new RuleEngineFragment(mRoom_ID));
@@ -161,7 +156,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         if (currentFragment != null) {
             ft.hide(currentFragment);
         }
-        currentFragment = (BasicFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        currentFragment = (BaseMvpFragment) getSupportFragmentManager().findFragmentByTag(tag);
         if (currentFragment == null) {
             currentFragment = createBaseFragment(type);
             ft.add(R.id.fl_container, currentFragment, tag);
@@ -170,7 +165,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         ft.commitAllowingStateLoss();
     }
 
-    private BasicFragment createBaseFragment(int type) {
+    private BaseMvpFragment createBaseFragment(int type) {
         switch (type) {
             case GO_HOME_TYPE: {
 

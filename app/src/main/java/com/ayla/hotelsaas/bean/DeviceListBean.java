@@ -1,6 +1,5 @@
 package com.ayla.hotelsaas.bean;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +7,7 @@ import java.util.List;
  * @作者 fanchunlei
  * @时间 2020/7/14
  */
-public class DeviceListBean implements Serializable {
+public class DeviceListBean {
 
 
     /**
@@ -65,7 +64,7 @@ public class DeviceListBean implements Serializable {
         this.devices = devices;
     }
 
-    public static class DevicesBean implements Serializable {
+    public static class DevicesBean {
         /**
          * cuId : null
          * deviceId : SC000W000194710
@@ -82,6 +81,8 @@ public class DeviceListBean implements Serializable {
         private String deviceStatus;
         private int connectTypeId;//1-网关设备、2-节点设备
         private String iconUrl;
+        private boolean hasH5;
+        private int deviceUseType;//0:常规设备 1:用途设备 2:存在用途的设备   。用途设备在联动里面，直接可以作为联动动作，支持的动作以物模型为准。
 
         public String getDeviceCategory() {
             return deviceCategory;
@@ -145,6 +146,14 @@ public class DeviceListBean implements Serializable {
 
         public void setIconUrl(String iconUrl) {
             this.iconUrl = iconUrl;
+        }
+
+        public boolean isHasH5() {
+            return hasH5;
+        }
+
+        public int getDeviceUseType() {
+            return deviceUseType;
         }
     }
 }

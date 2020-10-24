@@ -27,14 +27,14 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
 
-    public void getRenameAbleFunctions(int cuId, String deviceName, String deviceId) {
+    public void getRenameAbleFunctions(int cuId, String deviceCategory, String deviceId) {
         Disposable subscribe = RequestModel.getInstance()
                 .getDeviceCategoryDetail()
                 .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, DeviceCategoryDetailBean>() {
                     @Override
                     public DeviceCategoryDetailBean apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
                         for (DeviceCategoryDetailBean deviceCategoryDetailBean : listBaseResult.data) {
-                            if (cuId == deviceCategoryDetailBean.getCuId() && TextUtils.equals(deviceName, deviceCategoryDetailBean.getDeviceName())) {
+                            if (cuId == deviceCategoryDetailBean.getCuId() && TextUtils.equals(deviceCategory, deviceCategoryDetailBean.getOemModel())) {
                                 return deviceCategoryDetailBean;
                             }
                         }

@@ -201,8 +201,8 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     public void resertPasswordSuccess(Boolean data) {
         CustomToast.makeText(MyApplication.getInstance(), "重置密码成功", R.drawable.ic_success).show();
         final Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        finish();
     }
 
     @Override

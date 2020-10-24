@@ -4,8 +4,6 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -26,10 +24,11 @@ import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
@@ -39,15 +38,19 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  */
 public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView, DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
     private final int REQUEST_CODE_ADD_DEVICE = 0X10;
+    private final int REQUEST_CODE_SELECT_GATEWAY = 0X11;
     @BindView(R.id.rv_left)
     RecyclerView leftRecyclerView;
 
     @BindView(R.id.rv_right)
     RecyclerView rightRecyclerView;
+    @BindView(R.id.empty_layout)
+    View mEmptyView;
+    @BindView(R.id.ll_content)
+    View mContentView;
 
     private DeviceCategoryListLeftAdapter mLeftAdapter;
     private DeviceCategoryListRightAdapter mRightAdapter;
-    private DeviceCategoryBean.SubBean mSubBean;
 
     @Override
     protected int getLayoutId() {
@@ -56,10 +59,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
     @Override
     protected void initView() {
-//        if (mPresenter != null && !mAuthCode) {
-//            String mRoom_ID = getIntent().getStringExtra("scopeId");
-//            mPresenter.getAuthCode(mRoom_ID + "");
-//        }
         leftRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mLeftAdapter = new DeviceCategoryListLeftAdapter(R.layout.item_device_add_category);
         mLeftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -115,16 +114,16 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
     @Override
     public void showCategory(List<DeviceCategoryBean> deviceCategoryBeans) {
+        mContentView.setVisibility(View.VISIBLE);
+        mEmptyView.setVisibility(View.GONE);
         mLeftAdapter.setNewData(deviceCategoryBeans);
         adjustData(0);
     }
 
     @Override
-    public void getAuthCodeSuccess(String data) {}
-
-    @Override
-    public void getAuthCodeFail(String code, String msg) {
-        Log.d("aliyun_auth_code", "authCode授权失败");
+    public void categoryLoadFail() {
+        mContentView.setVisibility(View.GONE);
+        mEmptyView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -148,91 +147,89 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         if (FastClickUtils.isDoubleClick()) {
             return;
         }
-        int gatewayCount = 0;
-        DeviceListBean.DevicesBean gateway = null;
+        List<DeviceListBean.DevicesBean> aylaGateways = new ArrayList<>();
+        List<DeviceListBean.DevicesBean> hyGateways = new ArrayList<>();
         List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
         if (devicesBean != null) {
             for (DeviceListBean.DevicesBean device : devicesBean) {
                 if (TempUtils.isDeviceGateway(device)) {
-                    gatewayCount++;
-                    gateway = device;
+                    if (device.getCuId() == 0) {
+                        aylaGateways.add(device);
+                    } else if (device.getCuId() == 1) {
+                        hyGateways.add(device);
+                    }
                 }
             }
         }
         if (2 == subBean.getNetworkType()) {//艾拉网关
-            if (gatewayCount == 0) {//没有网关
-                Intent mainActivity = new Intent(this, AylaGatewayAddGuideActivity.class);
-                mainActivity.putExtra("cuId", subBean.getCuId());
-                mainActivity.putExtras(getIntent());
-                mainActivity.putExtra("deviceCategory", subBean.getOemModel());
-                mainActivity.putExtra("deviceName", subBean.getDeviceName());
-                startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
-            } else {
-                CustomToast.makeText(this, "只能绑定一个网关", R.drawable.ic_toast_warming).show();
-            }
+            Intent mainActivity = new Intent(this, AylaGatewayAddGuideActivity.class);
+            mainActivity.putExtra("cuId", subBean.getCuId());
+            mainActivity.putExtras(getIntent());
+            mainActivity.putExtra("deviceCategory", subBean.getOemModel());
+            mainActivity.putExtra("deviceName", subBean.getDeviceName());
+            startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
         } else if (3 == subBean.getNetworkType()) {//跳转艾拉节点
-            if (gatewayCount == 0) {//没有网关
-                CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
-            } else if (gatewayCount == 1) {//一个网关
-                if (gateway.getCuId() == 0) {//艾拉网关
-                    if (TempUtils.isDeviceOnline(gateway)) {//网关在线
-                        Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
-                        mainActivity.putExtra("networkType", subBean.getNetworkType());
-                        mainActivity.putExtra("deviceId", gateway.getDeviceId());
-                        mainActivity.putExtra("cuId", gateway.getCuId());
-                        mainActivity.putExtras(getIntent());
-                        mainActivity.putExtra("deviceCategory", subBean.getOemModel());
-                        mainActivity.putExtra("deviceName", subBean.getDeviceName());
-                        mainActivity.putExtra("categoryId", subBean.getId());
-                        startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
-                    } else {
-                        CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
-                    }
+            if (aylaGateways.size() == 0) {//没有艾拉网关
+                CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming).show();
+            } else if (aylaGateways.size() == 1) {//一个艾拉网关
+                DeviceListBean.DevicesBean gateway = aylaGateways.get(0);
+                if (TempUtils.isDeviceOnline(gateway)) {//网关在线
+                    Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
+                    mainActivity.putExtra("networkType", subBean.getNetworkType());
+                    mainActivity.putExtra("deviceId", gateway.getDeviceId());
+                    mainActivity.putExtra("cuId", gateway.getCuId());
+                    mainActivity.putExtras(getIntent());
+                    mainActivity.putExtra("deviceCategory", subBean.getOemModel());
+                    mainActivity.putExtra("deviceName", subBean.getDeviceName());
+                    mainActivity.putExtra("categoryId", subBean.getId());
+                    startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                 } else {
-                    CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming).show();
+                    CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
                 }
-            }
-//            else {//多个网关
-//                Intent mainActivity = new Intent(this, ZigBeeAddSelectGatewayActivity.class);
-//                mainActivity.putExtras(getIntent());
-//                mainActivity.putExtra("deviceCategory", subBean.getOemModel());
-//                mainActivity.putExtra("deviceName", subBean.getDeviceName());
-//                mainActivity.putExtra("categoryId", subBean.getId());
-//                startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
-//            }
-        } else if (1 == subBean.getNetworkType()) {//跳转鸿雁网关
-            if (gatewayCount == 0) {//没有网关
-                Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
-                mainActivity.putExtra("cuId", subBean.getCuId());
+            } else {//多个网关
+                Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
                 mainActivity.putExtras(getIntent());
+                mainActivity.putExtra("networkType", subBean.getNetworkType());
+                mainActivity.putExtra("cuId", subBean.getCuId());
                 mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                 mainActivity.putExtra("deviceName", subBean.getDeviceName());
-                startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
-            } else {
-                CustomToast.makeText(this, "只能绑定一个网关", R.drawable.ic_toast_warming).show();
+                mainActivity.putExtra("categoryId", subBean.getId());
+                startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
             }
+        } else if (1 == subBean.getNetworkType()) {//跳转鸿雁网关
+            Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
+            mainActivity.putExtra("cuId", subBean.getCuId());
+            mainActivity.putExtras(getIntent());
+            mainActivity.putExtra("deviceCategory", subBean.getOemModel());
+            mainActivity.putExtra("deviceName", subBean.getDeviceName());
+            startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
         } else if (4 == subBean.getNetworkType()) {//跳转鸿雁节点
-            if (gatewayCount == 0) {//没有网关
-                CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming).show();
-            } else if (gatewayCount == 1) {//一个网关
-                if (gateway.getCuId() == 1) {//鸿雁网关
-                    if (TempUtils.isDeviceOnline(gateway)) {//网关在线
-//                        this.mSubBean = subBean;
-                        Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
-                        mainActivity.putExtra("networkType", subBean.getNetworkType());
-                        mainActivity.putExtra("deviceId", gateway.getDeviceId());
-                        mainActivity.putExtra("cuId", gateway.getCuId());
-                        mainActivity.putExtras(getIntent());
-                        mainActivity.putExtra("deviceCategory", subBean.getOemModel());
-                        mainActivity.putExtra("deviceName", subBean.getDeviceName());
-                        mainActivity.putExtra("categoryId", subBean.getId());
-                        startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
-                    } else {
-                        CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
-                    }
+            if (hyGateways.size() == 0) {//没有鸿雁网关
+                CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming).show();
+            } else if (hyGateways.size() == 1) {//一个网关
+                DeviceListBean.DevicesBean gateway = hyGateways.get(0);
+                if (TempUtils.isDeviceOnline(gateway)) {//网关在线
+                    Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
+                    mainActivity.putExtra("networkType", subBean.getNetworkType());
+                    mainActivity.putExtra("deviceId", gateway.getDeviceId());
+                    mainActivity.putExtra("cuId", gateway.getCuId());
+                    mainActivity.putExtras(getIntent());
+                    mainActivity.putExtra("deviceCategory", subBean.getOemModel());
+                    mainActivity.putExtra("deviceName", subBean.getDeviceName());
+                    mainActivity.putExtra("categoryId", subBean.getId());
+                    startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                 } else {
-                    CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming).show();
+                    CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
                 }
+            } else {//多个网关
+                Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
+                mainActivity.putExtras(getIntent());
+                mainActivity.putExtra("networkType", subBean.getNetworkType());
+                mainActivity.putExtra("cuId", subBean.getCuId());
+                mainActivity.putExtra("deviceCategory", subBean.getOemModel());
+                mainActivity.putExtra("deviceName", subBean.getDeviceName());
+                mainActivity.putExtra("categoryId", subBean.getId());
+                startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
             }
         } else if (5 == subBean.getNetworkType()) {//跳转艾拉wifi
             Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
@@ -245,13 +242,23 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         }
     }
 
-
-    // 接收配网结果
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_ADD_DEVICE && resultCode == RESULT_OK) {
             setResult(RESULT_OK);
             finish();
+        } else if (requestCode == REQUEST_CODE_SELECT_GATEWAY && resultCode == RESULT_OK) {
+            Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
+            mainActivity.putExtras(data);
+            startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
         }
+    }
+
+    @OnClick(R.id.bt_refresh)
+    void handleRefresh() {
+        mContentView.setVisibility(View.VISIBLE);
+        mEmptyView.setVisibility(View.GONE);
+        mPresenter.loadCategory();
     }
 }

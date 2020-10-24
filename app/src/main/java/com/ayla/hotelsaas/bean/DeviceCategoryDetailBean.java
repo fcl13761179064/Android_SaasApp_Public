@@ -9,26 +9,16 @@ import java.util.List;
 public class DeviceCategoryDetailBean {
 
     /**
-     * deviceName : xxxxx
      * cuId : 0
      * oemModel : sxxxxxx
      * conditionProperties : ["1111","2222"]
      * actionProperties : ["1111","2222"]
      */
 
-    private String deviceName;
     private int cuId;
     private String oemModel;
     private List<String> conditionProperties;
     private List<String> actionProperties;
-
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
-    }
 
     public int getCuId() {
         return cuId;

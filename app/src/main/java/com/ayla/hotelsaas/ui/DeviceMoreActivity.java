@@ -5,24 +5,37 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.fragment.app.DialogFragment;
+
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.adapter.FunctionRenameListAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
-import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
+/**
+ * 参数
+ * String deviceId
+ * long scopeId
+ */
 public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMorePresenter> implements DeviceMoreView {
 
-    @BindView(R.id.appBar)
-    AppBar appBar;
     @BindView(R.id.rl_device_rename)
     RelativeLayout rl_device_rename;
     @BindView(R.id.tv_device_name)
@@ -34,23 +47,8 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     @BindView(R.id.rl_device_detail)
     RelativeLayout rl_device_detail;
 
-
-    private DeviceListBean.DevicesBean mDevicesBean;
-    private Long mScopeId;
-
-    @Override
-    public void refreshUI() {
-        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
-        mScopeId = getIntent().getLongExtra("scopeId", 0);
-        appBar.setCenterText("更多");
-        if (mDevicesBean != null && !TextUtils.isEmpty(mDevicesBean.getNickname())) {
-            tv_device_name.setText(mDevicesBean.getNickname());
-        }
-        if (TempUtils.isDeviceGateway(mDevicesBean)) {
-            rl_function_rename.setVisibility(View.GONE);
-        }
-        super.refreshUI();
-    }
+    private long mScopeId;
+    private String deviceId;
 
     @Override
     protected DeviceMorePresenter initPresenter() {
@@ -64,8 +62,15 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
 
     @Override
     protected void initView() {
-
-
+        deviceId = getIntent().getStringExtra("deviceId");
+        DeviceListBean.DevicesBean mDevicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
+        mScopeId = getIntent().getLongExtra("scopeId", 0);
+        if (mDevicesBean != null) {
+            tv_device_name.setText(mDevicesBean.getNickname());
+            if (!TempUtils.isDeviceGateway(mDevicesBean)) {
+                mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getDeviceCategory(), mDevicesBean.getDeviceId());
+            }
+        }
     }
 
     @Override
@@ -75,7 +80,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DeviceMoreActivity.this, DeviceDetailActivity.class);
-                intent.putExtras(getIntent());
+                intent.putExtra("deviceId", getIntent().getStringExtra("deviceId"));
                 startActivity(intent);
             }
         });
@@ -87,9 +92,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                             @Override
                             public void onDone(CustomAlarmDialog dialog) {
                                 dialog.dismissAllowingStateLoss();
-                                if (mDevicesBean != null) {
-                                    mPresenter.deviceRemove(mDevicesBean.getDeviceId(), mScopeId, "2");
-                                }
+                                mPresenter.deviceRemove(deviceId, mScopeId, "2");
                             }
 
                             @Override
@@ -112,15 +115,13 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                 ValueChangeDialog
                         .newInstance(new ValueChangeDialog.DoneCallback() {
                             @Override
-                            public void onDone(DialogFragment dialog, String txt) {
-                                if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
+                            public void onDone(DialogFragment dialog, String newName) {
+                                if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
                                     CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming).show();
                                     return;
                                 } else {
-                                    tv_device_name.setText(txt);
-                                    if (mDevicesBean != null) {
-                                        mPresenter.deviceRenameMethod(mDevicesBean.getDeviceId(), txt);
-                                    }
+                                    tv_device_name.setText(newName);
+                                    mPresenter.deviceRenameMethod(deviceId, newName);
                                 }
                                 dialog.dismissAllowingStateLoss();
                             }
@@ -135,33 +136,45 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     }
 
     @Override
-    public void operateError(String msg) {
+    public void renameFailed(String msg) {
         CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
     }
 
     @Override
-    public void operateSuccess(Boolean is_rename) {
+    public void renameSuccess(String newNickName) {
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
         setResult(RESULT_OK);
+        MyApplication.getInstance().getDevicesBean(deviceId).setNickname(newNickName);
+        EventBus.getDefault().post(new DeviceChangedEvent(deviceId));
         finish();
     }
 
     @Override
-    public void operateRemoveSuccess(Boolean is_rename) {
+    public void removeSuccess(Boolean is_rename) {
         CustomToast.makeText(this, "移除成功", R.drawable.ic_success).show();
         setResult(RESULT_OK);
+        EventBus.getDefault().post(new DeviceRemovedEvent(deviceId));
         finish();
     }
 
     @Override
-    public void operateMoveFailSuccess(String code, String msg) {
+    public void removeFailed(String code, String msg) {
         CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
+    }
+
+    @Override
+    public void showFunctions(List<FunctionRenameListAdapter.Bean> attributesBeans) {
+        if (attributesBeans == null || attributesBeans.isEmpty()) {
+            rl_function_rename.setVisibility(View.GONE);
+        } else {
+            rl_function_rename.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.rl_device_function_rename)
     public void handleFunctionRenameJump() {
         Intent intent = new Intent(this, FunctionRenameActivity.class);
-        intent.putExtra("device", mDevicesBean);
+        intent.putExtra("deviceId", deviceId);
         startActivity(intent);
     }
 }

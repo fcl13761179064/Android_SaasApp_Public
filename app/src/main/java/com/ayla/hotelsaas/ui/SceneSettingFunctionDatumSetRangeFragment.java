@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -30,10 +31,10 @@ public class SceneSettingFunctionDatumSetRangeFragment extends BaseMvpFragment i
     @BindView(R.id.tv_value)
     TextView mValueTextView;
 
-    public static SceneSettingFunctionDatumSetRangeFragment newInstance(DeviceListBean.DevicesBean devicesBean, DeviceTemplateBean.AttributesBean attributesBean) {
+    public static SceneSettingFunctionDatumSetRangeFragment newInstance(String deviceId, DeviceTemplateBean.AttributesBean attributesBean) {
 
         Bundle args = new Bundle();
-        args.putSerializable("deviceBean", devicesBean);
+        args.putSerializable("deviceId", deviceId);
         args.putSerializable("attributeBean", attributesBean);
         SceneSettingFunctionDatumSetRangeFragment fragment = new SceneSettingFunctionDatumSetRangeFragment();
         fragment.setArguments(args);
@@ -86,7 +87,7 @@ public class SceneSettingFunctionDatumSetRangeFragment extends BaseMvpFragment i
     @Override
     public CallBackBean getDatum() {
         DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
-        DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getArguments().getSerializable("deviceBean");
+        DeviceListBean.DevicesBean deviceBean = MyApplication.getInstance().getDevicesBean(getArguments().getString("deviceId"));
 
         String targetValue = String.valueOf(mAppCompatSeekBar.getProgress());
 

@@ -4,8 +4,10 @@ package com.ayla.hotelsaas.mvp.model;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
+import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
@@ -42,9 +44,6 @@ import okhttp3.RequestBody;
  * @时间 2020/6/3
  */
 public class RequestModel {
-
-    public static final String APP_key = "vrmandroid";
-    public static final String APP_SECRET = "92bAH6hNF4Q9RHymVGqYCdn58Zr3FPTU";
 
     private volatile static RequestModel instance = null;
 
@@ -216,29 +215,6 @@ public class RequestModel {
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
         return getApiService().fetchDeviceCategory();
-//                .map(new Function<BaseResult<List<DeviceCategoryBean>>, BaseResult<List<DeviceCategoryBean>>>() {
-//                    @Override
-//                    public BaseResult<List<DeviceCategoryBean>> apply(BaseResult<List<DeviceCategoryBean>> listBaseResult) throws Exception {
-//                        List<DeviceCategoryBean> data = listBaseResult.data;
-//                        DeviceCategoryBean bean = new DeviceCategoryBean();
-//                        bean.setId(100);
-//                        bean.setName("WiFi设备");
-//                        ArrayList<DeviceCategoryBean.SubBean> objects = new ArrayList<>();
-//                        DeviceCategoryBean.SubBean subBean = new DeviceCategoryBean.SubBean();
-//                        subBean.setId(100);
-//                        subBean.setDeviceName("AY008RTK1");
-//                        subBean.setName("智能插座");
-//                        subBean.setDeviceConnectType(3);
-//                        subBean.setNetworkType(5);
-//                        subBean.setCuId(1);
-//                        subBean.setOemModel("SP0-01-0-001");
-//
-//                        objects.add(subBean);
-//                        bean.setSub(objects);
-//                        data.add(bean);
-//                        return listBaseResult;
-//                    }
-//                });
     }
 
     /**
@@ -303,6 +279,15 @@ public class RequestModel {
      */
     public Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(long scopeId) {
         return getApiService().fetchRuleEngines(scopeId);
+    }
+
+
+    public Observable<BaseResult<DeviceFirmwareVersionBean>> fetchDeviceDetail(String deviceId) {
+        return getApiService().fetchDeviceDetail(deviceId);
+    }
+
+    public Observable<BaseResult<List<GatewayNodeBean>>> getGatewayNodes(String deviceId, long scopeId) {
+        return getApiService().getGatewayNodes(deviceId, scopeId);
     }
 
     /**

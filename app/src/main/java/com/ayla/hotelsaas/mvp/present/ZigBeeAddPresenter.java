@@ -227,6 +227,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                         try {
                                             Boolean aBoolean = RequestModel.getInstance()
                                                     .removeDeviceAllReleate(subProductKey, subDeviceName)
+                                                    .subscribeOn(Schedulers.io())
                                                     .map(new Function<BaseResult<String>, Boolean>() {
                                                         @Override
                                                         public Boolean apply(BaseResult<String> stringBaseResult) throws Exception {
@@ -255,7 +256,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                         emitter.onComplete();
                                     }
                                 });
-                                nodeHelper[0].startBind(authCode, dsn, deviceCategory, 100);
+                                nodeHelper[0].startBind(authCode, dsn, deviceCategory, 60);
                             }
                         });
                     }

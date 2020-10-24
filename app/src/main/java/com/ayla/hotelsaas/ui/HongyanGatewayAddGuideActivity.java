@@ -42,12 +42,6 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
     private HongyanGetwayAdapter mAdapter;
 
     @Override
-    public void refreshUI() {
-        appBar.setCenterText("添加设备");
-        super.refreshUI();
-    }
-
-    @Override
     protected GatewayAddPresenter initPresenter() {
         return null;
     }
@@ -59,6 +53,8 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
 
     @Override
     protected void initView() {
+        appBar.setCenterText("添加设备");
+
         recyclerview.setLayoutManager(new LinearLayoutManager(this));
         recyclerview.setHasFixedSize(true);
         recyclerview.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL, 3, R.color.all_bg_color));

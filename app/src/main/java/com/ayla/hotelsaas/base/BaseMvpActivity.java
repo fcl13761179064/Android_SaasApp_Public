@@ -9,19 +9,13 @@ public abstract class BaseMvpActivity<V extends BaseView, T extends BasePresente
     //业务处理层
     public T mPresenter;
 
-    @Override
-    public void initSaveInstace(Bundle savedInstanceState) {
-        mPresenter = initPresenter();
-        attachView();
-        super.initSaveInstace(savedInstanceState);
-    }
-
     protected abstract T initPresenter();
 
     @Override
-    public void onResume() {
-        super.onResume();
+    protected void onCreate(Bundle savedInstanceState) {
+        mPresenter = initPresenter();
         attachView();
+        super.onCreate(savedInstanceState);
     }
 
     private void attachView() {
@@ -31,16 +25,16 @@ public abstract class BaseMvpActivity<V extends BaseView, T extends BasePresente
         }
     }
 
-    public void detachView() {
+    @Override
+    protected void onDestroy() {
+        detachView();
+        super.onDestroy();
+    }
+
+    private void detachView() {
         if (null != mPresenter) {
             mPresenter.detachView();
             mPresenter = null;
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        detachView();
     }
 }
