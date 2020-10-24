@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.SceneSettingActionItemAdapter;
 import com.ayla.hotelsaas.adapter.SceneSettingConditionItemAdapter;
-import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -26,12 +27,11 @@ import com.ayla.hotelsaas.localBean.LocalSceneBean;
 import com.ayla.hotelsaas.localBean.RemoteSceneBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
-import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.CustomSheet;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
+import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -41,7 +41,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 场景编辑页面
@@ -69,8 +68,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     ImageView mIconImageView;
     @BindView(R.id.tv_scene_site)
     TextView mSiteTextView;
-    @BindView(R.id.ll_join_type)
-    LinearLayout mJoinTypeLinearLayout;
     @BindView(R.id.tv_join_type)
     TextView mJoinTypeTextView;
     @BindView(R.id.tv_enable_time)
@@ -128,7 +125,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     break;
                 }
             }
-        }else{
+        } else {
             mSiteTextView.setText("云端");
         }
         mEnableTimeTextView.setText(decodeCronExpression2(mRuleEngineBean.getEnableTime()));
@@ -248,17 +245,31 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     @Override
     protected void initView() {
         mConditionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mConditionRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
-                .color(android.R.color.transparent)
-                .size(AutoSizeUtils.dp2px(this, 16)).build());
+        mConditionRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int size = SizeUtils.dp2px(10);
+                int position = parent.getChildAdapterPosition(view);
+
+                outRect.set(0, (position == 0) ? size : 0, 0, size);
+            }
+        });
         mConditionAdapter = new SceneSettingConditionItemAdapter(new ArrayList<>());
         mConditionAdapter.bindToRecyclerView(mConditionRecyclerView);
         mConditionAdapter.setEmptyView(R.layout.item_scene_setting_condition_empty);
 
         mActionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mActionRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
-                .color(android.R.color.transparent)
-                .size(AutoSizeUtils.dp2px(this, 16)).build());
+        mActionRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int size = SizeUtils.dp2px(10);
+                int position = parent.getChildAdapterPosition(view);
+
+                outRect.set(0, (position == 0) ? size : 0, 0, size);
+            }
+        });
         mActionAdapter = new SceneSettingActionItemAdapter(R.layout.item_scene_setting_action_device);
         mActionAdapter.bindToRecyclerView(mActionRecyclerView);
         mActionAdapter.setEmptyView(R.layout.item_scene_setting_action_empty);
@@ -446,7 +457,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ICON);
     }
 
-    @OnClick(R.id.tv_scene_name)
+    @OnClick(R.id.rl_scene_name)
     public void sceneNameClicked() {
         String currentSceneName = mSceneNameTextView.getText().toString();
         ValueChangeDialog

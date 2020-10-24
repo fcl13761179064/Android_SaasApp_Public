@@ -1,10 +1,11 @@
 package com.ayla.hotelsaas.ui;
 
-import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +21,6 @@ import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.List;
 
@@ -56,9 +56,16 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     @Override
     protected void initView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
-                .size(SizeUtils.dp2px(1))
-                .color(Color.TRANSPARENT).build());
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int size = SizeUtils.dp2px(10);
+                int position = parent.getChildAdapterPosition(view);
+
+                outRect.set(0, (position == 0) ? size : 0, 0, size);
+            }
+        });
         mAdapter = new FunctionRenameListAdapter(R.layout.item_function_rename_list);
         mAdapter.bindToRecyclerView(mRecyclerView);
     }
