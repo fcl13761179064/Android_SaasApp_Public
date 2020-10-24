@@ -71,13 +71,20 @@ public class MyApplication extends AApplication {
             CrashReport.initCrashReport(getApplicationContext(), "8863fabcca", BuildConfig.DEBUG);
         }
         mInstance = this;
-
-        IoTSmart.init(this, new IoTSmart.InitConfig().setDebug(true));
     }
 
     public List<DeviceListBean.DevicesBean> getDevicesBean() {
         return mDevicesBean;
     }
+
+    public DeviceListBean.DevicesBean getDevicesBean(String deviceId){
+        for (DeviceListBean.DevicesBean devicesBean : mDevicesBean) {
+            if (devicesBean.getDeviceId().equals(deviceId)) {
+                return devicesBean;
+            }
+        }
+        return null;
+    };
 
     public void setDevicesBean(List<DeviceListBean.DevicesBean> devicesBean) {
         mDevicesBean = devicesBean;

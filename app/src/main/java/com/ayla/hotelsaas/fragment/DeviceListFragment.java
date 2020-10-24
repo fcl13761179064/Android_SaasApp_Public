@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 
@@ -25,6 +26,7 @@ import com.ayla.hotelsaas.ui.DeviceDetailH5Activity;
 import com.ayla.hotelsaas.ui.DeviceMoreActivity;
 import com.ayla.hotelsaas.ui.TouchPanelActivity;
 import com.ayla.hotelsaas.utils.FastClickUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -84,6 +86,16 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         mAdapter.bindToRecyclerView(mRecyclerview);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         mRefreshLayout.setEnableLoadMore(false);
+        mRecyclerview.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int size = SizeUtils.dp2px(10);
+                int position = parent.getChildAdapterPosition(view);
+
+                outRect.set(0, (position == 0) ? size : 0, 0, size);
+            }
+        });
     }
 
     @Override
@@ -97,18 +109,18 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
                 if (devicesBean.getCuId() == 1 && "a1UR1BjfznK".equals(devicesBean.getDeviceCategory())) {
                     Intent intent = new Intent(getContext(), TouchPanelActivity.class);
-                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("deviceId", devicesBean.getDeviceId());
                     intent.putExtra("scopeId", room_id);
                     intent.putExtra("pannel_type", "1");
                     startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
                 } else if (devicesBean.isHasH5()) {
                     Intent intent = new Intent(getContext(), DeviceDetailH5Activity.class);
-                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("deviceId", devicesBean.getDeviceId());
                     intent.putExtra("scopeId", room_id);
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
-                    intent.putExtra("devicesBean", devicesBean);
+                    intent.putExtra("deviceId", devicesBean.getDeviceId());
                     intent.putExtra("scopeId", room_id);
                     startActivity(intent);
                 }
@@ -194,6 +206,6 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceChangedEvent(DeviceChangedEvent event) {
-        mRefreshLayout.autoRefresh();
+        mAdapter.notifyDataSetChanged();
     }
 }

@@ -22,7 +22,7 @@ public class BeanObtainCompactUtil {
         if (siteType == 1) {//本地
             sceneBean = new LocalSceneBean();
             ((LocalSceneBean) sceneBean).setTargetGateway(ruleEngineBean.getTargetGateway());
-            ((LocalSceneBean) sceneBean).setTargetGatewayType(ruleEngineBean.getTargetGatewayType() == 0 ? DeviceType.AYLA : DeviceType.ALI);
+            ((LocalSceneBean) sceneBean).setTargetGatewayType(ruleEngineBean.getTargetGatewayType() == 0 ? DeviceType.AYLA_DEVICE_ID : DeviceType.ALI_DEVICE_ID);
         } else {//云端
             sceneBean = new RemoteSceneBean();
         }

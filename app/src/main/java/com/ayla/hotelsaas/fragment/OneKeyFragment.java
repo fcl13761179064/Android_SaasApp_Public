@@ -1,8 +1,10 @@
 package com.ayla.hotelsaas.fragment;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +18,7 @@ import com.ayla.hotelsaas.mvp.present.OneKeyPresenter;
 import com.ayla.hotelsaas.mvp.view.OneKeyView;
 import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.SceneSettingActivity;
+import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.List;
@@ -47,6 +50,16 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
         mAdapter = new OneKeyRuleEngineAdapter();
         mAdapter.bindToRecyclerView(mRecyclerView);
         mAdapter.setEmptyView(R.layout.empty_scene_page);
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int size = SizeUtils.dp2px(10);
+                int position = parent.getChildAdapterPosition(view);
+
+                outRect.set(0, (position == 0) ? size : 0, 0, size);
+            }
+        });
     }
 
     @Override
@@ -81,7 +94,7 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
                 Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
                 intent.putExtra("sceneBean", ruleEngineBean);
                 if (getParentFragment() != null) {
-                    getParentFragment().startActivityForResult(intent, 0);
+                    getParentFragment().startActivityForResult(intent, RuleEngineFragment.REQUEST_CODE_SETTING);
                 }
             }
         });

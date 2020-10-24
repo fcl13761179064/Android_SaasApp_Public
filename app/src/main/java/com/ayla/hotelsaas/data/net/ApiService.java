@@ -3,8 +3,10 @@ package com.ayla.hotelsaas.data.net;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
+import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.HotelListBean;
@@ -69,10 +71,11 @@ public interface ApiService {
     @POST("api/v1/construction/appuser/newpassword")
     Observable<BaseResult<Boolean>> modifyOldPassword(@Body RequestBody body);
 
-
     @GET("api/v1/construction/user/mybaseinfo")
     Observable<BaseResult<PersonCenter>> getUserInfo();
 
+    @GET("api/v1/construction/device/{deviceId}/{scopeId}/nodes")
+    Observable<BaseResult<List<GatewayNodeBean>>> getGatewayNodes(@Path("deviceId") String deviceId, @Path("scopeId") long scopeId);
 
     @POST("api/v2/sso/refresh")
     Observable<BaseResult<User>> refreshToken(@Body RequestBody body);
@@ -130,6 +133,9 @@ public interface ApiService {
 
     @GET("api/v1/construction/device/queryModelTemplate/{oemModel}")
     Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("oemModel") String oemModel);
+
+    @GET("api/v1/construction/device/{deviceId}")
+    Observable<BaseResult<DeviceFirmwareVersionBean>> fetchDeviceDetail(@Path("deviceId") String deviceId);
 
     @PUT("api/v1/construction/device/{deviceId}/info")
     Observable<BaseResult<Boolean>> deviceRename(@Path("deviceId") String deviceId, @Body RequestBody body);

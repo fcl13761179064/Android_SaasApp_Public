@@ -1,7 +1,7 @@
 package com.ayla.hotelsaas.localBean;
 
 public enum DeviceType {
-    AYLA(0), ALI(1);
+    AYLA_DEVICE_ID(0), ALI_DEVICE_ID(1),INFRARED_VIRTUAL_SUB_DEVICE(8);
 
     public int code;
 
@@ -13,10 +13,13 @@ public enum DeviceType {
         DeviceType data = null;
         switch (code) {
             case 0:
-                data = AYLA;
+                data = AYLA_DEVICE_ID;
                 break;
             case 1:
-                data = ALI;
+                data = ALI_DEVICE_ID;
+                break;
+            case 8:
+                data = INFRARED_VIRTUAL_SUB_DEVICE;
                 break;
         }
         return data;

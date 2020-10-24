@@ -26,7 +26,13 @@ public class SceneSettingFunctionDatumSetSingleChoosePresenter extends BasePrese
                 datumBean.setOperator("==");
                 datumBean.setRightValue(valueBean.getValue());
                 datumBean.setRightValueType(valueBean.getDataType());
-                datumBean.setDeviceType(deviceBean.getCuId());
+                {
+                    if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
+                        datumBean.setDeviceType(8);
+                    } else {
+                        datumBean.setDeviceType(deviceBean.getCuId());
+                    }
+                }
                 datumBean.setDeviceId(deviceBean.getDeviceId());
                 datumBean.setIconUrl(deviceBean.getIconUrl());
                 CheckableSupport<SceneSettingFunctionDatumSetAdapter.DatumBean> bean = new CheckableSupport<>(datumBean);

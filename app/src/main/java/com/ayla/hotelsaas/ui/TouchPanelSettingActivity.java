@@ -27,7 +27,7 @@ import butterknife.BindView;
 /**
  * 面板按键设置页面
  * 进入时带入TouchPanelBean "touchpanel"
- * DeviceListBean.DevicesBean "devicesBean"
+ * String deviceId
  */
 public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, TourchPanelPresenter> implements TourchPanelView {
 
@@ -60,7 +60,7 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
     protected void initView() {
         appBar.setCenterText("场景按键设置");
         mTouchPanelBean = (TouchPanelBean) getIntent().getSerializableExtra("touchpanel");
-        mDevicesBean = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("devicesBean");
+        mDevicesBean = MyApplication.getInstance().getDevicesBean(getIntent().getStringExtra("deviceId"));
         tv_touchpanel_rename.setText(mTouchPanelBean.getWords());
 
         iv_scene_icon.setImageResource(mTouchPanelBean.getIconRes());

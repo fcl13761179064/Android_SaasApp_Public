@@ -79,7 +79,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.ZigBeeAddSelectGatewayActivity"
+            android:name=".ui.GatewaySelectActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />

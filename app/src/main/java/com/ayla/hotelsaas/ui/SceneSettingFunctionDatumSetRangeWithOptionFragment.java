@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -22,10 +23,10 @@ public class SceneSettingFunctionDatumSetRangeWithOptionFragment extends BaseMvp
     @BindView(R.id.np_2)
     NumberPicker mNumberPicker2;
 
-    public static SceneSettingFunctionDatumSetRangeWithOptionFragment newInstance(DeviceListBean.DevicesBean devicesBean, DeviceTemplateBean.AttributesBean attributesBean) {
+    public static SceneSettingFunctionDatumSetRangeWithOptionFragment newInstance(String deviceId, DeviceTemplateBean.AttributesBean attributesBean) {
 
         Bundle args = new Bundle();
-        args.putSerializable("deviceBean", devicesBean);
+        args.putSerializable("deviceId", deviceId);
         args.putSerializable("attributeBean", attributesBean);
         SceneSettingFunctionDatumSetRangeWithOptionFragment fragment = new SceneSettingFunctionDatumSetRangeWithOptionFragment();
         fragment.setArguments(args);
@@ -94,7 +95,7 @@ public class SceneSettingFunctionDatumSetRangeWithOptionFragment extends BaseMvp
     @Override
     public CallBackBean getDatum() {
         DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
-        DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) getArguments().getSerializable("deviceBean");
+        DeviceListBean.DevicesBean deviceBean =  MyApplication.getInstance().getDevicesBean(getArguments().getString("deviceId"));
 
         String option = "==";
         int optionIndex = mNumberPicker1.getValue();
