@@ -129,9 +129,9 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
 
     }
 
-    public void renameFunction(int cuId, String deviceId, int id, String propertyName, String propertyValue, String deviceCategory) {
+    public void renameFunction(int cuId, String deviceId, int id, String propertyName, String propertyValue) {
         Disposable subscribe = RequestModel.getInstance()
-                .touchPanelRenameMethod(id, deviceId, cuId, propertyName, "nickName", propertyValue, deviceCategory, false)
+                .setPropertyNickName(id, deviceId, cuId, propertyName, propertyValue)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -146,9 +146,9 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<BaseResult<Boolean>>() {
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void accept(BaseResult<Boolean> booleanBaseResult) throws Exception {
+                    public void accept(Boolean aBoolean) throws Exception {
                         mView.renameSuccess();
                     }
                 }, new Consumer<Throwable>() {

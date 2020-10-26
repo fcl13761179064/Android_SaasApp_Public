@@ -35,8 +35,6 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -570,7 +568,7 @@ public class RequestModel {
     }
 
     /**
-     * 场景重新命名
+     * 开关重命名/触控面板名称重命名/触控面板图片更换
      *
      * @return
      */
@@ -601,6 +599,47 @@ public class RequestModel {
                     public ObservableSource<BaseResult<Boolean>> apply(RequestBody body) throws Exception {
                         return getApiService().tourchPanelRenameAndIcon(body);
                     }
+                });
+    }
+
+    /**
+     * 设置设备属性的别名
+     *
+     * @param id
+     * @param deviceId
+     * @param cuId
+     * @param propertyName
+     * @return
+     */
+    public Observable<Boolean> setPropertyNickName(int id, String deviceId, int cuId, String propertyName, String propertyNickName) {
+        return Observable
+                .fromCallable(new Callable<RequestBody>() {
+                    @Override
+                    public RequestBody call() throws Exception {
+                        JSONObject uploadParams = new JSONObject();
+                        JSONArray list = new JSONArray();
+                        JSONObject jsonObject = new JSONObject();
+                        if (id != 0) {
+                            jsonObject.put("id", id);
+                        }
+                        uploadParams.put("needHandleAliService", false);
+                        jsonObject.put("deviceId", deviceId);
+                        jsonObject.put("cuId", cuId);
+                        jsonObject.put("propertyName", propertyName);
+                        jsonObject.put("propertyType", "nickName");
+                        jsonObject.put("propertyValue", propertyNickName);
+                        list.put(jsonObject);
+                        uploadParams.put("propertyList", list);
+                        return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
+                    }
+                })
+                .flatMap(new Function<RequestBody, ObservableSource<BaseResult<Boolean>>>() {
+                    @Override
+                    public ObservableSource<BaseResult<Boolean>> apply(RequestBody body) throws Exception {
+                        return getApiService().tourchPanelRenameAndIcon(body);
+                    }
+                })
+                .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
                 });
     }
 
