@@ -4,6 +4,7 @@ import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.GatewayAddView;
@@ -143,15 +144,19 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<BaseResult<Boolean>>() {
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void accept(BaseResult<Boolean> booleanBaseResult) throws Exception {
-                        mView.renameSuccess();
+                    public void accept(Boolean aBoolean) throws Exception {
+                        mView.renameSuccess(nickName);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.renameFailed();
+                        if (throwable instanceof RxjavaFlatmapThrowable) {
+                            mView.renameFailed(((RxjavaFlatmapThrowable) throwable).getCode(), ((RxjavaFlatmapThrowable) throwable).getMsg());
+                        } else {
+                            mView.renameFailed(null, throwable.getMessage());
+                        }
                     }
                 });
         addSubscrebe(subscribe);

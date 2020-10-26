@@ -20,6 +20,7 @@ import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
+import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -34,6 +35,8 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -557,11 +560,13 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> deviceRename(String deviceId, String nickName) {
+    public Observable<Boolean> deviceRename(String deviceId, String nickName) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("nickName", nickName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().deviceRename(deviceId, body111);
+        return getApiService().deviceRename(deviceId, body111)
+                .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                });
     }
 
     /**

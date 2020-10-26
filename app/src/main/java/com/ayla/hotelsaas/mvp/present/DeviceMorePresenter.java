@@ -8,6 +8,7 @@ import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
@@ -34,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
 
     public void deviceRenameMethod(String dsn, String nickName) {
-        RequestModel.getInstance().deviceRename(dsn, nickName)
+        Disposable subscribe = RequestModel.getInstance().deviceRename(dsn, nickName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -49,26 +50,22 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new RxjavaObserver<Boolean>() {
-
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
-
-                    }
-
-                    @Override
-                    public void _onNext(Boolean data) {
-                        mView.hideProgress();
+                    public void accept(Boolean aBoolean) throws Exception {
                         mView.renameSuccess(nickName);
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void _onError(String code, String msg) {
-                        mView.hideProgress();
-                        mView.renameFailed(msg);
+                    public void accept(Throwable throwable) throws Exception {
+                        if (throwable instanceof RxjavaFlatmapThrowable) {
+                            mView.renameFailed(((RxjavaFlatmapThrowable) throwable).getCode(), ((RxjavaFlatmapThrowable) throwable).getMsg());
+                        } else {
+                            mView.renameFailed(null, throwable.getMessage());
+                        }
                     }
                 });
+        addSubscrebe(subscribe);
     }
 
 

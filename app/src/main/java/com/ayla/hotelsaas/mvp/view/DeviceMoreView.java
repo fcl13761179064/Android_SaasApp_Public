@@ -8,7 +8,7 @@ import java.util.List;
 public interface DeviceMoreView extends BaseView {
 
     //错误提示
-    void renameFailed(String msg);
+    void renameFailed(String code, String msg);
 
     //操作成功
     void renameSuccess(String newNickName);
