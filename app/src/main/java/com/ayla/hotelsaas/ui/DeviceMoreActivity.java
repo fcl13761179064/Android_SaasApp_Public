@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.FunctionRenameListAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -23,8 +22,6 @@ import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -167,12 +164,13 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     }
 
     @Override
-    public void showFunctions(List<FunctionRenameListAdapter.Bean> attributesBeans) {
-        if (attributesBeans == null || attributesBeans.isEmpty()) {
-            rl_function_rename.setVisibility(View.GONE);
-        } else {
-            rl_function_rename.setVisibility(View.VISIBLE);
-        }
+    public void cannotRenameFunction() {
+        rl_function_rename.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void canRenameFunction() {
+        rl_function_rename.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.rl_device_function_rename)

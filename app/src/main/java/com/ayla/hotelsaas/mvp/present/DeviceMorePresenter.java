@@ -2,12 +2,10 @@ package com.ayla.hotelsaas.mvp.present;
 
 import android.text.TextUtils;
 
-import com.ayla.hotelsaas.adapter.FunctionRenameListAdapter;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
-import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
@@ -22,7 +20,6 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -146,34 +143,6 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                                 });
                     }
                 })//然后结合物模板查询出功能默认名称
-                .zipWith(RequestModel.getInstance().getALlTouchPanelDeviceInfo(cuId, deviceId).map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
-                    @Override
-                    public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
-                        return listBaseResult.data;
-                    }
-                }), new BiFunction<List<DeviceTemplateBean.AttributesBean>, List<TouchPanelDataBean>, List<FunctionRenameListAdapter.Bean>>() {
-                    @Override
-                    public List<FunctionRenameListAdapter.Bean> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
-                        List<FunctionRenameListAdapter.Bean> result = new ArrayList<>();
-                        for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans) {
-                            FunctionRenameListAdapter.Bean bean = new FunctionRenameListAdapter.Bean();
-                            result.add(bean);
-                            String code = attributesBean.getCode();
-                            String displayName = attributesBean.getDisplayName();
-                            bean.setCode(code);
-                            bean.setDisplayName(displayName);
-                            bean.setPropertyValue(attributesBean.getDisplayName());
-                            for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
-                                if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
-                                        TextUtils.equals(code, touchPanelDataBean.getPropertyName())) {
-                                    bean.setPropertyValue(touchPanelDataBean.getPropertyValue());
-                                    bean.setId(touchPanelDataBean.getId());
-                                }
-                            }
-                        }
-                        return result;
-                    }
-                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -188,15 +157,19 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<List<FunctionRenameListAdapter.Bean>>() {
+                .subscribe(new Consumer<List<DeviceTemplateBean.AttributesBean>>() {
                     @Override
-                    public void accept(List<FunctionRenameListAdapter.Bean> beans) throws Exception {
-                        mView.showFunctions(beans);
+                    public void accept(List<DeviceTemplateBean.AttributesBean> attributesBeans) throws Exception {
+                        if (attributesBeans.size() == 0) {
+                            mView.cannotRenameFunction();
+                        } else {
+                            mView.canRenameFunction();
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.showFunctions(null);
+                        mView.cannotRenameFunction();
                     }
                 });
         addSubscrebe(subscribe);
