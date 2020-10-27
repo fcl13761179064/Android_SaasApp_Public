@@ -1,6 +1,8 @@
 package com.ayla.hotelsaas.mvp.model;
 
 
+import android.text.TextUtils;
+
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -605,13 +607,13 @@ public class RequestModel {
     /**
      * 设置设备属性的别名
      *
-     * @param id
+     * @param nickNameId
      * @param deviceId
      * @param cuId
      * @param propertyName
      * @return
      */
-    public Observable<Boolean> setPropertyNickName(int id, String deviceId, int cuId, String propertyName, String propertyNickName) {
+    public Observable<Boolean> setPropertyNickName(String nickNameId, String deviceId, int cuId, String propertyName, String propertyNickName) {
         return Observable
                 .fromCallable(new Callable<RequestBody>() {
                     @Override
@@ -619,8 +621,8 @@ public class RequestModel {
                         JSONObject uploadParams = new JSONObject();
                         JSONArray list = new JSONArray();
                         JSONObject jsonObject = new JSONObject();
-                        if (id != 0) {
-                            jsonObject.put("id", id);
+                        if (!TextUtils.isEmpty(nickNameId)) {
+                            jsonObject.put("id", nickNameId);
                         }
                         uploadParams.put("needHandleAliService", false);
                         jsonObject.put("deviceId", deviceId);

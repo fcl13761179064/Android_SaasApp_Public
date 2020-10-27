@@ -22,7 +22,9 @@ import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -93,22 +95,20 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
                                             if (i == position) {
                                                 continue;
                                             }
-                                            if (TextUtils.equals(item.getPropertyValue(), txt) || TextUtils.equals(item.getDisplayName(), txt)) {
+                                            if (TextUtils.equals(item.getPropertyNickname(), txt) || TextUtils.equals(item.getPropertyName(), txt)) {
                                                 CustomToast.makeText(getBaseContext(), "不能和其他开关重名", R.drawable.ic_toast_warming).show();
                                                 return;
                                             }
                                         }
-
-                                        attributesBean.setPropertyValue(txt);
                                         mAdapter.notifyItemChanged(position);
                                         mPresenter.renameFunction(mDevicesBean.getCuId(), mDevicesBean.getDeviceId(),
-                                                attributesBean.getId(), attributesBean.getCode(), txt);
+                                                attributesBean.getNickNameId(), attributesBean.getPropertyCode(), txt);
                                     }
                                 }
                                 dialog.dismissAllowingStateLoss();
                             }
                         })
-                        .setEditValue(attributesBean.getPropertyValue())
+                        .setEditValue(TextUtils.isEmpty(attributesBean.getNickNameId()) ? attributesBean.getPropertyName() : attributesBean.getPropertyNickname())
                         .setTitle("修改名称")
                         .setEditHint("请输入名称")
                         .setMaxLength(20)
@@ -118,8 +118,17 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     }
 
     @Override
-    public void showFunctions(List<FunctionRenameListAdapter.Bean> attributesBeans) {
-        mAdapter.setNewData(attributesBeans);
+    public void showFunctions(List<Map<String, String>> attributesBeans) {
+        List<FunctionRenameListAdapter.Bean> data = new ArrayList<>();
+        for (Map<String, String> attributesBean : attributesBeans) {
+            FunctionRenameListAdapter.Bean bean = new FunctionRenameListAdapter.Bean();
+            bean.setPropertyCode(attributesBean.get("propertyCode"));
+            bean.setPropertyName(attributesBean.get("propertyName"));
+            bean.setNickNameId(attributesBean.get("nickNameId"));
+            bean.setPropertyNickname(attributesBean.get("propertyNickname"));
+            data.add(bean);
+        }
+        mAdapter.setNewData(data);
     }
 
     @Override
