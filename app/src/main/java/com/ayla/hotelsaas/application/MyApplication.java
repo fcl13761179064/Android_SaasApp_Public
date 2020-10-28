@@ -71,6 +71,7 @@ public class MyApplication extends AApplication {
             CrashReport.initCrashReport(getApplicationContext(), "8863fabcca", BuildConfig.DEBUG);
         }
         mInstance = this;
+        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(BuildConfig.DEBUG));
     }
 
     public List<DeviceListBean.DevicesBean> getDevicesBean() {

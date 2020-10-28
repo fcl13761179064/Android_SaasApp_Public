@@ -5,11 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 
-import com.aliyun.iot.aep.sdk.IoTSmart;
-import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
@@ -19,7 +16,6 @@ public class SPlashActivity extends BaseMvpActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(BuildConfig.DEBUG));
         new Handler(getMainLooper())
                 .postDelayed(new Runnable() {
                     @Override
