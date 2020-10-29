@@ -25,7 +25,6 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
         mWebView = getWebView();
         View emptyView = getEmptyView();
         mWebView.getSettings().setCacheMode(Constance.isNetworkDebug ? WebSettings.LOAD_NO_CACHE : WebSettings.LOAD_DEFAULT);
-        mWebView.getSettings().setAppCacheEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
