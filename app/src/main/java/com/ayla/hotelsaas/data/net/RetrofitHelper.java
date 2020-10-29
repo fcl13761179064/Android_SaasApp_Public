@@ -88,7 +88,7 @@ public class RetrofitHelper {
         builder.addInterceptor(CommonParameterInterceptor);
         //登录失败 重新登录
         builder.addInterceptor(ReloginInterceptor);
-        httpLoggingInterceptor.setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.BASIC);
+        httpLoggingInterceptor.setLevel(Constance.isNetworkDebug ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.BASIC);
         builder.addInterceptor(httpLoggingInterceptor);
         builder.retryOnConnectionFailure(true);
         return builder.build();

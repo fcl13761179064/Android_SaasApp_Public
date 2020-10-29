@@ -92,7 +92,6 @@ public class LarkWebView extends WebView {
         String appCacheDir = this.getContext().getDir("cache", Context.MODE_PRIVATE).getAbsolutePath();
         webSettings.setAppCachePath(appCacheDir);
         webSettings.setAllowFileAccess(true);
-        webSettings.setCacheMode(BuildConfig.DEBUG ? WebSettings.LOAD_NO_CACHE : WebSettings.LOAD_DEFAULT);
         webSettings.setAllowFileAccess(true);
         webSettings.setAllowFileAccessFromFileURLs(true);
         webSettings.setAllowUniversalAccessFromFileURLs(true);
