@@ -43,8 +43,4 @@ public class Constance {
     //refresh token
     public static String SP_Refresh_Token = "refresh_token";
 
-    //状态
-    public static final String V_STATUS_online = "online";    //初始状态
-    public static final String V_STATUS_offline = "offline";    //未批准
-
 }
