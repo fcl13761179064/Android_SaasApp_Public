@@ -1,21 +1,15 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
-import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
@@ -40,7 +34,7 @@ import wendu.dsbridge.DWebView;
  * String deviceId
  * long scopeId
  */
-public class DeviceDetailH5Activity extends BaseMvpActivity {
+public class DeviceDetailH5Activity extends BaseWebViewActivity {
 
     private static final String TAG = DeviceDetailH5Activity.class.getSimpleName();
     @BindView(R.id.web_view)
@@ -55,6 +49,16 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
         EventBus.getDefault().register(this);
         mWebView.loadUrl(Constance.getDeviceControlBaseUrl());
 
+    }
+
+    @Override
+    protected View getEmptyView() {
+        return emptyView;
+    }
+
+    @Override
+    protected WebView getWebView() {
+        return mWebView;
     }
 
     @Override
@@ -73,45 +77,6 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
 
     @Override
     protected void initListener() {
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mWebView.getSettings().setAppCacheEnabled(false);
-        mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            // 加载主框架出错时会被回调的方法 API<23
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                super.onReceivedError(view, errorCode, description, failingUrl);
-                Log.d(TAG, "onReceivedError: " + description);
-                if (mWebView.getVisibility() != View.VISIBLE) {
-                    emptyView.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
-                Log.d(TAG, "onReceivedError: ");
-                if (mWebView.getVisibility() != View.VISIBLE) {
-                    emptyView.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                Log.d(TAG, "onPageStarted: ");
-                showProgress();
-                emptyView.setVisibility(View.INVISIBLE);
-                mWebView.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                Log.d(TAG, "onPageFinished: ");
-                hideProgress();
-                mWebView.setVisibility(View.VISIBLE);
-            }
-        });
         mWebView.addJavascriptObject(new Object() {
             @JavascriptInterface
             public void back(Object msg) {
@@ -174,24 +139,15 @@ public class DeviceDetailH5Activity extends BaseMvpActivity {
     }
 
     @OnClick(R.id.bt_refresh)
-    void handleRefreshClick() {
-        mWebView.reload();
+    @Override
+    public void handleRefreshClick() {
+        super.handleRefreshClick();
     }
 
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        mWebView.destroy();
         super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mWebView.canGoBack()) {
-            mWebView.goBack();
-            return;
-        }
-        super.onBackPressed();
     }
 
     private void miya_native_dataShare_init() {
