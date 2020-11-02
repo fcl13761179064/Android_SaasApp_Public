@@ -31,9 +31,14 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
      * @param cuId
      * @param scopeId
      */
-    public void
-    bindAylaGateway(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
-        RequestModel.getInstance().bindDeviceWithDSN(dsn, cuId, scopeId, 2, deviceCategory, deviceName, deviceName)
+    public void bindAylaGateway(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
+        String newNickname;
+        if (dsn.length() > 4) {
+            newNickname = deviceName + "_" + dsn.substring(dsn.length() - 4);
+        } else {
+            newNickname = deviceName + "_" + dsn;
+        }
+        RequestModel.getInstance().bindDeviceWithDSN(dsn, cuId, scopeId, 2, deviceCategory, deviceName, newNickname)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxjavaObserver() {
@@ -44,7 +49,7 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
 
                     @Override
                     public void _onNext(Object data) {
-                        mView.bindSuccess(dsn, deviceName);
+                        mView.bindSuccess(dsn, newNickname);
                     }
 
                     @Override
