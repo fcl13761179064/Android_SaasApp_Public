@@ -68,24 +68,26 @@ public class MyApplication extends AApplication {
         super.onCreate();
         Log.d(TAG, "version name: " + BuildConfig.VERSION_NAME + ", version code: " + BuildConfig.VERSION_CODE);
         if (ProcessUtils.isMainProcess()) {
-            CrashReport.initCrashReport(getApplicationContext(), "8863fabcca", Constance.isNetworkDebug);
+            CrashReport.initCrashReport(getApplicationContext(), "8863fabcca", Constance.isNetworkDebug());
         }
         mInstance = this;
-        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug));
+        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
     }
 
     public List<DeviceListBean.DevicesBean> getDevicesBean() {
         return mDevicesBean;
     }
 
-    public DeviceListBean.DevicesBean getDevicesBean(String deviceId){
+    public DeviceListBean.DevicesBean getDevicesBean(String deviceId) {
         for (DeviceListBean.DevicesBean devicesBean : mDevicesBean) {
             if (devicesBean.getDeviceId().equals(deviceId)) {
                 return devicesBean;
             }
         }
         return null;
-    };
+    }
+
+    ;
 
     public void setDevicesBean(List<DeviceListBean.DevicesBean> devicesBean) {
         mDevicesBean = devicesBean;

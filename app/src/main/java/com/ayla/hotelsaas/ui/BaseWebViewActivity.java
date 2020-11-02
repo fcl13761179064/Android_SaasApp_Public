@@ -24,7 +24,7 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
         super.onCreate(savedInstanceState);
         mWebView = getWebView();
         View emptyView = getEmptyView();
-        mWebView.getSettings().setCacheMode(Constance.isNetworkDebug ? WebSettings.LOAD_NO_CACHE : WebSettings.LOAD_DEFAULT);
+        mWebView.getSettings().setCacheMode(Constance.isNetworkDebug() ? WebSettings.LOAD_NO_CACHE : WebSettings.LOAD_DEFAULT);
         mWebView.getSettings().setDomStorageEnabled(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
@@ -66,7 +66,7 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 mWebView.setVisibility(View.VISIBLE);
             }
         });
-        WebView.setWebContentsDebuggingEnabled(Constance.isNetworkDebug);
+        WebView.setWebContentsDebuggingEnabled(Constance.isNetworkDebug());
     }
 
     protected abstract View getEmptyView();
