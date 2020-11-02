@@ -20,6 +20,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -216,12 +217,12 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         return stringBaseResult.data;
                     }
                 })
-                .flatMap(new Function<String, ObservableSource<String>>() {
+                .flatMap(new Function<String, ObservableSource<String[]>>() {
                     @Override
-                    public ObservableSource<String> apply(String authCode) throws Exception {
-                        return Observable.create(new ObservableOnSubscribe<String>() {
+                    public ObservableSource<String[]> apply(String authCode) throws Exception {
+                        return Observable.create(new ObservableOnSubscribe<String[]>() {
                             @Override
-                            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                            public void subscribe(ObservableEmitter<String[]> emitter) throws Exception {
                                 nodeHelper[0] = new NodeHelper(new NodeHelper.BindCallback() {
                                     @Override
                                     public boolean isUnbindRelation(String subIotId, String subProductKey, String subDeviceName) {
@@ -252,8 +253,8 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                     }
 
                                     @Override
-                                    public void onSuccess(String iotId) {
-                                        emitter.onNext(iotId);
+                                    public void onSuccess(String subIotId, String subProductKey, String subDeviceName) {
+                                        emitter.onNext(new String[]{subIotId, subProductKey, subDeviceName});
                                         emitter.onComplete();
                                     }
                                 });
@@ -287,15 +288,21 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     }
                 })//通知网关连接成功
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<String, ObservableSource<DeviceListBean.DevicesBean>>() {
+                .flatMap(new Function<String[], ObservableSource<String[]>>() {
                     @Override
-                    public ObservableSource<DeviceListBean.DevicesBean> apply(String s) throws Exception {
+                    public ObservableSource<String[]> apply(String subDeviceInfo[]) throws Exception {
+                        String subIotId = subDeviceInfo[0];
+                        String subDeviceName = subDeviceInfo[2];
+                        if (subDeviceName != null && subDeviceName.length() > 4) {
+                            subDeviceName = subDeviceName.substring(subDeviceName.length() - 4);
+                        }
+                        String newNickName = deviceName + "_" + subDeviceName;
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(s, cuId, scopeId, 2, deviceCategory, deviceName, deviceName)
-                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
+                                .bindDeviceWithDSN(subIotId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName)
+                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, String[]>() {
                                     @Override
-                                    public DeviceListBean.DevicesBean apply(BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
-                                        return devicesBeanBaseResult.data;
+                                    public String[] apply(@NonNull BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
+                                        return new String[]{subIotId, newNickName};
                                     }
                                 });
                     }
@@ -307,10 +314,10 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         mView.step2Finish();
                     }
                 })//通知子节点绑定成功
-                .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
+                .subscribe(new Consumer<String[]>() {
                     @Override
-                    public void accept(DeviceListBean.DevicesBean bean) throws Exception {
-                        mView.bindSuccess(bean.getDeviceId(), deviceName);
+                    public void accept(String[] subDeviceInfo) throws Exception {
+                        mView.bindSuccess(subDeviceInfo[0], subDeviceInfo[1]);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
