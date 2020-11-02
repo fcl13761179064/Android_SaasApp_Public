@@ -16,6 +16,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -63,12 +64,12 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                         return stringBaseResult.data;
                     }
                 })
-                .flatMap(new Function<String, ObservableSource<String>>() {
+                .flatMap(new Function<String, ObservableSource<String[]>>() {
                     @Override
-                    public ObservableSource<String> apply(String authCode) throws Exception {
-                        return Observable.create(new ObservableOnSubscribe<String>() {
+                    public ObservableSource<String[]> apply(String authCode) throws Exception {
+                        return Observable.create(new ObservableOnSubscribe<String[]>() {
                             @Override
-                            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                            public void subscribe(ObservableEmitter<String[]> emitter) throws Exception {
                                 bindHelper[0] = new GatewayHelper.BindHelper(application, new GatewayHelper.BindCallback() {
                                     @Override
                                     public void onFailure(Exception e) {
@@ -76,8 +77,8 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                                     }
 
                                     @Override
-                                    public void onBindSuccess(String iotId) {
-                                        emitter.onNext(iotId);
+                                    public void onBindSuccess(String iotId, String productKey, String deviceName) {
+                                        emitter.onNext(new String[]{iotId, productKey, deviceName});
                                         emitter.onComplete();
                                     }
                                 });
@@ -95,25 +96,27 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                         }
                     }
                 })
-                .flatMap(new Function<String, ObservableSource<DeviceListBean.DevicesBean>>() {
+                .flatMap(new Function<String[], ObservableSource<String[]>>() {
                     @Override
-                    public ObservableSource<DeviceListBean.DevicesBean> apply(String s) throws Exception {
+                    public ObservableSource<String[]> apply(String[] deviceInfo) throws Exception {
+                        String deviceId = deviceInfo[0];
+                        String newNickName = deviceName + "_" + deviceInfo[2];
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(s, cuId, scopeId, 2, deviceCategory, deviceName, deviceName)
-                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
+                                .bindDeviceWithDSN(deviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName)
+                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, String[]>() {
                                     @Override
-                                    public DeviceListBean.DevicesBean apply(BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
-                                        return devicesBeanBaseResult.data;
+                                    public String[] apply(@NonNull BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
+                                        return new String[]{deviceId, newNickName};
                                     }
                                 });
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
+                .subscribe(new Consumer<String[]>() {
                     @Override
-                    public void accept(DeviceListBean.DevicesBean bean) throws Exception {
-                        mView.bindSuccess(bean.getDeviceId(), deviceName);
+                    public void accept(String[] strings) throws Exception {
+                        mView.bindSuccess(strings[0], strings[1]);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
