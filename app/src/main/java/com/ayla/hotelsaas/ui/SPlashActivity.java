@@ -10,7 +10,6 @@ import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.blankj.utilcode.util.AppUtils;
 
 public class SPlashActivity extends BaseMvpActivity {
     @Override
@@ -46,12 +45,6 @@ public class SPlashActivity extends BaseMvpActivity {
     @Override
     protected void initListener() {
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        AppUtils.exitApp();
     }
 
     @Override

@@ -87,8 +87,6 @@ public class MyApplication extends AApplication {
         return null;
     }
 
-    ;
-
     public void setDevicesBean(List<DeviceListBean.DevicesBean> devicesBean) {
         mDevicesBean = devicesBean;
     }

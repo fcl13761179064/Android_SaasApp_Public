@@ -1,14 +1,12 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
@@ -29,7 +27,6 @@ import com.ayla.hotelsaas.utils.FastClickUtils;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
-import com.blankj.utilcode.util.AppUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -83,7 +80,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                 startActivity(mainActivity);
             }
         });
-        keepLoginBtnNotOver(rl_root_view, ll_content_view);
         //触摸外部，键盘消失
         rl_root_view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -116,38 +112,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         });
 
     }
-
-
-    /**
-     * 保持登录按钮始终不会被覆盖
-     *
-     * @param root
-     * @param subView
-     */
-    private void keepLoginBtnNotOver(final View root, final View subView) {
-        root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect rect = new Rect();
-                // 获取root在窗体的可视区域
-                root.getWindowVisibleDisplayFrame(rect);
-                // 获取root在窗体的不可视区域高度(被其他View遮挡的区域高度)
-                int rootInvisibleHeight = root.getRootView().getHeight() - rect.bottom;
-                // 若不可视区域高度大于200，则键盘显示,其实相当于键盘的高度
-                if (rootInvisibleHeight > 200) {
-                    // 显示键盘时
-                    int srollHeight = rootInvisibleHeight - (root.getHeight() - subView.getHeight()) - SoftIntPutUtils.getNavigationBarHeight(root.getContext());
-                    if (srollHeight > 0) {//当键盘高度覆盖按钮时
-                        root.scrollTo(0, srollHeight + 10);
-                    }
-                } else {
-                    // 隐藏键盘时
-                    root.scrollTo(0, 0);
-                }
-            }
-        });
-    }
-
 
     private TextWatcher edtWatcher = new TextWatcher() {
         @Override
@@ -214,11 +178,5 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             edite_count.startAnimation(mShakeAnimation);
             edit_password.startAnimation(mShakeAnimation);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        AppUtils.exitApp();
     }
 }

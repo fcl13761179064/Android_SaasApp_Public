@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -183,25 +182,9 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         return null;
     }
 
-
     @Override
     protected MainPresenter initPresenter() {
         return new MainPresenter();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) { //按下的如果是BACK，同时没有重复
-            finish();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
