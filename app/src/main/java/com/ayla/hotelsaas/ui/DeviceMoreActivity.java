@@ -133,7 +133,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
 
     @Override
     public void renameFailed(String code, String msg) {
-        if ("140000".equals(code)) {
+        if ("140001".equals(code)) {
             CustomToast.makeText(this, "该名称不能重复使用", R.drawable.ic_toast_warming).show();
         } else {
             CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
