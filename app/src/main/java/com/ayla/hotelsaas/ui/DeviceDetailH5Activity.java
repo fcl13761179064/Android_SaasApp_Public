@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
@@ -57,7 +56,7 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
     }
 
     @Override
-    protected WebView getWebView() {
+    protected DWebView getWebView() {
         return mWebView;
     }
 

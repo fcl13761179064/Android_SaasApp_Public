@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
 import android.view.View;
-import android.webkit.WebView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BasePresenter;
@@ -53,7 +52,7 @@ public class H5BaseActivity extends BaseWebViewActivity {
     }
 
     @Override
-    protected WebView getWebView() {
+    protected DWebView getWebView() {
         return mWebView;
     }
 

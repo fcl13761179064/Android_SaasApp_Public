@@ -67,11 +67,11 @@ public class MyApplication extends AApplication {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "version name: " + BuildConfig.VERSION_NAME + ", version code: " + BuildConfig.VERSION_CODE);
+        mInstance = this;
         if (ProcessUtils.isMainProcess()) {
             CrashReport.initCrashReport(getApplicationContext(), "8863fabcca", Constance.isNetworkDebug());
+            IoTSmart.init(this, new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
         }
-        mInstance = this;
-        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
     }
 
     public List<DeviceListBean.DevicesBean> getDevicesBean() {

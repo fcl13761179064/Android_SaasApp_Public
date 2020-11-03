@@ -1,23 +1,24 @@
 package com.ayla.hotelsaas.ui;
 
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.tencent.smtt.export.external.interfaces.WebResourceError;
+import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
+
+import wendu.dsbridge.DWebView;
 
 public abstract class BaseWebViewActivity extends BaseMvpActivity {
     private final String TAG = this.getClass().getSimpleName();
 
-    private WebView mWebView;
+    private DWebView mWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +27,6 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
         View emptyView = getEmptyView();
         mWebView.getSettings().setCacheMode(Constance.isNetworkDebug() ? WebSettings.LOAD_NO_CACHE : WebSettings.LOAD_DEFAULT);
         mWebView.getSettings().setDomStorageEnabled(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        }
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             // 加载主框架出错时会被回调的方法 API<23
@@ -71,7 +69,7 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
 
     protected abstract View getEmptyView();
 
-    protected abstract WebView getWebView();
+    protected abstract DWebView getWebView();
 
     protected void handleRefreshClick() {
         mWebView.reload();

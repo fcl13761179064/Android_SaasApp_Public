@@ -20,9 +20,9 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.ForgitPresenter;
 import com.ayla.hotelsaas.mvp.view.ForgitView;
 import com.ayla.hotelsaas.utils.FastClickUtils;
-import com.ayla.hotelsaas.utils.PregnancyUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
 import com.ayla.hotelsaas.widget.AppBar;
+import com.blankj.utilcode.util.RegexUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -110,7 +110,7 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
                 if (TextUtils.isEmpty(userName)) {
                     CustomToast.makeText(MyApplication.getContext(), "手机号不能为空", R.drawable.ic_toast_warming).show();
                     return;
-                } else if (!PregnancyUtil.checkPhoneNum(userName)) {
+                } else if (!RegexUtils.isMobileSimple(userName)) {
                     CustomToast.makeText(MyApplication.getContext(), "手机格式错误", R.drawable.ic_toast_warming).show();
                     return;
                 }
