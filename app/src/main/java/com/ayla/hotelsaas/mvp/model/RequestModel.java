@@ -299,10 +299,11 @@ public class RequestModel {
      * @param ruleEngineBean
      * @return
      */
-    public Observable<BaseResult> saveRuleEngine(RuleEngineBean ruleEngineBean) {
+    public Observable<Boolean> saveRuleEngine(RuleEngineBean ruleEngineBean) {
         String json = new Gson().toJson(ruleEngineBean);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
-        return getApiService().saveRuleEngine(body111);
+        return getApiService().saveRuleEngine(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
 
@@ -312,10 +313,11 @@ public class RequestModel {
      * @param ruleEngineBean
      * @return
      */
-    public Observable<BaseResult> updateRuleEngine(RuleEngineBean ruleEngineBean) {
+    public Observable<Boolean> updateRuleEngine(RuleEngineBean ruleEngineBean) {
         String json = new Gson().toJson(ruleEngineBean);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
-        return getApiService().updateRuleEngine(body111);
+        return getApiService().updateRuleEngine(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
     /**

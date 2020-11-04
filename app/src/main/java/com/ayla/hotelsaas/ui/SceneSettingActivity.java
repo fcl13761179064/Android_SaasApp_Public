@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +20,7 @@ import com.ayla.hotelsaas.adapter.SceneSettingConditionItemAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.localBean.DeviceType;
 import com.ayla.hotelsaas.localBean.LocalSceneBean;
@@ -410,12 +410,18 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     }
 
     @Override
-    public void saveFailed(String code) {
-        if ("159999".equals(code)) {
-            CustomToast.makeText(this, "该设备有异常,请移除后再创建场景", R.drawable.ic_toast_warming).show();
-        } else {
-            CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming).show();
+    public void saveFailed(Throwable throwable) {
+        if (throwable instanceof RxjavaFlatmapThrowable) {
+            String code = ((RxjavaFlatmapThrowable) throwable).getCode();
+            if ("159999".equals(code)) {
+                CustomToast.makeText(this, "该设备有异常,请移除后再创建场景", R.drawable.ic_toast_warming).show();
+                return;
+            } else if ("155000".equals(code)) {
+                CustomToast.makeText(this, "场景名称已被使用", R.drawable.ic_toast_warming).show();
+                return;
+            }
         }
+        CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming).show();
     }
 
     @Override
