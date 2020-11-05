@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.utils.ClickUtils;
 import com.ayla.hotelsaas.widget.LoadingDialog;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.ScreenUtils;
@@ -57,16 +56,16 @@ abstract class BasicActivity extends AppCompatActivity {
         if (appbarRoot != null) {
             View leftIV = appbarRoot.findViewById(R.id.iv_left);
             if (leftIV != null && !leftIV.hasOnClickListeners()) {
-                ClickUtils.applySingleDebouncing(leftIV, new View.OnClickListener() {
+                leftIV.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         appBarLeftIvClicked();
                     }
                 });
             }
             View leftTV = appbarRoot.findViewById(R.id.tv_left);
             if (leftTV != null && !leftTV.hasOnClickListeners()) {
-                ClickUtils.applySingleDebouncing(leftTV, new View.OnClickListener() {
+                leftTV.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         appBarLeftTvClicked();
@@ -75,7 +74,7 @@ abstract class BasicActivity extends AppCompatActivity {
             }
             View rightIV = appbarRoot.findViewById(R.id.iv_right);
             if (rightIV != null && !rightIV.hasOnClickListeners()) {
-                ClickUtils.applySingleDebouncing(rightIV, new View.OnClickListener() {
+                rightIV.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         appBarRightIvClicked();
@@ -84,7 +83,7 @@ abstract class BasicActivity extends AppCompatActivity {
             }
             View rightTv = appbarRoot.findViewById(R.id.tv_right);
             if (rightTv != null && !rightTv.hasOnClickListeners()) {
-                ClickUtils.applySingleDebouncing(rightTv, new View.OnClickListener() {
+                rightTv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         appBarRightTvClicked();

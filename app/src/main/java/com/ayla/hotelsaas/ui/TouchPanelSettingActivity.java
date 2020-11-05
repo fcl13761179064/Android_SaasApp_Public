@@ -18,7 +18,7 @@ import com.ayla.hotelsaas.bean.TouchPanelBean;
 import com.ayla.hotelsaas.fragment.DeviceListFragment;
 import com.ayla.hotelsaas.mvp.present.TourchPanelPresenter;
 import com.ayla.hotelsaas.mvp.view.TourchPanelView;
-import com.ayla.hotelsaas.utils.FastClickUtils;
+
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
@@ -86,9 +86,7 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
         rl_touchpanel_rename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (FastClickUtils.isDoubleClick()) {
-                    return;
-                }
+
                 ValueChangeDialog
                         .newInstance(new ValueChangeDialog.DoneCallback() {
                             @Override
