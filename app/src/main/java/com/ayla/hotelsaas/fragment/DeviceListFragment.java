@@ -25,7 +25,7 @@ import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
 import com.ayla.hotelsaas.ui.DeviceDetailH5Activity;
 import com.ayla.hotelsaas.ui.DeviceMoreActivity;
 import com.ayla.hotelsaas.ui.TouchPanelActivity;
-import com.ayla.hotelsaas.utils.FastClickUtils;
+
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -103,9 +103,6 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (FastClickUtils.isDoubleClick()) {
-                    return;
-                }
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
                 if (devicesBean.getCuId() == 1 && "a1UR1BjfznK".equals(devicesBean.getDeviceCategory())) {
                     Intent intent = new Intent(getContext(), TouchPanelActivity.class);
@@ -152,9 +149,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (FastClickUtils.isDoubleClick()) {
-                    return;
-                }
+
                 Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
                 intent.putExtra("scopeId", room_id);
                 startActivityForResult(intent, REQUEST_CODE_DEVICE_EDIT);
