@@ -35,16 +35,23 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tv_content"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/cb"
         android:layout_below="@id/iv_title"
         android:layout_marginLeft="16dp"
+        android:scrollbars="vertical"
         android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        android:textColor="#ff999999"
-        android:textSize="14sp" />
+        android:layout_marginRight="16dp">
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ff999999"
+            android:textSize="14sp" />
+    </ScrollView>
 
     <Button
         android:id="@+id/bt"
@@ -53,7 +60,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="40dp"
         android:background="@drawable/green_btn_bg"
         android:stateListAnimator="@null"
         android:text="下一步"

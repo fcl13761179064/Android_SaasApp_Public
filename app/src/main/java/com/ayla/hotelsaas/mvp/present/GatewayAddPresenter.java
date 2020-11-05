@@ -4,6 +4,7 @@ import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.GatewayAddView;
@@ -15,6 +16,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -29,9 +31,14 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
      * @param cuId
      * @param scopeId
      */
-    public void
-    bindAylaGateway(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
-        RequestModel.getInstance().bindDeviceWithDSN(dsn, cuId, scopeId, 2, deviceCategory, deviceName, deviceName)
+    public void bindAylaGateway(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
+        String newNickname;
+        if (dsn.length() > 4) {
+            newNickname = deviceName + "_" + dsn.substring(dsn.length() - 4);
+        } else {
+            newNickname = deviceName + "_" + dsn;
+        }
+        RequestModel.getInstance().bindDeviceWithDSN(dsn, cuId, scopeId, 2, deviceCategory, deviceName, newNickname)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxjavaObserver() {
@@ -42,7 +49,7 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
 
                     @Override
                     public void _onNext(Object data) {
-                        mView.bindSuccess(dsn, deviceName);
+                        mView.bindSuccess(dsn, newNickname);
                     }
 
                     @Override
@@ -62,12 +69,12 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                         return stringBaseResult.data;
                     }
                 })
-                .flatMap(new Function<String, ObservableSource<String>>() {
+                .flatMap(new Function<String, ObservableSource<String[]>>() {
                     @Override
-                    public ObservableSource<String> apply(String authCode) throws Exception {
-                        return Observable.create(new ObservableOnSubscribe<String>() {
+                    public ObservableSource<String[]> apply(String authCode) throws Exception {
+                        return Observable.create(new ObservableOnSubscribe<String[]>() {
                             @Override
-                            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                            public void subscribe(ObservableEmitter<String[]> emitter) throws Exception {
                                 bindHelper[0] = new GatewayHelper.BindHelper(application, new GatewayHelper.BindCallback() {
                                     @Override
                                     public void onFailure(Exception e) {
@@ -75,8 +82,8 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                                     }
 
                                     @Override
-                                    public void onBindSuccess(String iotId) {
-                                        emitter.onNext(iotId);
+                                    public void onBindSuccess(String iotId, String productKey, String deviceName) {
+                                        emitter.onNext(new String[]{iotId, productKey, deviceName});
                                         emitter.onComplete();
                                     }
                                 });
@@ -94,25 +101,27 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                         }
                     }
                 })
-                .flatMap(new Function<String, ObservableSource<DeviceListBean.DevicesBean>>() {
+                .flatMap(new Function<String[], ObservableSource<String[]>>() {
                     @Override
-                    public ObservableSource<DeviceListBean.DevicesBean> apply(String s) throws Exception {
+                    public ObservableSource<String[]> apply(String[] deviceInfo) throws Exception {
+                        String deviceId = deviceInfo[0];
+                        String newNickName = deviceName + "_" + deviceInfo[2];
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(s, cuId, scopeId, 2, deviceCategory, deviceName, deviceName)
-                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
+                                .bindDeviceWithDSN(deviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName)
+                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, String[]>() {
                                     @Override
-                                    public DeviceListBean.DevicesBean apply(BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
-                                        return devicesBeanBaseResult.data;
+                                    public String[] apply(@NonNull BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
+                                        return new String[]{deviceId, newNickName};
                                     }
                                 });
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
+                .subscribe(new Consumer<String[]>() {
                     @Override
-                    public void accept(DeviceListBean.DevicesBean bean) throws Exception {
-                        mView.bindSuccess(bean.getDeviceId(), deviceName);
+                    public void accept(String[] strings) throws Exception {
+                        mView.bindSuccess(strings[0], strings[1]);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -143,15 +152,19 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<BaseResult<Boolean>>() {
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void accept(BaseResult<Boolean> booleanBaseResult) throws Exception {
-                        mView.renameSuccess();
+                    public void accept(Boolean aBoolean) throws Exception {
+                        mView.renameSuccess(nickName);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.renameFailed();
+                        if (throwable instanceof RxjavaFlatmapThrowable) {
+                            mView.renameFailed(((RxjavaFlatmapThrowable) throwable).getCode(), ((RxjavaFlatmapThrowable) throwable).getMsg());
+                        } else {
+                            mView.renameFailed(null, throwable.getMessage());
+                        }
                     }
                 });
         addSubscrebe(subscribe);

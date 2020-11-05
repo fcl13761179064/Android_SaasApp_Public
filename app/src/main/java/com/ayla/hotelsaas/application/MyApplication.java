@@ -19,8 +19,13 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.smtt.export.external.TbsCoreSettings;
+import com.tencent.smtt.sdk.QbSdk;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fcl13761179064 on 2020/6/3.
@@ -67,24 +72,66 @@ public class MyApplication extends AApplication {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "version name: " + BuildConfig.VERSION_NAME + ", version code: " + BuildConfig.VERSION_CODE);
-        if (ProcessUtils.isMainProcess()) {
-            CrashReport.initCrashReport(getApplicationContext(), "8863fabcca", BuildConfig.DEBUG);
-        }
         mInstance = this;
+        if (ProcessUtils.isMainProcess()) {
+            initBugly();
+            initX5();
+            IoTSmart.init(this, new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
+        }
+    }
+
+    private void initBugly() {
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
+        strategy.setCrashHandleCallback(new CrashReport.CrashHandleCallback() {
+            public Map<String, String> onCrashHandleStart(
+                    int crashType,
+                    String errorType,
+                    String errorMessage,
+                    String errorStack) {
+
+                LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+                String x5CrashInfo = com.tencent.smtt.sdk.WebView.getCrashExtraMessage(getApplicationContext());
+                map.put("x5crashInfo", x5CrashInfo);
+                return map;
+            }
+
+            @Override
+            public byte[] onCrashHandleStart2GetExtraDatas(
+                    int crashType,
+                    String errorType,
+                    String errorMessage,
+                    String errorStack) {
+                try {
+                    return "Extra data.".getBytes("UTF-8");
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        });
+
+        CrashReport.initCrashReport(getApplicationContext(), "8863fabcca", Constance.isNetworkDebug());
+    }
+
+    private void initX5() {
+        // 在调用TBS初始化、创建WebView之前进行如下配置
+        HashMap map = new HashMap();
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
+        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
+        QbSdk.initTbsSettings(map);
     }
 
     public List<DeviceListBean.DevicesBean> getDevicesBean() {
         return mDevicesBean;
     }
 
-    public DeviceListBean.DevicesBean getDevicesBean(String deviceId){
+    public DeviceListBean.DevicesBean getDevicesBean(String deviceId) {
         for (DeviceListBean.DevicesBean devicesBean : mDevicesBean) {
             if (devicesBean.getDeviceId().equals(deviceId)) {
                 return devicesBean;
             }
         }
         return null;
-    };
+    }
 
     public void setDevicesBean(List<DeviceListBean.DevicesBean> devicesBean) {
         mDevicesBean = devicesBean;

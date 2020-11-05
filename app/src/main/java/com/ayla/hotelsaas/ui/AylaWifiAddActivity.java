@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.ui;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -102,13 +101,17 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
     }
 
     @Override
-    public void renameSuccess() {
+    public void renameSuccess(String nickName) {
         finish();
     }
 
     @Override
-    public void renameFailed() {
-        CustomToast.makeText(MyApplication.getContext(), "更新设备名称失败", R.drawable.ic_toast_warming).show();
+    public void renameFailed(String code, String msg) {
+        if ("140001".equals(code)) {
+            CustomToast.makeText(this, "该名称不能重复使用", R.drawable.ic_toast_warming).show();
+        } else {
+            CustomToast.makeText(MyApplication.getContext(), "修改失败", R.drawable.ic_toast_warming).show();
+        }
     }
 
     @Override

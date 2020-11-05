@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.adapter;
 
+import android.text.TextUtils;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -12,47 +14,50 @@ public class FunctionRenameListAdapter extends BaseQuickAdapter<FunctionRenameLi
 
     @Override
     protected void convert(BaseViewHolder helper, FunctionRenameListAdapter.Bean item) {
-        helper.setText(R.id.tv_function_name, item.getDisplayName());
-        helper.setText(R.id.tv_nickname, item.getPropertyValue());
+        helper.setText(R.id.tv_function_name, item.propertyName);
+        if (TextUtils.isEmpty(item.getNickNameId())) {
+            helper.setText(R.id.tv_nickname, item.propertyName);
+        }else{
+            helper.setText(R.id.tv_nickname, item.propertyNickname);
+        }
     }
 
     public static class Bean{
-        private String code;
-        private String displayName;
-        private int id;
-        private String propertyValue;
+        private String propertyCode;
+        private String propertyName;
+        private String propertyNickname;
+        private String nickNameId;
 
-        public String getCode() {
-            return code;
+        public String getPropertyCode() {
+            return propertyCode;
         }
 
-        public void setCode(String code) {
-            this.code = code;
+        public void setPropertyCode(String propertyCode) {
+            this.propertyCode = propertyCode;
         }
 
-        public String getDisplayName() {
-            return displayName;
+        public void setPropertyName(String propertyName) {
+            this.propertyName = propertyName;
         }
 
-        public void setDisplayName(String displayName) {
-            this.displayName = displayName;
+        public void setPropertyNickname(String propertyNickname) {
+            this.propertyNickname = propertyNickname;
         }
 
-        public int getId() {
-            return id;
+        public void setNickNameId(String nickNameId) {
+            this.nickNameId = nickNameId;
         }
 
-        public void setId(int id) {
-            this.id = id;
+        public String getPropertyName() {
+            return propertyName;
         }
 
-        public String getPropertyValue() {
-            return propertyValue;
+        public String getPropertyNickname() {
+            return propertyNickname;
         }
 
-        public void setPropertyValue(String propertyValue) {
-            this.propertyValue = propertyValue;
+        public String getNickNameId() {
+            return nickNameId;
         }
     }
-
 }

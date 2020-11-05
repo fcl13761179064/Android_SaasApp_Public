@@ -35,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
     public void saveOrUpdateRuleEngine(BaseSceneBean mRuleEngineBean) {
-        Observable<BaseResult> observable;
+        Observable<Boolean> observable;
         RuleEngineBean ruleEngineBean = BeanObtainCompactUtil.obtainRuleEngineBean(mRuleEngineBean);
         if (mRuleEngineBean.getRuleId() == 0) {
             observable = RequestModel.getInstance().saveRuleEngine(ruleEngineBean);
@@ -57,17 +57,15 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<BaseResult>() {
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void accept(BaseResult baseResult) throws Exception {
+                    public void accept(Boolean baseResult) throws Exception {
                         mView.saveSuccess();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        RxjavaFlatmapThrowable mThrowable = (RxjavaFlatmapThrowable) throwable;
-                        String code = mThrowable.getCode();
-                        mView.saveFailed(code);
+                        mView.saveFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);

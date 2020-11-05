@@ -8,7 +8,7 @@ public interface GatewayAddView extends BaseView {
 
     void bindFailed(String msg);
 
-    void renameSuccess();
+    void renameSuccess(String nickName);
 
-    void renameFailed();
+    void renameFailed(String code, String msg);
 }

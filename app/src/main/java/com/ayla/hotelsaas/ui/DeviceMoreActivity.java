@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.FunctionRenameListAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -23,8 +22,6 @@ import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -120,7 +117,6 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                                     CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming).show();
                                     return;
                                 } else {
-                                    tv_device_name.setText(newName);
                                     mPresenter.deviceRenameMethod(deviceId, newName);
                                 }
                                 dialog.dismissAllowingStateLoss();
@@ -136,12 +132,17 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     }
 
     @Override
-    public void renameFailed(String msg) {
-        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
+    public void renameFailed(String code, String msg) {
+        if ("140001".equals(code)) {
+            CustomToast.makeText(this, "该名称不能重复使用", R.drawable.ic_toast_warming).show();
+        } else {
+            CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
+        }
     }
 
     @Override
     public void renameSuccess(String newNickName) {
+        tv_device_name.setText(newNickName);
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
         setResult(RESULT_OK);
         MyApplication.getInstance().getDevicesBean(deviceId).setNickname(newNickName);
@@ -163,12 +164,13 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     }
 
     @Override
-    public void showFunctions(List<FunctionRenameListAdapter.Bean> attributesBeans) {
-        if (attributesBeans == null || attributesBeans.isEmpty()) {
-            rl_function_rename.setVisibility(View.GONE);
-        } else {
-            rl_function_rename.setVisibility(View.VISIBLE);
-        }
+    public void cannotRenameFunction() {
+        rl_function_rename.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void canRenameFunction() {
+        rl_function_rename.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.rl_device_function_rename)

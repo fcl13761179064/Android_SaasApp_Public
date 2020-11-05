@@ -1,15 +1,8 @@
 package com.ayla.hotelsaas.ui;
 
-import android.graphics.Bitmap;
 import android.view.View;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.widget.AppBar;
 
@@ -22,7 +15,7 @@ import wendu.dsbridge.DWebView;
  * pageTitle 标题
  * url 页面地址
  */
-public class H5BaseActivity extends BaseMvpActivity {
+public class H5BaseActivity extends BaseWebViewActivity {
 
     @BindView(R.id.web_view)
     DWebView mWebView;
@@ -40,41 +33,6 @@ public class H5BaseActivity extends BaseMvpActivity {
     @Override
     protected void initView() {
         mAppBar.setCenterText(getIntent().getStringExtra("pageTitle"));
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
-        mWebView.getSettings().setAppCacheEnabled(true);
-        mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
-                if (mWebView.getVisibility() != View.VISIBLE) {
-                    emptyView.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            // 加载主框架出错时会被回调的方法 API<23
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                super.onReceivedError(view, errorCode, description, failingUrl);
-                if (mWebView.getVisibility() != View.VISIBLE) {
-                    emptyView.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                showProgress();
-                emptyView.setVisibility(View.INVISIBLE);
-                mWebView.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                hideProgress();
-                mWebView.setVisibility(View.VISIBLE);
-            }
-        });
         mWebView.loadUrl(getIntent().getStringExtra("url"));
     }
 
@@ -88,24 +46,20 @@ public class H5BaseActivity extends BaseMvpActivity {
         return null;
     }
 
+    @Override
+    protected View getEmptyView() {
+        return emptyView;
+    }
+
+    @Override
+    protected DWebView getWebView() {
+        return mWebView;
+    }
+
     @OnClick(R.id.bt_refresh)
-    void handleRefreshClick() {
-        mWebView.reload();
-    }
-
     @Override
-    public void onBackPressed() {
-        if (mWebView.canGoBack()) {
-            mWebView.goBack();
-            return;
-        }
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onDestroy() {
-        mWebView.destroy();
-        super.onDestroy();
+    public void handleRefreshClick() {
+        super.handleRefreshClick();
     }
 }
 

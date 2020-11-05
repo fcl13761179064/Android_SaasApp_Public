@@ -5,12 +5,11 @@ import android.text.TextUtils;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.RegisterView;
 import com.ayla.hotelsaas.ui.CustomToast;
-import com.ayla.hotelsaas.utils.PregnancyUtil;
+import com.blankj.utilcode.util.RegexUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -18,7 +17,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.http.HEAD;
 
 /**
  * @描述
@@ -51,9 +49,9 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
             mView.errorShake(2, 2, "");
             return;
         }
-        if (PregnancyUtil.checkEmail(account)) {
+        if (RegexUtils.isEmail(account)) {
             register(userName, account, password);
-        } else if (PregnancyUtil.checkPhoneNum(account)) {
+        } else if (RegexUtils.isMobileSimple(account)) {
             register(userName, account, password);
         } else {
             CustomToast.makeText(MyApplication.getContext(), R.string.account_error, R.drawable.ic_toast_warming).show();

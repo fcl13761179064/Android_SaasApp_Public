@@ -1,10 +1,12 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,14 +20,13 @@ import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingFunctionSelectPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionSelectView;
 import com.ayla.hotelsaas.widget.AppBar;
+import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 场景创建，选择功能菜单的页面
@@ -53,16 +54,25 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     protected int getLayoutId() {
         return R.layout.activity_zigbee_add_select_gateway;
     }
+
     private DeviceListBean.DevicesBean deviceBean;
+
     @Override
     protected void initView() {
         deviceBean = MyApplication.getInstance().getDevicesBean(getIntent().getStringExtra("deviceId"));
         appBar.setCenterText("选择功能");
         mAdapter = new SceneSettingFunctionSelectAdapter(R.layout.item_scene_setting_function_select);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
-                .showLastDivider()
-                .color(android.R.color.transparent).size(AutoSizeUtils.dp2px(this, 1)).build());
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int size = SizeUtils.dp2px(10);
+                int position = parent.getChildAdapterPosition(view);
+
+                outRect.set(0, (position == 0) ? size : 0, 0, size);
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
     }
 

@@ -32,9 +32,9 @@ public class AutoRunFragmentPresenter extends BasePresenter<AutoRunView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<BaseResult>() {
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void accept(BaseResult booleanBaseResult) throws Exception {
+                    public void accept(Boolean booleanBaseResult) throws Exception {
                         mView.changeSuccess();
                     }
                 }, new Consumer<Throwable>() {

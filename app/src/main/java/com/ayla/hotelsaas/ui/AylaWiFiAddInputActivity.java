@@ -89,7 +89,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
             mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
 
             if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
-                if (PermissionUtils.isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
                     if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
                         CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning).show();
                     }
@@ -99,23 +99,24 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
                             @Override
                             public void onDone(CustomAlarmDialog dialog) {
                                 dialog.dismissAllowingStateLoss();
-                                PermissionUtils.permission(PermissionConstants.LOCATION).callback(new PermissionUtils.FullCallback() {
-                                    @Override
-                                    public void onGranted(@NonNull List<String> granted) {
-                                        String connectWifiSsid = WifiUtil.getConnectWifiSsid();
-                                        mWiFiNameEditText.setText(connectWifiSsid);
-                                        mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
-                                    }
+                                PermissionUtils.permission(PermissionConstants.LOCATION)
+                                        .callback(new PermissionUtils.FullCallback() {
+                                            @Override
+                                            public void onGranted(@NonNull List<String> granted) {
+                                                String connectWifiSsid = WifiUtil.getConnectWifiSsid();
+                                                mWiFiNameEditText.setText(connectWifiSsid);
+                                                mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
+                                            }
 
-                                    @Override
-                                    public void onDenied(@NonNull List<String> deniedForever, @NonNull List<String> denied) {
-                                        if (deniedForever.size() > 0) {
-                                            Intent settingsIntent = IntentUtils.getLaunchAppDetailsSettingsIntent(AppUtils.getAppPackageName());
-                                            startActivity(settingsIntent);
+                                            @Override
+                                            public void onDenied(@NonNull List<String> deniedForever, @NonNull List<String> denied) {
+                                                if (deniedForever.size() > 0) {
+                                                    Intent settingsIntent = IntentUtils.getLaunchAppDetailsSettingsIntent(AppUtils.getAppPackageName());
+                                                    startActivity(settingsIntent);
 //                                            CustomToast.makeText(getApplicationContext(), "你拒绝了访问位置信息的授权，无法自动填充WiFi名称", R.drawable.ic_warning).show();
-                                        }
-                                    }
-                                }).request();
+                                                }
+                                            }
+                                        }).request();
                             }
 
                             @Override

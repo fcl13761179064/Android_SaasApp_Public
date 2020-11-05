@@ -8,9 +8,8 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.ForgitView;
-import com.ayla.hotelsaas.mvp.view.RegisterView;
 import com.ayla.hotelsaas.ui.CustomToast;
-import com.ayla.hotelsaas.utils.PregnancyUtil;
+import com.blankj.utilcode.util.RegexUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -45,9 +44,9 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
             mView.errorShake(2, 2, "");
             return;
         }
-        if (PregnancyUtil.checkEmail(userName)) {
+        if (RegexUtils.isEmail(userName)) {
             modifyforgit(userName, yanzhengma);
-        } else if (PregnancyUtil.checkPhoneNum(userName)) {
+        } else if (RegexUtils.isMobileSimple(userName)) {
             modifyforgit(userName, yanzhengma);
         } else {
             CustomToast.makeText(MyApplication.getContext(), R.string.account_forgit_password, R.drawable.ic_toast_warming).show();
@@ -128,7 +127,7 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
 
                     @Override
                     public void _onError(String code, String msg) {
-                        mView.errorShake(-1,2,msg);
+                        mView.errorShake(-1, 2, msg);
                     }
                 });
     }
@@ -143,11 +142,11 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
             CustomToast.makeText(MyApplication.getContext(), "密码至少为6位", R.drawable.ic_toast_warming).show();
             return;
         }
-        reset_Password(phone,new_password);
+        reset_Password(phone, new_password);
     }
 
     private void reset_Password(String phone, String new_password) {
-        RequestModel.getInstance().resert_passwoed(phone,new_password)
+        RequestModel.getInstance().resert_passwoed(phone, new_password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

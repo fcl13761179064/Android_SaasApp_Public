@@ -1,14 +1,16 @@
 package com.ayla.hotelsaas.mvp.view;
 
-import com.ayla.hotelsaas.adapter.FunctionRenameListAdapter;
 import com.ayla.hotelsaas.base.BaseView;
-import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FunctionRenameView extends BaseView {
-
-    void showFunctions(List<FunctionRenameListAdapter.Bean> attributesBeans);
+    /**
+     *
+     * @param attributesBeans propertyName propertyNickname nickNameId
+     */
+    void showFunctions(List<Map<String, String>> attributesBeans);
 
     void renameSuccess();
 

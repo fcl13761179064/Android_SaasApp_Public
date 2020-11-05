@@ -35,7 +35,7 @@ public interface AylaWifiAddView extends BaseView {
      */
     void step1Start();
 
-    void renameSuccess();
+    void renameSuccess(String nickName);
 
-    void renameFailed();
+    void renameFailed(String code, String msg);
 }
