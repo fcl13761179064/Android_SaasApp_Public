@@ -75,12 +75,16 @@ public class SceneSettingEnableTimeActivity extends BaseMvpActivity {
     protected void appBarRightTvClicked() {
         super.appBarRightTvClicked();
         if (!enableTime.isAllDay()) {
-            if (!(enableTime.getStartHour() <= enableTime.getEndHour() && enableTime.getStartMinute() <= enableTime.getEndMinute())) {
-                CustomToast.makeText(this,"时间范围不能跨天",R.drawable.ic_toast_warming).show();
+            if (enableTime.getStartHour() > enableTime.getEndHour()) {
+                CustomToast.makeText(this, "时间范围不能跨天", R.drawable.ic_toast_warming).show();
                 return;
             }
-            if(enableTime.getEndHour() == 0 && enableTime.getEndMinute() == 0){
-                CustomToast.makeText(this,"时间范围不能跨天",R.drawable.ic_toast_warming).show();
+            if (enableTime.getStartHour() == enableTime.getEndHour() && enableTime.getStartMinute() > enableTime.getEndMinute()) {
+                CustomToast.makeText(this, "时间范围不能跨天", R.drawable.ic_toast_warming).show();
+                return;
+            }
+            if (enableTime.getEndHour() == 0 && enableTime.getEndMinute() == 0) {
+                CustomToast.makeText(this, "时间范围不能跨天", R.drawable.ic_toast_warming).show();
                 return;
             }
         }
