@@ -37,6 +37,7 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -364,7 +365,21 @@ public class RequestModel {
      */
     public Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(String oemModel) {
         return getApiService().fetchDeviceTemplate(oemModel)
-                //特别处理：如果是智镜设备，要强行加上 场景的支持。
+                .doOnNext(new Consumer<BaseResult<DeviceTemplateBean>>() {
+                    @Override
+                    public void accept(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
+                        DeviceTemplateBean deviceTemplateBean = deviceTemplateBeanBaseResult.data;
+                        List<DeviceTemplateBean.AttributesBean> extendAttributes = deviceTemplateBean.getExtendAttributes();
+                        List<DeviceTemplateBean.AttributesBean> attributes = deviceTemplateBean.getAttributes();
+                        if (extendAttributes != null) {
+                            if (attributes == null) {
+                                attributes = new ArrayList<>();
+                                deviceTemplateBean.setAttributes(attributes);
+                            }
+                            attributes.addAll(extendAttributes);
+                        }
+                    }
+                })//特别处理：红外家电设备自学习的功能在物模板里面定义在extendAttributes 字段中，需要把它融合到字段attributes 里面。
                 .map(new Function<BaseResult<DeviceTemplateBean>, BaseResult<DeviceTemplateBean>>() {
                     @Override
                     public BaseResult<DeviceTemplateBean> apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
@@ -554,7 +569,8 @@ public class RequestModel {
                         }
                         return deviceTemplateBeanBaseResult;
                     }
-                });
+                })//特别处理：如果是智镜设备，要强行加上 场景的支持。
+                ;
     }
 
     /**

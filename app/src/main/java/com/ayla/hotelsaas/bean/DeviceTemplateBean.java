@@ -18,6 +18,7 @@ public class DeviceTemplateBean {
     private long deviceType;//    AYLA(0,"艾拉设备"),    ALI(1,"阿里设备");
     private long deviceNodeType;//    NODE(0,"节点设备"),    GATEWAY(1,"网关设备");
     private List<AttributesBean> attributes;
+    private List<AttributesBean> extendAttributes;
 
     public String getVersion() {
         return version;
@@ -57,6 +58,14 @@ public class DeviceTemplateBean {
 
     public void setAttributes(List<AttributesBean> attributes) {
         this.attributes = attributes;
+    }
+
+    public List<AttributesBean> getExtendAttributes() {
+        return extendAttributes;
+    }
+
+    public void setExtendAttributes(List<AttributesBean> extendAttributes) {
+        this.extendAttributes = extendAttributes;
     }
 
     public static class AttributesBean implements Serializable {
