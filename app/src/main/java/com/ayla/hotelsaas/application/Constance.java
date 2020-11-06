@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.application;
 
+import com.ayla.hotelsaas.BuildConfig;
+
 /**
  * @描述 常量类
  * @作者 fanchunlei
@@ -7,16 +9,39 @@ package com.ayla.hotelsaas.application;
  */
 public class Constance {
     /**
-     * 是否是网络测试环境
+     * 是否处于开发状态。
      */
-    public static boolean isNetworkDebug = false;
+    private static boolean networkDebug;
 
-    public static String sProdUrl = "https://abp-prod.ayla.com.cn/";//正式环境
-    public static String sQaUrl = "https://abp.ayla.com.cn/";//测试环境
-    public static String sDevUrl = "http://106.15.231.103/";//DEV环境
+    static {
+        switch (BuildConfig.server_domain) {
+            case "qa":
+            case "dev":
+                networkDebug = true;
+                break;
+            default:
+                networkDebug = false;
+        }
+        networkDebug = networkDebug || BuildConfig.DEBUG;
+    }
+
+    public static String sProdUrl = "https://abp-prod.ayla.com.cn";//正式环境
+    public static String sQaUrl = "https://abp.ayla.com.cn";//测试环境
+    public static String sDevUrl = "http://106.15.231.103";//DEV环境
 
     public static String getBaseUrl() {
-        return isNetworkDebug ? sQaUrl : sProdUrl;
+        String url;
+        switch (BuildConfig.server_domain) {
+            case "qa":
+                url = sQaUrl;
+                break;
+            case "dev":
+                url = sDevUrl;
+                break;
+            default:
+                url = sProdUrl;
+        }
+        return url;
     }
 
     /**
@@ -25,7 +50,16 @@ public class Constance {
      * @return
      */
     public static String getAssistantBaseUrl() {
-        return isNetworkDebug ? "https://smarthotel-h5-test.ayla.com.cn" : "https://smarthotel-h5.ayla.com.cn";
+        String url;
+        switch (BuildConfig.server_domain) {
+            case "qa":
+            case "dev":
+                url = "https://smarthotel-h5-test.ayla.com.cn";
+                break;
+            default:
+                url = "https://smarthotel-h5.ayla.com.cn";
+        }
+        return url;
     }
 
     /**
@@ -34,7 +68,20 @@ public class Constance {
      * @return
      */
     public static String getDeviceControlBaseUrl() {
-        return isNetworkDebug ? "https://miya-h5-test.ayla.com.cn" : "https://miya-h5.ayla.com.cn";
+        String url;
+        switch (BuildConfig.server_domain) {
+            case "qa":
+            case "dev":
+                url = "https://miya-h5-test.ayla.com.cn";
+                break;
+            default:
+                url = "https://miya-h5.ayla.com.cn";
+        }
+        return url;
+    }
+
+    public static boolean isNetworkDebug() {
+        return networkDebug;
     }
 
     //登录保存key
@@ -42,9 +89,5 @@ public class Constance {
 
     //refresh token
     public static String SP_Refresh_Token = "refresh_token";
-
-    //状态
-    public static final String V_STATUS_online = "online";    //初始状态
-    public static final String V_STATUS_offline = "offline";    //未批准
 
 }

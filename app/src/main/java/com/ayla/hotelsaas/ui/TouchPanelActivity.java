@@ -16,7 +16,6 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.TouchPanelBean;
 import com.ayla.hotelsaas.utils.ImageLoader;
-import com.ayla.hotelsaas.utils.ToastUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ public class TouchPanelActivity extends BaseMvpActivity {
                     intent.putExtra("pannel_type", 1);
                     startActivity(intent);
                 } else {
-                    ToastUtils.showShortToast("该功能未开发");
+                    CustomToast.makeText(getApplicationContext(), "该功能未开发", R.drawable.ic_toast_warming);
                 }
             }
         });

@@ -1,8 +1,10 @@
 package com.ayla.hotelsaas.ui;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,13 +17,12 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingFunctionDatumSetSingleChoosePresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionDatumSetView;
+import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.List;
 
 import butterknife.BindView;
-import me.jessyan.autosize.utils.AutoSizeUtils;
 
 /**
  * 场景创建，选择执行功能点的页面，单选情况
@@ -55,9 +56,16 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
     protected void initView(View view) {
         mAdapter = new SceneSettingFunctionDatumSetAdapter(R.layout.item_scene_setting_function_datum_set);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
-                .showLastDivider()
-                .color(android.R.color.transparent).size(AutoSizeUtils.dp2px(getContext(), 1)).build());
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int size = SizeUtils.dp2px(10);
+                int position = parent.getChildAdapterPosition(view);
+
+                outRect.set(0, (position == 0) ? size : 0, 0, size);
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
 
         DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");

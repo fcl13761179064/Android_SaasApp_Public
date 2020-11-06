@@ -5,6 +5,7 @@ import android.content.Context;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.AylaWifiAddView;
 import com.sunseaiot.larkairkiss.LarkConfigCallback;
@@ -73,32 +74,38 @@ public class AylaWifiAddPresenter extends BasePresenter<AylaWifiAddView> {
                     }
                 })//设备airkiss过程完成
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<String[], ObservableSource<String>>() {
+                .flatMap(new Function<String[], ObservableSource<String[]>>() {
                     @Override
-                    public ObservableSource<String> apply(String[] strings) throws Exception {
-                        String dsn = strings[0];
+                    public ObservableSource<String[]> apply(String[] strings) throws Exception {
+                        String deviceId = strings[0];
+                        String newNickname;
+                        if (deviceId.length() > 4) {
+                            newNickname = deviceName + "_" + deviceId.substring(deviceId.length() - 4);
+                        } else {
+                            newNickname = deviceName + "_" + deviceId;
+                        }
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(dsn, cuId, scopeId, 2,
-                                        deviceCategory, deviceName, deviceName)
-                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, String>() {
+                                .bindDeviceWithDSN(deviceId, cuId, scopeId, 2,
+                                        deviceCategory, deviceName, newNickname)
+                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, String[]>() {
                                     @Override
-                                    public String apply(BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
-                                        return devicesBeanBaseResult.data.getDeviceId();
+                                    public String[] apply(BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
+                                        return new String[]{deviceId, newNickname};
                                     }
                                 });
                     }
                 })//绑定设备
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<String>() {
+                .doOnNext(new Consumer<String[]>() {
                     @Override
-                    public void accept(String s) throws Exception {
+                    public void accept(String[] s) throws Exception {
                         mView.step2Finish();
                     }
                 })
-                .subscribe(new Consumer<String>() {
+                .subscribe(new Consumer<String[]>() {
                     @Override
-                    public void accept(String s) throws Exception {
-                        mView.bindSuccess(s, deviceName);
+                    public void accept(String[] s) throws Exception {
+                        mView.bindSuccess(s[0], s[1]);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -125,15 +132,19 @@ public class AylaWifiAddPresenter extends BasePresenter<AylaWifiAddView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<BaseResult<Boolean>>() {
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void accept(BaseResult<Boolean> booleanBaseResult) throws Exception {
-                        mView.renameSuccess();
+                    public void accept(Boolean aBoolean) throws Exception {
+                        mView.renameSuccess(nickName);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.renameFailed();
+                        if (throwable instanceof RxjavaFlatmapThrowable) {
+                            mView.renameFailed(((RxjavaFlatmapThrowable) throwable).getCode(), ((RxjavaFlatmapThrowable) throwable).getMsg());
+                        } else {
+                            mView.renameFailed(null, throwable.getMessage());
+                        }
                     }
                 });
         addSubscrebe(subscribe);

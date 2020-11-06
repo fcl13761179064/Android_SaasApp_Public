@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.mvp.present;
 
 import android.text.TextUtils;
 
-import com.ayla.hotelsaas.adapter.FunctionRenameListAdapter;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -12,8 +11,10 @@ import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.FunctionRenameView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import io.reactivex.ObservableSource;
@@ -72,28 +73,28 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                                 });
                     }
                 })//然后结合物模板查询出功能默认名称
-                .zipWith(RequestModel.getInstance().getALlTouchPanelDeviceInfo(cuId, deviceId).map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
+                .zipWith(RequestModel.getInstance().getALlTouchPanelDeviceInfo(cuId, deviceId)
+                        .map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
+                            @Override
+                            public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
+                                return listBaseResult.data;
+                            }
+                        }), new BiFunction<List<DeviceTemplateBean.AttributesBean>, List<TouchPanelDataBean>, List<Map<String, String>>>() {
                     @Override
-                    public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
-                        return listBaseResult.data;
-                    }
-                }), new BiFunction<List<DeviceTemplateBean.AttributesBean>, List<TouchPanelDataBean>, List<FunctionRenameListAdapter.Bean>>() {
-                    @Override
-                    public List<FunctionRenameListAdapter.Bean> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
-                        List<FunctionRenameListAdapter.Bean> result = new ArrayList<>();
+                    public List<Map<String, String>> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
+                        List<Map<String, String>> result = new ArrayList<>();
                         for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans) {
-                            FunctionRenameListAdapter.Bean bean = new FunctionRenameListAdapter.Bean();
+                            Map<String, String> bean = new HashMap<>();
                             result.add(bean);
                             String code = attributesBean.getCode();
-                            String displayName = attributesBean.getDisplayName();
-                            bean.setCode(code);
-                            bean.setDisplayName(displayName);
-                            bean.setPropertyValue(attributesBean.getDisplayName());
+                            bean.put("propertyCode", attributesBean.getCode());
+                            bean.put("propertyName", attributesBean.getDisplayName());
                             for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
                                 if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
                                         TextUtils.equals(code, touchPanelDataBean.getPropertyName())) {
-                                    bean.setPropertyValue(touchPanelDataBean.getPropertyValue());
-                                    bean.setId(touchPanelDataBean.getId());
+                                    bean.put("propertyNickname", touchPanelDataBean.getPropertyValue());
+                                    bean.put("nickNameId", String.valueOf(touchPanelDataBean.getId()));
+                                    break;
                                 }
                             }
                         }
@@ -114,9 +115,9 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<List<FunctionRenameListAdapter.Bean>>() {
+                .subscribe(new Consumer<List<Map<String, String>>>() {
                     @Override
-                    public void accept(List<FunctionRenameListAdapter.Bean> beans) throws Exception {
+                    public void accept(List<Map<String, String>> beans) throws Exception {
                         mView.showFunctions(beans);
                     }
                 }, new Consumer<Throwable>() {
@@ -129,9 +130,9 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
 
     }
 
-    public void renameFunction(int cuId, String deviceId, int id, String propertyName, String propertyValue, String deviceCategory) {
+    public void renameFunction(int cuId, String deviceId, String nickNameId, String property, String propertyNickName) {
         Disposable subscribe = RequestModel.getInstance()
-                .touchPanelRenameMethod(id, deviceId, cuId, propertyName, "nickName", propertyValue, deviceCategory, false)
+                .setPropertyNickName(nickNameId, deviceId, cuId, property, propertyNickName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -146,9 +147,9 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<BaseResult<Boolean>>() {
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void accept(BaseResult<Boolean> booleanBaseResult) throws Exception {
+                    public void accept(Boolean aBoolean) throws Exception {
                         mView.renameSuccess();
                     }
                 }, new Consumer<Throwable>() {

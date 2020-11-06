@@ -5,14 +5,12 @@
 
 package com.ayla.hotelsaas.utils;
 
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
 import com.blankj.utilcode.util.Utils;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 import static android.content.Context.WIFI_SERVICE;
 
@@ -42,18 +40,10 @@ public class WifiUtil {
                     e.printStackTrace();
                 }
             }
-            if (ssid.isEmpty()) {
-                List<WifiConfiguration> configuredNetworks = wifiManager.getConfiguredNetworks();
-                if (null != configuredNetworks) {
-                    for (WifiConfiguration network : configuredNetworks) {
-                        if (network.networkId == networkId) {
-                            ssid = network.SSID;
-                            break;
-                        }
-                    }
-                }
-            }
         }
-        return ssid.replace("\"", "");
+        if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+            ssid = ssid.substring(1, ssid.length() - 1);
+        }
+        return ssid;
     }
 }

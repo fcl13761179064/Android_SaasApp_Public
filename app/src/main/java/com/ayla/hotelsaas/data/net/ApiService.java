@@ -117,10 +117,10 @@ public interface ApiService {
     Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Path("scopeId") long scopeId);
 
     @POST("api/v1/construction/scene/save")
-    Observable<BaseResult> saveRuleEngine(@Body RequestBody body);
+    Observable<BaseResult<Boolean>> saveRuleEngine(@Body RequestBody body);
 
     @POST("api/v1/construction/scene/update")
-    Observable<BaseResult> updateRuleEngine(@Body RequestBody body);
+    Observable<BaseResult<Boolean>> updateRuleEngine(@Body RequestBody body);
 
     @POST("api/v1/construction/scene/delete")
     Observable<BaseResult<Boolean>> deleteRuleEngine(@Body RequestBody body);

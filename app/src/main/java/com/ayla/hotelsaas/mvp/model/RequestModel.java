@@ -1,6 +1,8 @@
 package com.ayla.hotelsaas.mvp.model;
 
 
+import android.text.TextUtils;
+
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -20,6 +22,7 @@ import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
+import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -34,6 +37,7 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -296,10 +300,11 @@ public class RequestModel {
      * @param ruleEngineBean
      * @return
      */
-    public Observable<BaseResult> saveRuleEngine(RuleEngineBean ruleEngineBean) {
+    public Observable<Boolean> saveRuleEngine(RuleEngineBean ruleEngineBean) {
         String json = new Gson().toJson(ruleEngineBean);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
-        return getApiService().saveRuleEngine(body111);
+        return getApiService().saveRuleEngine(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
 
@@ -309,10 +314,11 @@ public class RequestModel {
      * @param ruleEngineBean
      * @return
      */
-    public Observable<BaseResult> updateRuleEngine(RuleEngineBean ruleEngineBean) {
+    public Observable<Boolean> updateRuleEngine(RuleEngineBean ruleEngineBean) {
         String json = new Gson().toJson(ruleEngineBean);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), json);
-        return getApiService().updateRuleEngine(body111);
+        return getApiService().updateRuleEngine(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
     /**
@@ -359,7 +365,21 @@ public class RequestModel {
      */
     public Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(String oemModel) {
         return getApiService().fetchDeviceTemplate(oemModel)
-                //特别处理：如果是智镜设备，要强行加上 场景的支持。
+                .doOnNext(new Consumer<BaseResult<DeviceTemplateBean>>() {
+                    @Override
+                    public void accept(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
+                        DeviceTemplateBean deviceTemplateBean = deviceTemplateBeanBaseResult.data;
+                        List<DeviceTemplateBean.AttributesBean> extendAttributes = deviceTemplateBean.getExtendAttributes();
+                        List<DeviceTemplateBean.AttributesBean> attributes = deviceTemplateBean.getAttributes();
+                        if (extendAttributes != null) {
+                            if (attributes == null) {
+                                attributes = new ArrayList<>();
+                                deviceTemplateBean.setAttributes(attributes);
+                            }
+                            attributes.addAll(extendAttributes);
+                        }
+                    }
+                })//特别处理：红外家电设备自学习的功能在物模板里面定义在extendAttributes 字段中，需要把它融合到字段attributes 里面。
                 .map(new Function<BaseResult<DeviceTemplateBean>, BaseResult<DeviceTemplateBean>>() {
                     @Override
                     public BaseResult<DeviceTemplateBean> apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
@@ -549,7 +569,8 @@ public class RequestModel {
                         }
                         return deviceTemplateBeanBaseResult;
                     }
-                });
+                })//特别处理：如果是智镜设备，要强行加上 场景的支持。
+                ;
     }
 
     /**
@@ -557,15 +578,17 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> deviceRename(String deviceId, String nickName) {
+    public Observable<Boolean> deviceRename(String deviceId, String nickName) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("nickName", nickName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().deviceRename(deviceId, body111);
+        return getApiService().deviceRename(deviceId, body111)
+                .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                });
     }
 
     /**
-     * 场景重新命名
+     * 开关重命名/触控面板名称重命名/触控面板图片更换
      *
      * @return
      */
@@ -596,6 +619,47 @@ public class RequestModel {
                     public ObservableSource<BaseResult<Boolean>> apply(RequestBody body) throws Exception {
                         return getApiService().tourchPanelRenameAndIcon(body);
                     }
+                });
+    }
+
+    /**
+     * 设置设备属性的别名
+     *
+     * @param nickNameId
+     * @param deviceId
+     * @param cuId
+     * @param propertyName
+     * @return
+     */
+    public Observable<Boolean> setPropertyNickName(String nickNameId, String deviceId, int cuId, String propertyName, String propertyNickName) {
+        return Observable
+                .fromCallable(new Callable<RequestBody>() {
+                    @Override
+                    public RequestBody call() throws Exception {
+                        JSONObject uploadParams = new JSONObject();
+                        JSONArray list = new JSONArray();
+                        JSONObject jsonObject = new JSONObject();
+                        if (!TextUtils.isEmpty(nickNameId)) {
+                            jsonObject.put("id", nickNameId);
+                        }
+                        uploadParams.put("needHandleAliService", false);
+                        jsonObject.put("deviceId", deviceId);
+                        jsonObject.put("cuId", cuId);
+                        jsonObject.put("propertyName", propertyName);
+                        jsonObject.put("propertyType", "nickName");
+                        jsonObject.put("propertyValue", propertyNickName);
+                        list.put(jsonObject);
+                        uploadParams.put("propertyList", list);
+                        return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
+                    }
+                })
+                .flatMap(new Function<RequestBody, ObservableSource<BaseResult<Boolean>>>() {
+                    @Override
+                    public ObservableSource<BaseResult<Boolean>> apply(RequestBody body) throws Exception {
+                        return getApiService().tourchPanelRenameAndIcon(body);
+                    }
+                })
+                .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
                 });
     }
 

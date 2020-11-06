@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.BaseResult;
@@ -80,9 +81,6 @@ public class RetrofitHelper {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
             public void log(String message) {
-                if (MyApplication.getInstance() == null) {
-                    System.out.println(message);
-                }
                 Log.d("okhttp", message);
             }
         });
@@ -90,7 +88,7 @@ public class RetrofitHelper {
         builder.addInterceptor(CommonParameterInterceptor);
         //登录失败 重新登录
         builder.addInterceptor(ReloginInterceptor);
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        httpLoggingInterceptor.setLevel(Constance.isNetworkDebug() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.BASIC);
         builder.addInterceptor(httpLoggingInterceptor);
         builder.retryOnConnectionFailure(true);
         return builder.build();
