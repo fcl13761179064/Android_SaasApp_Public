@@ -13,6 +13,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 abstract class BasicFragment extends Fragment {
+    protected final String TAG = getClass().getSimpleName();
+
     private Unbinder unbinder;
 
     @Override

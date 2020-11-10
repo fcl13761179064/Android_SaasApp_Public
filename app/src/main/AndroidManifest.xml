@@ -201,6 +201,9 @@
         <activity
             android:name=".ui.ProjectListActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ProjectMainActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"

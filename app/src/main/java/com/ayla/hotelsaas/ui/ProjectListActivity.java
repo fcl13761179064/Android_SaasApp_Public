@@ -3,12 +3,12 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListAdapter;
@@ -16,6 +16,10 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.blankj.utilcode.util.SizeUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.List;
 
@@ -26,8 +30,8 @@ import butterknife.OnClick;
  * 我的项目页面
  */
 public class ProjectListActivity extends BaseMvpActivity<ProjectListView, ProjectListPresenter> implements ProjectListView {
-    @BindView(R.id.SwipeRefreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.SmartRefreshLayout)
+    SmartRefreshLayout mSmartRefreshLayout;
 
     @BindView(R.id.RecyclerView)
     RecyclerView mRecyclerView;
@@ -52,6 +56,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @Override
     protected void initView() {
+        mSmartRefreshLayout.setEnableLoadMore(true).setEnableRefresh(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -69,7 +74,25 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @Override
     protected void initListener() {
+        mSmartRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                Log.d(TAG, "onLoadMore: ");
+                refreshLayout.finishLoadMore(2000);
+            }
 
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                Log.d(TAG, "onRefresh: ");
+                refreshLayout.finishRefresh(2000);
+            }
+        });
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(getApplicationContext(), ProjectMainActivity.class));
+            }
+        });
     }
 
     @Override
