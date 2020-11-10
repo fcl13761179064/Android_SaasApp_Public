@@ -77,7 +77,7 @@ public class TouchPanelActivity extends BaseMvpActivity {
                     intent.putExtra("pannel_type", 1);
                     startActivity(intent);
                 } else {
-                    CustomToast.makeText(getApplicationContext(), "该功能未开发", R.drawable.ic_toast_warming);
+                    CustomToast.makeText(getApplicationContext(), "该功能未开发", R.drawable.ic_toast_warming).show();
                 }
             }
         });
