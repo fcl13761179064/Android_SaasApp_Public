@@ -18,9 +18,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -138,7 +140,9 @@ public class RetrofitHelper {
                             String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
                             final User[] newUser = {null};
                             if (!TextUtils.isEmpty(refresh_token)) {
-                                Disposable subscribe = RequestModel.getInstance().refreshToken(refresh_token)
+                                Disposable subscribe = RequestModel.getInstance()
+                                        .refreshToken(refresh_token)
+                                        .subscribeOn(Schedulers.newThread())//避免countDownLatch.countDown(); 产生死锁。
                                         .doFinally(new Action() {
                                             @Override
                                             public void run() throws Exception {
