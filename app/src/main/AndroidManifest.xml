@@ -208,6 +208,9 @@
         <activity
             android:name=".ui.DeviceDetailH5Activity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.CreateProjectActivity"
+            android:screenOrientation="portrait" />
 
         <!--X5内核-->
         <service
