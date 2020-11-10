@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.BaseResult;
@@ -101,15 +100,15 @@ public class RetrofitHelper {
     private static Interceptor CommonParameterInterceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
+            Request.Builder requestBuilder = chain.request().newBuilder();
+            requestBuilder.header("appId", "3");
             if (MyApplication.getInstance() != null) {
                 final String sava_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
                 if (sava_token != null) {
-                    Request request = chain.request().newBuilder()
-                            .header("Authorization", sava_token).build();
-                    return chain.proceed(request);
+                    requestBuilder.header("Authorization", sava_token).build();
                 }
             }
-            return chain.proceed(chain.request());
+            return chain.proceed(requestBuilder.build());
         }
     };
 
