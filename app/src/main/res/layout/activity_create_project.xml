@@ -32,6 +32,7 @@
             android:textSize="16sp" />
 
         <EditText
+            android:id="@+id/ed_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -75,6 +76,7 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/cb_01"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:button="@drawable/ic_project_industry_hotel" />
@@ -96,6 +98,7 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/cb_02"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:button="@drawable/ic_project_industry_decoration" />
@@ -117,6 +120,7 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/cb_03"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:button="@drawable/ic_project_industry_property" />
@@ -138,6 +142,7 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/cb_04"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:button="@drawable/ic_project_industry_apartment" />
@@ -183,9 +188,11 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/cb_05"
                     android:layout_width="36dp"
-                    android:layout_height="36dp" />
+                    android:layout_height="36dp"
+                    android:button="@drawable/ic_project_type_box" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -203,9 +210,11 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/cb_06"
                     android:layout_width="36dp"
-                    android:layout_height="36dp" />
+                    android:layout_height="36dp"
+                    android:button="@drawable/ic_project_type_room" />
 
                 <TextView
                     android:layout_width="wrap_content"
