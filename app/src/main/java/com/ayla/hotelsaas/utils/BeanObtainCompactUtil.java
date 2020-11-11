@@ -106,13 +106,18 @@ public class BeanObtainCompactUtil {
             if (ruleEngineBean.getAction() != null) {
                 if (ruleEngineBean.getAction().getItems() != null) {
                     for (RuleEngineBean.Action.ActionItem actionItem : ruleEngineBean.getAction().getItems()) {
-                        BaseSceneBean.Action action = new BaseSceneBean.Action();
+                        BaseSceneBean.Action action;
+                        if (actionItem.getTargetDeviceType() == 10) {//delay动作
+                            action = new BaseSceneBean.DelayAction();
+                        } else {//普通设备动作
+                            action = new BaseSceneBean.DeviceAction();
+                        }
                         action.setLeftValue(actionItem.getLeftValue());
                         action.setOperator(actionItem.getOperator());
                         action.setRightValue(actionItem.getRightValue());
                         action.setTargetDeviceId(actionItem.getTargetDeviceId());
                         action.setTargetDeviceType(DeviceType.valueOf(actionItem.getTargetDeviceType()));
-                        action.setRightValueType(BaseSceneBean.Action.VALUE_TYPE.valueOf(actionItem.getRightValueType()));
+                        action.setRightValueType(actionItem.getRightValueType());
                         sceneBean.getActions().add(action);
                     }
                 }
@@ -203,14 +208,14 @@ public class BeanObtainCompactUtil {
                 actionItem.setRightValue(action.getRightValue());
                 actionItem.setLeftValue(action.getLeftValue());
                 actionItem.setOperator(action.getOperator());
-                actionItem.setRightValueType(action.getRightValueType().code);
+                actionItem.setRightValueType(action.getRightValueType());
                 _action.getItems().add(actionItem);
             }
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < ruleEngineBean.getAction().getItems().size(); i++) {
                 RuleEngineBean.Action.ActionItem actionItem = ruleEngineBean.getAction().getItems().get(i);
-                sb.append(String.format("func.execute('%s','%s','%s')", actionItem.getTargetDeviceType(), actionItem.getTargetDeviceId(), actionItem.getLeftValue()));
+                sb.append(String.format("func.%s('%s','%s','%s')", actionItem.getTargetDeviceType() == 10 ? "delay" : "execute", actionItem.getTargetDeviceType(), actionItem.getTargetDeviceId(), actionItem.getLeftValue()));
                 if (i < ruleEngineBean.getAction().getItems().size() - 1) {
                     sb.append(" && ");
                 }

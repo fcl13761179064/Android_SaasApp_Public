@@ -11,9 +11,9 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
-        android:layout_margin="16dp"
         android:padding="15dp"
-        android:src="@drawable/ic_scene_condition_type_onekey" />
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_scene_action_type_delay" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="功能：一键执行"
+            android:text="延时"
             android:textColor="#ff333333"
             android:textSize="14sp"
             android:textStyle="bold" />
