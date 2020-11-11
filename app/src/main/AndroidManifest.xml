@@ -191,10 +191,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.DeviceDetailH5Activity"
-            android:screenOrientation="portrait" /> <!-- X5内核 -->
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SceneActionDelaySettingActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.CreateProjectActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
             android:label="dexopt"

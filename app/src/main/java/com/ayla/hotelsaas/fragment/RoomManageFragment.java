@@ -17,6 +17,7 @@ import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.mvp.present.RoomManagePresenter;
 import com.ayla.hotelsaas.mvp.view.RoomManageView;
+import com.ayla.hotelsaas.ui.CreateProjectActivity;
 import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.MainActivity;
 
@@ -71,24 +72,25 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    ValueChangeDialog
-                            .newInstance(new ValueChangeDialog.DoneCallback() {
-                                @Override
-                                public void onDone(DialogFragment dialog, String txt) {
-                                    if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
-                                        CustomToast.makeText(getContext(), "修改房间名称不能为空", R.drawable.ic_toast_warming).show();
-                                        return;
-                                    } else {
-                                        mPresenter.createRoomNum(txt);
-                                    }
-                                    dialog.dismissAllowingStateLoss();
-                                }
-                            })
-                            .setEditValue("")
-                            .setTitle("创建新房间")
-                            .setEditHint("请输入房间名称")
-                            .setMaxLength(20)
-                            .show(getFragmentManager(), "room_num");
+                startActivity(new Intent(getContext(), CreateProjectActivity.class));
+//                    ValueChangeDialog
+//                            .newInstance(new ValueChangeDialog.DoneCallback() {
+//                                @Override
+//                                public void onDone(DialogFragment dialog, String txt) {
+//                                    if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
+//                                        CustomToast.makeText(getContext(), "修改房间名称不能为空", R.drawable.ic_toast_warming).show();
+//                                        return;
+//                                    } else {
+//                                        mPresenter.createRoomNum(txt);
+//                                    }
+//                                    dialog.dismissAllowingStateLoss();
+//                                }
+//                            })
+//                            .setEditValue("")
+//                            .setTitle("创建新房间")
+//                            .setEditHint("请输入房间名称")
+//                            .setMaxLength(20)
+//                            .show(getFragmentManager(), "room_num");
             }
         });
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
