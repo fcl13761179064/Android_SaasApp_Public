@@ -103,7 +103,7 @@ public class RetrofitHelper {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request.Builder requestBuilder = chain.request().newBuilder();
-            requestBuilder.header("appId", "3");
+            requestBuilder.header("serviceId", "3");
             if (MyApplication.getInstance() != null) {
                 final String sava_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
                 if (sava_token != null) {
