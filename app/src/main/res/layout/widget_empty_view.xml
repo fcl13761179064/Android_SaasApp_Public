@@ -28,7 +28,7 @@
         android:layout_width="100dp"
         android:layout_height="36dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/bg_network_error_refresh"
+        android:background="@drawable/green_btn_bg"
         android:text="重新加载"
         android:textColor="#FFFFFF" />
 </LinearLayout>

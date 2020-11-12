@@ -16,7 +16,7 @@ import com.ayla.hotelsaas.fragment.RoomManageFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
-
+@Deprecated
 public class WorkRoomManageActivity extends BaseMvpActivity {
     private final int REQUEST_CODE_DISTRIBUTION_ROOM = 0x10;
     @BindView(R.id.tl_tabs)
