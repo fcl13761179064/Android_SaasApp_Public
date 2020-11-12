@@ -11,13 +11,13 @@ import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
+import com.blankj.utilcode.util.LogUtils;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -77,12 +77,13 @@ public class RetrofitHelper {
     private static OkHttpClient getOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
+        LogUtils.getConfig().setLog2FileSwitch(false).setBorderSwitch(false).setLogHeadSwitch(false);
         //HttpLoggingInterceptor打印网络日志的方法 默认日志拦截器普通版:OkHttp：
         //自定义拦截器，小写日志
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
             public void log(String message) {
-                Log.d("okhttp", message);
+                LogUtils.dTag("okhttp", message);
             }
         });
         //添加请求头

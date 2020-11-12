@@ -92,6 +92,7 @@ public class BeanObtainCompactUtil {
                             condition.setRightValue(conditionItem.getRightValue());
                             condition.setSourceDeviceId(conditionItem.getSourceDeviceId());
                             condition.setSourceDeviceType(DeviceType.valueOf(conditionItem.getSourceDeviceType()));
+                            // TODO: 2020/11/12  
                             sceneBean.getConditions().add(condition);
                         }
                     }
@@ -188,9 +189,14 @@ public class BeanObtainCompactUtil {
                 String cronExpression = calculateCronExpression(enableTime);
                 RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
                 conditionItem.setCronExpression("1 " + cronExpression);
-                _condition.getItems().add(conditionItem);
 
-                sb.append(" && ");
+                if (_condition.getItems().isEmpty()) {
+                    conditionItem.setJoinType(0);
+                }else{
+                    conditionItem.setJoinType(1);
+                    sb.append(" && ");
+                }
+                _condition.getItems().add(conditionItem);
                 sb.append(String.format("func.parseCronExpression('%s')", conditionItem.getCronExpression()));
             }
             _condition.setExpression(sb.toString());

@@ -66,9 +66,11 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
                                 }
                                 if ("Words".equals(touchPanelDataBean.getPropertyType())) {
                                     if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
-                                        for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
-                                            if (TextUtils.equals(valueBean.getValue(), touchPanelDataBean.getPropertyName())) {
-                                                valueBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                        if (attributesBean.getValue() != null) {
+                                            for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
+                                                if (TextUtils.equals(valueBean.getValue(), touchPanelDataBean.getPropertyName())) {
+                                                    valueBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                                }
                                             }
                                         }
                                     }

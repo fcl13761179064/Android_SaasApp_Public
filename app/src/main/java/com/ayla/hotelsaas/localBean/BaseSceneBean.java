@@ -156,6 +156,9 @@ public abstract class BaseSceneBean implements Serializable {
 
     }
 
+    /**
+     * 普通property
+     */
     public static class DeviceCondition extends Condition {
 
         private String operator;
@@ -163,6 +166,25 @@ public abstract class BaseSceneBean implements Serializable {
         private String rightValue;
         private String sourceDeviceId;
         private DeviceType sourceDeviceType;//0:艾拉 1：阿里
+
+        private int bit;
+        private int compareValue;
+
+        public int getBit() {
+            return bit;
+        }
+
+        public void setBit(int bit) {
+            this.bit = bit;
+        }
+
+        public int getCompareValue() {
+            return compareValue;
+        }
+
+        public void setCompareValue(int compareValue) {
+            this.compareValue = compareValue;
+        }
 
         public String getOperator() {
             return operator;
