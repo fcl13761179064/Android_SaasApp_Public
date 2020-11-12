@@ -4,11 +4,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import java.util.List;
 
@@ -20,7 +24,7 @@ public class CreateProjectActivity extends BaseMvpActivity {
     @BindViews({R.id.cb_01, R.id.cb_02, R.id.cb_03, R.id.cb_04, R.id.cb_05, R.id.cb_06})
     List<CheckBox> mCheckBoxList;
     @BindView(R.id.ed_name)
-    EditText mEditText;
+    TextView mEditText;
 
     @Override
     protected BasePresenter initPresenter() {
@@ -66,6 +70,28 @@ public class CreateProjectActivity extends BaseMvpActivity {
                 }
                 break;
         }
+    }
+
+    @OnClick(R.id.ed_name)
+    void handleNameInput(){
+        ValueChangeDialog
+                .newInstance(new ValueChangeDialog.DoneCallback() {
+                    @Override
+                    public void onDone(DialogFragment dialog, String txt) {
+                        if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
+                            CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming).show();
+                            return;
+                        } else {
+                           mEditText.setText(txt);
+                        }
+                        dialog.dismissAllowingStateLoss();
+                    }
+                })
+                .setEditValue(mEditText.getText().toString())
+                .setTitle("项目名称")
+                .setEditHint("输入项目名称")
+                .setMaxLength(20)
+                .show(getSupportFragmentManager(), "scene_name");
     }
 
     @Override
