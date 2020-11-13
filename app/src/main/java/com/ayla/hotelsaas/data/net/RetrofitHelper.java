@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.BaseResult;
@@ -18,9 +17,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -101,15 +102,15 @@ public class RetrofitHelper {
     private static Interceptor CommonParameterInterceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
+            Request.Builder requestBuilder = chain.request().newBuilder();
+            requestBuilder.header("serviceId", "3");
             if (MyApplication.getInstance() != null) {
                 final String sava_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
                 if (sava_token != null) {
-                    Request request = chain.request().newBuilder()
-                            .header("Authorization", sava_token).build();
-                    return chain.proceed(request);
+                    requestBuilder.header("Authorization", sava_token).build();
                 }
             }
-            return chain.proceed(chain.request());
+            return chain.proceed(requestBuilder.build());
         }
     };
 
@@ -138,7 +139,9 @@ public class RetrofitHelper {
                             String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
                             final User[] newUser = {null};
                             if (!TextUtils.isEmpty(refresh_token)) {
-                                Disposable subscribe = RequestModel.getInstance().refreshToken(refresh_token)
+                                Disposable subscribe = RequestModel.getInstance()
+                                        .refreshToken(refresh_token)
+                                        .subscribeOn(Schedulers.newThread())//避免countDownLatch.countDown(); 产生死锁。
                                         .doFinally(new Action() {
                                             @Override
                                             public void run() throws Exception {
