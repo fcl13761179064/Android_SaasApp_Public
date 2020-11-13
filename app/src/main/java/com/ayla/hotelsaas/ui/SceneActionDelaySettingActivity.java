@@ -61,7 +61,13 @@ public class SceneActionDelaySettingActivity extends BaseMvpActivity {
     protected void appBarRightTvClicked() {
         int minute = numberPickerMinute.getValue();
         int second = numberPickerSecond.getValue();
-        setResult(RESULT_OK, new Intent().putExtra("seconds", minute * 60 + second));
+
+        int seconds = minute * 60 + second;
+        if (seconds == 0) {
+            CustomToast.makeText(this, "无效的延时设置", R.drawable.ic_toast_warming).show();
+            return;
+        }
+        setResult(RESULT_OK, new Intent().putExtra("seconds", seconds));
         finish();
     }
 }
