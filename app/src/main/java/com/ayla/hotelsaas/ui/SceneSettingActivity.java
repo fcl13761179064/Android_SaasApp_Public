@@ -350,7 +350,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             conditionItem.setFunctionName(datumBean.getFunctionName());
             conditionItem.setValueName(datumBean.getValueName());
             mRuleEngineBean.setRuleType(BaseSceneBean.RULE_TYPE.AUTO);
-            mRuleEngineBean.getConditions().add( conditionItem);
+            mRuleEngineBean.getConditions().add(conditionItem);
             showData();
         }
         if (requestCode == REQUEST_CODE_SELECT_ACTION && resultCode == RESULT_OK) {//选择动作返回结果
@@ -364,7 +364,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             actionItem.setRightValue(datumBean.getRightValue());
             actionItem.setFunctionName(datumBean.getFunctionName());
             actionItem.setValueName(datumBean.getValueName());
-            mRuleEngineBean.getActions().add( actionItem);
+            mRuleEngineBean.getActions().add(actionItem);
             showData();
         }
         if (requestCode == REQUEST_CODE_SELECT_ICON && resultCode == RESULT_OK) {//选择ICON返回结果
@@ -415,6 +415,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     }
                 }
             }
+        }
+        BaseSceneBean.Action lastAction = mRuleEngineBean.getActions().get(mRuleEngineBean.getActions().size() - 1);
+        if (lastAction instanceof BaseSceneBean.DelayAction) {//如果最后一个Action是延时，不允许
+            CustomToast.makeText(getBaseContext(), "延时后必须添加一个设备类型的动作", R.drawable.ic_toast_warming).show();
+            return;
         }
         mPresenter.saveOrUpdateRuleEngine(mRuleEngineBean);
     }
@@ -543,8 +548,18 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     @OnClick(R.id.v_add_action)
     public void jumpAddActions() {
         if (mRuleEngineBean.getSiteType() == BaseSceneBean.SITE_TYPE.REMOTE) {//只有云端场景才可以设置延时动作。
-            Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
-            startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
+            if (mRuleEngineBean.getActions().size() == 0) {
+                Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
+                startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
+            } else {
+                BaseSceneBean.Action lastAction = mRuleEngineBean.getActions().get(mRuleEngineBean.getActions().size() - 1);
+                if (lastAction instanceof BaseSceneBean.DelayAction) {
+                    doJumpAddActions();
+                } else {
+                    Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
+                    startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
+                }
+            }
         } else {
             doJumpAddActions();
         }
