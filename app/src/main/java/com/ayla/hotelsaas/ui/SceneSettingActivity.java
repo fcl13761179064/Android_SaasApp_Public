@@ -371,11 +371,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 } else if (deviceBean.getCuId() == 1) {
                     conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
                 }
-                conditionItem.setRightValue(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getValue());
+                conditionItem.setRightValue(String.valueOf(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getValue()));
                 conditionItem.setLeftValue(attributesBean.getCode());
                 conditionItem.setOperator(datumBean.getOperator());
                 conditionItem.setFunctionName(attributesBean.getDisplayName());
-                conditionItem.setValueName(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDisplayName());
+                conditionItem.setValueName(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getDisplayName());
                 conditionItem.setBit(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getBit());
                 conditionItem.setCompareValue(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getCompareValue());
                 mRuleEngineBean.getConditions().add(conditionItem);
