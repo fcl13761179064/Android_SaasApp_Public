@@ -87,8 +87,9 @@ public class DeviceTemplateBean {
         private int custom;//    DEVICE_FIXED(1,"设备固有"),    OEM_CUSTOM(2,"OEM自定义"),    USER_CUSTOM(3,"用户自定义");
         private int direction;//    OUTPUT_ONLY(1,"只上报"),    OUTPUT_INPUT(2,"可设置可上报");
         private int dataType;// TEXT(1, "字符串")，INT(2, "整型")，FLOAT(3, "单精度浮点")，DOUBLE(4, "双精度浮点")，DATE_TIME(5, "时间")，BOOL(6, "布尔")，ENUM(7, "枚举")，ARRAY(8, "数组")，ASSEMBLY(9, "组合")
-        private List<ValueBean> value;//dataType = BOOL ENUM 时使用
-        private SetupBean setup;//步进类型的数据 dataType = INT  FLOAT  DOUBLE  TEXT 时使用
+        private List<ValueBean> value;//property属性
+        private SetupBean setup;//步进类型的数据
+        private List<BitValueBean> bitValue;//bit位
 
         public String getCode() {
             return code;
@@ -160,6 +161,14 @@ public class DeviceTemplateBean {
 
         public void setSetup(SetupBean setup) {
             this.setup = setup;
+        }
+
+        public List<BitValueBean> getBitValue() {
+            return bitValue;
+        }
+
+        public void setBitValue(List<BitValueBean> bitValue) {
+            this.bitValue = bitValue;
         }
 
         public static class ValueBean implements Serializable {
@@ -234,6 +243,63 @@ public class DeviceTemplateBean {
 
             public void setUnit(String unit) {
                 this.unit = unit;
+            }
+        }
+
+        public static class BitValueBean implements Serializable {
+
+            /**
+             * dataType : 2
+             * displayName : 状态正常
+             * value : 0
+             * bit : 0
+             * compareValue : 1
+             */
+
+            private int dataType;
+            private String displayName;
+            private int value;
+            private int bit;
+            private int compareValue;
+
+            public int getDataType() {
+                return dataType;
+            }
+
+            public void setDataType(int dataType) {
+                this.dataType = dataType;
+            }
+
+            public String getDisplayName() {
+                return displayName;
+            }
+
+            public void setDisplayName(String displayName) {
+                this.displayName = displayName;
+            }
+
+            public int getValue() {
+                return value;
+            }
+
+            public void setValue(int value) {
+                this.value = value;
+            }
+
+            public int getBit() {
+                return bit;
+            }
+
+            public void setBit(int bit) {
+                this.bit = bit;
+            }
+
+            public int getCompareValue() {
+                return compareValue;
+            }
+
+            public void setCompareValue(int compareValue) {
+                this.compareValue = compareValue;
             }
         }
     }

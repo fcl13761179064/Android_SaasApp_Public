@@ -1,93 +1,68 @@
 package com.ayla.hotelsaas.ui;
 
+import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+
 import java.io.Serializable;
 
 interface ISceneSettingFunctionDatumSet {
     CallBackBean getDatum();
 
-    class CallBackBean implements Serializable {
-        private String functionName;
-        private String valueName;
-
-        private int deviceType;
-        private String deviceId;
-        private String leftValue;
-        private String rightValue;
-        private String operator;
-        private int rightValueType;
-
-        private String iconUrl;
-
-        public void setFunctionName(String functionName) {
-            this.functionName = functionName;
-        }
-
-        public void setValueName(String valueName) {
-            this.valueName = valueName;
-        }
-
-        public void setDeviceType(int deviceType) {
-            this.deviceType = deviceType;
-        }
-
-        public void setDeviceId(String deviceId) {
-            this.deviceId = deviceId;
-        }
-
-        public void setLeftValue(String leftValue) {
-            this.leftValue = leftValue;
-        }
-
-        public void setRightValue(String rightValue) {
-            this.rightValue = rightValue;
-        }
-
-        public void setOperator(String operator) {
+    abstract class CallBackBean implements Serializable {
+        public CallBackBean(String operator) {
             this.operator = operator;
         }
 
-        public void setRightValueType(int rightValueType) {
-            this.rightValueType = rightValueType;
-        }
-
-        public void setIconUrl(String iconUrl) {
-            this.iconUrl = iconUrl;
-        }
-
-        public String getFunctionName() {
-            return functionName;
-        }
-
-        public String getValueName() {
-            return valueName;
-        }
-
-        public int getDeviceType() {
-            return deviceType;
-        }
-
-        public String getDeviceId() {
-            return deviceId;
-        }
-
-        public String getLeftValue() {
-            return leftValue;
-        }
-
-        public String getRightValue() {
-            return rightValue;
-        }
+        private String operator;
 
         public String getOperator() {
             return operator;
         }
+    }
 
-        public int getRightValueType() {
-            return rightValueType;
+    class ValueCallBackBean extends CallBackBean {
+
+        private DeviceTemplateBean.AttributesBean.ValueBean valueBean;
+
+        public ValueCallBackBean(DeviceTemplateBean.AttributesBean.ValueBean valueBean) {
+            super("==");
+            this.valueBean = valueBean;
         }
 
-        public String getIconUrl() {
-            return iconUrl;
+        public DeviceTemplateBean.AttributesBean.ValueBean getValueBean() {
+            return valueBean;
+        }
+    }
+
+    class BitValueCallBackBean extends CallBackBean {
+
+        private DeviceTemplateBean.AttributesBean.BitValueBean bitValueBean;
+
+        public BitValueCallBackBean(DeviceTemplateBean.AttributesBean.BitValueBean bitValueBean) {
+            super("==");
+            this.bitValueBean = bitValueBean;
+        }
+
+        public DeviceTemplateBean.AttributesBean.BitValueBean getBitValueBean() {
+            return bitValueBean;
+        }
+    }
+
+    class SetupCallBackBean extends CallBackBean {
+        private String targetValue;
+        private DeviceTemplateBean.AttributesBean.SetupBean setupBean;
+
+        public SetupCallBackBean(String operator, String targetValue, DeviceTemplateBean.AttributesBean.SetupBean setupBean) {
+            super(operator);
+            this.targetValue = targetValue;
+            this.setupBean = setupBean;
+        }
+
+        public String getTargetValue() {
+            return targetValue;
+        }
+
+        public DeviceTemplateBean.AttributesBean.SetupBean getSetupBean() {
+            return setupBean;
         }
     }
 }
