@@ -92,6 +92,8 @@ public class BeanObtainCompactUtil {
                             condition.setRightValue(conditionItem.getRightValue());
                             condition.setSourceDeviceId(conditionItem.getSourceDeviceId());
                             condition.setSourceDeviceType(DeviceType.valueOf(conditionItem.getSourceDeviceType()));
+                            condition.setBit(conditionItem.getBit());
+                            condition.setCompareValue(conditionItem.getCompareValue());
                             sceneBean.getConditions().add(condition);
                         }
                     }
@@ -154,6 +156,8 @@ public class BeanObtainCompactUtil {
                     conditionItem.setRightValue(((BaseSceneBean.DeviceCondition) condition).getRightValue());
                     conditionItem.setLeftValue(((BaseSceneBean.DeviceCondition) condition).getLeftValue());
                     conditionItem.setOperator(((BaseSceneBean.DeviceCondition) condition).getOperator());
+                    conditionItem.setBit(((BaseSceneBean.DeviceCondition) condition).getBit());
+                    conditionItem.setCompareValue(((BaseSceneBean.DeviceCondition) condition).getCompareValue());
                     _condition.getItems().add(conditionItem);
                 }
             }
@@ -177,7 +181,11 @@ public class BeanObtainCompactUtil {
                 }
                 RuleEngineBean.Condition.ConditionItem conditionItem = ruleEngineBean.getCondition().getItems().get(i);
                 sb.append(conditionItem.getJoinType() == 1 ? " && " : conditionItem.getJoinType() == 2 ? " || " : "");
-                sb.append(String.format("func.get('%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
+                if (conditionItem.getBit() == 0 && conditionItem.getCompareValue() == 0) {
+                    sb.append(String.format("func.get('%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
+                } else {
+                    sb.append(String.format("func.bit('%s','%s','%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getBit(), conditionItem.getCompareValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
+                }
                 if (i == ruleEngineBean.getCondition().getItems().size() - 1) {
                     sb.append(")");
                 }
@@ -188,9 +196,14 @@ public class BeanObtainCompactUtil {
                 String cronExpression = calculateCronExpression(enableTime);
                 RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
                 conditionItem.setCronExpression("1 " + cronExpression);
-                _condition.getItems().add(conditionItem);
 
-                sb.append(" && ");
+                if (_condition.getItems().isEmpty()) {
+                    conditionItem.setJoinType(0);
+                } else {
+                    conditionItem.setJoinType(1);
+                    sb.append(" && ");
+                }
+                _condition.getItems().add(conditionItem);
                 sb.append(String.format("func.parseCronExpression('%s')", conditionItem.getCronExpression()));
             }
             _condition.setExpression(sb.toString());

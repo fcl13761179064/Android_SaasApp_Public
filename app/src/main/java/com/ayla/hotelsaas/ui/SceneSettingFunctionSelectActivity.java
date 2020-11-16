@@ -17,6 +17,7 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingFunctionSelectPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionSelectView;
 import com.ayla.hotelsaas.widget.AppBar;
@@ -86,8 +87,8 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
                 boolean nest = true;
                 int type = getIntent().getIntExtra("type", 0);//选择的功能作为条件还是动作。
                 if (type == 0) {//条件
-                    int ruleSetMode = getIntent().getIntExtra("ruleSetMode", 2);//选择的功能作为条件还是动作。
-                    if (ruleSetMode == 3) {//满足任意
+                    BaseSceneBean.RULE_SET_MODE ruleSetMode = (BaseSceneBean.RULE_SET_MODE) getIntent().getSerializableExtra("ruleSetMode");//选择的功能作为条件还是动作。
+                    if (ruleSetMode == BaseSceneBean.RULE_SET_MODE.ANY) {//满足任意
                         nest = false;
                     }
                 }
