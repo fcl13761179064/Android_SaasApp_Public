@@ -48,7 +48,7 @@ public class ProjectMainActivity extends BaseMvpActivity {
             @Override
             public Fragment getItem(int position) {
                 if (position == 0) {
-                    return ProjectRoomsFragment.newInstance();
+                    return ProjectRoomsFragment.newInstance(bean);
                 }
                 if (position == 1) {
                     return ProjectDetailFragment.newInstance(bean);

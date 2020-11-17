@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.TreeListBean;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.Observer;
 
 import butterknife.BindView;
@@ -34,9 +34,10 @@ public class ProjectRoomBeanFragment extends BaseMvpFragment {
         this.observer = observer;
     }
 
-    public static ProjectRoomBeanFragment newInstance(Observer observer) {
+    public static ProjectRoomBeanFragment newInstance(Observer observer, ArrayList<TreeListBean> treeListBeans) {
 
         Bundle args = new Bundle();
+        args.putSerializable("treeListBeans", treeListBeans);
         ProjectRoomBeanFragment fragment = new ProjectRoomBeanFragment(observer);
         fragment.setArguments(args);
         return fragment;
@@ -52,7 +53,7 @@ public class ProjectRoomBeanFragment extends BaseMvpFragment {
         return R.layout.fragment_project_room_bean;
     }
 
-    BaseQuickAdapter<Object, BaseViewHolder> mAdapter;
+    BaseQuickAdapter<TreeListBean, BaseViewHolder> mAdapter;
 
     @Override
     protected void initView(View view) {
@@ -67,10 +68,10 @@ public class ProjectRoomBeanFragment extends BaseMvpFragment {
                 outRect.set(0, (position == 0) ? size : 0, 0, size);
             }
         });
-        mAdapter = new BaseQuickAdapter<Object, BaseViewHolder>(R.layout.item_project_room_list) {
+        mAdapter = new BaseQuickAdapter<TreeListBean, BaseViewHolder>(R.layout.item_project_room_list) {
             @Override
-            protected void convert(BaseViewHolder helper, Object item) {
-                helper.setText(R.id.tv, item.toString());
+            protected void convert(BaseViewHolder helper, TreeListBean item) {
+                helper.setText(R.id.tv, item.getContentName());
             }
         };
         mAdapter.bindToRecyclerView(mRecyclerView);
@@ -81,17 +82,15 @@ public class ProjectRoomBeanFragment extends BaseMvpFragment {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                observer.update(null, 1);
+                TreeListBean item = mAdapter.getItem(position);
+                observer.update(null, item);
             }
         });
     }
 
     @Override
     protected void initData() {
-        ArrayList<Object> data = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            data.add(getTag() + " " + i);
-        }
-        mAdapter.setNewData(data);
+        ArrayList<TreeListBean> treeListBeans = (ArrayList<TreeListBean>) getArguments().getSerializable("treeListBeans");
+        mAdapter.setNewData(treeListBeans);
     }
 }

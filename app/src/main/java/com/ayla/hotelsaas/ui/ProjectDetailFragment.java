@@ -69,7 +69,7 @@ public class ProjectDetailFragment extends BaseMvpFragment {
         textView01.setText(String.format("行业：%s", trade));
 
         String type = null;
-        switch (bean.getTrade()) {
+        switch (bean.getType()) {
             case 0:
                 type = "正式";
                 break;
@@ -101,7 +101,7 @@ public class ProjectDetailFragment extends BaseMvpFragment {
 
         try {
             textView04.setText(String.format("施工日期：%s-%s", sf_target.format(sf_source.parse(bean.getStartDate())), sf_target.format(sf_source.parse(bean.getEndDate()))));
-        } catch (ParseException e) {
+        } catch (Exception e) {
             textView04.setText("施工日期：");
             e.printStackTrace();
         }

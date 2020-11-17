@@ -211,4 +211,12 @@ public interface ApiService {
      */
     @GET("/api/v1/construction/constructbill")
     Observable<BaseResult<ConstructionBillListBean>> getConstructionBillList(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
+
+    /**
+     * 创建项目单
+     *
+     * @return
+     */
+    @POST("/api/v1/construction/constructbill")
+    Observable<BaseResult> createBill(@Body RequestBody body);
 }

@@ -81,7 +81,7 @@ public class ConstructionBillListBean {
         private String id;
         private String title;
         private String businessId;
-        private int type;
+        private int type;//0:正式 1:展箱 2:展厅
         private String startDate;
         private String endDate;
         private int constructionStatus;
@@ -92,6 +92,12 @@ public class ConstructionBillListBean {
         private String updateName;
         private String updateTime;
         private int isDeleted;
+        /**
+         * 1	酒店	酒店行业
+         * 2	家装	家装行业
+         * 3	地产	地产行业
+         * 4	公寓	公寓行业
+         */
         private int trade;
 
         public String getId() {

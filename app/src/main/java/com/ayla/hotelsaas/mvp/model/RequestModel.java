@@ -779,4 +779,17 @@ public class RequestModel {
                 .compose(new BaseResultTransformer<BaseResult<ConstructionBillListBean>, ConstructionBillListBean>() {
                 });
     }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult> createBill(String title, int trade, int type) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("title", title);
+        jsonObject.addProperty("trade", trade);
+        jsonObject.addProperty("type", type);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().createBill(body111);
+    }
 }

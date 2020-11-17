@@ -58,6 +58,34 @@
             android:src="@drawable/ic_menu_item_arrow_right" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_room_distribution"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/rl_room_rename"
+        android:layout_marginTop="16dp"
+        android:background="#FFFFFF"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_16"
+            android:text="分配"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+
+        <ImageView
+            android:layout_width="8dp"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_menu_item_arrow_right" />
+    </RelativeLayout>
+
     <Button
         android:id="@+id/btn_remove_room"
         style="?android:attr/borderlessButtonStyle"

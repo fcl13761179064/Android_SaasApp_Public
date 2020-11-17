@@ -5,7 +5,6 @@ import com.ayla.hotelsaas.bean.ConstructionBillListBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -21,8 +20,8 @@ public class ProjectListAdapter extends BaseQuickAdapter<ConstructionBillListBea
     protected void convert(BaseViewHolder helper, ConstructionBillListBean.ResultListBean item) {
         helper.setText(R.id.tv_title, item.getTitle());
         try {
-            helper.setText(R.id.tv_date, String.format("施工日期：%s", sf_target.format(sf_source.parse(item.getStartDate()))));
-        } catch (ParseException e) {
+            helper.setText(R.id.tv_date, String.format("施工日期：%s-%s", sf_target.format(sf_source.parse(item.getStartDate())), sf_target.format(sf_source.parse(item.getEndDate()))));
+        } catch (Exception e) {
             helper.setText(R.id.tv_date, "施工日期：");
             e.printStackTrace();
         }
@@ -59,7 +58,7 @@ public class ProjectListAdapter extends BaseQuickAdapter<ConstructionBillListBea
         helper.setText(R.id.tv_sub_1, trade);
 
         String type = null;
-        switch (item.getTrade()) {
+        switch (item.getType()) {
             case 0:
                 type = "正式";
                 break;

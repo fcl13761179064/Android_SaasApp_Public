@@ -3,7 +3,6 @@ package com.ayla.hotelsaas.ui;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
@@ -11,7 +10,8 @@ import androidx.fragment.app.DialogFragment;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.mvp.present.CreateProjectPresenter;
+import com.ayla.hotelsaas.mvp.view.CreateProjectView;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import java.util.List;
@@ -20,15 +20,15 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.OnClick;
 
-public class CreateProjectActivity extends BaseMvpActivity {
+public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, CreateProjectPresenter> implements CreateProjectView {
     @BindViews({R.id.cb_01, R.id.cb_02, R.id.cb_03, R.id.cb_04, R.id.cb_05, R.id.cb_06})
     List<CheckBox> mCheckBoxList;
     @BindView(R.id.ed_name)
     TextView mEditText;
 
     @Override
-    protected BasePresenter initPresenter() {
-        return null;
+    protected CreateProjectPresenter initPresenter() {
+        return new CreateProjectPresenter();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class CreateProjectActivity extends BaseMvpActivity {
     }
 
     @OnClick(R.id.ed_name)
-    void handleNameInput(){
+    void handleNameInput() {
         ValueChangeDialog
                 .newInstance(new ValueChangeDialog.DoneCallback() {
                     @Override
@@ -82,7 +82,7 @@ public class CreateProjectActivity extends BaseMvpActivity {
                             CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming).show();
                             return;
                         } else {
-                           mEditText.setText(txt);
+                            mEditText.setText(txt);
                         }
                         dialog.dismissAllowingStateLoss();
                     }
@@ -97,6 +97,7 @@ public class CreateProjectActivity extends BaseMvpActivity {
     @Override
     protected void appBarRightTvClicked() {
         String newName = mEditText.getText().toString();
+        int trade = 0, type = 0;
         if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
             CustomToast.makeText(MyApplication.getContext(), "名称不能为空", R.drawable.ic_toast_warming).show();
             return;
@@ -105,6 +106,7 @@ public class CreateProjectActivity extends BaseMvpActivity {
         for (int i = 0; i < 4; i++) {
             if (mCheckBoxList.get(i).isChecked()) {
                 check = true;
+                trade = i + 1;
                 break;
             }
         }
@@ -116,6 +118,7 @@ public class CreateProjectActivity extends BaseMvpActivity {
         for (int i = 4; i < 6; i++) {
             if (mCheckBoxList.get(i).isChecked()) {
                 check = true;
+                type = i - 3;
                 break;
             }
         }
@@ -123,6 +126,17 @@ public class CreateProjectActivity extends BaseMvpActivity {
             CustomToast.makeText(MyApplication.getContext(), "请选择项目类型", R.drawable.ic_toast_warming).show();
             return;
         }
-        CustomToast.makeText(MyApplication.getContext(), "111111", R.drawable.ic_toast_warming).show();
+        mPresenter.createProject(newName, trade, type);
+    }
+
+    @Override
+    public void onFailed(Throwable throwable) {
+        CustomToast.makeText(this, "创建失败", R.drawable.ic_toast_warming).show();
+    }
+
+    @Override
+    public void onSuccess() {
+        setResult(RESULT_OK);
+        finish();
     }
 }

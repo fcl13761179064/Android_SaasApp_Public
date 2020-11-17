@@ -1,8 +1,9 @@
 package com.ayla.hotelsaas.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TreeListBean {
+public class TreeListBean implements Serializable {
 
     /**
      * id : 1302801433778839601

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +29,8 @@ import butterknife.OnClick;
  * 我的项目页面
  */
 public class ProjectListActivity extends BaseMvpActivity<ProjectListView, ProjectListPresenter> implements ProjectListView {
+    private final int REQUEST_CODE_CREATE_PROJECT = 0x10;
+
     @BindView(R.id.SmartRefreshLayout)
     SmartRefreshLayout mSmartRefreshLayout;
 
@@ -40,6 +43,12 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter.refresh();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mSmartRefreshLayout.autoRefresh();
     }
 
     @Override
@@ -130,6 +139,14 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @OnClick(R.id.bt_add)
     void handleAdd() {
-        startActivity(new Intent(this, CreateProjectActivity.class));
+        startActivityForResult(new Intent(this, CreateProjectActivity.class), REQUEST_CODE_CREATE_PROJECT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_CREATE_PROJECT && resultCode == RESULT_OK) {
+            mSmartRefreshLayout.autoRefresh();
+        }
     }
 }
