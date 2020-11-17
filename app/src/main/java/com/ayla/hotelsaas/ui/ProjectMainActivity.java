@@ -13,10 +13,16 @@ import androidx.viewpager.widget.ViewPager;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.ConstructionBillListBean;
 import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
 
+/**
+ * 酒店页面
+ * 进入时带入参数
+ * bean： {@link ConstructionBillListBean.ResultListBean}
+ */
 public class ProjectMainActivity extends BaseMvpActivity {
     @BindView(R.id.tl_tabs)
     TabLayout mTabLayout;
@@ -33,8 +39,10 @@ public class ProjectMainActivity extends BaseMvpActivity {
         return R.layout.activity_project_main;
     }
 
+
     @Override
     protected void initView() {
+        ConstructionBillListBean.ResultListBean bean = (ConstructionBillListBean.ResultListBean) getIntent().getSerializableExtra("bean");
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             @NonNull
             @Override
@@ -43,7 +51,7 @@ public class ProjectMainActivity extends BaseMvpActivity {
                     return ProjectRoomsFragment.newInstance();
                 }
                 if (position == 1) {
-                    return ProjectDetailFragment.newInstance();
+                    return ProjectDetailFragment.newInstance(bean);
                 }
                 return null;
             }

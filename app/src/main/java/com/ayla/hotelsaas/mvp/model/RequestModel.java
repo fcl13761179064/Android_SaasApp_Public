@@ -4,6 +4,7 @@ package com.ayla.hotelsaas.mvp.model;
 import android.text.TextUtils;
 
 import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.ConstructionBillListBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
@@ -768,5 +769,14 @@ public class RequestModel {
      */
     public Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(String categoryId) {
         return getApiService().getNetworkConfigGuide(categoryId);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<ConstructionBillListBean> getConstructionBillList(int pageNo, int pageSize) {
+        return getApiService().getConstructionBillList(pageNo, pageSize)
+                .compose(new BaseResultTransformer<BaseResult<ConstructionBillListBean>, ConstructionBillListBean>() {
+                });
     }
 }

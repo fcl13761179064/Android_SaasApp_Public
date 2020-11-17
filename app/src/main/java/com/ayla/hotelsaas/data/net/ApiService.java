@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.ConstructionBillListBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
@@ -60,7 +61,6 @@ public interface ApiService {
 
     @PUT("api/v1/construction/user/register")
     Observable<BaseResult<Boolean>> register(@Body RequestBody body);
-
 
     @POST("api/v1/construction/appuser/sendcode")
     Observable<BaseResult<Boolean>> sendSmsCode(@Body RequestBody body);
@@ -204,4 +204,11 @@ public interface ApiService {
      */
     @GET("/api/v1/construction/devicetypes/{categoryId}/networkguide")
     Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(@Path("categoryId") String categoryId);
+
+    /**
+     * 获取项目单列表
+     * @return
+     */
+    @GET("/api/v1/construction/constructbill")
+    Observable<BaseResult<ConstructionBillListBean>> getConstructionBillList(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
 }
