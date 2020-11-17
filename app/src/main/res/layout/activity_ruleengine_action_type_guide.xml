@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:text="设置条件"
+        android:text="如果满足条件时就做什么"
         android:textColor="#ff333333"
         android:textSize="17sp" />
 
@@ -27,48 +27,15 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="6dp"
-        android:text="比如：有人打开开关时"
+        android:text="比如：打开电视"
         android:textColor="#ff282828"
         android:textSize="14sp" />
-
-    <RelativeLayout
-        android:id="@+id/rl_type_one_key"
-        android:layout_width="match_parent"
-        android:layout_height="57dp"
-        android:layout_marginTop="16dp"
-        android:background="#FFFFFF"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
-
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_scene_condition_type_onekey" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="26dp"
-            android:maxLines="1"
-            android:text="一键执行"
-            android:textColor="#ff333333"
-            android:textSize="17sp" />
-
-        <ImageView
-            android:layout_width="8dp"
-            android:layout_height="14dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_menu_item_arrow_right" />
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_device_changed"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="16dp"
         android:background="#FFFFFF"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
@@ -85,7 +52,40 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="26dp"
             android:maxLines="1"
-            android:text="设备状态变化时"
+            android:text="设备状态变化"
+            android:textColor="#ff333333"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:layout_width="8dp"
+            android:layout_height="14dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_menu_item_arrow_right" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_type_one_key"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_marginTop="1dp"
+        android:background="#FFFFFF"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_scene_action_type_delay" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="26dp"
+            android:maxLines="1"
+            android:text="延时"
             android:textColor="#ff333333"
             android:textSize="17sp" />
 

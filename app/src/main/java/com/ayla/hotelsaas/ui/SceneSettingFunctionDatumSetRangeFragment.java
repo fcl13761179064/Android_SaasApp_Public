@@ -8,11 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.xw.repo.BubbleSeekBar;
 
@@ -31,10 +28,9 @@ public class SceneSettingFunctionDatumSetRangeFragment extends BaseMvpFragment i
     @BindView(R.id.tv_value)
     TextView mValueTextView;
 
-    public static SceneSettingFunctionDatumSetRangeFragment newInstance(String deviceId, DeviceTemplateBean.AttributesBean attributesBean) {
+    public static SceneSettingFunctionDatumSetRangeFragment newInstance(DeviceTemplateBean.AttributesBean attributesBean) {
 
         Bundle args = new Bundle();
-        args.putSerializable("deviceId", deviceId);
         args.putSerializable("attributeBean", attributesBean);
         SceneSettingFunctionDatumSetRangeFragment fragment = new SceneSettingFunctionDatumSetRangeFragment();
         fragment.setArguments(args);
@@ -51,9 +47,11 @@ public class SceneSettingFunctionDatumSetRangeFragment extends BaseMvpFragment i
         return R.layout.fragment_scene_function_datum_set_range;
     }
 
+    private DeviceTemplateBean.AttributesBean attributesBean;
+
     @Override
     protected void initView(View view) {
-        DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
+        attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
 
         Double max = attributesBean.getSetup().getMax();
         Double min = attributesBean.getSetup().getMin();
@@ -86,23 +84,8 @@ public class SceneSettingFunctionDatumSetRangeFragment extends BaseMvpFragment i
 
     @Override
     public CallBackBean getDatum() {
-        DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
-        DeviceListBean.DevicesBean deviceBean = MyApplication.getInstance().getDevicesBean(getArguments().getString("deviceId"));
-
         String targetValue = String.valueOf(mAppCompatSeekBar.getProgress());
 
-        CallBackBean datumBean = new CallBackBean();
-
-        datumBean.setFunctionName(attributesBean.getDisplayName());
-        datumBean.setValueName(targetValue);
-        datumBean.setLeftValue(attributesBean.getCode());
-        datumBean.setOperator("==");
-        datumBean.setRightValue(targetValue);
-        datumBean.setRightValueType(attributesBean.getDataType());
-        datumBean.setDeviceType(deviceBean.getCuId());
-        datumBean.setDeviceId(deviceBean.getDeviceId());
-        datumBean.setIconUrl(deviceBean.getIconUrl());
-
-        return datumBean;
+        return new SetupCallBackBean("==", targetValue, attributesBean.getSetup());
     }
 }

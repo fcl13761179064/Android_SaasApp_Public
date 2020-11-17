@@ -11,7 +11,6 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
-import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
@@ -134,7 +133,6 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                     });//获取品类中心描述
         }
         Disposable subscribe = observable
-                .subscribeOn(Schedulers.io())
                 .flatMap(new Function<List<DeviceCategoryDetailBean>, ObservableSource<DeviceTemplateBean[]>>() {
                     @Override
                     public ObservableSource<DeviceTemplateBean[]> apply(List<DeviceCategoryDetailBean> deviceCategoryDetailBeans) throws Exception {
@@ -256,6 +254,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
 
                                                     List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
                                                     DeviceTemplateBean.AttributesBean.SetupBean setupBean = attribute.getSetup();
+                                                    List<DeviceTemplateBean.AttributesBean.BitValueBean> bitValue = attribute.getBitValue();
                                                     if (attributeValue != null) {
                                                         for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
                                                             if (TextUtils.equals(valueBean.getValue(), conditionItem.getRightValue())) {
@@ -265,6 +264,14 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                     } else if (setupBean != null) {
                                                         String unit = setupBean.getUnit();
                                                         conditionItem.setValueName(String.format("%s%s", conditionItem.getRightValue(), TextUtils.isEmpty(unit) ? "" : unit));
+                                                    } else if (bitValue != null) {
+                                                        for (DeviceTemplateBean.AttributesBean.BitValueBean bitValueBean : bitValue) {
+                                                            if (bitValueBean.getBit() == conditionItem.getBit() &&
+                                                                    bitValueBean.getCompareValue() == conditionItem.getCompareValue() &&
+                                                                    TextUtils.equals(conditionItem.getRightValue(), String.valueOf(bitValueBean.getValue()))) {
+                                                                conditionItem.setValueName(bitValueBean.getDisplayName());
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
@@ -275,6 +282,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         }
                     }
                 })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override

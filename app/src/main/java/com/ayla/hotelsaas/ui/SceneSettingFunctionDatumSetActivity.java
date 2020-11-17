@@ -24,7 +24,9 @@ import butterknife.BindView;
  * 2.String deviceId
  * 3.type 选择的功能作为条件还是动作。0:条件
  * 返回：
- * result {@link ISceneSettingFunctionDatumSet.CallBackBean}
+ * result
+ * {@link ISceneSettingFunctionDatumSet.CallBackBean}
+ * {@link String deviceId}
  */
 public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
     @BindView(R.id.appBar)
@@ -40,7 +42,6 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
         return R.layout.activity_scene_function_datum_set;
     }
 
-    private DeviceListBean.DevicesBean deviceBean;
 
     @Override
     protected void initView() {
@@ -48,18 +49,20 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
         appBar.setRightText("完成");
 
         DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getIntent().getSerializableExtra("attributeBean");
-        deviceBean = MyApplication.getInstance().getDevicesBean(getIntent().getStringExtra("deviceId"));
+        DeviceListBean.DevicesBean deviceBean = MyApplication.getInstance().getDevicesBean(getIntent().getStringExtra("deviceId"));
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (attributesBean.getValue() != null) {
-            fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(deviceBean.getDeviceId(), attributesBean), "content");
+            fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(attributesBean), "content");
         } else if (attributesBean.getSetup() != null) {
             int type = getIntent().getIntExtra("type", 0);//0:条件
             if (type == 0) {
-                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeWithOptionFragment.newInstance(deviceBean.getDeviceId(), attributesBean), "content");
+                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeWithOptionFragment.newInstance(attributesBean), "content");
             } else {
-                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeFragment.newInstance(deviceBean.getDeviceId(), attributesBean), "content");
+                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeFragment.newInstance(attributesBean), "content");
             }
+        } else if (attributesBean.getBitValue() != null) {
+            fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(attributesBean), "content");
         }
         fragmentTransaction.commitNowAllowingStateLoss();
     }
@@ -71,10 +74,8 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
             public void onClick(View v) {
                 Fragment contentFragment = getSupportFragmentManager().findFragmentByTag("content");
                 if (contentFragment instanceof ISceneSettingFunctionDatumSet) {
-                    ISceneSettingFunctionDatumSet.CallBackBean datumBean = ((ISceneSettingFunctionDatumSet) contentFragment).getDatum();
-
-                    Intent data = new Intent();
-                    data.putExtra("result", datumBean);
+                    Intent data = new Intent(getIntent());
+                    data.putExtra("result", ((ISceneSettingFunctionDatumSet) contentFragment).getDatum());
                     setResult(Activity.RESULT_OK, data);
                     finish();
                 }

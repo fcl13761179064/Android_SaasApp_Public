@@ -19,7 +19,7 @@ import com.ayla.hotelsaas.mvp.present.RoomManagePresenter;
 import com.ayla.hotelsaas.mvp.view.RoomManageView;
 import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.MainActivity;
-import com.ayla.hotelsaas.utils.FastClickUtils;
+
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -71,7 +71,6 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!FastClickUtils.isDoubleClick()) {
                     ValueChangeDialog
                             .newInstance(new ValueChangeDialog.DoneCallback() {
                                 @Override
@@ -90,14 +89,11 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                             .setEditHint("请输入房间名称")
                             .setMaxLength(20)
                             .show(getFragmentManager(), "room_num");
-                }
-
             }
         });
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (!FastClickUtils.isDoubleClick()) {
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     RoomManageBean.RecordsBean recordsBean = mAdapter.getData().get(position);
                     long roomId = recordsBean.getId();
@@ -106,7 +102,6 @@ public class RoomManageFragment extends BaseMvpFragment<RoomManageView, RoomMana
                     intent.putExtra("roomName", roomName);
                     intent.putExtra("removeEnable", true);
                     startActivityForResult(intent, REQUEST_CODE_TO_ROOM);
-                }
             }
         });
 

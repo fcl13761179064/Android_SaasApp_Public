@@ -92,6 +92,8 @@ public class BeanObtainCompactUtil {
                             condition.setRightValue(conditionItem.getRightValue());
                             condition.setSourceDeviceId(conditionItem.getSourceDeviceId());
                             condition.setSourceDeviceType(DeviceType.valueOf(conditionItem.getSourceDeviceType()));
+                            condition.setBit(conditionItem.getBit());
+                            condition.setCompareValue(conditionItem.getCompareValue());
                             sceneBean.getConditions().add(condition);
                         }
                     }
@@ -106,13 +108,18 @@ public class BeanObtainCompactUtil {
             if (ruleEngineBean.getAction() != null) {
                 if (ruleEngineBean.getAction().getItems() != null) {
                     for (RuleEngineBean.Action.ActionItem actionItem : ruleEngineBean.getAction().getItems()) {
-                        BaseSceneBean.Action action = new BaseSceneBean.Action();
+                        BaseSceneBean.Action action;
+                        if (actionItem.getTargetDeviceType() == 10) {//delay动作
+                            action = new BaseSceneBean.DelayAction();
+                        } else {//普通设备动作
+                            action = new BaseSceneBean.DeviceAction();
+                        }
                         action.setLeftValue(actionItem.getLeftValue());
                         action.setOperator(actionItem.getOperator());
                         action.setRightValue(actionItem.getRightValue());
                         action.setTargetDeviceId(actionItem.getTargetDeviceId());
                         action.setTargetDeviceType(DeviceType.valueOf(actionItem.getTargetDeviceType()));
-                        action.setRightValueType(BaseSceneBean.Action.VALUE_TYPE.valueOf(actionItem.getRightValueType()));
+                        action.setRightValueType(actionItem.getRightValueType());
                         sceneBean.getActions().add(action);
                     }
                 }
@@ -149,6 +156,8 @@ public class BeanObtainCompactUtil {
                     conditionItem.setRightValue(((BaseSceneBean.DeviceCondition) condition).getRightValue());
                     conditionItem.setLeftValue(((BaseSceneBean.DeviceCondition) condition).getLeftValue());
                     conditionItem.setOperator(((BaseSceneBean.DeviceCondition) condition).getOperator());
+                    conditionItem.setBit(((BaseSceneBean.DeviceCondition) condition).getBit());
+                    conditionItem.setCompareValue(((BaseSceneBean.DeviceCondition) condition).getCompareValue());
                     _condition.getItems().add(conditionItem);
                 }
             }
@@ -172,7 +181,11 @@ public class BeanObtainCompactUtil {
                 }
                 RuleEngineBean.Condition.ConditionItem conditionItem = ruleEngineBean.getCondition().getItems().get(i);
                 sb.append(conditionItem.getJoinType() == 1 ? " && " : conditionItem.getJoinType() == 2 ? " || " : "");
-                sb.append(String.format("func.get('%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
+                if (conditionItem.getBit() == 0 && conditionItem.getCompareValue() == 0) {
+                    sb.append(String.format("func.get('%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
+                } else {
+                    sb.append(String.format("func.bit('%s','%s','%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getBit(), conditionItem.getCompareValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
+                }
                 if (i == ruleEngineBean.getCondition().getItems().size() - 1) {
                     sb.append(")");
                 }
@@ -183,9 +196,14 @@ public class BeanObtainCompactUtil {
                 String cronExpression = calculateCronExpression(enableTime);
                 RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
                 conditionItem.setCronExpression("1 " + cronExpression);
-                _condition.getItems().add(conditionItem);
 
-                sb.append(" && ");
+                if (_condition.getItems().isEmpty()) {
+                    conditionItem.setJoinType(0);
+                } else {
+                    conditionItem.setJoinType(1);
+                    sb.append(" && ");
+                }
+                _condition.getItems().add(conditionItem);
                 sb.append(String.format("func.parseCronExpression('%s')", conditionItem.getCronExpression()));
             }
             _condition.setExpression(sb.toString());
@@ -203,14 +221,14 @@ public class BeanObtainCompactUtil {
                 actionItem.setRightValue(action.getRightValue());
                 actionItem.setLeftValue(action.getLeftValue());
                 actionItem.setOperator(action.getOperator());
-                actionItem.setRightValueType(action.getRightValueType().code);
+                actionItem.setRightValueType(action.getRightValueType());
                 _action.getItems().add(actionItem);
             }
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < ruleEngineBean.getAction().getItems().size(); i++) {
                 RuleEngineBean.Action.ActionItem actionItem = ruleEngineBean.getAction().getItems().get(i);
-                sb.append(String.format("func.execute('%s','%s','%s')", actionItem.getTargetDeviceType(), actionItem.getTargetDeviceId(), actionItem.getLeftValue()));
+                sb.append(String.format("func.%s('%s','%s','%s')", actionItem.getTargetDeviceType() == 10 ? "delay" : "execute", actionItem.getTargetDeviceType(), actionItem.getTargetDeviceId(), actionItem.getLeftValue()));
                 if (i < ruleEngineBean.getAction().getItems().size() - 1) {
                     sb.append(" && ");
                 }

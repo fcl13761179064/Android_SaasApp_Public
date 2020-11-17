@@ -156,6 +156,9 @@ public abstract class BaseSceneBean implements Serializable {
 
     }
 
+    /**
+     * 普通property
+     */
     public static class DeviceCondition extends Condition {
 
         private String operator;
@@ -163,6 +166,25 @@ public abstract class BaseSceneBean implements Serializable {
         private String rightValue;
         private String sourceDeviceId;
         private DeviceType sourceDeviceType;//0:艾拉 1：阿里
+
+        private int bit;
+        private int compareValue;
+
+        public int getBit() {
+            return bit;
+        }
+
+        public void setBit(int bit) {
+            this.bit = bit;
+        }
+
+        public int getCompareValue() {
+            return compareValue;
+        }
+
+        public void setCompareValue(int compareValue) {
+            this.compareValue = compareValue;
+        }
 
         public String getOperator() {
             return operator;
@@ -205,7 +227,7 @@ public abstract class BaseSceneBean implements Serializable {
         }
     }
 
-    public static class Action implements Serializable {
+    public abstract static class Action implements Serializable {
         private DeviceType targetDeviceType;
 
         private String targetDeviceId;
@@ -216,7 +238,7 @@ public abstract class BaseSceneBean implements Serializable {
 
         private String rightValue;
 
-        private VALUE_TYPE rightValueType;//1:数值类型 2:action类型  3:文本类型  4:场景类型
+        private int rightValueType;//0:场景类型 1:文本类型 2:整型类型  3:单精度  4:双精度 5:时间戳   6:bool类型    8:Long类型
 
         private String functionName;//显示的功能名称
         private String valueName;//显示的值名称
@@ -277,41 +299,26 @@ public abstract class BaseSceneBean implements Serializable {
             this.rightValue = rightValue;
         }
 
-        public VALUE_TYPE getRightValueType() {
+        public int getRightValueType() {
             return rightValueType;
         }
 
-        public void setRightValueType(VALUE_TYPE rightValueType) {
+        public void setRightValueType(int rightValueType) {
             this.rightValueType = rightValueType;
         }
+    }
 
-        public enum VALUE_TYPE {
-            NUMBER(1), ACTION(2), TEXT(3), SCENE(4);
+    public static class DeviceAction extends Action {
 
-            public int code;
+    }
 
-            VALUE_TYPE(int code) {
-                this.code = code;
-            }
-
-            public static VALUE_TYPE valueOf(int code) {
-                VALUE_TYPE data = null;
-                switch (code) {
-                    case 1:
-                        data = NUMBER;
-                        break;
-                    case 2:
-                        data = ACTION;
-                        break;
-                    case 3:
-                        data = TEXT;
-                        break;
-                    case 4:
-                        data = SCENE;
-                        break;
-                }
-                return data;
-            }
+    public static class DelayAction extends Action {
+        public DelayAction() {
+            setOperator("==");
+            setLeftValue("SECONDS");
+            setRightValueType(8);
+            setTargetDeviceId("DELAY");
+            setTargetDeviceType(DeviceType.DELAY_ACTION);
         }
     }
 

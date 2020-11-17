@@ -5,12 +5,9 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
-import com.blankj.utilcode.util.NumberUtils;
 
 import butterknife.BindView;
 
@@ -23,10 +20,9 @@ public class SceneSettingFunctionDatumSetRangeWithOptionFragment extends BaseMvp
     @BindView(R.id.np_2)
     NumberPicker mNumberPicker2;
 
-    public static SceneSettingFunctionDatumSetRangeWithOptionFragment newInstance(String deviceId, DeviceTemplateBean.AttributesBean attributesBean) {
+    public static SceneSettingFunctionDatumSetRangeWithOptionFragment newInstance(DeviceTemplateBean.AttributesBean attributesBean) {
 
         Bundle args = new Bundle();
-        args.putSerializable("deviceId", deviceId);
         args.putSerializable("attributeBean", attributesBean);
         SceneSettingFunctionDatumSetRangeWithOptionFragment fragment = new SceneSettingFunctionDatumSetRangeWithOptionFragment();
         fragment.setArguments(args);
@@ -43,9 +39,11 @@ public class SceneSettingFunctionDatumSetRangeWithOptionFragment extends BaseMvp
         return R.layout.fragment_scene_function_datum_set__option_range;
     }
 
+    private DeviceTemplateBean.AttributesBean attributesBean;
+
     @Override
     protected void initView(View view) {
-        DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
+        attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
 
         Double max = attributesBean.getSetup().getMax();
         Double min = attributesBean.getSetup().getMin();
@@ -94,8 +92,6 @@ public class SceneSettingFunctionDatumSetRangeWithOptionFragment extends BaseMvp
 
     @Override
     public CallBackBean getDatum() {
-        DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
-        DeviceListBean.DevicesBean deviceBean =  MyApplication.getInstance().getDevicesBean(getArguments().getString("deviceId"));
 
         String option = "==";
         int optionIndex = mNumberPicker1.getValue();
@@ -108,17 +104,7 @@ public class SceneSettingFunctionDatumSetRangeWithOptionFragment extends BaseMvp
         }
         String valueName = mNumberPicker2.getDisplayedValues()[mNumberPicker2.getValue()];
         String realValue = realValues[mNumberPicker2.getValue()];
-        CallBackBean datumBean = new CallBackBean();
-        datumBean.setFunctionName(attributesBean.getDisplayName());
-        datumBean.setValueName(valueName);
-        datumBean.setLeftValue(attributesBean.getCode());
-        datumBean.setOperator(option);
-        datumBean.setRightValue(realValue);
-        datumBean.setRightValueType(attributesBean.getDataType());
-        datumBean.setDeviceType(deviceBean.getCuId());
-        datumBean.setDeviceId(deviceBean.getDeviceId());
-        datumBean.setIconUrl(deviceBean.getIconUrl());
 
-        return datumBean;
+        return new SetupCallBackBean(option, realValue, attributesBean.getSetup());
     }
 }
