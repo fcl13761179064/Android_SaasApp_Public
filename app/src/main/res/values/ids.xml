@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item type="id" name="expandable_toggle_button" />
-    <item type="id" name="expandable" />
-
-    <item name="statusbarutil_fake_status_bar_view" type="id" />
-    <item name="statusbarutil_translucent_view" type="id" />
-
+    <item type="id" name="anti_click_tag" />
 </resources>

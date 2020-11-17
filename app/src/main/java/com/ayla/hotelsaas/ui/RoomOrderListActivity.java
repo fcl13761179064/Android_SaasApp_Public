@@ -19,7 +19,7 @@ import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.RoomOrderPresenter;
 import com.ayla.hotelsaas.mvp.view.RoomOrderView;
-import com.ayla.hotelsaas.utils.FastClickUtils;
+
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -93,7 +93,6 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (!FastClickUtils.isDoubleClick()) {
                     Intent intent = new Intent(RoomOrderListActivity.this, MainActivity.class);
                     RoomOrderBean.ResultListBean room_result = mAdapter.getData().get(position);
                     long roomId = room_result.getRoomId();
@@ -102,7 +101,6 @@ public class RoomOrderListActivity extends BaseMvpActivity<RoomOrderView, RoomOr
                     intent.putExtra("roomName", roomName);
                     intent.putExtra("removeEnable", false);
                     startActivityForResult(intent, REQUEST_CODE_TO_ROOM);
-                }
             }
         });
 

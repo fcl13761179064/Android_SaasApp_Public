@@ -71,6 +71,9 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
                 boolean needWarming = false;
                 s1:
                 for (BaseSceneBean.Action actionItem : ruleEngineBean.getActions()) {
+                    if (!(actionItem instanceof BaseSceneBean.DeviceAction)) {
+                        continue;
+                    }
                     String targetDeviceId = actionItem.getTargetDeviceId();
                     for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
                         if (devicesBean.getDeviceId().equals(targetDeviceId)) {

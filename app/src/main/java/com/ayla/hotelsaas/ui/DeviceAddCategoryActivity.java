@@ -20,7 +20,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddCategoryPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
-import com.ayla.hotelsaas.utils.FastClickUtils;
+
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -144,9 +144,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
      * @param subBean
      */
     private void handleAddJump(DeviceCategoryBean.SubBean subBean) {
-        if (FastClickUtils.isDoubleClick()) {
-            return;
-        }
+
         List<DeviceListBean.DevicesBean> aylaGateways = new ArrayList<>();
         List<DeviceListBean.DevicesBean> hyGateways = new ArrayList<>();
         List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
