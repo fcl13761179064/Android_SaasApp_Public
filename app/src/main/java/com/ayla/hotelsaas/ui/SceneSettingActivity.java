@@ -413,7 +413,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     actionItem.setTargetDeviceType(DeviceType.ALI_DEVICE_ID);
                 }
                 actionItem.setTargetDeviceId(deviceBean.getDeviceId());
-                actionItem.setRightValueType(attributesBean.getDataType());
+                actionItem.setRightValueType(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDataType());
                 actionItem.setOperator(datumBean.getOperator());
                 actionItem.setLeftValue(attributesBean.getCode());
                 actionItem.setRightValue(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getValue());
