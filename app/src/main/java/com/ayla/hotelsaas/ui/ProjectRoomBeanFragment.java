@@ -70,7 +70,7 @@ public class ProjectRoomBeanFragment extends BaseMvpFragment {
         mAdapter = new BaseQuickAdapter<Object, BaseViewHolder>(R.layout.item_project_room_list) {
             @Override
             protected void convert(BaseViewHolder helper, Object item) {
-
+                helper.setText(R.id.tv, item.toString());
             }
         };
         mAdapter.bindToRecyclerView(mRecyclerView);
@@ -90,7 +90,7 @@ public class ProjectRoomBeanFragment extends BaseMvpFragment {
     protected void initData() {
         ArrayList<Object> data = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            data.add(0);
+            data.add(getTag() + " " + i);
         }
         mAdapter.setNewData(data);
     }

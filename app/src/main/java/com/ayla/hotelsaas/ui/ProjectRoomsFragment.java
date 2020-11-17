@@ -3,10 +3,11 @@ package com.ayla.hotelsaas.ui;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -14,7 +15,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.blankj.utilcode.util.FragmentUtils;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
@@ -107,14 +107,27 @@ public class ProjectRoomsFragment extends BaseMvpFragment implements Observer {
 
     private void handleSelect() {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        if (getChildFragmentManager().getFragments().size() != 0) {
-            Fragment latestFragment = getChildFragmentManager().getFragments().get(getChildFragmentManager().getFragments().size() - 1);
-            fragmentTransaction.hide(latestFragment);
+
+        //首先把现有的fragment全部hidden
+        for (Fragment fragment : getChildFragmentManager().getFragments()) {
+            fragmentTransaction.hide(fragment);
         }
 
+        //创建新的fragment
         ProjectRoomBeanFragment fragment = ProjectRoomBeanFragment.newInstance(this);
-        fragmentTransaction.add(R.id.fl_container, fragment, "AAA").commitNow();
+        fragmentTransaction.add(R.id.fl_container, fragment, "tag" + getChildFragmentManager().getFragments().size()).commitNow();
 
-        mTabLayout.addTab(mTabLayout.newTab().setText("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), true);
+        //创建新的tab
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_custom_tab, null);
+        TextView textView = view.findViewById(R.id.tv);
+        textView.setText(fragment.getTag());
+        TabLayout.Tab tab = mTabLayout.newTab().setCustomView(view);
+        mTabLayout.addTab(tab, false);
+        mTabLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                tab.select();
+            }
+        });
     }
 }

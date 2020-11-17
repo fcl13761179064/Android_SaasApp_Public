@@ -15,6 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="房间 8643"
+        android:id="@+id/tv"
         android:layout_centerVertical="true"
         android:textColor="#ff333333"
         android:textSize="15sp"
