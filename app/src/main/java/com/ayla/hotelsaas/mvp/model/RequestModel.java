@@ -116,11 +116,12 @@ public class RequestModel {
         return getApiService().modifyOldPassword(new_body);
     }
 
-    public Observable<BaseResult<User>> refreshToken(String refreshToken) {
+    public Observable<User> refreshToken(String refreshToken) {
         JsonObject body = new JsonObject();
         body.addProperty("refreshToken", refreshToken);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().refreshToken(new_body);
+        return getApiService().refreshToken(new_body).compose(new BaseResultTransformer<BaseResult<User>, User>() {
+        });
     }
 
     /**
