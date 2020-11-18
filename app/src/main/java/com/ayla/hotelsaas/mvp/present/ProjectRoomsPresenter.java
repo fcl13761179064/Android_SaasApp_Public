@@ -15,8 +15,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class ProjectRoomsPresenter extends BasePresenter<ProjectRoomsView> {
-    public void loadData(String hotelId) {
-        Disposable subscribe = RequestModel.getInstance().fetchTransferTreeList(hotelId)
+    public void loadData(String billId, String hotelId) {
+        Disposable subscribe = RequestModel.getInstance().fetchTransferTreeList(billId, hotelId)
                 .compose(new BaseResultTransformer<BaseResult<List<TreeListBean>>, List<TreeListBean>>() {
                 })
                 .subscribeOn(Schedulers.io())
@@ -29,7 +29,7 @@ public class ProjectRoomsPresenter extends BasePresenter<ProjectRoomsView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-mView.loadDataFailed(throwable);
+                        mView.loadDataFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);

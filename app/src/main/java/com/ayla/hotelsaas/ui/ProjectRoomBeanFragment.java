@@ -2,9 +2,11 @@ package com.ayla.hotelsaas.ui;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,11 +14,17 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.TreeListBean;
+import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observer;
 
 import butterknife.BindView;
@@ -56,6 +64,18 @@ public class ProjectRoomBeanFragment extends BaseMvpFragment {
     BaseQuickAdapter<TreeListBean, BaseViewHolder> mAdapter;
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     protected void initView(View view) {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -92,5 +112,38 @@ public class ProjectRoomBeanFragment extends BaseMvpFragment {
     protected void initData() {
         ArrayList<TreeListBean> treeListBeans = (ArrayList<TreeListBean>) getArguments().getSerializable("treeListBeans");
         mAdapter.setNewData(treeListBeans);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleRoomChangedEvent(RoomChangedEvent event) {
+        long roomId = event.roomId;
+        String newName = event.newName;
+        for (int i = 0; i < mAdapter.getData().size(); i++) {
+            TreeListBean treeListBean = mAdapter.getItem(i);
+            if (treeListBean != null) {
+                if (TextUtils.equals(treeListBean.getId(), String.valueOf(roomId))) {
+                    treeListBean.setContentName(newName);
+                    mAdapter.notifyItemChanged(i);
+                    break;
+                } else {
+                    modifyChild(treeListBean.getChildren(), roomId, newName);
+                }
+            }
+        }
+    }
+
+    public void modifyChild(List<TreeListBean> children, long roomId, String newName) {
+        if (children != null) {
+            for (TreeListBean treeListBean : children) {
+                if (treeListBean != null) {
+                    if (TextUtils.equals(treeListBean.getId(), String.valueOf(roomId))) {
+                        treeListBean.setContentName(newName);
+                        return;
+                    } else {
+                        modifyChild(treeListBean.getChildren(), roomId, newName);
+                    }
+                }
+            }
+        }
     }
 }

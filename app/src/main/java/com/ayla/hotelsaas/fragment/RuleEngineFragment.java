@@ -4,7 +4,9 @@ package com.ayla.hotelsaas.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,9 +29,9 @@ import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.CustomSheet;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +49,10 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
     TabLayout mTabLayout;
     @BindView(R.id.float_btn)
     FloatingActionButton float_btn;
+    @BindView(R.id.fl_content)
+    FrameLayout mFrameLayout;
     @BindView(R.id.device_refreshLayout)
-    SmartRefreshLayout mRefreshLayout;
+    SmartRefreshLayout mSmartRefreshLayout;
     @BindView(R.id.vp_content)
     ViewPager mViewPager;
 
@@ -67,15 +71,18 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
     protected void initView(View view) {
         mAdapter = new RuleEnginePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mViewPager.setAdapter(mAdapter);
-        mRefreshLayout.setEnableLoadMore(false);
         mTabLayout.setupWithViewPager(mViewPager, true);
         mTabLayout.setTabTextColors(Color.parseColor("#282828"), ContextCompat.getColor(getContext(), R.color.colorAccent));
         mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+        mSmartRefreshLayout.setEnableRefresh(false);
+        mSmartRefreshLayout.setEnableLoadMore(false);
+        mSmartRefreshLayout.setVisibility(View.INVISIBLE);
+        mFrameLayout.addView(LayoutInflater.from(getContext()).inflate(R.layout.layout_loading, null));
     }
 
     @Override
     protected void initListener() {
-        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+        mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
@@ -83,8 +90,6 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                 }
             }
         });
-
-        mRefreshLayout.autoRefresh();//自动刷新
 
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +143,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
 
     @Override
     protected void initData() {
-
+        mPresenter.loadData(mRoom_ID);
     }
 
     @Override
@@ -148,6 +153,10 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
 
     @Override
     public void loadDataSuccess(List<BaseSceneBean> data) {
+        if (mFrameLayout.getChildCount() !=1) {
+            mFrameLayout.removeViewAt(mFrameLayout.getChildCount() - 1);
+        }
+        mSmartRefreshLayout.setVisibility(View.VISIBLE);
         List<BaseSceneBean> oneKeys = new ArrayList<>();
         List<BaseSceneBean> autoRuns = new ArrayList<>();
 
@@ -167,20 +176,36 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
             AutoRunFragment oneKeyFragment = (AutoRunFragment) mAdapter.getItem(1);
             oneKeyFragment.showData(autoRuns);
         }
-        loadDataFinish();
+        mSmartRefreshLayout.setEnableRefresh(true);
+        mSmartRefreshLayout.finishRefresh(true);
     }
 
     @Override
-    public void loadDataFinish() {
-        mRefreshLayout.finishRefresh();
-        mRefreshLayout.finishLoadMore();
+    public void loadDataFailed() {
+        if (mFrameLayout.getChildCount() !=1) {
+            mFrameLayout.removeViewAt(mFrameLayout.getChildCount() - 1);
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.widget_empty_view, null);
+            mFrameLayout.addView(view);
+            view.findViewById(R.id.bt_refresh).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mFrameLayout.removeViewAt(mFrameLayout.getChildCount() - 1);
+                    mFrameLayout.addView(LayoutInflater.from(getContext()).inflate(R.layout.layout_loading, null));
+                    mPresenter.loadData(mRoom_ID);
+                }
+            });
+            mSmartRefreshLayout.setVisibility(View.INVISIBLE);
+        }
+        if (mSmartRefreshLayout.isRefreshing()) {
+            mSmartRefreshLayout.finishRefresh(false);
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SETTING && resultCode == Activity.RESULT_OK) {
-            mRefreshLayout.autoRefresh();
+            mSmartRefreshLayout.autoRefresh();
         }
         if (requestCode == REQUEST_CODE_SELECT_GATEWAY && resultCode == Activity.RESULT_OK) {
             Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
@@ -193,6 +218,6 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
      * subFragment 通知刷新的入口
      */
     public final void notifyRefresh() {
-        mRefreshLayout.autoRefresh();//自动刷新
+        mSmartRefreshLayout.autoRefresh();//自动刷新
     }
 }

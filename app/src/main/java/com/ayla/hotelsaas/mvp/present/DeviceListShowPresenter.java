@@ -3,13 +3,12 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -20,21 +19,11 @@ import io.reactivex.schedulers.Schedulers;
 public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
     //页码
     private int pageNum = 1;
-    //拉取数量
-    private static int maxNum = Integer.MAX_VALUE;
-
-    /**
-     * 加载下一页
-     */
-    public void loadNextPage(long businessId) {
-        pageNum++;
-        loadData(businessId);
-    }
 
     /**
      * 加载第一页
      */
-    public void loadFistPage(long resourceRoomId) {
+    public void refresh(long resourceRoomId) {
         pageNum = 1;
         loadData(resourceRoomId);
     }
@@ -45,25 +34,23 @@ public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
      * @param resourceRoomId
      */
     public void loadData(long resourceRoomId) {
-        RequestModel.getInstance()
-                .getDeviceList(resourceRoomId, pageNum, maxNum)
+        Disposable subscribe = RequestModel.getInstance()
+                .getDeviceList(resourceRoomId, pageNum, Integer.MAX_VALUE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new RxjavaObserver<DeviceListBean>() {
+                .subscribe(new Consumer<DeviceListBean>() {
                     @Override
-                    public void _onNext(DeviceListBean data) {
-                        mView.loadDataSuccess(data);
+                    public void accept(DeviceListBean deviceListBean) throws Exception {
+                        pageNum++;
+                        mView.loadDataSuccess(deviceListBean);
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void _onError(String code, String msg) {
+                    public void accept(Throwable throwable) throws Exception {
                         mView.loadDataFinish();
                     }
-
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addSubscrebe(d);
-                    }
                 });
+        addSubscrebe(subscribe);
     }
+
 }

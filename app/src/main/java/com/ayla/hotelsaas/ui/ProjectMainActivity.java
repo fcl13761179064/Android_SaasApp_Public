@@ -14,6 +14,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.ConstructionBillListBean;
+import com.ayla.hotelsaas.widget.AppBar;
 import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
@@ -28,6 +29,8 @@ public class ProjectMainActivity extends BaseMvpActivity {
     TabLayout mTabLayout;
     @BindView(R.id.vp_content)
     ViewPager mViewPager;
+    @BindView(R.id.appBar)
+    AppBar mAppBar;
 
     @Override
     protected BasePresenter initPresenter() {
@@ -39,10 +42,12 @@ public class ProjectMainActivity extends BaseMvpActivity {
         return R.layout.activity_project_main;
     }
 
-
     @Override
     protected void initView() {
         ConstructionBillListBean.ResultListBean bean = (ConstructionBillListBean.ResultListBean) getIntent().getSerializableExtra("bean");
+
+        mAppBar.setCenterText(bean.getTitle());
+
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             @NonNull
             @Override

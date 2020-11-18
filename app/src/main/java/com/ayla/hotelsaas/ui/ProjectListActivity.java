@@ -48,6 +48,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        mAdapter.setNewData(null);
         mSmartRefreshLayout.autoRefresh();
     }
 
@@ -63,7 +64,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @Override
     protected void initView() {
-        mSmartRefreshLayout.setEnableLoadMore(true).setEnableRefresh(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -109,12 +109,15 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         mAdapter.setEmptyView(R.layout.empty_project_list);
         mSmartRefreshLayout.setEnableRefresh(true);
         mSmartRefreshLayout.setEnableLoadMore(true);
-        mAdapter.setNewData(data.getResultList());
 
         if (mSmartRefreshLayout.isRefreshing()) {
             mSmartRefreshLayout.finishRefresh();
+            mAdapter.setNewData(data.getResultList());
         } else if (mSmartRefreshLayout.isLoading()) {
             mSmartRefreshLayout.finishLoadMore();
+            mAdapter.addData(data.getResultList());
+        }else{
+            mAdapter.setNewData(data.getResultList());
         }
 
         boolean lastPage = data.getCurrentPage() >= data.getTotalPages();
@@ -123,8 +126,19 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @Override
     public void onRequestFailed(Throwable throwable) {
-        mAdapter.setEmptyView(R.layout.empty_project_list);
-        mSmartRefreshLayout.setEnableRefresh(true);
+        if (mAdapter.getData().isEmpty()) {//如果是空的数据
+            mAdapter.setEmptyView(R.layout.widget_empty_view);
+            mAdapter.getEmptyView().findViewById(R.id.bt_refresh).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapter.setEmptyView(R.layout.layout_loading);
+                    mPresenter.refresh();
+                }
+            });
+        }else{
+            mSmartRefreshLayout.setEnableRefresh(true);
+            mAdapter.setEmptyView(R.layout.empty_project_list);
+        }
         if (mSmartRefreshLayout.isRefreshing()) {
             mSmartRefreshLayout.finishRefresh(false);
         } else if (mSmartRefreshLayout.isLoading()) {

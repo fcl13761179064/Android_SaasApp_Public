@@ -28,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class DistributionStructSelectPresenter extends BasePresenter<DistributionStructSelectView> {
     public void fetchTransferTreeList(String hotelId) {
-        Observable<List<TreeListBean>> fetchTree = RequestModel.getInstance().fetchTransferTreeList(hotelId)
+        Observable<List<TreeListBean>> fetchTree = RequestModel.getInstance().fetchTransferTreeList(null,hotelId)
                 .map(new Function<BaseResult<List<TreeListBean>>, List<TreeListBean>>() {
                     @Override
                     public List<TreeListBean> apply(BaseResult<List<TreeListBean>> listBaseResult) throws Exception {

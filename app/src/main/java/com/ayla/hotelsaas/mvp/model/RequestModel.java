@@ -208,14 +208,14 @@ public class RequestModel {
      * @param //每页加载量
      * @return
      */
-    public Observable<BaseResult<DeviceListBean>> getDeviceList(long roomId, int pageNum, int maxNum) {
+    public Observable<DeviceListBean> getDeviceList(long roomId, int pageNum, int maxNum) {
         JsonObject body = new JsonObject();
         body.addProperty("roomId", roomId);
         body.addProperty("pageNo", pageNum);
         body.addProperty("pageSize", maxNum);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().getDeviceList(body111);
-
+        return getApiService().getDeviceList(body111).compose(new BaseResultTransformer<BaseResult<DeviceListBean>, DeviceListBean>() {
+        });
     }
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
@@ -707,8 +707,8 @@ public class RequestModel {
     /**
      * @return
      */
-    public Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(String hotelId) {
-        return getApiService().fetchTransferTreeList(hotelId);
+    public Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(String billId, String hotelId) {
+        return getApiService().fetchTransferTreeList(billId, hotelId);
     }
 
     /**

@@ -163,7 +163,7 @@ public interface ApiService {
      * @return
      */
     @GET("/api/v1/construction/device/transfer/treelist")
-    Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(@Query("hotelId") String hotelId);
+    Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(@Query("billId") String billId, @Query("hotelId") String hotelId);
 
     /**
      * 房间分配，获取房间列表 ,返回酒店下面的所有房间
@@ -207,6 +207,7 @@ public interface ApiService {
 
     /**
      * 获取项目单列表
+     *
      * @return
      */
     @GET("/api/v1/construction/constructbill")

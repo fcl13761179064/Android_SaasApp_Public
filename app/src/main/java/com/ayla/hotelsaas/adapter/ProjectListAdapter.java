@@ -19,11 +19,15 @@ public class ProjectListAdapter extends BaseQuickAdapter<ConstructionBillListBea
     @Override
     protected void convert(BaseViewHolder helper, ConstructionBillListBean.ResultListBean item) {
         helper.setText(R.id.tv_title, item.getTitle());
-        try {
-            helper.setText(R.id.tv_date, String.format("施工日期：%s-%s", sf_target.format(sf_source.parse(item.getStartDate())), sf_target.format(sf_source.parse(item.getEndDate()))));
-        } catch (Exception e) {
-            helper.setText(R.id.tv_date, "施工日期：");
-            e.printStackTrace();
+        if (item.getType() == 0) {
+            try {
+                helper.setText(R.id.tv_date, String.format("施工日期：%s-%s", sf_target.format(sf_source.parse(item.getStartDate())), sf_target.format(sf_source.parse(item.getEndDate()))));
+            } catch (Exception e) {
+                helper.setText(R.id.tv_date, "施工日期：");
+                e.printStackTrace();
+            }
+        }else{
+            helper.setText(R.id.tv_date,null);
         }
 
         String status = null;

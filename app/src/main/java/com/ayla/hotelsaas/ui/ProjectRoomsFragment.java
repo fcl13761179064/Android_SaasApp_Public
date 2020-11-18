@@ -75,7 +75,7 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
     private void loadData() {
 
         mFrameLayout.addView(LayoutInflater.from(getContext()).inflate(R.layout.layout_loading, null));
-        mPresenter.loadData(bean.getBusinessId());
+        mPresenter.loadData(bean.getId(),bean.getBusinessId());
     }
 
     TabLayout mTabLayout;

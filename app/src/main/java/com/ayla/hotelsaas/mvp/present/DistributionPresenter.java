@@ -13,6 +13,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -36,10 +37,10 @@ public class DistributionPresenter extends BasePresenter<DistributionView> {
                         for (RoomManageBean.RecordsBean recordsBean : recordsBeans) {
                             Observable<Integer> getCountObservable = RequestModel.getInstance()
                                     .getDeviceList(recordsBean.getId(), 1, Integer.MAX_VALUE)
-                                    .map(new Function<BaseResult<DeviceListBean>, Integer>() {
+                                    .map(new Function<DeviceListBean, Integer>() {
                                         @Override
-                                        public Integer apply(BaseResult<DeviceListBean> deviceListBeanBaseResult) throws Exception {
-                                            return deviceListBeanBaseResult.data.getDevices().size();
+                                        public Integer apply(@NonNull DeviceListBean deviceListBean) throws Exception {
+                                            return deviceListBean.getDevices().size();
                                         }
                                     });
                             jobs.add(getCountObservable);

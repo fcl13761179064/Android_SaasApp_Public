@@ -12,11 +12,14 @@ import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.ayla.hotelsaas.mvp.present.RoomMorePresenter;
 import com.ayla.hotelsaas.mvp.view.RoomMoreView;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 
@@ -128,25 +131,28 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
     }
 
     @Override
-    public void operateError(String msg) {
+    public void renameFailed(String msg) {
         CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
     }
 
     @Override
-    public void operateSuccess(String newName) {
+    public void renameSuccess(String newName) {
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
         setResult(RESULT_CODE_RENAMED, new Intent().putExtra("newName", newName));
+        EventBus.getDefault().post(new RoomChangedEvent(mRoom_ID, newName));
     }
 
     @Override
-    public void operateRemoveSuccess(String is_rename) {
+    public void removeSuccess(String is_rename) {
         CustomToast.makeText(this, "移除成功", R.drawable.ic_success).show();
+        Intent mainActivity = new Intent(this, ProjectListActivity.class);
+        startActivity(mainActivity);
         setResult(RESULT_CODE_REMOVED);
         finish();
     }
 
     @Override
-    public void operateMoveFailSuccess(String code, String msg) {
+    public void removeFailed(String code, String msg) {
         CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
     }
 
@@ -156,6 +162,7 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
         if (requestCode == REQUEST_CODE_DISTRIBUTION_ROOM && resultCode == RESULT_OK) {
             Intent mainActivity = new Intent(this, ProjectListActivity.class);
             startActivity(mainActivity);
+            finish();
         }
     }
 }

@@ -2,10 +2,8 @@ package com.ayla.hotelsaas.mvp.present;
 
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.mvp.view.RoomManageView;
 import com.ayla.hotelsaas.mvp.view.RoomMoreView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -42,13 +40,13 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
                     @Override
                     public void _onNext(String data) {
 
-                        mView.operateSuccess(reName);
+                        mView.renameSuccess(reName);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
 
-                        mView.operateError(msg);
+                        mView.renameFailed(msg);
                     }
 
                     @Override
@@ -79,13 +77,13 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
                     @Override
                     public void _onNext(String data) {
 
-                        mView.operateRemoveSuccess(data);
+                        mView.removeSuccess(data);
                     }
 
                     @Override
                     public void _onError(String code, String msg) {
 
-                        mView.operateMoveFailSuccess(code, msg);
+                        mView.removeFailed(code, msg);
                     }
 
                     @Override

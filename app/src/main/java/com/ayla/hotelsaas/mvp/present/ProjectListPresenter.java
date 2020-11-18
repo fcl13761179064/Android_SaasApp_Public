@@ -26,7 +26,7 @@ public class ProjectListPresenter extends BasePresenter<ProjectListView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-mView.onRequestFailed(throwable);
+                        mView.onRequestFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);

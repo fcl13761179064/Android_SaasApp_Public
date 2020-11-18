@@ -53,7 +53,7 @@ public class RuleEnginePresenter extends BasePresenter<RuleEngineView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.loadDataFinish();
+                        mView.loadDataFailed();
                     }
                 });
         addSubscrebe(subscribe);
