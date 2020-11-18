@@ -123,8 +123,6 @@ dependencies {
     implementation rootProject.libraries.logging_interceptor
     implementation rootProject.libraries.adapter_rxjava
     implementation rootProject.libraries.autosize
-    implementation rootProject.libraries.SmartRefreshLayout
-    implementation rootProject.libraries.SmartRefreshHeader
     implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
     implementation  'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
     implementation  'com.scwang.smart:refresh-footer-classics:2.0.1'    //经典加载

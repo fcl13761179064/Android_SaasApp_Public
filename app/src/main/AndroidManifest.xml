@@ -43,10 +43,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.RoomOrderListActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.DeviceAddCategoryActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -135,10 +131,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.TouchPanelSettingActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.WorkRoomManageActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
