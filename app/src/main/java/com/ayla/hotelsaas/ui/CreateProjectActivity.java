@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.mvp.present.CreateProjectPresenter;
 import com.ayla.hotelsaas.mvp.view.CreateProjectView;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
@@ -131,7 +132,11 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
 
     @Override
     public void onFailed(Throwable throwable) {
-        CustomToast.makeText(this, "创建失败", R.drawable.ic_toast_warming).show();
+        String msg = "创建失败";
+        if (throwable instanceof RxjavaFlatmapThrowable) {
+            msg = ((RxjavaFlatmapThrowable) throwable).getMsg();
+        }
+        CustomToast.makeText(this, msg, R.drawable.ic_toast_warming).show();
     }
 
     @Override
