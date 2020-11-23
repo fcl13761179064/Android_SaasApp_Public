@@ -13,15 +13,15 @@ import com.ayla.hotelsaas.bean.RoomManageBean;
 public interface RoomMoreView extends BaseView {
 
     //错误提示
-    void operateError(String msg);
+    void renameFailed(String msg);
 
     //操作成功
-    void operateSuccess(String newName);
+    void renameSuccess(String newName);
 
     //移除成功
-    void operateRemoveSuccess(String is_rename);
+    void removeSuccess(String is_rename);
 
     //失败成功
-    void operateMoveFailSuccess(String code,String msg);
+    void removeFailed(String code, String msg);
 
 }

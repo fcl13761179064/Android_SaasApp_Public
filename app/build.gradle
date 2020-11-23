@@ -21,7 +21,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode Integer.parseInt(new Date().format("yyyyMMdd"))
-        versionName "1.5.0"
+        versionName "1.6.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
@@ -123,8 +123,9 @@ dependencies {
     implementation rootProject.libraries.logging_interceptor
     implementation rootProject.libraries.adapter_rxjava
     implementation rootProject.libraries.autosize
-    implementation rootProject.libraries.SmartRefreshLayout
-    implementation rootProject.libraries.SmartRefreshHeader
+    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
+    implementation  'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
+    implementation  'com.scwang.smart:refresh-footer-classics:2.0.1'    //经典加载
     implementation rootProject.libraries.BaseRyViewAdapHelper
     implementation rootProject.libraries.utilcode
     implementation rootProject.libraries.eventbus

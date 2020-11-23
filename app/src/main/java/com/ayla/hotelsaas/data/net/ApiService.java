@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.ConstructionBillListBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
@@ -60,7 +61,6 @@ public interface ApiService {
 
     @PUT("api/v1/construction/user/register")
     Observable<BaseResult<Boolean>> register(@Body RequestBody body);
-
 
     @POST("api/v1/construction/appuser/sendcode")
     Observable<BaseResult<Boolean>> sendSmsCode(@Body RequestBody body);
@@ -163,7 +163,7 @@ public interface ApiService {
      * @return
      */
     @GET("/api/v1/construction/device/transfer/treelist")
-    Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(@Query("hotelId") String hotelId);
+    Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(@Query("billId") String billId, @Query("hotelId") String hotelId);
 
     /**
      * 房间分配，获取房间列表 ,返回酒店下面的所有房间
@@ -204,4 +204,20 @@ public interface ApiService {
      */
     @GET("/api/v1/construction/devicetypes/{categoryId}/networkguide")
     Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(@Path("categoryId") String categoryId);
+
+    /**
+     * 获取项目单列表
+     *
+     * @return
+     */
+    @GET("/api/v1/construction/constructbill")
+    Observable<BaseResult<ConstructionBillListBean>> getConstructionBillList(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
+
+    /**
+     * 创建项目单
+     *
+     * @return
+     */
+    @POST("/api/v1/construction/constructbill")
+    Observable<BaseResult> createBill(@Body RequestBody body);
 }

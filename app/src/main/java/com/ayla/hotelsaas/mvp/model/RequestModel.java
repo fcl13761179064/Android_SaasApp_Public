@@ -4,6 +4,7 @@ package com.ayla.hotelsaas.mvp.model;
 import android.text.TextUtils;
 
 import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.ConstructionBillListBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
@@ -115,11 +116,12 @@ public class RequestModel {
         return getApiService().modifyOldPassword(new_body);
     }
 
-    public Observable<BaseResult<User>> refreshToken(String refreshToken) {
+    public Observable<User> refreshToken(String refreshToken) {
         JsonObject body = new JsonObject();
         body.addProperty("refreshToken", refreshToken);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().refreshToken(new_body);
+        return getApiService().refreshToken(new_body).compose(new BaseResultTransformer<BaseResult<User>, User>() {
+        });
     }
 
     /**
@@ -207,14 +209,14 @@ public class RequestModel {
      * @param //每页加载量
      * @return
      */
-    public Observable<BaseResult<DeviceListBean>> getDeviceList(long roomId, int pageNum, int maxNum) {
+    public Observable<DeviceListBean> getDeviceList(long roomId, int pageNum, int maxNum) {
         JsonObject body = new JsonObject();
         body.addProperty("roomId", roomId);
         body.addProperty("pageNo", pageNum);
         body.addProperty("pageSize", maxNum);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().getDeviceList(body111);
-
+        return getApiService().getDeviceList(body111).compose(new BaseResultTransformer<BaseResult<DeviceListBean>, DeviceListBean>() {
+        });
     }
 
     public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
@@ -706,8 +708,8 @@ public class RequestModel {
     /**
      * @return
      */
-    public Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(String hotelId) {
-        return getApiService().fetchTransferTreeList(hotelId);
+    public Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(String billId, String hotelId) {
+        return getApiService().fetchTransferTreeList(billId, hotelId);
     }
 
     /**
@@ -768,5 +770,27 @@ public class RequestModel {
      */
     public Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(String categoryId) {
         return getApiService().getNetworkConfigGuide(categoryId);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<ConstructionBillListBean> getConstructionBillList(int pageNo, int pageSize) {
+        return getApiService().getConstructionBillList(pageNo, pageSize)
+                .compose(new BaseResultTransformer<BaseResult<ConstructionBillListBean>, ConstructionBillListBean>() {
+                });
+    }
+
+    /**
+     * @return
+     */
+    public Observable<BaseResult> createBill(String title, int trade, int type) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("title", title);
+        jsonObject.addProperty("trade", trade);
+        jsonObject.addProperty("type", type);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().createBill(body111);
     }
 }

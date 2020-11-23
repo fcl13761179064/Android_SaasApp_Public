@@ -24,7 +24,7 @@ public class SPlashActivity extends BaseMvpActivity {
                             Intent intent = new Intent(SPlashActivity.this, LoginActivity.class);
                             startActivity(intent);
                         } else {
-                            Intent intent = new Intent(SPlashActivity.this, WorkRoomManageActivity.class);
+                            Intent intent = new Intent(SPlashActivity.this, ProjectListActivity.class);
                             startActivity(intent);
                         }
                         finish();

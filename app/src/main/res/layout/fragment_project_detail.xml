@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingTop="10dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_corner_10"
+        android:elevation="1px"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingTop="22dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="22dp">
+
+        <TextView
+            android:id="@+id/tv_01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="行业：111111111111111111111111111111111111111111111111111111111111111111111111"
+            android:textColor="#ff999999"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="类型：1111"
+            android:textColor="#ff999999"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="项目阶段：111"
+            android:textColor="#ff999999"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="施工日期：1111"
+            android:textColor="#ff999999"
+            android:textSize="14sp" />
+    </LinearLayout>
+</FrameLayout>

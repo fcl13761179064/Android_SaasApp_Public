@@ -3,7 +3,6 @@
     android:id="@+id/rl_empty_show"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F6F9"
     android:gravity="center_vertical">
 
     <ImageView

@@ -43,10 +43,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.RoomOrderListActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.DeviceAddCategoryActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -138,10 +134,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.WorkRoomManageActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.TouchPanelSceneIconSelectActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -191,10 +183,21 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.DeviceDetailH5Activity"
-            android:screenOrientation="portrait" /> <!-- X5内核 -->
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SceneActionDelaySettingActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.CreateProjectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ProjectListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ProjectMainActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
             android:label="dexopt"

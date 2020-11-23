@@ -149,10 +149,10 @@ public class RetrofitHelper {
                                                 countDownLatch.countDown();
                                             }
                                         })
-                                        .subscribe(new Consumer<BaseResult<User>>() {
+                                        .subscribe(new Consumer<User>() {
                                             @Override
-                                            public void accept(BaseResult<User> baseResult) throws Exception {
-                                                newUser[0] = baseResult.data;
+                                            public void accept(User user) throws Exception {
+                                                newUser[0] = user;
                                             }
                                         }, new Consumer<Throwable>() {
                                             @Override

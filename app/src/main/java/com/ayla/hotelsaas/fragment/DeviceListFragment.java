@@ -25,19 +25,16 @@ import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
 import com.ayla.hotelsaas.ui.DeviceDetailH5Activity;
 import com.ayla.hotelsaas.ui.DeviceMoreActivity;
 import com.ayla.hotelsaas.ui.TouchPanelActivity;
-
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -46,14 +43,13 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     private final int REQUEST_CODE_DEVICE_EDIT = 0X10;
     private final Long room_id;
     @BindView(R.id.device_recyclerview)
-    RecyclerView recyclerview;
+    RecyclerView mRecyclerview;
     @BindView(R.id.float_btn)
     FloatingActionButton float_btn;
     @BindView(R.id.device_refreshLayout)
-    SmartRefreshLayout mRefreshLayout;
+    SmartRefreshLayout mSmartRefreshLayout;
     public static int[] drawableIcon = new int[]{R.drawable.one, R.drawable.two, R.drawable.three, R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, R.drawable.eight, R.drawable.nine, R.drawable.ten, R.drawable.eleven, R.drawable.tween};
     private DeviceListAdapter mAdapter;
-    private RecyclerView mRecyclerview;
 
     public DeviceListFragment(Long room_id) {
         this.room_id = room_id;
@@ -78,14 +74,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
 
     @Override
     protected void initView(View view) {
-        mRefreshLayout = view.findViewById(R.id.device_refreshLayout);
-        mRecyclerview = view.findViewById(R.id.device_recyclerview);
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new DeviceListAdapter();
-        mRecyclerview.setAdapter(mAdapter);
-        mAdapter.bindToRecyclerView(mRecyclerview);
-        mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        mRefreshLayout.setEnableLoadMore(false);
         mRecyclerview.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -96,6 +85,12 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                 outRect.set(0, (position == 0) ? size : 0, 0, size);
             }
         });
+
+        mAdapter = new DeviceListAdapter();
+        mAdapter.bindToRecyclerView(mRecyclerview);
+        mAdapter.setEmptyView(R.layout.layout_loading);
+        mSmartRefreshLayout.setEnableRefresh(false);
+        mSmartRefreshLayout.setEnableLoadMore(false);
     }
 
     @Override
@@ -123,28 +118,18 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
                 }
             }
         });
-        mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+
+        mSmartRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                if (null != mAdapter.getData()) {
-                    mAdapter.getData().clear();
-                    mAdapter.notifyDataSetChanged();
-                }
-                if (mPresenter != null) {
-                    mPresenter.loadFistPage(room_id);
-                }
-
+                mPresenter.refresh(room_id);
             }
 
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                if (mPresenter != null) {
-                    mPresenter.loadNextPage(room_id);
-                }
+                mPresenter.loadData(room_id);
             }
         });
-
-        mRefreshLayout.autoRefresh();//自动刷新
 
         float_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,7 +145,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
 
     @Override
     protected void initData() {
-
+        mPresenter.refresh(room_id);
     }
 
     @Override
@@ -170,33 +155,48 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
 
     @Override
     public void loadDataSuccess(DeviceListBean data) {
-        final List<DeviceListBean.DevicesBean> devices = data.getDevices();
-        if (devices.isEmpty()) {
-            mAdapter.setEmptyView(R.layout.empty_device_order);
-        } else {
-            mAdapter.setNewData(devices);
+        MyApplication.getInstance().setDevicesBean(data.getDevices());
+
+        mAdapter.setEmptyView(R.layout.empty_project_list);
+        mSmartRefreshLayout.setEnableRefresh(true);
+
+        if (mSmartRefreshLayout.isRefreshing()) {
+            mSmartRefreshLayout.finishRefresh();
         }
-        MyApplication.getInstance().setDevicesBean(devices);
-        loadDataFinish();
+        mAdapter.setNewData(data.getDevices());
     }
 
     @Override
     public void loadDataFinish() {
-        mRefreshLayout.finishRefresh();
-        mRefreshLayout.finishLoadMore();
+        if (mAdapter.getData().isEmpty()) {//如果是空的数据
+            mAdapter.setEmptyView(R.layout.widget_empty_view);
+            mAdapter.getEmptyView().findViewById(R.id.bt_refresh).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapter.setEmptyView(R.layout.layout_loading);
+                    mPresenter.refresh(room_id);
+                }
+            });
+        } else {
+            mSmartRefreshLayout.setEnableRefresh(true);
+            mAdapter.setEmptyView(R.layout.empty_project_list);
+        }
+        if (mSmartRefreshLayout.isRefreshing()) {
+            mSmartRefreshLayout.finishRefresh(false);
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_DEVICE_EDIT && resultCode == Activity.RESULT_OK) {
-            mRefreshLayout.autoRefresh();
+            mSmartRefreshLayout.autoRefresh();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceRemoved(DeviceRemovedEvent event) {
-        mRefreshLayout.autoRefresh();
+        mSmartRefreshLayout.autoRefresh();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
