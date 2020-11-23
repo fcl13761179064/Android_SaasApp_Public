@@ -8,7 +8,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
@@ -21,9 +20,6 @@ import com.ayla.hotelsaas.mvp.present.MainPresenter;
 import com.ayla.hotelsaas.mvp.view.MainView;
 import com.ayla.hotelsaas.widget.AppBar;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 
 /**
@@ -32,7 +28,7 @@ import butterknife.BindView;
  * @时间 2020/7/20
  * removeEnable ,标记是否支持删除
  */
-public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements RadioGroup.OnCheckedChangeListener, MainView {
+public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements MainView {
     private static final int REQUEST_CODE_TO_MORE = 0x10;
 
     public static final int RESULT_CODE_REMOVED = 0X20;
@@ -53,7 +49,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
 
     private long mRoom_ID;
     private String mRoom_name;
-    private List<Fragment> mFragments;
     private BaseMvpFragment currentFragment;
     public final static int GO_HOME_TYPE = 0;
     public final static int GO_THREE_TYPE = 2;
@@ -71,26 +66,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         appBar.setCenterText(mRoom_name);
         appBar.setRightText("更多");
 
-        mFragments = new ArrayList<>();
-        mFragments.add(new DeviceListFragment(mRoom_ID));
-        mFragments.add(new RuleEngineFragment(mRoom_ID));
-        mFragments.add(new TestFragment());
-    }
-
-    @Override
-    protected void appBarRightTvClicked() {
-        super.appBarRightTvClicked();
-        Intent intent = new Intent(MainActivity.this, RoomMoreActivity.class);
-        intent.putExtras(getIntent());
-        startActivityForResult(intent, REQUEST_CODE_TO_MORE);
-    }
-
-    @Override
-    protected void initListener() {
         rgIndicators.check(R.id.rb_main_fragment_device);
-        rgIndicators.setOnCheckedChangeListener(this);
-        //默认选择加载首页
-        changeFragment(GO_HOME_TYPE);
 
         //定义底部标签图片大小和位置
         Drawable drawable_news = getResources().getDrawable(R.drawable.bar_bottom_device);
@@ -112,7 +88,42 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         drawable_tuijian.setBounds(0, 0, 48, 48);
         //设置图片在文字的哪个方向
         main_test.setCompoundDrawables(null, drawable_tuijian, null, null);
-        appBar.setRightText("更多");
+
+        //默认选择加载首页
+        changeFragment(GO_HOME_TYPE);
+    }
+
+    @Override
+    protected void appBarRightTvClicked() {
+        super.appBarRightTvClicked();
+        Intent intent = new Intent(MainActivity.this, RoomMoreActivity.class);
+        intent.putExtras(getIntent());
+        startActivityForResult(intent, REQUEST_CODE_TO_MORE);
+    }
+
+    @Override
+    protected void initListener() {
+        rgIndicators.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                switch (checkedId) {
+                    case R.id.rb_main_fragment_device: {
+                        changeFragment(GO_HOME_TYPE);
+                        break;
+                    }
+                    case R.id.rb_main_fragment_linkage: {
+                        changeFragment(GO_SECOND_TYPE);
+                        break;
+                    }
+                    case R.id.rb_main_fragment_test: {
+                        changeFragment(GO_THREE_TYPE);
+                        break;
+                    }
+                }
+            }
+        });
     }
 
 
@@ -167,15 +178,12 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     private BaseMvpFragment createBaseFragment(int type) {
         switch (type) {
             case GO_HOME_TYPE: {
-
                 return new DeviceListFragment(mRoom_ID);
-
             }
             case GO_SECOND_TYPE: {
                 return new RuleEngineFragment(mRoom_ID);
             }
             case GO_THREE_TYPE: {
-
                 return new TestFragment();
             }
         }
@@ -185,28 +193,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     @Override
     protected MainPresenter initPresenter() {
         return new MainPresenter();
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-        switch (checkedId) {
-            case R.id.rb_main_fragment_device: {
-                appBar.setCenterText(mRoom_name);
-                changeFragment(GO_HOME_TYPE);
-                break;
-            }
-            case R.id.rb_main_fragment_linkage: {
-                appBar.setCenterText(mRoom_name);
-                changeFragment(GO_SECOND_TYPE);
-                break;
-            }
-            case R.id.rb_main_fragment_test: {
-                appBar.setCenterText("测试");
-                changeFragment(GO_THREE_TYPE);
-                break;
-            }
-        }
     }
 
     @Override
@@ -220,6 +206,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
             }
             if (resultCode == RoomMoreActivity.RESULT_CODE_REMOVED) {
                 setResult(RESULT_CODE_REMOVED, new Intent().putExtra("roomId", mRoom_ID));
+
                 finish();
             }
         }

@@ -7,16 +7,19 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.ayla.hotelsaas.mvp.present.RoomMorePresenter;
 import com.ayla.hotelsaas.mvp.view.RoomMoreView;
-
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 
@@ -26,11 +29,14 @@ import butterknife.BindView;
 public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePresenter> implements RoomMoreView {
     public static final int RESULT_CODE_REMOVED = 0X10;
     public static final int RESULT_CODE_RENAMED = 0X11;
+    private final int REQUEST_CODE_DISTRIBUTION_ROOM = 0x12;
 
     @BindView(R.id.appBar)
     AppBar appBar;
     @BindView(R.id.rl_room_rename)
     RelativeLayout rl_room_rename;
+    @BindView(R.id.rl_room_distribution)
+    RelativeLayout rl_room_distribution;
     @BindView(R.id.tv_room_name)
     TextView tv_room_name;
     @BindView(R.id.btn_remove_room)
@@ -57,7 +63,8 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
         mRoom_name = getIntent().getStringExtra("roomName");
         tv_room_name.setText(mRoom_name);
         boolean removeEnable = getIntent().getBooleanExtra("removeEnable", false);
-        btn_remove_room.setVisibility(removeEnable?View.VISIBLE:View.GONE);
+        btn_remove_room.setVisibility(removeEnable ? View.VISIBLE : View.GONE);
+        rl_room_distribution.setVisibility(removeEnable ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -113,28 +120,49 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
                         .show(getSupportFragmentManager(), "scene_name");
             }
         });
+
+        rl_room_distribution.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RoomMoreActivity.this, DistributionHotelSelectActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_DISTRIBUTION_ROOM);
+            }
+        });
     }
 
     @Override
-    public void operateError(String msg) {
+    public void renameFailed(String msg) {
         CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
     }
 
     @Override
-    public void operateSuccess(String newName) {
+    public void renameSuccess(String newName) {
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
         setResult(RESULT_CODE_RENAMED, new Intent().putExtra("newName", newName));
+        EventBus.getDefault().post(new RoomChangedEvent(mRoom_ID, newName));
     }
 
     @Override
-    public void operateRemoveSuccess(String is_rename) {
+    public void removeSuccess(String is_rename) {
         CustomToast.makeText(this, "移除成功", R.drawable.ic_success).show();
+        Intent mainActivity = new Intent(this, ProjectListActivity.class);
+        startActivity(mainActivity);
         setResult(RESULT_CODE_REMOVED);
         finish();
     }
 
     @Override
-    public void operateMoveFailSuccess(String code, String msg) {
+    public void removeFailed(String code, String msg) {
         CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_DISTRIBUTION_ROOM && resultCode == RESULT_OK) {
+            Intent mainActivity = new Intent(this, ProjectListActivity.class);
+            startActivity(mainActivity);
+            finish();
+        }
     }
 }
