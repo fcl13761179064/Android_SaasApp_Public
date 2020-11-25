@@ -4,7 +4,7 @@ package com.ayla.hotelsaas.mvp.model;
 import android.text.TextUtils;
 
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.ConstructionBillListBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
@@ -21,7 +21,6 @@ import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
-import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
@@ -131,8 +130,10 @@ public class RequestModel {
      * @param maxNum  每页加载量
      * @return
      */
-    public Observable<BaseResult<WorkOrderBean>> getWorkOrderList(int pageNum, int maxNum) {
-        return getApiService().getWorkOrders(pageNum, maxNum);
+    public Observable<WorkOrderBean> getWorkOrderList(int pageNum, int maxNum) {
+        return getApiService().getWorkOrders(pageNum, maxNum)
+                .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
+                });
     }
 
 
@@ -775,15 +776,6 @@ public class RequestModel {
     /**
      * @return
      */
-    public Observable<ConstructionBillListBean> getConstructionBillList(int pageNo, int pageSize) {
-        return getApiService().getConstructionBillList(pageNo, pageSize)
-                .compose(new BaseResultTransformer<BaseResult<ConstructionBillListBean>, ConstructionBillListBean>() {
-                });
-    }
-
-    /**
-     * @return
-     */
     public Observable<BaseResult> createBill(String title, int trade, int type) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("title", title);
@@ -791,6 +783,6 @@ public class RequestModel {
         jsonObject.addProperty("type", type);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().createBill(body111);
+        return getApiService().createWorkOrder(body111);
     }
 }

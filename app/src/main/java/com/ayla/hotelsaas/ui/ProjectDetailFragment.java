@@ -7,9 +7,8 @@ import android.widget.TextView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.ConstructionBillListBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -28,7 +27,7 @@ public class ProjectDetailFragment extends BaseMvpFragment {
     @BindView(R.id.tv_04)
     TextView textView04;
 
-    public static ProjectDetailFragment newInstance(ConstructionBillListBean.ResultListBean bean) {
+    public static ProjectDetailFragment newInstance(WorkOrderBean.ResultListBean bean) {
 
         Bundle args = new Bundle();
         args.putSerializable("bean", bean);
@@ -49,7 +48,7 @@ public class ProjectDetailFragment extends BaseMvpFragment {
 
     @Override
     protected void initView(View view) {
-        ConstructionBillListBean.ResultListBean bean = (ConstructionBillListBean.ResultListBean) getArguments().getSerializable("bean");
+        WorkOrderBean.ResultListBean bean = (WorkOrderBean.ResultListBean) getArguments().getSerializable("bean");
 
         String trade = null;
         switch (bean.getTrade()) {

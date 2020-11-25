@@ -1,7 +1,7 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.ConstructionBillListBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 
@@ -14,12 +14,12 @@ public class ProjectListPresenter extends BasePresenter<ProjectListView> {
     private int currentPage = 1;
 
     public void loadData() {
-        Disposable subscribe = RequestModel.getInstance().getConstructionBillList(currentPage, 50)
+        Disposable subscribe = RequestModel.getInstance().getWorkOrderList(currentPage, 50)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ConstructionBillListBean>() {
+                .subscribe(new Consumer<WorkOrderBean>() {
                     @Override
-                    public void accept(ConstructionBillListBean constructionBillListBean) throws Exception {
+                    public void accept(WorkOrderBean constructionBillListBean) throws Exception {
                         currentPage++;
                         mView.showData(constructionBillListBean);
                     }

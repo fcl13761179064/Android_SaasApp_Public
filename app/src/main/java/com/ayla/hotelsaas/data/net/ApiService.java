@@ -1,7 +1,7 @@
 package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.ConstructionBillListBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
@@ -18,18 +18,13 @@ import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
-import com.ayla.hotelsaas.bean.WorkOrderBean;
 
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
-import retrofit2.http.FieldMap;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -94,6 +89,14 @@ public interface ApiService {
 
     @GET("api/v1/construction/constructbill")
     Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
+
+    /**
+     * 创建项目单
+     *
+     * @return
+     */
+    @POST("/api/v1/construction/constructbill")
+    Observable<BaseResult> createWorkOrder(@Body RequestBody body);
 
     @GET("api/v1/construction/billrooms")
     Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("billId") String billId);
@@ -204,20 +207,4 @@ public interface ApiService {
      */
     @GET("/api/v1/construction/devicetypes/{categoryId}/networkguide")
     Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(@Path("categoryId") String categoryId);
-
-    /**
-     * 获取项目单列表
-     *
-     * @return
-     */
-    @GET("/api/v1/construction/constructbill")
-    Observable<BaseResult<ConstructionBillListBean>> getConstructionBillList(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
-
-    /**
-     * 创建项目单
-     *
-     * @return
-     */
-    @POST("/api/v1/construction/constructbill")
-    Observable<BaseResult> createBill(@Body RequestBody body);
 }

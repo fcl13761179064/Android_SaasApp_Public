@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.bean.ConstructionBillListBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.blankj.utilcode.util.SizeUtils;
@@ -98,14 +98,14 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                ConstructionBillListBean.ResultListBean item = mAdapter.getItem(position);
+                WorkOrderBean.ResultListBean item = mAdapter.getItem(position);
                 startActivity(new Intent(getApplicationContext(), ProjectMainActivity.class).putExtra("bean", item));
             }
         });
     }
 
     @Override
-    public void showData(ConstructionBillListBean data) {
+    public void showData(WorkOrderBean data) {
         mAdapter.setEmptyView(R.layout.empty_project_list);
         mSmartRefreshLayout.setEnableRefresh(true);
         mSmartRefreshLayout.setEnableLoadMore(true);
