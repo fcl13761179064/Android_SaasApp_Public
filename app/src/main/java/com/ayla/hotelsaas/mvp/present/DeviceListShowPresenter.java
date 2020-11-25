@@ -47,7 +47,7 @@ public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.loadDataFinish();
+                        mView.loadDataFinish(throwable);
                     }
                 });
         addSubscrebe(subscribe);

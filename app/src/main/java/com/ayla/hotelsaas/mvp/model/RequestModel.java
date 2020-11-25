@@ -72,12 +72,13 @@ public class RequestModel {
         return RetrofitHelper.getApiService();
     }
 
-    public Observable<BaseResult<User>> login(String account, String password) {
+    public Observable<User> login(String account, String password) {
         JsonObject body = new JsonObject();
         body.addProperty("account", account);
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().login(1, new_body);
+        return getApiService().login(1, new_body).compose(new BaseResultTransformer<BaseResult<User>, User>() {
+        });
     }
 
     public Observable<BaseResult<Boolean>> register(String user_name, String account, String password) {
@@ -159,7 +160,6 @@ public class RequestModel {
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().createRoom(body111);
     }
-
 
     /**
      * 重新命名房间号
@@ -284,8 +284,9 @@ public class RequestModel {
      * @param scopeId
      * @return
      */
-    public Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(long scopeId) {
-        return getApiService().fetchRuleEngines(scopeId);
+    public Observable<List<RuleEngineBean>> fetchRuleEngines(long scopeId) {
+        return getApiService().fetchRuleEngines(scopeId).compose(new BaseResultTransformer<BaseResult<List<RuleEngineBean>>, List<RuleEngineBean>>() {
+        });
     }
 
 
@@ -695,8 +696,9 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<PersonCenter>> getUserInfo() {
-        return getApiService().getUserInfo();
+    public Observable<PersonCenter> getUserInfo() {
+        return getApiService().getUserInfo().compose(new BaseResultTransformer<BaseResult<PersonCenter>, PersonCenter>() {
+        });
     }
 
     /**

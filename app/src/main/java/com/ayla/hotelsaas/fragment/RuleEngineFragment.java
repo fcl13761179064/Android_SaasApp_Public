@@ -33,6 +33,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -153,7 +154,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
 
     @Override
     public void loadDataSuccess(List<BaseSceneBean> data) {
-        if (mFrameLayout.getChildCount() !=1) {
+        if (mFrameLayout.getChildCount() != 1) {
             mFrameLayout.removeViewAt(mFrameLayout.getChildCount() - 1);
         }
         mSmartRefreshLayout.setVisibility(View.VISIBLE);
@@ -181,8 +182,8 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
     }
 
     @Override
-    public void loadDataFailed() {
-        if (mFrameLayout.getChildCount() !=1) {
+    public void loadDataFailed(Throwable throwable) {
+        if (mFrameLayout.getChildCount() != 1) {
             mFrameLayout.removeViewAt(mFrameLayout.getChildCount() - 1);
             View view = LayoutInflater.from(getContext()).inflate(R.layout.widget_empty_view, null);
             mFrameLayout.addView(view);
@@ -195,6 +196,10 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                 }
             });
             mSmartRefreshLayout.setVisibility(View.INVISIBLE);
+        } else {
+            if (throwable instanceof UnknownHostException) {
+                CustomToast.makeText(getContext(), R.string.request_not_connect, R.drawable.ic_toast_warming).show();
+            }
         }
         if (mSmartRefreshLayout.isRefreshing()) {
             mSmartRefreshLayout.finishRefresh(false);

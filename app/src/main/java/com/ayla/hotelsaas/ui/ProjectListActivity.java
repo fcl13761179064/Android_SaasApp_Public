@@ -16,11 +16,14 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
+import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
+
+import java.net.UnknownHostException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -116,7 +119,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else if (mSmartRefreshLayout.isLoading()) {
             mSmartRefreshLayout.finishLoadMore();
             mAdapter.addData(data.getResultList());
-        }else{
+        } else {
             mAdapter.setNewData(data.getResultList());
         }
 
@@ -135,9 +138,12 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
                     mPresenter.refresh();
                 }
             });
-        }else{
+        } else {
             mSmartRefreshLayout.setEnableRefresh(true);
             mAdapter.setEmptyView(R.layout.empty_project_list);
+            if (throwable instanceof UnknownHostException) {
+                CustomToast.makeText(this,R.string.request_not_connect, R.drawable.ic_toast_warming).show();
+            }
         }
         if (mSmartRefreshLayout.isRefreshing()) {
             mSmartRefreshLayout.finishRefresh(false);

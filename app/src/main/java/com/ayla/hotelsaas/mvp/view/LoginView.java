@@ -10,15 +10,8 @@ import com.ayla.hotelsaas.bean.User;
  */
 public interface LoginView extends BaseView {
 
-    //获取账号
-    String getAccount();
-
-    //密码
-    String getPassword();
-
-    //错误提示
-    void errorShake(int type, int CycleTimes, String msg);
-
     //登录成功
     void loginSuccess(User data);
+
+    void loginFailed(Throwable throwable);
 }

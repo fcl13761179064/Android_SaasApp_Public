@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.ui.LoginActivity;

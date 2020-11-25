@@ -16,6 +16,8 @@ import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 
+import java.net.UnknownHostException;
+
 import butterknife.BindView;
 
 public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, PersonCenterPresenter> implements PersonCenterView {
@@ -53,7 +55,7 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
             public void onClick(View v) {
                 Intent intent = new Intent(PersonCenterActivity.this, H5BaseActivity.class);
                 intent.putExtra("pageTitle", "帮助中心");
-                intent.putExtra("url", Constance.getAssistantBaseUrl()+"/trainingPage.html");
+                intent.putExtra("url", Constance.getAssistantBaseUrl() + "/trainingPage.html");
                 startActivity(intent);
             }
         });
@@ -85,7 +87,11 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
     }
 
     @Override
-    public void getUserInfoFail(String code, String msg) {
+    public void getUserInfoFail(Throwable throwable) {
+        String msg = "未知错误";
+        if (throwable instanceof UnknownHostException) {
+            msg = getString(R.string.request_not_connect);
+        }
         CustomToast.makeText(MyApplication.getContext(), msg, R.drawable.ic_toast_warming).show();
     }
 

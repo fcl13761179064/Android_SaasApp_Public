@@ -6,7 +6,7 @@ import com.ayla.hotelsaas.bean.PersonCenter;
 public interface PersonCenterView extends BaseView {
 
     //错误提示
-    void getUserInfoFail(String code,String msg);
+    void getUserInfoFail(Throwable throwable);
 
     //操作成功
     void getUserInfoFailSuccess(PersonCenter personCenter);

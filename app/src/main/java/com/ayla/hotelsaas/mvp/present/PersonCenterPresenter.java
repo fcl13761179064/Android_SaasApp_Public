@@ -2,13 +2,12 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.PersonCenter;
-import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 import com.ayla.hotelsaas.mvp.view.PersonCenterView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -20,31 +19,32 @@ import io.reactivex.schedulers.Schedulers;
 public class PersonCenterPresenter extends BasePresenter<PersonCenterView> {
 
     public void getUserInfo() {
-        RequestModel.getInstance().getUserInfo()
+        Disposable subscribe = RequestModel.getInstance().getUserInfo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
                     }
                 })
-                .subscribe(new RxjavaObserver<PersonCenter>() {
-
+                .doFinally(new Action() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
-
+                    public void run() throws Exception {
+                        mView.hideProgress();
                     }
-
+                })
+                .subscribe(new Consumer<PersonCenter>() {
                     @Override
-                    public void _onNext(PersonCenter data) {
-                        mView.getUserInfoFailSuccess(data);
+                    public void accept(PersonCenter personCenter) throws Exception {
+                        mView.getUserInfoFailSuccess(personCenter);
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void _onError(String code, String msg) {
-                        mView.getUserInfoFail(code, msg);
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.getUserInfoFail(throwable);
                     }
                 });
+        addSubscrebe(subscribe);
     }
 }
