@@ -92,7 +92,7 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
         if (throwable instanceof UnknownHostException) {
             msg = getString(R.string.request_not_connect);
         }
-        CustomToast.makeText(MyApplication.getContext(), msg, R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(MyApplication.getContext(), msg, R.drawable.ic_toast_warming);
     }
 
     @Override

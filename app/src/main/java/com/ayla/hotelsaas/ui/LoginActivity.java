@@ -70,17 +70,17 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         String password = edit_password.getText().toString();
 
         if (TextUtils.isEmpty(account)) {
-            CustomToast.makeText(MyApplication.getContext(), "登录账号不能为空", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "登录账号不能为空", R.drawable.ic_toast_warming);
             errorShake(1, 2, "");
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            CustomToast.makeText(MyApplication.getContext(), "登陆密码不能为空", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "登陆密码不能为空", R.drawable.ic_toast_warming);
             errorShake(2, 2, "");
             return;
         }
         if (!RegexUtils.isEmail(account) && !RegexUtils.isMobileSimple(account)) {
-            CustomToast.makeText(MyApplication.getContext(), R.string.account_error, R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), R.string.account_error, R.drawable.ic_toast_warming);
             return;
         }
         SoftInputUtil.hideSysSoftInput(LoginActivity.this);

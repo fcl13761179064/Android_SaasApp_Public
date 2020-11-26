@@ -89,7 +89,7 @@ public class AutoRunFragment extends BaseMvpFragment<AutoRunView, AutoRunFragmen
 
     @Override
     public void changeSuccess() {
-        CustomToast.makeText(getContext(), "修改成功", R.drawable.ic_success).show();
+        CustomToast.makeText(getContext(), "修改成功", R.drawable.ic_success);
         Fragment parentFragment = getParentFragment();
         if (parentFragment instanceof RuleEngineFragment) {
             ((RuleEngineFragment) parentFragment).notifyRefresh();
@@ -98,7 +98,7 @@ public class AutoRunFragment extends BaseMvpFragment<AutoRunView, AutoRunFragmen
 
     @Override
     public void changeFailed(BaseSceneBean ruleEngineBean) {
-        CustomToast.makeText(getContext(), "修改失败", R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(getContext(), "修改失败", R.drawable.ic_toast_warming);
         for (int i = 0; i < mAdapter.getData().size(); i++) {
             BaseSceneBean bean = mAdapter.getData().get(i);
             if (bean.getRuleId() == ruleEngineBean.getRuleId()) {

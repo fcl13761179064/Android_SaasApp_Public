@@ -117,7 +117,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                                             if (TempUtils.isDeviceOnline(gateway)) {//网关在线
                                                 intent.putExtra("targetGateway", gateway.getDeviceId());
                                             } else {
-                                                CustomToast.makeText(getContext(), "请确保网关在线", R.drawable.ic_toast_warming).show();
+                                                CustomToast.makeText(getContext(), "请确保网关在线", R.drawable.ic_toast_warming);
                                                 return;
                                             }
                                         } else {
@@ -126,7 +126,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                                             return;
                                         }
                                     } else {
-                                        CustomToast.makeText(getContext(), "请先添加网关", R.drawable.ic_toast_warming).show();
+                                        CustomToast.makeText(getContext(), "请先添加网关", R.drawable.ic_toast_warming);
                                         return;
                                     }
                                 }
@@ -198,7 +198,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
             mSmartRefreshLayout.setVisibility(View.INVISIBLE);
         } else {
             if (throwable instanceof UnknownHostException) {
-                CustomToast.makeText(getContext(), R.string.request_not_connect, R.drawable.ic_toast_warming).show();
+                CustomToast.makeText(getContext(), R.string.request_not_connect, R.drawable.ic_toast_warming);
             }
         }
         if (mSmartRefreshLayout.isRefreshing()) {

@@ -142,7 +142,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             mSmartRefreshLayout.setEnableRefresh(true);
             mAdapter.setEmptyView(R.layout.empty_project_list);
             if (throwable instanceof UnknownHostException) {
-                CustomToast.makeText(this,R.string.request_not_connect, R.drawable.ic_toast_warming).show();
+                CustomToast.makeText(this,R.string.request_not_connect, R.drawable.ic_toast_warming);
             }
         }
         if (mSmartRefreshLayout.isRefreshing()) {

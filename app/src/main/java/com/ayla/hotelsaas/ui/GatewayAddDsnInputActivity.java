@@ -41,7 +41,7 @@ public class GatewayAddDsnInputActivity extends BaseMvpActivity {
     public void handleJump() {
         String dsn = mDSNEditText.getText().toString();
         if (dsn.length() == 0) {
-            CustomToast.makeText(this, "设备ID号输入不能为空", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(this, "设备ID号输入不能为空", R.drawable.ic_toast_warming);
         } else {
             setResult(RESULT_OK, new Intent().putExtra("result", dsn));
             finish();

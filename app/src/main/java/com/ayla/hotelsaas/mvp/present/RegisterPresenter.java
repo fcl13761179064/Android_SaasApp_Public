@@ -30,22 +30,22 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
         String account = mView.getAccount();
         String password = mView.getPassword();
         if (TextUtils.isEmpty(userName)) {
-            CustomToast.makeText(MyApplication.getContext(), "用户名不能为空", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "用户名不能为空", R.drawable.ic_toast_warming);
             mView.errorShake(1, 2, "");
             return;
         }
         if (TextUtils.isEmpty(account)) {
-            CustomToast.makeText(MyApplication.getContext(), "账号不能为空", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "账号不能为空", R.drawable.ic_toast_warming);
             mView.errorShake(1, 2, "");
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            CustomToast.makeText(MyApplication.getContext(), "密码不能为空", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "密码不能为空", R.drawable.ic_toast_warming);
             mView.errorShake(2, 2, "");
             return;
         }
         if (password.length() < 6) {
-            CustomToast.makeText(MyApplication.getContext(), "密码长度不能小于6位", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "密码长度不能小于6位", R.drawable.ic_toast_warming);
             mView.errorShake(2, 2, "");
             return;
         }
@@ -54,7 +54,7 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
         } else if (RegexUtils.isMobileSimple(account)) {
             register(userName, account, password);
         } else {
-            CustomToast.makeText(MyApplication.getContext(), R.string.account_error, R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), R.string.account_error, R.drawable.ic_toast_warming);
         }
     }
 

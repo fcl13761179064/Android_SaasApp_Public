@@ -4,10 +4,14 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.MainThread;
+
+import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
+import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.LogUtils;
@@ -89,6 +93,25 @@ public class RetrofitHelper {
         builder.addInterceptor(CommonParameterInterceptor);
         //登录失败 重新登录
         builder.addInterceptor(ReloginInterceptor);
+        //拦截403无访问权限的异常
+        builder.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                //原始接口请求
+                Request originalRequest = chain.request();
+                //原始接口结果
+                Response originalResponse = chain.proceed(originalRequest);
+
+                MediaType mediaType = originalResponse.body().contentType();
+                String content = originalResponse.body().string();
+                originalResponse.body().close();
+                if (originalResponse.code() == 403) {
+                    CustomToast.makeText(MyApplication.getContext(), "无访问权限", R.drawable.ic_toast_warming);
+                    jump2Main();
+                }
+                return originalResponse.newBuilder().body(ResponseBody.create(mediaType, content)).build();
+            }
+        });
         httpLoggingInterceptor.setLevel(Constance.isNetworkDebug() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.BASIC);
         builder.addInterceptor(httpLoggingInterceptor);
         builder.retryOnConnectionFailure(true);
@@ -128,6 +151,7 @@ public class RetrofitHelper {
 
             MediaType mediaType = originalResponse.body().contentType();
             String content = originalResponse.body().string();
+            originalResponse.body().close();
             if (originalResponse.isSuccessful()) {
                 try {
                     JSONObject jsonObject = new JSONObject(content);
@@ -184,14 +208,14 @@ public class RetrofitHelper {
             }
             return originalResponse.newBuilder().body(ResponseBody.create(mediaType, content)).build();
         }
-
-        private void jump2Main() {
-            SharePreferenceUtils.remove(MyApplication.getContext(), Constance.SP_Login_Token);
-            SharePreferenceUtils.remove(MyApplication.getContext(), Constance.SP_Refresh_Token);
-            //跳转到首页
-            Intent intent = new Intent(MyApplication.getContext(), LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            MyApplication.getContext().startActivity(intent);
-        }
     };
+
+    private static void jump2Main() {
+        SharePreferenceUtils.remove(MyApplication.getContext(), Constance.SP_Login_Token);
+        SharePreferenceUtils.remove(MyApplication.getContext(), Constance.SP_Refresh_Token);
+        //跳转到首页
+        Intent intent = new Intent(MyApplication.getContext(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        MyApplication.getContext().startActivity(intent);
+    }
 }

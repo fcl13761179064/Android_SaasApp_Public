@@ -92,7 +92,7 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
                             @Override
                             public void onDone(DialogFragment dialog, String txt) {
                                 if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
-                                    CustomToast.makeText(getBaseContext(), "修改场景名称不能为空", R.drawable.ic_toast_warming).show();
+                                    CustomToast.makeText(getBaseContext(), "修改场景名称不能为空", R.drawable.ic_toast_warming);
                                 } else {
                                     tv_touchpanel_rename.setText(txt);
                                     if (mDevicesBean != null) {
@@ -116,12 +116,12 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
 
     @Override
     public void operateError(String msg) {
-        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming);
     }
 
     @Override
     public void operateSuccess(Boolean is_rename) {
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
         setResult(RESULT_OK);
     }
 

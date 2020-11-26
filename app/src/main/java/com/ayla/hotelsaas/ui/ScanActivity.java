@@ -62,7 +62,7 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
                                 }
                             });
                         } else if (permission.shouldShowRequestPermissionRationale) {
-                            CustomToast.makeText(getBaseContext(), "请允许使用相机权限", R.drawable.ic_toast_warming).show();
+                            CustomToast.makeText(getBaseContext(), "请允许使用相机权限", R.drawable.ic_toast_warming);
                         } else if (firstLoad) {
                             firstLoad = false;
                             CustomAlarmDialog
@@ -137,7 +137,7 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
 
     @Override
     public void onScanQRCodeOpenCameraError() {
-        CustomToast.makeText(getBaseContext(), "打开相机出错", R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(getBaseContext(), "打开相机出错", R.drawable.ic_toast_warming);
         finish();
     }
 

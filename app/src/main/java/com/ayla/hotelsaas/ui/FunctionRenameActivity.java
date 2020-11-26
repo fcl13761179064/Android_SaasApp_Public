@@ -84,7 +84,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
                             @Override
                             public void onDone(DialogFragment dialog, String txt) {
                                 if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
-                                    CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming).show();
+                                    CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming);
                                     return;
                                 } else {
                                     if (mDevicesBean != null) {
@@ -94,7 +94,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
                                                 continue;
                                             }
                                             if (TextUtils.equals(item.getPropertyNickname(), txt) || TextUtils.equals(item.getPropertyName(), txt)) {
-                                                CustomToast.makeText(getBaseContext(), "不能和其他开关重名", R.drawable.ic_toast_warming).show();
+                                                CustomToast.makeText(getBaseContext(), "不能和其他开关重名", R.drawable.ic_toast_warming);
                                                 return;
                                             }
                                         }
@@ -131,13 +131,13 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
 
     @Override
     public void renameSuccess() {
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
         loadData();
     }
 
     @Override
     public void renameFailed() {
-        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming);
     }
 
     private void loadData() {
