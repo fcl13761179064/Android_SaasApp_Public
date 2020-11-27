@@ -59,13 +59,48 @@
             android:src="@drawable/ic_menu_item_arrow_right" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_check_upgrade"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/appBar"
+        android:layout_marginTop="10dp"
+        android:background="#FFFFFF"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="更新版本"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:id="@+id/tv_version_code"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="40dp"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_menu_item_arrow_right" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_log_out"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_below="@id/appBar"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:background="#FFFFFF"
         android:gravity="center"
         android:paddingLeft="16dp"

@@ -26,6 +26,7 @@ public class CustomAlarmDialog extends DialogFragment {
         return fragment;
     }
 
+    private Callback doneCallback;
 
     private String title;
 
@@ -41,7 +42,19 @@ public class CustomAlarmDialog extends DialogFragment {
         return this;
     }
 
-    private Callback doneCallback;
+    private String cancelText;
+
+    public CustomAlarmDialog setCancelText(String cancelText) {
+        this.cancelText = cancelText;
+        return this;
+    }
+
+    private String ensureText;
+
+    public CustomAlarmDialog setEnsureText(String ensureText) {
+        this.ensureText = ensureText;
+        return this;
+    }
 
     @Nullable
     @Override
@@ -54,7 +67,8 @@ public class CustomAlarmDialog extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.v_done).setOnClickListener(new View.OnClickListener() {
+        TextView ensureTextView = view.findViewById(R.id.v_done);
+        ensureTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (doneCallback != null) {
@@ -62,7 +76,11 @@ public class CustomAlarmDialog extends DialogFragment {
                 }
             }
         });
-        view.findViewById(R.id.v_cancel).setOnClickListener(new View.OnClickListener() {
+        if (!TextUtils.isEmpty(ensureText)) {
+            ensureTextView.setText(ensureText);
+        }
+        TextView cancelTextView = view.findViewById(R.id.v_cancel);
+        cancelTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (doneCallback != null) {
@@ -70,11 +88,14 @@ public class CustomAlarmDialog extends DialogFragment {
                 }
             }
         });
+        if (!TextUtils.isEmpty(cancelText)) {
+            cancelTextView.setText(cancelText);
+        }
         TextView titleTextView = view.findViewById(R.id.tv_title);
         TextView contentTextView = view.findViewById(R.id.tv_content);
-        if(TextUtils.isEmpty(title)){
+        if (TextUtils.isEmpty(title)) {
             titleTextView.setVisibility(View.GONE);
-        }else{
+        } else {
             titleTextView.setVisibility(View.VISIBLE);
             titleTextView.setText(title);
         }

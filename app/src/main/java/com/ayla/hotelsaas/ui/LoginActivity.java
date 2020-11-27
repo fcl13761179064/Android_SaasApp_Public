@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -20,12 +21,14 @@ import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
+import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
+import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
 import com.blankj.utilcode.util.RegexUtils;
 
 import java.net.UnknownHostException;
@@ -53,6 +56,15 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
 
     private TranslateAnimation mShakeAnimation;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        VersionUpgradeBean upgradeBean = (VersionUpgradeBean) getIntent().getSerializableExtra("upgrade");
+        if (upgradeBean != null) {
+            UpgradeUnifiedCode.handleUpgrade(this, upgradeBean);
+        }
+    }
 
     @Override
     protected int getLayoutId() {

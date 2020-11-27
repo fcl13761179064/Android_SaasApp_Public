@@ -5,20 +5,24 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.PersonCenter;
+import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.mvp.present.PersonCenterPresenter;
 import com.ayla.hotelsaas.mvp.view.PersonCenterView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
+import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 
 import java.net.UnknownHostException;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, PersonCenterPresenter> implements PersonCenterView {
 
@@ -26,6 +30,8 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
     AppBar appBar;
     @BindView(R.id.tv_default_username)
     TextView tv_default_username;
+    @BindView(R.id.tv_version_code)
+    TextView tv_version_code;
     @BindView(R.id.rl_log_out)
     RelativeLayout rl_log_out;
     @BindView(R.id.rl_help_center)
@@ -44,7 +50,7 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
     @Override
     protected void initView() {
         appBar.setCenterText("个人中心");
-
+        tv_version_code.setText(BuildConfig.VERSION_NAME);
         mPresenter.getUserInfo();
     }
 
@@ -83,7 +89,6 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
                         .show(getSupportFragmentManager(), "");
             }
         });
-
     }
 
     @Override
@@ -99,5 +104,19 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
     public void getUserInfoFailSuccess(PersonCenter personCenter) {
         tv_default_username.setText(personCenter.getFullName());
 
+    }
+
+    @Override
+    public void onVersionResult(VersionUpgradeBean baseResult) {
+        if (baseResult != null) {
+            UpgradeUnifiedCode.handleUpgrade(this, baseResult);
+        } else {
+            CustomToast.makeText(this, "当前已是最新版本", R.drawable.ic_toast_warming);
+        }
+    }
+
+    @OnClick(R.id.rl_check_upgrade)
+    public void handleCheckUpgrade() {
+        mPresenter.fetchVersionUpdate();
     }
 }
