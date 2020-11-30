@@ -50,7 +50,7 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
     @Override
     protected void initView() {
         appBar.setCenterText("个人中心");
-        tv_version_code.setText(BuildConfig.VERSION_NAME);
+        tv_version_code.setText(String.format("Version:%s %s", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
         mPresenter.getUserInfo();
     }
 

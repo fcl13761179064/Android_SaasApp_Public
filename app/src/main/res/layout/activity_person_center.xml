@@ -9,25 +9,24 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:left_iv="@mipmap/icon_back_black"
-        app:center_tv=""/>
+        app:center_tv=""
+        app:left_iv="@mipmap/icon_back_black" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
         android:layout_gravity="center"
-        android:background="@mipmap/default_user_img"/>
+        android:layout_marginTop="36dp"
+        android:background="@mipmap/default_user_img" />
 
     <TextView
         android:id="@+id/tv_default_username"
         android:layout_width="wrap_content"
-        android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="userName"
+        android:layout_gravity="center"
         android:layout_marginTop="@dimen/dp_16"
-        android:textColor="#333333"
+        android:gravity="center"
+        android:textColor="#282828"
         android:textSize="17sp" />
 
     <RelativeLayout
@@ -77,16 +76,6 @@
             android:textColor="#333333"
             android:textSize="17sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:id="@+id/tv_version_code"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="40dp"
-            android:textColor="#333333"
-            android:textSize="17sp" />
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="14dp"
@@ -115,4 +104,15 @@
             android:textSize="17sp" />
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_version_code"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="bottom"
+        android:paddingBottom="40dp"
+        android:text="0.0.1"
+        android:textColor="#999999"
+        android:textSize="17sp" />
 </LinearLayout>
