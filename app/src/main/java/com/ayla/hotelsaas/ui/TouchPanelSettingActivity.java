@@ -131,9 +131,10 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
         if (requestCode == REQUEST_CODE_SELECT_ICON && resultCode == RESULT_OK) {//选择ICON返回结果
             int index = data.getIntExtra("index", 0);
             iv_scene_icon.setImageResource(DeviceListFragment.drawableIcon[index]);
+            mTouchPanelBean.setPictureCode(String.valueOf(index + 1));
             mPresenter.TourchPanelRenameInsertMethod(mTouchPanelBean.getPictureCodeId(), mDevicesBean.getDeviceId(),
                     mDevicesBean.getCuId(), String.valueOf(mTouchPanelBean.getSequence()), "PictureCode",
-                    String.valueOf(index + 1), mDevicesBean.getDeviceCategory());
+                    mTouchPanelBean.getPictureCode(), mDevicesBean.getDeviceCategory());
         }
     }
 }
