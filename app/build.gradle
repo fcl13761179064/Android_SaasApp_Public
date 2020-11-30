@@ -132,7 +132,7 @@ dependencies {
     implementation 'com.xw.repo:bubbleseekbar:3.20'
     implementation 'com.tencent.bugly:crashreport:3.1.9'
     implementation 'com.github.wendux:DSBridge-Android:x5-3.0-SNAPSHOT'
-    implementation 'com.github.AylaAsia:HongYanConfigLib:0.0.9'
+    implementation 'com.github.AylaAsia:HongYanConfigLib:0.0.10'
 }
 
 pact {
