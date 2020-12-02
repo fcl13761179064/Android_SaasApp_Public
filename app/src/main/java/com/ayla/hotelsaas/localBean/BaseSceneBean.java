@@ -322,6 +322,20 @@ public abstract class BaseSceneBean implements Serializable {
         }
     }
 
+    /**
+     * 酒店欢迎语动作
+     */
+    public static class WelcomeAction extends Action {
+        public WelcomeAction() {
+            setOperator("==");
+            setLeftValue("triggerWelcome");
+            setRightValueType(7);
+            setTargetDeviceId("assistantService");
+            setTargetDeviceType(DeviceType.XIAODU_SERVER);
+            setRightValue("aylaHotelRoomId");
+        }
+    }
+
     public static class EnableTime implements Serializable {
         public EnableTime() {
             isAllDay = true;

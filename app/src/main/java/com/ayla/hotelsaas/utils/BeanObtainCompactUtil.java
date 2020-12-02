@@ -111,6 +111,8 @@ public class BeanObtainCompactUtil {
                         BaseSceneBean.Action action;
                         if (actionItem.getTargetDeviceType() == 10) {//delay动作
                             action = new BaseSceneBean.DelayAction();
+                        } else if (actionItem.getTargetDeviceType() == 6) {//targetDeviceType == 6 表示调用小度服务
+                            action = new BaseSceneBean.WelcomeAction();
                         } else {//普通设备动作
                             action = new BaseSceneBean.DeviceAction();
                         }

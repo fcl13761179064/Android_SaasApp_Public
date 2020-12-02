@@ -55,6 +55,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private final int REQUEST_CODE_SELECT_ENABLE_TIME = 0X14;
     private final int REQUEST_CODE_SELECT_ACTION_TYPE = 0X15;
     private final int REQUEST_CODE_SET_DELAY_ACTION = 0X16;
+    private final int REQUEST_CODE_HOTEL_WELCOME_ACTION = 0X17;
     @BindView(R.id.rv_condition)
     public RecyclerView mConditionRecyclerView;
     @BindView(R.id.rv_action)
@@ -333,11 +334,20 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             }
         }
         if (requestCode == REQUEST_CODE_SELECT_ACTION_TYPE && resultCode == RESULT_OK) {//选择动作类型返回结果
-            boolean delay = data.getBooleanExtra("delay", false);
-            if (delay) {
-                startActivityForResult(new Intent(this, SceneActionDelaySettingActivity.class), REQUEST_CODE_SET_DELAY_ACTION);
-            } else {
-                doJumpAddActions();
+            int type = data.getIntExtra("type", 0);
+            switch (type) {
+                case 0: {
+                    doJumpAddActions();
+                }
+                break;
+                case 1: {
+                    startActivityForResult(new Intent(this, SceneActionDelaySettingActivity.class), REQUEST_CODE_SET_DELAY_ACTION);
+                }
+                break;
+                case 2: {
+                    startActivityForResult(new Intent(this, RuleEngineActionHotelWelcomeActivity.class), REQUEST_CODE_HOTEL_WELCOME_ACTION);
+                }
+                break;
             }
         }
         if (requestCode == REQUEST_CODE_SELECT_CONDITION && resultCode == RESULT_OK) {//选择条件返回结果
@@ -456,6 +466,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             BaseSceneBean.DelayAction delayAction = new BaseSceneBean.DelayAction();
             delayAction.setRightValue(String.valueOf(seconds));
             mRuleEngineBean.getActions().add(delayAction);
+            showData();
+        }
+        if (requestCode == REQUEST_CODE_HOTEL_WELCOME_ACTION && resultCode == RESULT_OK) {//酒店欢迎语动作添加返回
+            BaseSceneBean.WelcomeAction welcomeAction = new BaseSceneBean.WelcomeAction();
+            mRuleEngineBean.getActions().add(welcomeAction);
             showData();
         }
     }
@@ -621,19 +636,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @OnClick(R.id.v_add_action)
     public void jumpAddActions() {
-        if (mRuleEngineBean.getSiteType() == BaseSceneBean.SITE_TYPE.REMOTE) {//只有云端场景才可以设置延时动作。
-            if (mRuleEngineBean.getActions().size() == 0) {
-                Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
-                startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
-            } else {
-                BaseSceneBean.Action lastAction = mRuleEngineBean.getActions().get(mRuleEngineBean.getActions().size() - 1);
-                if (lastAction instanceof BaseSceneBean.DelayAction) {
-                    doJumpAddActions();
-                } else {
-                    Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
-                    startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
-                }
-            }
+        if (mRuleEngineBean.getSiteType() == BaseSceneBean.SITE_TYPE.REMOTE) {//只有云端场景才可以设置延时动作、酒店欢迎语动作，进入动作类型选择页面。
+            Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
+            mainActivity.putExtra("data", mRuleEngineBean);
+            mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
+            startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
         } else {
             doJumpAddActions();
         }

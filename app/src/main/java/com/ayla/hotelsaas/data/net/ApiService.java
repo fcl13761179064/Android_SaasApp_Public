@@ -120,7 +120,7 @@ public interface ApiService {
     @GET("api/v1/construction/scene/list/{scopeId}")
     Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Path("scopeId") long scopeId);
 
-    @POST("api/v1/construction/scene/save")
+    @POST("api/v1/build/scene/save")
     Observable<BaseResult<Boolean>> saveRuleEngine(@Body RequestBody body);
 
     @POST("api/v1/construction/scene/update")
@@ -211,4 +211,19 @@ public interface ApiService {
 
     @GET("/api/v1/build/version")
     Observable<BaseResult<VersionUpgradeBean>> getAppVersion(@Query("platform") int platform, @Query("versionCode") int versionCode);
+
+    /**
+     * 校验是房间是否绑定音响
+     * @param scopeId
+     * @return
+     */
+    @GET("/api/v1/build/scene/radio/{scopeId}")
+    Observable<BaseResult<Boolean>> checkRadioExists(@Path("scopeId") long scopeId);
+
+    /**
+     * 校验房间是否设置了欢迎语
+     * @return
+     */
+    @POST("/api/v1/build/scene/voiceRule}")
+    Observable<BaseResult<Boolean>> checkVoiceRule(@Body RequestBody body);
 }

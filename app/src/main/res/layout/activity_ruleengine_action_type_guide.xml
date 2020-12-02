@@ -65,7 +65,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl_type_one_key"
+        android:id="@+id/rl_type_delay"
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:layout_marginTop="1dp"
@@ -86,6 +86,39 @@
             android:layout_marginLeft="26dp"
             android:maxLines="1"
             android:text="延时"
+            android:textColor="#ff333333"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:layout_width="8dp"
+            android:layout_height="14dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_menu_item_arrow_right" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_type_welcome"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_marginTop="1dp"
+        android:background="#FFFFFF"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_scene_action_type_welcome" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="26dp"
+            android:maxLines="1"
+            android:text="酒店欢迎语"
             android:textColor="#ff333333"
             android:textSize="17sp" />
 
