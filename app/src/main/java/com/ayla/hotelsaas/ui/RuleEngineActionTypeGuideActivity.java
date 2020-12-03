@@ -16,6 +16,10 @@ import butterknife.OnClick;
  * 场景设备，选择动作类型
  * 进入必须带上 {@link long scopeId} 房间ID
  * {@link BaseSceneBean data}
+ * {@link Boolean hasWelcomeAction} 是否本身就包含酒店欢迎语动作
+ * <p>
+ * 返回：
+ * type 0：设备动作 1：延时动作 2：欢迎语动作
  */
 public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngineActionTypeGuideView, RuleEngineActionTypeGuidePresenter> implements RuleEngineActionTypeGuideView {
     @Override
@@ -39,12 +43,14 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
 
     private BaseSceneBean mRuleEngineBean;
     private long scopeId;
+    private boolean hasWelcomeAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mRuleEngineBean = (BaseSceneBean) getIntent().getSerializableExtra("data");
         scopeId = getIntent().getLongExtra("scopeId", 0);
+        hasWelcomeAction = getIntent().getBooleanExtra("hasWelcomeAction", false);
     }
 
     @OnClick(R.id.rl_device_changed)
@@ -54,7 +60,7 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
     }
 
     @OnClick(R.id.rl_type_delay)
-    public void handleOneKeySelect() {
+    public void handleDelaySelect() {
         if (mRuleEngineBean.getActions().size() != 0) {
             BaseSceneBean.Action lastAction = mRuleEngineBean.getActions().get(mRuleEngineBean.getActions().size() - 1);
             if (lastAction instanceof BaseSceneBean.DelayAction) {
@@ -90,7 +96,7 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
         if (result == 0) {
             setResult(RESULT_OK, new Intent().putExtra("type", 2));
             finish();
-        } else if (result == -1) {
+        } else if (result == -1) {//没有音响
             CustomAlarmDialog.newInstance()
                     .setDoneCallback(new CustomAlarmDialog.Callback() {
                         @Override
@@ -104,20 +110,33 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
                         }
                     }).setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON).setTitle("提示")
                     .setContent("未检测到该房间下有可设置的音箱，请确认是否已完成关联").show(getSupportFragmentManager(), "tip");
-        } else if (result == -2) {
-            CustomAlarmDialog.newInstance()
-                    .setDoneCallback(new CustomAlarmDialog.Callback() {
-                        @Override
-                        public void onDone(CustomAlarmDialog dialog) {
-                            dialog.dismissAllowingStateLoss();
-                        }
+        } else if (result == -2) {//已经设置了欢迎语的联动
+            //如果是编辑一个包含欢迎语动作的联动，就需要忽略这个错误
+            boolean currentExitWelcomeAction = false;
+            for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
+                if (action instanceof BaseSceneBean.WelcomeAction) {
+                    currentExitWelcomeAction = true;
+                    break;
+                }
+            }
+            if (hasWelcomeAction && !currentExitWelcomeAction) {
+                setResult(RESULT_OK, new Intent().putExtra("type", 2));
+                finish();
+            } else {
+                CustomAlarmDialog.newInstance()
+                        .setDoneCallback(new CustomAlarmDialog.Callback() {
+                            @Override
+                            public void onDone(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                            }
 
-                        @Override
-                        public void onCancel(CustomAlarmDialog dialog) {
-                            dialog.dismissAllowingStateLoss();
-                        }
-                    }).setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON).setTitle("提示")
-                    .setContent("当前房间已设置过酒店欢迎语，不可重复设置").show(getSupportFragmentManager(), "tip");
+                            @Override
+                            public void onCancel(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                            }
+                        }).setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON).setTitle("提示")
+                        .setContent("当前房间已设置过酒店欢迎语，不可重复设置").show(getSupportFragmentManager(), "tip");
+            }
         }
     }
 

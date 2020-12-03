@@ -224,6 +224,6 @@ public interface ApiService {
      * 校验房间是否设置了欢迎语
      * @return
      */
-    @POST("/api/v1/build/scene/voiceRule}")
+    @POST("/api/v1/build/scene/voiceRule")
     Observable<BaseResult<Boolean>> checkVoiceRule(@Body RequestBody body);
 }

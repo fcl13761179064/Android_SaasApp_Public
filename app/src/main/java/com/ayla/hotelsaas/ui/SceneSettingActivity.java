@@ -83,12 +83,20 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private SceneSettingConditionItemAdapter mConditionAdapter;
     private SceneSettingActionItemAdapter mActionAdapter;
 
+    private boolean actualHasWelcomeAction;//如果是已存在的场景，判断是否包含有酒店欢迎语的动作。
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Serializable sceneBean = getIntent().getSerializableExtra("sceneBean");
         if (sceneBean instanceof BaseSceneBean) {
             mRuleEngineBean = (BaseSceneBean) sceneBean;
+            for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
+                if (action instanceof BaseSceneBean.WelcomeAction) {
+                    actualHasWelcomeAction = true;
+                    break;
+                }
+            }
             mSceneNameTextView.setText(mRuleEngineBean.getRuleName());
             mDeleteView.setVisibility(View.VISIBLE);
             syncSourceAndAdapter2();
@@ -640,6 +648,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
             mainActivity.putExtra("data", mRuleEngineBean);
             mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
+            mainActivity.putExtra("hasWelcomeAction", actualHasWelcomeAction);
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
         } else {
             doJumpAddActions();
