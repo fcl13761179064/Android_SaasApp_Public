@@ -676,18 +676,36 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @OnClick(R.id.tv_delete)
     public void handleDelete() {
-        CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
-            @Override
-            public void onDone(CustomAlarmDialog dialog) {
-                dialog.dismissAllowingStateLoss();
-                mPresenter.deleteScene(mRuleEngineBean.getRuleId());
-            }
+        if (actualHasWelcomeAction) {
+            CustomAlarmDialog.newInstance()
+                    .setDoneCallback(new CustomAlarmDialog.Callback() {
+                        @Override
+                        public void onDone(CustomAlarmDialog dialog) {
+                            dialog.dismissAllowingStateLoss();
+                            mPresenter.deleteScene(mRuleEngineBean.getRuleId());
+                        }
 
-            @Override
-            public void onCancel(CustomAlarmDialog dialog) {
-                dialog.dismissAllowingStateLoss();
-            }
-        }).setTitle("确认是否移除").setContent("确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
+                        @Override
+                        public void onCancel(CustomAlarmDialog dialog) {
+                            dialog.dismissAllowingStateLoss();
+                        }
+                    })
+                    .setTitle("确认删除").setContent("删除后该房间下的音箱将不再播放欢迎语，是否删除？")
+                    .show(getSupportFragmentManager(), "delete");
+        } else {
+            CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
+                @Override
+                public void onDone(CustomAlarmDialog dialog) {
+                    dialog.dismissAllowingStateLoss();
+                    mPresenter.deleteScene(mRuleEngineBean.getRuleId());
+                }
+
+                @Override
+                public void onCancel(CustomAlarmDialog dialog) {
+                    dialog.dismissAllowingStateLoss();
+                }
+            }).setTitle("确认删除").setContent("确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
+        }
     }
 
     @OnClick(R.id.ll_join_type)
