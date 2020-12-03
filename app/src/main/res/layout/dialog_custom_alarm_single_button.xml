@@ -21,7 +21,8 @@
             android:layout_marginBottom="16dp"
             android:text="场景名称"
             android:textColor="#ff000000"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_content"
