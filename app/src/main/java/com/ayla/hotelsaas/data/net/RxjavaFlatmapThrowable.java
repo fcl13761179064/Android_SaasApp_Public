@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.data.net;
 
 import java.io.IOException;
 
-
 /**
  * @描述 自定义异常类, 当flatmap转换时上次请求数据时, 上次请求数据返回status不等于200时候使用
  * @作者 fanchunlei

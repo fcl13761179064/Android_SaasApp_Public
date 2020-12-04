@@ -75,7 +75,7 @@ public class GatewaySelectActivity extends BaseMvpActivity<ZigBeeAddSelectGatewa
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
-                    CustomToast.makeText(GatewaySelectActivity.this, "当前网关离线", R.drawable.ic_toast_warming).show();
+                    CustomToast.makeText(GatewaySelectActivity.this, "当前网关离线", R.drawable.ic_toast_warming);
                 }
             }
         });

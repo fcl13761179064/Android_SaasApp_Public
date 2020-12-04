@@ -3,25 +3,38 @@ package com.ayla.hotelsaas.bean;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @描述 工作订单的bean
- * @作者 fanchunlei
- * @时间 2020/7/14
- */
-public class WorkOrderBean implements Serializable {
+public class WorkOrderBean {
 
     /**
-     * resultList : [{"id":1,"title":"施工单1","businessId":2,"startDate":"2020-07-20T14:10:56","endDate":"2020-07-24T14:11:00","constructionStatus":1,"createId":"","createName":"json","createTime":"2020-07-20T06:11:38","updateId":"","updateName":"","updateTime":"2020-07-20T06:11:48","isDeleted":0}]
-     * currentPage : 10
-     * pageSize : 1
-     * totalPages : 20
-     * totalCount : 10
+     * resultList : [{"id":"1","title":"艾拉智慧酒店","businessId":"1298506027704045655","type":0,"startDate":"2020-08-26 06:39:15","endDate":"2020-09-30 06:39:15","constructionStatus":2,"createId":"1290198260413161513","createName":"syssuperadmin","createTime":"2020-08-26 06:39:41","updateId":"1290198260413161513","updateName":"syssuperadmin","updateTime":"2020-08-26 06:39:41","isDeleted":0,"trade":"酒店"},{"id":"6","title":"酒店版展示箱01","businessId":"1299250249302331418","type":0,"startDate":"2020-08-31 06:29:36","endDate":"2020-09-01 06:29:36","constructionStatus":2,"createId":"1290198260413161513","createName":"syssuperadmin","createTime":"2020-08-31 06:29:55","updateId":"1290198260413161513","updateName":"syssuperadmin","updateTime":"2020-08-31 06:29:55","isDeleted":0,"trade":"酒店"},{"id":"63","title":"展厅项目9","businessId":"1305418026031575122","type":0,"startDate":null,"endDate":null,"constructionStatus":2,"createId":"1298510272788484174","createName":"施工人员","createTime":"2020-11-17 03:36:45","updateId":"1298510272788484174","updateName":"施工人员","updateTime":"2020-11-17 03:36:45","isDeleted":0,"trade":""}]
+     * currentPage : 1
+     * pageSize : 20
+     * totalPages : 1
+     * totalCount : 3
      */
 
     private int currentPage;
     private int pageSize;
     private int totalPages;
     private int totalCount;
+    /**
+     * id : 1
+     * title : 艾拉智慧酒店
+     * businessId : 1298506027704045655
+     * type : 0
+     * startDate : 2020-08-26 06:39:15
+     * endDate : 2020-09-30 06:39:15
+     * constructionStatus : 2
+     * createId : 1290198260413161513
+     * createName : syssuperadmin
+     * createTime : 2020-08-26 06:39:41
+     * updateId : 1290198260413161513
+     * updateName : syssuperadmin
+     * updateTime : 2020-08-26 06:39:41
+     * isDeleted : 0
+     * trade : 酒店
+     */
+
     private List<ResultListBean> resultList;
 
     public int getCurrentPage() {
@@ -65,25 +78,10 @@ public class WorkOrderBean implements Serializable {
     }
 
     public static class ResultListBean implements Serializable {
-        /**
-         * id : 1
-         * title : 施工单1
-         * businessId : 2
-         * startDate : 2020-07-20T14:10:56
-         * endDate : 2020-07-24T14:11:00
-         * constructionStatus : 1
-         * createId :
-         * createName : json
-         * createTime : 2020-07-20T06:11:38
-         * updateId :
-         * updateName :
-         * updateTime : 2020-07-20T06:11:48
-         * isDeleted : 0
-         */
-
-        private long id;
+        private String id;
         private String title;
-        private long businessId;
+        private String businessId;
+        private int type;//0:正式 1:展箱 2:展厅
         private String startDate;
         private String endDate;
         private int constructionStatus;
@@ -94,7 +92,21 @@ public class WorkOrderBean implements Serializable {
         private String updateName;
         private String updateTime;
         private int isDeleted;
+        /**
+         * 1	酒店	酒店行业
+         * 2	家装	家装行业
+         * 3	地产	地产行业
+         * 4	公寓	公寓行业
+         */
+        private int trade;
 
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
 
         public String getTitle() {
             return title;
@@ -104,21 +116,20 @@ public class WorkOrderBean implements Serializable {
             this.title = title;
         }
 
-
-        public long getId() {
-            return id;
-        }
-
-        public void setId(long id) {
-            this.id = id;
-        }
-
-         public long getBusinessId() {
+        public String getBusinessId() {
             return businessId;
         }
 
-        public void setBusinessId(long businessId) {
+        public void setBusinessId(String businessId) {
             this.businessId = businessId;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
         }
 
         public String getStartDate() {
@@ -199,6 +210,14 @@ public class WorkOrderBean implements Serializable {
 
         public void setIsDeleted(int isDeleted) {
             this.isDeleted = isDeleted;
+        }
+
+        public int getTrade() {
+            return trade;
+        }
+
+        public void setTrade(int trade) {
+            this.trade = trade;
         }
     }
 }

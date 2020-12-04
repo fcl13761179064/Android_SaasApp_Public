@@ -62,7 +62,7 @@ public class SceneSettingRepeatDataActivity extends BaseMvpActivity {
             }
         }
         if (enables.size() == 0) {
-            CustomToast.makeText(this, "最少选择一天", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(this, "最少选择一天", R.drawable.ic_toast_warming);
             return;
         }
         int[] result = new int[enables.size()];

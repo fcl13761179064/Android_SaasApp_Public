@@ -102,7 +102,7 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
                             @Override
                             public void onDone(DialogFragment dialog, String txt) {
                                 if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
-                                    CustomToast.makeText(getBaseContext(), "修改房间名不能为空", R.drawable.ic_toast_warming).show();
+                                    CustomToast.makeText(getBaseContext(), "修改房间名不能为空", R.drawable.ic_toast_warming);
                                     return;
                                 } else {
                                     tv_room_name.setText(txt);
@@ -132,19 +132,19 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
 
     @Override
     public void renameFailed(String msg) {
-        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming);
     }
 
     @Override
     public void renameSuccess(String newName) {
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
         setResult(RESULT_CODE_RENAMED, new Intent().putExtra("newName", newName));
         EventBus.getDefault().post(new RoomChangedEvent(mRoom_ID, newName));
     }
 
     @Override
     public void removeSuccess(String is_rename) {
-        CustomToast.makeText(this, "移除成功", R.drawable.ic_success).show();
+        CustomToast.makeText(this, "移除成功", R.drawable.ic_success);
         Intent mainActivity = new Intent(this, ProjectListActivity.class);
         startActivity(mainActivity);
         setResult(RESULT_CODE_REMOVED);
@@ -153,7 +153,7 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
 
     @Override
     public void removeFailed(String code, String msg) {
-        CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming);
     }
 
     @Override

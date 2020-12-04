@@ -41,31 +41,9 @@ abstract class BasicFragment extends Fragment {
 
     protected abstract void initData();
 
-    public void showProgress(String msg) {
-        FragmentActivity activity = getActivity();
-        if (activity instanceof BaseMvpActivity) {
-            ((BaseMvpActivity) activity).showProgress(msg);
-        }
-    }
-
-    public void showProgress() {
-        FragmentActivity activity = getActivity();
-        if (activity instanceof BaseMvpActivity) {
-            ((BaseMvpActivity) activity).showProgress();
-        }
-    }
-
-    public void hideProgress() {
-        FragmentActivity activity = getActivity();
-        if (activity instanceof BaseMvpActivity) {
-            ((BaseMvpActivity) activity).hideProgress();
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
-        hideProgress();
     }
 }

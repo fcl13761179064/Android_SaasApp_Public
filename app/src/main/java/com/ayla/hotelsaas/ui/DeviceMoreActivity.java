@@ -112,7 +112,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
                             @Override
                             public void onDone(DialogFragment dialog, String newName) {
                                 if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
-                                    CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming).show();
+                                    CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming);
                                     return;
                                 } else {
                                     mPresenter.deviceRenameMethod(deviceId, newName);
@@ -132,16 +132,16 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     @Override
     public void renameFailed(String code, String msg) {
         if ("140001".equals(code)) {
-            CustomToast.makeText(this, "该名称不能重复使用", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(this, "该名称不能重复使用", R.drawable.ic_toast_warming);
         } else {
-            CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming);
         }
     }
 
     @Override
     public void renameSuccess(String newNickName) {
         tv_device_name.setText(newNickName);
-        CustomToast.makeText(this, "修改成功", R.drawable.ic_success).show();
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
         setResult(RESULT_OK);
         MyApplication.getInstance().getDevicesBean(deviceId).setNickname(newNickName);
         EventBus.getDefault().post(new DeviceChangedEvent(deviceId));
@@ -150,7 +150,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
 
     @Override
     public void removeSuccess(Boolean is_rename) {
-        CustomToast.makeText(this, "移除成功", R.drawable.ic_success).show();
+        CustomToast.makeText(this, "移除成功", R.drawable.ic_success);
         setResult(RESULT_OK);
         EventBus.getDefault().post(new DeviceRemovedEvent(deviceId));
         finish();
@@ -158,7 +158,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
 
     @Override
     public void removeFailed(String code, String msg) {
-        CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming);
     }
 
     @Override

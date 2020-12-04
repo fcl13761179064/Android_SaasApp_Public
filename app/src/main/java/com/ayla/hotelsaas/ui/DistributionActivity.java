@@ -129,14 +129,14 @@ public class DistributionActivity extends BaseMvpActivity<DistributionView, Dist
 
     @Override
     public void doSuccess(String[] rooms) {
-        CustomToast.makeText(this, "操作成功", R.drawable.ic_success).show();
+        CustomToast.makeText(this, "操作成功", R.drawable.ic_success);
         setResult(RESULT_OK, new Intent().putExtra("rooms", rooms));
         finish();
     }
 
     @Override
     public void doFailed() {
-        CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming);
     }
 
     @OnClick(R.id.ll_repeat_data)
@@ -158,7 +158,7 @@ public class DistributionActivity extends BaseMvpActivity<DistributionView, Dist
             }
         }
         if (sourceId.isEmpty()) {
-            CustomToast.makeText(this, "至少选择一个分配房间", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(this, "至少选择一个分配房间", R.drawable.ic_toast_warming);
             return;
         }
         CustomAlarmDialog

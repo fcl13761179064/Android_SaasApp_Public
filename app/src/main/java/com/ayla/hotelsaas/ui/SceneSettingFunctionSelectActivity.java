@@ -103,7 +103,7 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
 
                             if (TextUtils.equals(deviceBean.getDeviceId(), dsn)) {
                                 if (TextUtils.equals(attributesBean.getCode(), property)) {
-                                    CustomToast.makeText(getBaseContext(), "不可重复添加", R.drawable.ic_toast_warming).show();
+                                    CustomToast.makeText(getBaseContext(), "不可重复添加", R.drawable.ic_toast_warming);
                                     return;
                                 }
                             }

@@ -7,13 +7,12 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.ConstructionBillListBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.google.android.material.tabs.TabLayout;
 
@@ -22,7 +21,7 @@ import butterknife.BindView;
 /**
  * 酒店页面
  * 进入时带入参数
- * bean： {@link ConstructionBillListBean.ResultListBean}
+ * bean： {@link WorkOrderBean.ResultListBean}
  */
 public class ProjectMainActivity extends BaseMvpActivity {
     @BindView(R.id.tl_tabs)
@@ -44,7 +43,7 @@ public class ProjectMainActivity extends BaseMvpActivity {
 
     @Override
     protected void initView() {
-        ConstructionBillListBean.ResultListBean bean = (ConstructionBillListBean.ResultListBean) getIntent().getSerializableExtra("bean");
+        WorkOrderBean.ResultListBean bean = (WorkOrderBean.ResultListBean) getIntent().getSerializableExtra("bean");
 
         mAppBar.setCenterText(bean.getTitle());
 

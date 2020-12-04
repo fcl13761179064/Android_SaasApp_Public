@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.mvp.present;
 
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -32,11 +32,11 @@ public class RuleEnginePresenter extends BasePresenter<RuleEngineView> {
     public void loadData(long resourceRoomId) {
         Disposable subscribe = RequestModel.getInstance()
                 .fetchRuleEngines(resourceRoomId)
-                .map(new Function<BaseResult<List<RuleEngineBean>>, List<BaseSceneBean>>() {
+                .map(new Function<List<RuleEngineBean>, List<BaseSceneBean>>() {
                     @Override
-                    public List<BaseSceneBean> apply(BaseResult<List<RuleEngineBean>> listBaseResult) throws Exception {
+                    public List<BaseSceneBean> apply(@NonNull List<RuleEngineBean> ruleEngineBeans) throws Exception {
                         List<BaseSceneBean> sceneBeans = new ArrayList<>();
-                        for (RuleEngineBean ruleEngineBean : listBaseResult.data) {
+                        for (RuleEngineBean ruleEngineBean : ruleEngineBeans) {
                             BaseSceneBean sceneBean = BeanObtainCompactUtil.obtainSceneBean(ruleEngineBean);
                             sceneBeans.add(sceneBean);
                         }
@@ -53,7 +53,7 @@ public class RuleEnginePresenter extends BasePresenter<RuleEngineView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.loadDataFailed();
+                        mView.loadDataFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);

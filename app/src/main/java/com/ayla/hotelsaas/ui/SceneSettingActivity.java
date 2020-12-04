@@ -463,15 +463,15 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     @Override
     protected void appBarRightTvClicked() {
         if (null == mRuleEngineBean.getRuleName() || mRuleEngineBean.getRuleName().length() == 0 || mRuleEngineBean.getRuleName().trim().isEmpty()) {
-            CustomToast.makeText(SceneSettingActivity.this, "名称不能为空", R.drawable.ic_warning).show();
+            CustomToast.makeText(SceneSettingActivity.this, "名称不能为空", R.drawable.ic_warning);
             return;
         }
         if (mRuleEngineBean.getConditions().size() == 0) {
-            CustomToast.makeText(SceneSettingActivity.this, "请添加条件", R.drawable.ic_warning).show();
+            CustomToast.makeText(SceneSettingActivity.this, "请添加条件", R.drawable.ic_warning);
             return;
         }
         if (mRuleEngineBean.getActions().size() == 0) {
-            CustomToast.makeText(SceneSettingActivity.this, "请添加动作", R.drawable.ic_warning).show();
+            CustomToast.makeText(SceneSettingActivity.this, "请添加动作", R.drawable.ic_warning);
             return;
         }
         if (mRuleEngineBean.getRuleSetMode() == BaseSceneBean.RULE_SET_MODE.ALL) {//满足所有条件时
@@ -482,7 +482,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     String leftValue = ((BaseSceneBean.DeviceCondition) condition).getLeftValue();
                     String value = deviceId + leftValue;
                     if (exist.contains(value)) {
-                        CustomToast.makeText(getBaseContext(), "选择满足所有条件时，条件中不可以添加多个同一设备的同一功能", R.drawable.ic_toast_warming).show();
+                        CustomToast.makeText(getBaseContext(), "选择满足所有条件时，条件中不可以添加多个同一设备的同一功能", R.drawable.ic_toast_warming);
                         return;
                     } else {
                         exist.add(value);
@@ -492,7 +492,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         }
         BaseSceneBean.Action lastAction = mRuleEngineBean.getActions().get(mRuleEngineBean.getActions().size() - 1);
         if (lastAction instanceof BaseSceneBean.DelayAction) {//如果最后一个Action是延时，不允许
-            CustomToast.makeText(getBaseContext(), "延时后必须添加一个设备类型的动作", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(getBaseContext(), "延时后必须添加一个设备类型的动作", R.drawable.ic_toast_warming);
             return;
         }
         mPresenter.saveOrUpdateRuleEngine(mRuleEngineBean);
@@ -500,7 +500,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @Override
     public void saveSuccess() {
-        CustomToast.makeText(this, "创建成功", R.drawable.ic_success).show();
+        CustomToast.makeText(this, "创建成功", R.drawable.ic_success);
         setResult(RESULT_OK);
         finish();
     }
@@ -510,26 +510,26 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         if (throwable instanceof RxjavaFlatmapThrowable) {
             String code = ((RxjavaFlatmapThrowable) throwable).getCode();
             if ("159999".equals(code)) {
-                CustomToast.makeText(this, "该设备有异常,请移除后再创建场景", R.drawable.ic_toast_warming).show();
+                CustomToast.makeText(this, "该设备有异常,请移除后再创建场景", R.drawable.ic_toast_warming);
                 return;
             } else if ("155000".equals(code)) {
-                CustomToast.makeText(this, "场景名称已被使用", R.drawable.ic_toast_warming).show();
+                CustomToast.makeText(this, "场景名称已被使用", R.drawable.ic_toast_warming);
                 return;
             }
         }
-        CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming);
     }
 
     @Override
     public void deleteSuccess() {
-        CustomToast.makeText(this, "删除成功", R.drawable.ic_success).show();
+        CustomToast.makeText(this, "删除成功", R.drawable.ic_success);
         setResult(RESULT_OK);
         finish();
     }
 
     @Override
     public void deleteFailed() {
-        CustomToast.makeText(this, "删除失败", R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(this, "删除失败", R.drawable.ic_toast_warming);
     }
 
     @Override
@@ -572,7 +572,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     @Override
                     public void onDone(DialogFragment dialog, String txt) {
                         if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
-                            CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming).show();
+                            CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming);
                             return;
                         }
                         mSceneNameTextView.setText(txt);

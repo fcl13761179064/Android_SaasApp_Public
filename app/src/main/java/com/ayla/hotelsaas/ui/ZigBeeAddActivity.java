@@ -112,7 +112,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         if (bindProgress == 6) {
             String newName = mEditText.getText().toString();
             if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
-                CustomToast.makeText(MyApplication.getContext(), "设备名称不能为空", R.drawable.ic_toast_warming).show();
+                CustomToast.makeText(MyApplication.getContext(), "设备名称不能为空", R.drawable.ic_toast_warming);
                 return;
             }
             if (TextUtils.equals(newName, bondDeviceName)) {
@@ -272,9 +272,9 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     @Override
     public void renameFailed(String code, String msg) {
         if ("140001".equals(code)) {
-            CustomToast.makeText(this, "该名称不能重复使用", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(this, "该名称不能重复使用", R.drawable.ic_toast_warming);
         } else {
-            CustomToast.makeText(MyApplication.getContext(), "修改失败", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "修改失败", R.drawable.ic_toast_warming);
         }
     }
 }

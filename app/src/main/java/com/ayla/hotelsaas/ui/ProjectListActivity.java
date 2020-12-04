@@ -13,14 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.bean.ConstructionBillListBean;
+import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
+import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
+import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
+
+import java.net.UnknownHostException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -42,6 +47,10 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        VersionUpgradeBean upgradeBean = (VersionUpgradeBean) getIntent().getSerializableExtra("upgrade");
+        if (upgradeBean != null) {
+            UpgradeUnifiedCode.handleUpgrade(this, upgradeBean);
+        }
         mPresenter.refresh();
     }
 
@@ -98,14 +107,14 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                ConstructionBillListBean.ResultListBean item = mAdapter.getItem(position);
+                WorkOrderBean.ResultListBean item = mAdapter.getItem(position);
                 startActivity(new Intent(getApplicationContext(), ProjectMainActivity.class).putExtra("bean", item));
             }
         });
     }
 
     @Override
-    public void showData(ConstructionBillListBean data) {
+    public void showData(WorkOrderBean data) {
         mAdapter.setEmptyView(R.layout.empty_project_list);
         mSmartRefreshLayout.setEnableRefresh(true);
         mSmartRefreshLayout.setEnableLoadMore(true);
@@ -116,7 +125,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else if (mSmartRefreshLayout.isLoading()) {
             mSmartRefreshLayout.finishLoadMore();
             mAdapter.addData(data.getResultList());
-        }else{
+        } else {
             mAdapter.setNewData(data.getResultList());
         }
 
@@ -135,9 +144,12 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
                     mPresenter.refresh();
                 }
             });
-        }else{
+        } else {
             mSmartRefreshLayout.setEnableRefresh(true);
             mAdapter.setEmptyView(R.layout.empty_project_list);
+            if (throwable instanceof UnknownHostException) {
+                CustomToast.makeText(this,R.string.request_not_connect, R.drawable.ic_toast_warming);
+            }
         }
         if (mSmartRefreshLayout.isRefreshing()) {
             mSmartRefreshLayout.finishRefresh(false);
