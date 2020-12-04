@@ -65,7 +65,7 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
                     }
                 }
             }
-            CustomToast.makeText(this, "无效的设备ID号", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(this, "无效的设备ID号", R.drawable.ic_toast_warming);
         } else if (requestCode == REQUEST_CODE_FOR_DSN_SCAN && resultCode == ScanActivity.RESULT_FOR_INPUT) {//扫码页面回退到手动输入页面
             Intent mainActivity = new Intent(this, GatewayAddDsnInputActivity.class);
             startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_INPUT);

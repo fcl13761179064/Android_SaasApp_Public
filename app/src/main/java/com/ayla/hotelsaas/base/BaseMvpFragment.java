@@ -1,11 +1,12 @@
 package com.ayla.hotelsaas.base;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 /**
  * 基础Mvp Fragment
  */
-public abstract class BaseMvpFragment<V extends BaseView, T extends BasePresenter<V>> extends BasicFragment {
+public abstract class BaseMvpFragment<V extends BaseView, T extends BasePresenter<V>> extends BasicFragment implements BaseView{
     //业务处理层
     public T mPresenter;
 
@@ -34,7 +35,30 @@ public abstract class BaseMvpFragment<V extends BaseView, T extends BasePresente
 
     @Override
     public void onDestroy() {
+        hideProgress();
         detachView();
         super.onDestroy();
     }
+
+    public void showProgress(String msg) {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof BaseMvpActivity) {
+            ((BaseMvpActivity) activity).showProgress(msg);
+        }
+    }
+
+    public void showProgress() {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof BaseMvpActivity) {
+            ((BaseMvpActivity) activity).showProgress();
+        }
+    }
+
+    public void hideProgress() {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof BaseMvpActivity) {
+            ((BaseMvpActivity) activity).hideProgress();
+        }
+    }
+
 }

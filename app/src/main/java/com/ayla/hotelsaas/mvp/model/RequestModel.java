@@ -4,7 +4,8 @@ package com.ayla.hotelsaas.mvp.model;
 import android.text.TextUtils;
 
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.ConstructionBillListBean;
+import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
@@ -21,7 +22,6 @@ import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
-import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
@@ -73,12 +73,13 @@ public class RequestModel {
         return RetrofitHelper.getApiService();
     }
 
-    public Observable<BaseResult<User>> login(String account, String password) {
+    public Observable<User> login(String account, String password) {
         JsonObject body = new JsonObject();
         body.addProperty("account", account);
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().login(1, new_body);
+        return getApiService().login(1, new_body).compose(new BaseResultTransformer<BaseResult<User>, User>() {
+        });
     }
 
     public Observable<BaseResult<Boolean>> register(String user_name, String account, String password) {
@@ -131,8 +132,10 @@ public class RequestModel {
      * @param maxNum  每页加载量
      * @return
      */
-    public Observable<BaseResult<WorkOrderBean>> getWorkOrderList(int pageNum, int maxNum) {
-        return getApiService().getWorkOrders(pageNum, maxNum);
+    public Observable<WorkOrderBean> getWorkOrderList(int pageNum, int maxNum) {
+        return getApiService().getWorkOrders(pageNum, maxNum)
+                .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
+                });
     }
 
 
@@ -158,7 +161,6 @@ public class RequestModel {
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().createRoom(body111);
     }
-
 
     /**
      * 重新命名房间号
@@ -283,8 +285,9 @@ public class RequestModel {
      * @param scopeId
      * @return
      */
-    public Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(long scopeId) {
-        return getApiService().fetchRuleEngines(scopeId);
+    public Observable<List<RuleEngineBean>> fetchRuleEngines(long scopeId) {
+        return getApiService().fetchRuleEngines(scopeId).compose(new BaseResultTransformer<BaseResult<List<RuleEngineBean>>, List<RuleEngineBean>>() {
+        });
     }
 
 
@@ -694,8 +697,9 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<PersonCenter>> getUserInfo() {
-        return getApiService().getUserInfo();
+    public Observable<PersonCenter> getUserInfo() {
+        return getApiService().getUserInfo().compose(new BaseResultTransformer<BaseResult<PersonCenter>, PersonCenter>() {
+        });
     }
 
     /**
@@ -775,15 +779,6 @@ public class RequestModel {
     /**
      * @return
      */
-    public Observable<ConstructionBillListBean> getConstructionBillList(int pageNo, int pageSize) {
-        return getApiService().getConstructionBillList(pageNo, pageSize)
-                .compose(new BaseResultTransformer<BaseResult<ConstructionBillListBean>, ConstructionBillListBean>() {
-                });
-    }
-
-    /**
-     * @return
-     */
     public Observable<BaseResult> createBill(String title, int trade, int type) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("title", title);
@@ -791,6 +786,15 @@ public class RequestModel {
         jsonObject.addProperty("type", type);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().createBill(body111);
+        return getApiService().createWorkOrder(body111);
+    }
+
+    /**
+     * @return
+     */
+    public Observable<VersionUpgradeBean> getAppVersion(int versionCode) {
+//        return getApiService().getAppVersion(0,versionCode).compose(new BaseResultTransformer<BaseResult<VersionUpgradeBean>, VersionUpgradeBean>() {
+//        });
+        return Observable.error(new Throwable());
     }
 }

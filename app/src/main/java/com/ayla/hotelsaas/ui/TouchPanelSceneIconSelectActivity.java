@@ -19,7 +19,9 @@ import butterknife.OnClick;
  */
 public class TouchPanelSceneIconSelectActivity extends BaseMvpActivity {
     @BindViews({R.id.cb_function_checked_01, R.id.cb_function_checked_02, R.id.cb_function_checked_03,
-            R.id.cb_function_checked_04, R.id.cb_function_checked_05, R.id.cb_function_checked_06})
+            R.id.cb_function_checked_04, R.id.cb_function_checked_05, R.id.cb_function_checked_06,
+            R.id.cb_function_checked_07, R.id.cb_function_checked_08, R.id.cb_function_checked_09,
+            R.id.cb_function_checked_10, R.id.cb_function_checked_11, R.id.cb_function_checked_12})
     List<CheckBox> checkBoxes;
 
     @Override
@@ -60,7 +62,9 @@ public class TouchPanelSceneIconSelectActivity extends BaseMvpActivity {
     }
 
     @OnClick({R.id.rl_01, R.id.rl_02, R.id.rl_03,
-            R.id.rl_04, R.id.rl_05, R.id.rl_06})
+            R.id.rl_04, R.id.rl_05, R.id.rl_06,
+            R.id.rl_07, R.id.rl_08, R.id.rl_09,
+            R.id.rl_10, R.id.rl_11, R.id.rl_12})
     void handleClicks(View view) {
         int index = 0;
         switch (view.getId()) {
@@ -81,6 +85,24 @@ public class TouchPanelSceneIconSelectActivity extends BaseMvpActivity {
                 break;
             case R.id.rl_06:
                 index = 5;
+                break;
+            case R.id.rl_07:
+                index = 6;
+                break;
+            case R.id.rl_08:
+                index = 7;
+                break;
+            case R.id.rl_09:
+                index = 8;
+                break;
+            case R.id.rl_10:
+                index = 9;
+                break;
+            case R.id.rl_11:
+                index = 10;
+                break;
+            case R.id.rl_12:
+                index = 11;
                 break;
         }
         syncIconShow(index);

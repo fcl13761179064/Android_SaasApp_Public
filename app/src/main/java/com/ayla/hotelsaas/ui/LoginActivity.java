@@ -1,9 +1,8 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
-import android.text.Editable;
+import android.os.Bundle;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,14 +18,20 @@ import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
+import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
-
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
+import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
+import com.blankj.utilcode.util.RegexUtils;
+
+import java.net.UnknownHostException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -53,6 +58,15 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     private TranslateAnimation mShakeAnimation;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        VersionUpgradeBean upgradeBean = (VersionUpgradeBean) getIntent().getSerializableExtra("upgrade");
+        if (upgradeBean != null) {
+            UpgradeUnifiedCode.handleUpgrade(this, upgradeBean);
+        }
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
     }
@@ -63,10 +77,26 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     }
 
     @OnClick({R.id.submitBtn})
-    public void onViewClicked(View v) {
+    public void handleLogin() {
+        String account = edite_count.getText().toString();
+        String password = edit_password.getText().toString();
 
-        mPresenter.login();
+        if (TextUtils.isEmpty(account)) {
+            CustomToast.makeText(MyApplication.getContext(), "登录账号不能为空", R.drawable.ic_toast_warming);
+            errorShake(1, 2, "");
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            CustomToast.makeText(MyApplication.getContext(), "登陆密码不能为空", R.drawable.ic_toast_warming);
+            errorShake(2, 2, "");
+            return;
+        }
+        if (!RegexUtils.isEmail(account) && !RegexUtils.isMobileSimple(account)) {
+            CustomToast.makeText(MyApplication.getContext(), R.string.account_error, R.drawable.ic_toast_warming);
+            return;
+        }
         SoftInputUtil.hideSysSoftInput(LoginActivity.this);
+        mPresenter.login(account, password);
     }
 
     @Override
@@ -86,15 +116,12 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
                 return false;
             }
         });
-        edit_password.addTextChangedListener(edtWatcher);
-        edite_count.addTextChangedListener(edtWatcher);
         edit_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction()))) {
-                    mPresenter.login();
-                    SoftInputUtil.hideSysSoftInput(LoginActivity.this);
+                    handleLogin();
                     return true;
                 }
                 return false;
@@ -111,40 +138,9 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     }
 
-    private TextWatcher edtWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            tv_error_show.setVisibility(View.INVISIBLE);
-            if (!TextUtils.isEmpty(getAccount()) && !TextUtils.isEmpty(getPassword())) {
-                submitBtn.setEnabled(true);
-            } else {
-                submitBtn.setEnabled(false);
-            }
-        }
-    };
-
     @Override
     protected LoginPresenter initPresenter() {
         return new LoginPresenter();
-    }
-
-
-    @Override
-    public String getAccount() {
-        return edite_count.getText().toString();
-    }
-
-    @Override
-    public String getPassword() {
-        return edit_password.getText().toString();
     }
 
     @Override
@@ -158,7 +154,18 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     }
 
     @Override
-    public void errorShake(int type, int CycleTimes, String msg) {
+    public void loginFailed(Throwable throwable) {
+        String msg = "未知错误";
+        if (throwable instanceof RxjavaFlatmapThrowable) {
+            msg = ((RxjavaFlatmapThrowable) throwable).getMsg();
+        }
+        if (throwable instanceof UnknownHostException) {
+            msg = getString(R.string.request_not_connect);
+        }
+        errorShake(0, 2, msg);
+    }
+
+    private void errorShake(int type, int CycleTimes, String msg) {
         tv_error_show.setVisibility(View.VISIBLE);
         tv_error_show.setText(msg);
         // CycleTimes动画重复的次数

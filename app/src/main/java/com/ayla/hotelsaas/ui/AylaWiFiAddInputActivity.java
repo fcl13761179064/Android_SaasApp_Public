@@ -91,7 +91,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
             if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
                 if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
                     if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
-                        CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning).show();
+                        CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning);
                     }
                 } else {//定位权限没有
                     if (!permissionHasAsked) {
@@ -113,7 +113,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
                                                 if (deniedForever.size() > 0) {
                                                     Intent settingsIntent = IntentUtils.getLaunchAppDetailsSettingsIntent(AppUtils.getAppPackageName());
                                                     startActivity(settingsIntent);
-//                                            CustomToast.makeText(getApplicationContext(), "你拒绝了访问位置信息的授权，无法自动填充WiFi名称", R.drawable.ic_warning).show();
+//                                            CustomToast.makeText(getApplicationContext(), "你拒绝了访问位置信息的授权，无法自动填充WiFi名称", R.drawable.ic_warning);
                                                 }
                                             }
                                         }).request();
@@ -136,7 +136,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
         String name = mWiFiNameEditText.getText().toString();
         String pwd = mWiFiPasswordEditText.getText().toString();
         if (name.length() == 0) {
-            CustomToast.makeText(this, "WiFi名输入不能为空", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(this, "WiFi名输入不能为空", R.drawable.ic_toast_warming);
         } else {
             saveWifiPwd(name, pwd);
 

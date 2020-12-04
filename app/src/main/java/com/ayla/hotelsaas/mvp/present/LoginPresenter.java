@@ -1,20 +1,14 @@
 package com.ayla.hotelsaas.mvp.present;
 
-import android.text.TextUtils;
-
-import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.User;
-import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.LoginView;
-import com.ayla.hotelsaas.ui.CustomToast;
-import com.blankj.utilcode.util.RegexUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -25,33 +19,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class LoginPresenter extends BasePresenter<LoginView> {
 
-    public void login() {
-        String account = mView.getAccount();
-        String password = mView.getPassword();
-
-        if (TextUtils.isEmpty(account)) {
-            CustomToast.makeText(MyApplication.getContext(), "登录账号不能为空", R.drawable.ic_toast_warming).show();
-            mView.errorShake(1, 2, "");
-            return;
-        }
-        if (TextUtils.isEmpty(password)) {
-            CustomToast.makeText(MyApplication.getContext(), "登陆密码不能为空", R.drawable.ic_toast_warming).show();
-            mView.errorShake(2, 2, "");
-            return;
-        }
-
-        if (RegexUtils.isEmail(account)) {
-            login(account, password);
-        } else if (RegexUtils.isMobileSimple(account)) {
-            login(account, password);
-        } else {
-            CustomToast.makeText(MyApplication.getContext(), R.string.account_error, R.drawable.ic_toast_warming).show();
-        }
-    }
-
-
-    private void login(final String account, String password) {
-        RequestModel.getInstance().login(account, password)
+    public void login(final String account, String password) {
+        Disposable subscribe = RequestModel.getInstance().login(account, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -60,25 +29,23 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                         mView.showProgress("登录中...");
                     }
                 })
-                .subscribe(new RxjavaObserver<User>() {
-
+                .doFinally(new Action() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
-                    }
-
-                    @Override
-                    public void _onNext(User data) {
+                    public void run() throws Exception {
                         mView.hideProgress();
-                        mView.loginSuccess(data);
-
                     }
-
+                })
+                .subscribe(new Consumer<User>() {
                     @Override
-                    public void _onError(String code, String msg) {
-                        mView.errorShake(0, 2, msg);
-                        mView.hideProgress();
+                    public void accept(User user) throws Exception {
+                        mView.loginSuccess(user);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.loginFailed(throwable);
                     }
                 });
+        addSubscrebe(subscribe);
     }
 }

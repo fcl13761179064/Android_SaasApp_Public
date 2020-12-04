@@ -95,12 +95,6 @@ abstract class BasicActivity extends AppCompatActivity {
         }
     }
 
-    private LoadingDialog progressDialog;
-
-    public void showProgress() {
-        showProgress("加载中...");
-    }
-
     @TargetApi(17)
     public boolean isFinished() {
         if (Build.VERSION.SDK_INT >= 16) {
@@ -108,25 +102,6 @@ abstract class BasicActivity extends AppCompatActivity {
         } else {
             return isFinishing();
         }
-    }
-
-
-    public void showProgress(String msg) {
-        if (isFinished() || isDestroyed()) {
-            return;
-        }
-        if (null != progressDialog) {
-            return;
-        }
-        progressDialog = LoadingDialog.newInstance(msg);
-        progressDialog.show(getSupportFragmentManager(), "loading");
-    }
-
-    public void hideProgress() {
-        if (null != progressDialog) {
-            progressDialog.dismissAllowingStateLoss();
-        }
-        progressDialog = null;
     }
 
     /**

@@ -29,18 +29,18 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
         String userName = mView.getUserName();
         String yanzhengma = mView.getYanzhengMa();
         if (TextUtils.isEmpty(userName)) {
-            CustomToast.makeText(MyApplication.getContext(), "用户名不能为空", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "用户名不能为空", R.drawable.ic_toast_warming);
             mView.errorShake(1, 2, "");
             return;
         }
 
         if (TextUtils.isEmpty(yanzhengma)) {
-            CustomToast.makeText(MyApplication.getContext(), "验证码不能为空", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "验证码不能为空", R.drawable.ic_toast_warming);
             mView.errorShake(2, 2, "");
             return;
         }
         if (yanzhengma.length() != 6) {
-            CustomToast.makeText(MyApplication.getContext(), "验证码错误", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "验证码错误", R.drawable.ic_toast_warming);
             mView.errorShake(2, 2, "");
             return;
         }
@@ -49,7 +49,7 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
         } else if (RegexUtils.isMobileSimple(userName)) {
             modifyforgit(userName, yanzhengma);
         } else {
-            CustomToast.makeText(MyApplication.getContext(), R.string.account_forgit_password, R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), R.string.account_forgit_password, R.drawable.ic_toast_warming);
         }
     }
 
@@ -136,10 +136,10 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
     public void resetPassword(String phone) {
         String new_password = mView.resetPassword();
         if (TextUtils.isEmpty(new_password)) {
-            CustomToast.makeText(MyApplication.getContext(), "密码不能为空", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "密码不能为空", R.drawable.ic_toast_warming);
             return;
         } else if (new_password.length() < 6) {
-            CustomToast.makeText(MyApplication.getContext(), "密码至少为6位", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "密码至少为6位", R.drawable.ic_toast_warming);
             return;
         }
         reset_Password(phone, new_password);
@@ -175,7 +175,7 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
 
                     @Override
                     public void _onError(String code, String msg) {
-                        CustomToast.makeText(MyApplication.getInstance(), msg, R.drawable.ic_success).show();
+                        CustomToast.makeText(MyApplication.getInstance(), msg, R.drawable.ic_success);
 
                     }
                 });

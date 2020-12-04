@@ -10,5 +10,5 @@ public interface RuleEngineView extends BaseView {
 
     void loadDataSuccess(List<BaseSceneBean> data);
 
-    void loadDataFailed();
+    void loadDataFailed(Throwable throwable);
 }

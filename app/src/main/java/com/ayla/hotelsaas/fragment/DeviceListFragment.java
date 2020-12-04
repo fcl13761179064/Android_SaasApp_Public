@@ -21,6 +21,7 @@ import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListShowPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
+import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
 import com.ayla.hotelsaas.ui.DeviceDetailH5Activity;
 import com.ayla.hotelsaas.ui.DeviceMoreActivity;
@@ -167,7 +168,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     }
 
     @Override
-    public void loadDataFinish() {
+    public void loadDataFinish(Throwable throwable) {
         if (mAdapter.getData().isEmpty()) {//如果是空的数据
             mAdapter.setEmptyView(R.layout.widget_empty_view);
             mAdapter.getEmptyView().findViewById(R.id.bt_refresh).setOnClickListener(new View.OnClickListener() {
@@ -180,6 +181,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         } else {
             mSmartRefreshLayout.setEnableRefresh(true);
             mAdapter.setEmptyView(R.layout.empty_project_list);
+            CustomToast.makeText(getContext(),R.string.request_not_connect, R.drawable.ic_toast_warming);
         }
         if (mSmartRefreshLayout.isRefreshing()) {
             mSmartRefreshLayout.finishRefresh(false);

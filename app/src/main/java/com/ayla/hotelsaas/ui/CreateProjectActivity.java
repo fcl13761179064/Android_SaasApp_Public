@@ -80,7 +80,7 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
                     @Override
                     public void onDone(DialogFragment dialog, String txt) {
                         if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
-                            CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming).show();
+                            CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming);
                             return;
                         } else {
                             mEditText.setText(txt);
@@ -100,7 +100,7 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
         String newName = mEditText.getText().toString();
         int trade = 0, type = 0;
         if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
-            CustomToast.makeText(MyApplication.getContext(), "名称不能为空", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "名称不能为空", R.drawable.ic_toast_warming);
             return;
         }
         boolean check = false;
@@ -112,7 +112,7 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
             }
         }
         if (!check) {
-            CustomToast.makeText(MyApplication.getContext(), "请选择项目行业", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "请选择项目行业", R.drawable.ic_toast_warming);
             return;
         }
         check = false;
@@ -124,7 +124,7 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
             }
         }
         if (!check) {
-            CustomToast.makeText(MyApplication.getContext(), "请选择项目类型", R.drawable.ic_toast_warming).show();
+            CustomToast.makeText(MyApplication.getContext(), "请选择项目类型", R.drawable.ic_toast_warming);
             return;
         }
         mPresenter.createProject(newName, trade, type);
@@ -136,7 +136,7 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
         if (throwable instanceof RxjavaFlatmapThrowable) {
             msg = ((RxjavaFlatmapThrowable) throwable).getMsg();
         }
-        CustomToast.makeText(this, msg, R.drawable.ic_toast_warming).show();
+        CustomToast.makeText(this, msg, R.drawable.ic_toast_warming);
     }
 
     @Override

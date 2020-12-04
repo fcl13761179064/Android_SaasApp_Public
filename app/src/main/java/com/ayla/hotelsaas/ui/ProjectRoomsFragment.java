@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
-import com.ayla.hotelsaas.bean.ConstructionBillListBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.mvp.present.ProjectRoomsPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectRoomsView;
@@ -33,7 +33,7 @@ import butterknife.BindView;
  * 酒店层级页面
  */
 public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, ProjectRoomsPresenter> implements Observer, ProjectRoomsView {
-    public static ProjectRoomsFragment newInstance(ConstructionBillListBean.ResultListBean bean) {
+    public static ProjectRoomsFragment newInstance(WorkOrderBean.ResultListBean bean) {
         Bundle args = new Bundle();
         args.putSerializable("bean", bean);
         ProjectRoomsFragment fragment = new ProjectRoomsFragment();
@@ -64,11 +64,11 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
 
     }
 
-    private ConstructionBillListBean.ResultListBean bean;
+    private WorkOrderBean.ResultListBean bean;
 
     @Override
     protected void initData() {
-        bean = (ConstructionBillListBean.ResultListBean) getArguments().getSerializable("bean");
+        bean = (WorkOrderBean.ResultListBean) getArguments().getSerializable("bean");
         loadData();
     }
 

@@ -168,7 +168,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
         } else if (3 == subBean.getNetworkType()) {//跳转艾拉节点
             if (aylaGateways.size() == 0) {//没有艾拉网关
-                CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming).show();
+                CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming);
             } else if (aylaGateways.size() == 1) {//一个艾拉网关
                 DeviceListBean.DevicesBean gateway = aylaGateways.get(0);
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
@@ -182,7 +182,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     mainActivity.putExtra("categoryId", subBean.getId());
                     startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                 } else {
-                    CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
+                    CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming);
                 }
             } else {//多个网关
                 Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
@@ -203,7 +203,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
         } else if (4 == subBean.getNetworkType()) {//跳转鸿雁节点
             if (hyGateways.size() == 0) {//没有鸿雁网关
-                CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming).show();
+                CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming);
             } else if (hyGateways.size() == 1) {//一个网关
                 DeviceListBean.DevicesBean gateway = hyGateways.get(0);
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
@@ -217,7 +217,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     mainActivity.putExtra("categoryId", subBean.getId());
                     startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                 } else {
-                    CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming).show();
+                    CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming);
                 }
             } else {//多个网关
                 Intent mainActivity = new Intent(this, GatewaySelectActivity.class);

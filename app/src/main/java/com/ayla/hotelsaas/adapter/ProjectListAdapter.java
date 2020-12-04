@@ -1,14 +1,14 @@
 package com.ayla.hotelsaas.adapter;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.bean.ConstructionBillListBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class ProjectListAdapter extends BaseQuickAdapter<ConstructionBillListBean.ResultListBean, BaseViewHolder> {
+public class ProjectListAdapter extends BaseQuickAdapter<WorkOrderBean.ResultListBean, BaseViewHolder> {
     SimpleDateFormat sf_source = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     SimpleDateFormat sf_target = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
 
@@ -17,7 +17,7 @@ public class ProjectListAdapter extends BaseQuickAdapter<ConstructionBillListBea
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, ConstructionBillListBean.ResultListBean item) {
+    protected void convert(BaseViewHolder helper, WorkOrderBean.ResultListBean item) {
         helper.setText(R.id.tv_title, item.getTitle());
         if (item.getType() == 0) {
             try {

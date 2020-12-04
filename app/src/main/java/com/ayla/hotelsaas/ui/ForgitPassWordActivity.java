@@ -104,10 +104,10 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
                 SoftIntPutUtils.closeKeyboard(ForgitPassWordActivity.this);
                 String userName = getUserName();
                 if (TextUtils.isEmpty(userName)) {
-                    CustomToast.makeText(MyApplication.getContext(), "手机号不能为空", R.drawable.ic_toast_warming).show();
+                    CustomToast.makeText(MyApplication.getContext(), "手机号不能为空", R.drawable.ic_toast_warming);
                     return;
                 } else if (!RegexUtils.isMobileSimple(userName)) {
-                    CustomToast.makeText(MyApplication.getContext(), "手机格式错误", R.drawable.ic_toast_warming).show();
+                    CustomToast.makeText(MyApplication.getContext(), "手机格式错误", R.drawable.ic_toast_warming);
                     return;
                 }
                 tv_send_code.setClickable(false);
@@ -182,7 +182,7 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
 
     @Override
     public void sendCodeSuccess(Boolean data) {
-        CustomToast.makeText(MyApplication.getInstance(), "发送成功", R.drawable.ic_success).show();
+        CustomToast.makeText(MyApplication.getInstance(), "发送成功", R.drawable.ic_success);
     }
 
     @Override
@@ -195,7 +195,7 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
 
     @Override
     public void resertPasswordSuccess(Boolean data) {
-        CustomToast.makeText(MyApplication.getInstance(), "重置密码成功", R.drawable.ic_success).show();
+        CustomToast.makeText(MyApplication.getInstance(), "重置密码成功", R.drawable.ic_success);
         final Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

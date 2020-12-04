@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="1px">
+    android:layout_height="match_parent">
 
     <wendu.dsbridge.DWebView
         android:id="@+id/web_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <include
+    <LinearLayout
         android:id="@+id/empty_layout"
-        layout="@layout/widget_empty_view"
-        android:visibility="invisible" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <com.ayla.hotelsaas.widget.AppBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:left_iv="@mipmap/icon_back_black" />
+
+        <include layout="@layout/widget_empty_view" />
+    </LinearLayout>
+
 </FrameLayout>
