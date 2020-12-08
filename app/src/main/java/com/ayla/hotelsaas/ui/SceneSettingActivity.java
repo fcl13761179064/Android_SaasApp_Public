@@ -319,10 +319,33 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             }
         });
         mActionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+            private void doRemove(int position) {
                 mRuleEngineBean.getActions().remove(position);
                 showData();
+            }
+
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                BaseSceneBean.Action action = mRuleEngineBean.getActions().get(position);
+                if (action instanceof BaseSceneBean.WelcomeAction) {
+                    CustomAlarmDialog.newInstance()
+                            .setDoneCallback(new CustomAlarmDialog.Callback() {
+                                @Override
+                                public void onDone(CustomAlarmDialog dialog) {
+                                    dialog.dismissAllowingStateLoss();
+                                    doRemove(position);
+                                }
+
+                                @Override
+                                public void onCancel(CustomAlarmDialog dialog) {
+                                    dialog.dismissAllowingStateLoss();
+                                }
+                            })
+                            .setTitle("确认删除").setContent("删除后该房间下的音箱将不再播放欢迎语，是否删除？")
+                            .show(getSupportFragmentManager(), "delete");
+                } else {
+                    doRemove(position);
+                }
             }
         });
     }
@@ -676,36 +699,18 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @OnClick(R.id.tv_delete)
     public void handleDelete() {
-        if (actualHasWelcomeAction) {
-            CustomAlarmDialog.newInstance()
-                    .setDoneCallback(new CustomAlarmDialog.Callback() {
-                        @Override
-                        public void onDone(CustomAlarmDialog dialog) {
-                            dialog.dismissAllowingStateLoss();
-                            mPresenter.deleteScene(mRuleEngineBean.getRuleId());
-                        }
+        CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
+            @Override
+            public void onDone(CustomAlarmDialog dialog) {
+                dialog.dismissAllowingStateLoss();
+                mPresenter.deleteScene(mRuleEngineBean.getRuleId());
+            }
 
-                        @Override
-                        public void onCancel(CustomAlarmDialog dialog) {
-                            dialog.dismissAllowingStateLoss();
-                        }
-                    })
-                    .setTitle("确认删除").setContent("删除后该房间下的音箱将不再播放欢迎语，是否删除？")
-                    .show(getSupportFragmentManager(), "delete");
-        } else {
-            CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
-                @Override
-                public void onDone(CustomAlarmDialog dialog) {
-                    dialog.dismissAllowingStateLoss();
-                    mPresenter.deleteScene(mRuleEngineBean.getRuleId());
-                }
-
-                @Override
-                public void onCancel(CustomAlarmDialog dialog) {
-                    dialog.dismissAllowingStateLoss();
-                }
-            }).setTitle("确认删除").setContent("确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
-        }
+            @Override
+            public void onCancel(CustomAlarmDialog dialog) {
+                dialog.dismissAllowingStateLoss();
+            }
+        }).setTitle("确认删除").setContent("确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
     }
 
     @OnClick(R.id.ll_join_type)
