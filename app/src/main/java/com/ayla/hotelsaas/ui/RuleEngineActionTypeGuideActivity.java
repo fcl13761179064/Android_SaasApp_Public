@@ -93,9 +93,21 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
 
     @Override
     public void checkResult(int result) {
+        //如果是编辑一个包含欢迎语动作的联动，就需要忽略这个错误
+        boolean currentExitWelcomeAction = false;
+        for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
+            if (action instanceof BaseSceneBean.WelcomeAction) {
+                currentExitWelcomeAction = true;
+                break;
+            }
+        }
+
         if (result == 0) {
-            setResult(RESULT_OK, new Intent().putExtra("type", 2));
-            finish();
+            if (!currentExitWelcomeAction) {
+                setResult(RESULT_OK, new Intent().putExtra("type", 2));
+                finish();
+                return;
+            }
         } else if (result == -1) {//没有音响
             CustomAlarmDialog.newInstance()
                     .setDoneCallback(new CustomAlarmDialog.Callback() {
@@ -110,34 +122,27 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
                         }
                     }).setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON).setTitle("提示")
                     .setContent("未检测到该房间下有可设置的音箱，请确认是否已完成关联").show(getSupportFragmentManager(), "tip");
+            return;
         } else if (result == -2) {//已经设置了欢迎语的联动
-            //如果是编辑一个包含欢迎语动作的联动，就需要忽略这个错误
-            boolean currentExitWelcomeAction = false;
-            for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
-                if (action instanceof BaseSceneBean.WelcomeAction) {
-                    currentExitWelcomeAction = true;
-                    break;
-                }
-            }
             if (hasWelcomeAction && !currentExitWelcomeAction) {
                 setResult(RESULT_OK, new Intent().putExtra("type", 2));
                 finish();
-            } else {
-                CustomAlarmDialog.newInstance()
-                        .setDoneCallback(new CustomAlarmDialog.Callback() {
-                            @Override
-                            public void onDone(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                            }
-
-                            @Override
-                            public void onCancel(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                            }
-                        }).setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON).setTitle("提示")
-                        .setContent("当前房间已设置过酒店欢迎语，不可重复设置").show(getSupportFragmentManager(), "tip");
+                return;
             }
         }
+        CustomAlarmDialog.newInstance()
+                .setDoneCallback(new CustomAlarmDialog.Callback() {
+                    @Override
+                    public void onDone(CustomAlarmDialog dialog) {
+                        dialog.dismissAllowingStateLoss();
+                    }
+
+                    @Override
+                    public void onCancel(CustomAlarmDialog dialog) {
+                        dialog.dismissAllowingStateLoss();
+                    }
+                }).setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON).setTitle("提示")
+                .setContent("当前房间已设置过酒店欢迎语，不可重复设置").show(getSupportFragmentManager(), "tip");
     }
 
     @Override
