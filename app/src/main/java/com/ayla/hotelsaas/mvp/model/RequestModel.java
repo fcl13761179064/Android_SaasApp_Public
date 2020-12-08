@@ -793,8 +793,9 @@ public class RequestModel {
      * @return
      */
     public Observable<VersionUpgradeBean> getAppVersion(int versionCode) {
-        return getApiService().getAppVersion(0,versionCode).compose(new BaseResultTransformer<BaseResult<VersionUpgradeBean>, VersionUpgradeBean>() {
-        });
+//        return getApiService().getAppVersion(0,versionCode).compose(new BaseResultTransformer<BaseResult<VersionUpgradeBean>, VersionUpgradeBean>() {
+//        });
+        return Observable.error(new Throwable());
     }
 
     public Observable<Boolean> checkRadioExists(long scopeId) {
