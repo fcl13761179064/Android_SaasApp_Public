@@ -15,6 +15,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.export.external.TbsCoreSettings;
 import com.tencent.smtt.sdk.QbSdk;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.Map;
 public class MyApplication extends AApplication {
 
     private final String TAG = this.getClass().getSimpleName();
-    private List<DeviceListBean.DevicesBean> mDevicesBean;
+    private List<DeviceListBean.DevicesBean> mDevicesBean = new ArrayList<>();
     private static MyApplication mInstance = null;
 
     public static MyApplication getInstance() {

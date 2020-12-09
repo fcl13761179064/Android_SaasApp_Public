@@ -29,6 +29,7 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
         super(data);
         addItemType(0, R.layout.item_scene_setting_action_device);
         addItemType(1, R.layout.item_scene_setting_action_delay);
+        addItemType(2, R.layout.item_scene_setting_action_welcome);
     }
 
     @Override
@@ -63,6 +64,8 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
             String _minute = minute < 10 ? "0" + minute : String.valueOf(minute);
             String _second = second < 10 ? "0" + second : String.valueOf(second);
             helper.setText(R.id.tv_name, String.format("%s分%s秒", _minute, _second));
+        } else if (action instanceof BaseSceneBean.WelcomeAction) {
+
         }
         helper.addOnClickListener(R.id.tv_delete);
     }
@@ -76,7 +79,16 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
 
         @Override
         public int getItemType() {
-            return (action instanceof BaseSceneBean.DeviceAction) ? 0 : 1;
+            if (action instanceof BaseSceneBean.DeviceAction) {
+                return 0;
+            }
+            if (action instanceof BaseSceneBean.DelayAction) {
+                return 1;
+            }
+            if (action instanceof BaseSceneBean.WelcomeAction) {
+                return 2;
+            }
+            return -1;
         }
     }
 }

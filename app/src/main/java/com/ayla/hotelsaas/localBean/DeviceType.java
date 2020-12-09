@@ -1,30 +1,5 @@
 package com.ayla.hotelsaas.localBean;
 
-public enum DeviceType {
-    AYLA_DEVICE_ID(0), ALI_DEVICE_ID(1),INFRARED_VIRTUAL_SUB_DEVICE(8),DELAY_ACTION(10);
-
-    public int code;
-
-    DeviceType(int code) {
-        this.code = code;
-    }
-
-    public static DeviceType valueOf(int code) {
-        DeviceType data = null;
-        switch (code) {
-            case 0:
-                data = AYLA_DEVICE_ID;
-                break;
-            case 1:
-                data = ALI_DEVICE_ID;
-                break;
-            case 8:
-                data = INFRARED_VIRTUAL_SUB_DEVICE;
-                break;
-            case 10:
-                data = DELAY_ACTION;
-                break;
-        }
-        return data;
-    }
+public interface DeviceType {
+    int AYLA_DEVICE_ID = 0, ALI_DEVICE_ID = 1, XIAODU_SERVER = 6, INFRARED_VIRTUAL_SUB_DEVICE = 8, DELAY_ACTION = 10;
 }

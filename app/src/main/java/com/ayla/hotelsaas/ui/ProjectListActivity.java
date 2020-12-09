@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,6 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
-import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
@@ -148,7 +148,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             mSmartRefreshLayout.setEnableRefresh(true);
             mAdapter.setEmptyView(R.layout.empty_project_list);
             if (throwable instanceof UnknownHostException) {
-                CustomToast.makeText(this,R.string.request_not_connect, R.drawable.ic_toast_warming);
+                CustomToast.makeText(this, R.string.request_not_connect, R.drawable.ic_toast_warming);
             }
         }
         if (mSmartRefreshLayout.isRefreshing()) {
@@ -174,5 +174,15 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         if (requestCode == REQUEST_CODE_CREATE_PROJECT && resultCode == RESULT_OK) {
             mSmartRefreshLayout.autoRefresh();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // 不退出程序，进入后台
+            moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

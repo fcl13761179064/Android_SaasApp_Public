@@ -87,7 +87,7 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
                 boolean nest = true;
                 int type = getIntent().getIntExtra("type", 0);//选择的功能作为条件还是动作。
                 if (type == 0) {//条件
-                    BaseSceneBean.RULE_SET_MODE ruleSetMode = (BaseSceneBean.RULE_SET_MODE) getIntent().getSerializableExtra("ruleSetMode");//选择的功能作为条件还是动作。
+                    int ruleSetMode = (int) getIntent().getIntExtra("ruleSetMode", BaseSceneBean.RULE_SET_MODE.ANY);//选择的功能作为条件还是动作。
                     if (ruleSetMode == BaseSceneBean.RULE_SET_MODE.ANY) {//满足任意
                         nest = false;
                     }

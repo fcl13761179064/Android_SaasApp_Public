@@ -17,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 import com.ayla.hotelsaas.R;
 
 public class CustomAlarmDialog extends DialogFragment {
+    @Deprecated
     public static CustomAlarmDialog newInstance(Callback doneCallback) {
 
         Bundle args = new Bundle();
@@ -26,7 +27,32 @@ public class CustomAlarmDialog extends DialogFragment {
         return fragment;
     }
 
+    public static CustomAlarmDialog newInstance() {
+
+        Bundle args = new Bundle();
+
+        CustomAlarmDialog fragment = new CustomAlarmDialog();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     private Callback doneCallback;
+
+    public CustomAlarmDialog setDoneCallback(Callback doneCallback) {
+        this.doneCallback = doneCallback;
+        return this;
+    }
+
+    public enum Style {
+        STYLE_NORMAL, STYLE_SINGLE_BUTTON,
+    }
+
+    private Style style = Style.STYLE_NORMAL;
+
+    public CustomAlarmDialog setStyle(Style style) {
+        this.style = style;
+        return this;
+    }
 
     private String title;
 
@@ -61,7 +87,11 @@ public class CustomAlarmDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        return inflater.inflate(R.layout.dialog_custom_alarm, container, false);
+        if (style == Style.STYLE_SINGLE_BUTTON) {
+            return inflater.inflate(R.layout.dialog_custom_alarm_single_button, container, false);
+        } else {
+            return inflater.inflate(R.layout.dialog_custom_alarm, container, false);
+        }
     }
 
     @Override
@@ -80,25 +110,27 @@ public class CustomAlarmDialog extends DialogFragment {
             ensureTextView.setText(ensureText);
         }
         TextView cancelTextView = view.findViewById(R.id.v_cancel);
-        cancelTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (doneCallback != null) {
-                    doneCallback.onCancel(CustomAlarmDialog.this);
+        if (cancelTextView != null) {
+            cancelTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (doneCallback != null) {
+                        doneCallback.onCancel(CustomAlarmDialog.this);
+                    }
                 }
+            });
+            if (!TextUtils.isEmpty(cancelText)) {
+                cancelTextView.setText(cancelText);
             }
-        });
-        if (!TextUtils.isEmpty(cancelText)) {
-            cancelTextView.setText(cancelText);
         }
         TextView titleTextView = view.findViewById(R.id.tv_title);
-        TextView contentTextView = view.findViewById(R.id.tv_content);
         if (TextUtils.isEmpty(title)) {
             titleTextView.setVisibility(View.GONE);
         } else {
             titleTextView.setVisibility(View.VISIBLE);
             titleTextView.setText(title);
         }
+        TextView contentTextView = view.findViewById(R.id.tv_content);
         contentTextView.setText(content);
     }
 

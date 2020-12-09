@@ -55,6 +55,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private final int REQUEST_CODE_SELECT_ENABLE_TIME = 0X14;
     private final int REQUEST_CODE_SELECT_ACTION_TYPE = 0X15;
     private final int REQUEST_CODE_SET_DELAY_ACTION = 0X16;
+    private final int REQUEST_CODE_HOTEL_WELCOME_ACTION = 0X17;
     @BindView(R.id.rv_condition)
     public RecyclerView mConditionRecyclerView;
     @BindView(R.id.rv_action)
@@ -82,25 +83,33 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private SceneSettingConditionItemAdapter mConditionAdapter;
     private SceneSettingActionItemAdapter mActionAdapter;
 
+    private boolean actualHasWelcomeAction;//如果是已存在的场景，判断是否包含有酒店欢迎语的动作。
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Serializable sceneBean = getIntent().getSerializableExtra("sceneBean");
         if (sceneBean instanceof BaseSceneBean) {
             mRuleEngineBean = (BaseSceneBean) sceneBean;
+            for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
+                if (action instanceof BaseSceneBean.WelcomeAction) {
+                    actualHasWelcomeAction = true;
+                    break;
+                }
+            }
             mSceneNameTextView.setText(mRuleEngineBean.getRuleName());
             mDeleteView.setVisibility(View.VISIBLE);
             syncSourceAndAdapter2();
         } else {
             long scopeId = getIntent().getLongExtra("scopeId", 0);
             int siteType = getIntent().getIntExtra("siteType", 0);
-            if (siteType == BaseSceneBean.SITE_TYPE.LOCAL.code) {
+            if (siteType == BaseSceneBean.SITE_TYPE.LOCAL) {
                 mRuleEngineBean = new LocalSceneBean();
                 String targetGateway = getIntent().getStringExtra("targetGateway");
                 ((LocalSceneBean) mRuleEngineBean).setTargetGateway(targetGateway);
                 for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
                     if (devicesBean.getDeviceId().equals(targetGateway)) {
-                        ((LocalSceneBean) mRuleEngineBean).setTargetGatewayType(DeviceType.valueOf(devicesBean.getCuId()));
+                        ((LocalSceneBean) mRuleEngineBean).setTargetGatewayType(devicesBean.getCuId());
                         break;
                     }
                 }
@@ -310,10 +319,33 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             }
         });
         mActionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+            private void doRemove(int position) {
                 mRuleEngineBean.getActions().remove(position);
                 showData();
+            }
+
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                BaseSceneBean.Action action = mRuleEngineBean.getActions().get(position);
+                if (action instanceof BaseSceneBean.WelcomeAction) {
+                    CustomAlarmDialog.newInstance()
+                            .setDoneCallback(new CustomAlarmDialog.Callback() {
+                                @Override
+                                public void onDone(CustomAlarmDialog dialog) {
+                                    dialog.dismissAllowingStateLoss();
+                                    doRemove(position);
+                                }
+
+                                @Override
+                                public void onCancel(CustomAlarmDialog dialog) {
+                                    dialog.dismissAllowingStateLoss();
+                                }
+                            })
+                            .setTitle("确认删除").setContent("删除后该房间下的音箱将不再播放欢迎语，是否删除？")
+                            .show(getSupportFragmentManager(), "delete");
+                } else {
+                    doRemove(position);
+                }
             }
         });
     }
@@ -333,11 +365,20 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             }
         }
         if (requestCode == REQUEST_CODE_SELECT_ACTION_TYPE && resultCode == RESULT_OK) {//选择动作类型返回结果
-            boolean delay = data.getBooleanExtra("delay", false);
-            if (delay) {
-                startActivityForResult(new Intent(this, SceneActionDelaySettingActivity.class), REQUEST_CODE_SET_DELAY_ACTION);
-            } else {
-                doJumpAddActions();
+            int type = data.getIntExtra("type", 0);
+            switch (type) {
+                case 0: {
+                    doJumpAddActions();
+                }
+                break;
+                case 1: {
+                    startActivityForResult(new Intent(this, SceneActionDelaySettingActivity.class), REQUEST_CODE_SET_DELAY_ACTION);
+                }
+                break;
+                case 2: {
+                    startActivityForResult(new Intent(this, RuleEngineActionHotelWelcomeActivity.class), REQUEST_CODE_HOTEL_WELCOME_ACTION);
+                }
+                break;
             }
         }
         if (requestCode == REQUEST_CODE_SELECT_CONDITION && resultCode == RESULT_OK) {//选择条件返回结果
@@ -456,6 +497,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             BaseSceneBean.DelayAction delayAction = new BaseSceneBean.DelayAction();
             delayAction.setRightValue(String.valueOf(seconds));
             mRuleEngineBean.getActions().add(delayAction);
+            showData();
+        }
+        if (requestCode == REQUEST_CODE_HOTEL_WELCOME_ACTION && resultCode == RESULT_OK) {//酒店欢迎语动作添加返回
+            BaseSceneBean.WelcomeAction welcomeAction = new BaseSceneBean.WelcomeAction();
+            mRuleEngineBean.getActions().add(welcomeAction);
             showData();
         }
     }
@@ -621,19 +667,12 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @OnClick(R.id.v_add_action)
     public void jumpAddActions() {
-        if (mRuleEngineBean.getSiteType() == BaseSceneBean.SITE_TYPE.REMOTE) {//只有云端场景才可以设置延时动作。
-            if (mRuleEngineBean.getActions().size() == 0) {
-                Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
-                startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
-            } else {
-                BaseSceneBean.Action lastAction = mRuleEngineBean.getActions().get(mRuleEngineBean.getActions().size() - 1);
-                if (lastAction instanceof BaseSceneBean.DelayAction) {
-                    doJumpAddActions();
-                } else {
-                    Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
-                    startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
-                }
-            }
+        if (mRuleEngineBean.getSiteType() == BaseSceneBean.SITE_TYPE.REMOTE) {//只有云端场景才可以设置延时动作、酒店欢迎语动作，进入动作类型选择页面。
+            Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
+            mainActivity.putExtra("data", mRuleEngineBean);
+            mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
+            mainActivity.putExtra("hasWelcomeAction", actualHasWelcomeAction);
+            startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
         } else {
             doJumpAddActions();
         }
@@ -671,7 +710,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             public void onCancel(CustomAlarmDialog dialog) {
                 dialog.dismissAllowingStateLoss();
             }
-        }).setTitle("确认是否移除").setContent("确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
+        }).setTitle("确认删除").setContent("确认后将永久的从列表中移除该场景，请谨慎操作！").show(getSupportFragmentManager(), "delete");
     }
 
     @OnClick(R.id.ll_join_type)
