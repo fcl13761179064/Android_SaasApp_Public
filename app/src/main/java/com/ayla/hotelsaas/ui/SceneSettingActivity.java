@@ -56,6 +56,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private final int REQUEST_CODE_SELECT_ACTION_TYPE = 0X15;
     private final int REQUEST_CODE_SET_DELAY_ACTION = 0X16;
     private final int REQUEST_CODE_HOTEL_WELCOME_ACTION = 0X17;
+    private final int REQUEST_CODE_EDIT_DELAY_ACTION = 0X18;
     @BindView(R.id.rv_condition)
     public RecyclerView mConditionRecyclerView;
     @BindView(R.id.rv_action)
@@ -348,6 +349,23 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 }
             }
         });
+        mActionAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                BaseSceneBean.Action action = mRuleEngineBean.getActions().get(position);
+                if (action instanceof BaseSceneBean.DelayAction) {
+                    int seconds = 0;
+                    try {
+                        String rightValue = action.getRightValue();
+                        seconds = Integer.parseInt(rightValue);
+                    } catch (Exception ignored) {
+                    }
+                    startActivityForResult(new Intent(SceneSettingActivity.this, SceneActionDelaySettingActivity.class)
+                            .putExtra("seconds", seconds)
+                            .putExtra("position", position), REQUEST_CODE_EDIT_DELAY_ACTION);
+                }
+            }
+        });
     }
 
     @Override
@@ -499,11 +517,27 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mRuleEngineBean.getActions().add(delayAction);
             showData();
         }
+        if (requestCode == REQUEST_CODE_EDIT_DELAY_ACTION && resultCode == RESULT_OK) {//延时动作编辑返回
+            int seconds = data.getIntExtra("seconds", 0);
+            int position = data.getIntExtra("position", -1);
+            if (position >= 0) {
+                BaseSceneBean.Action action = mRuleEngineBean.getActions().get(position);
+                if (action instanceof BaseSceneBean.DelayAction) {
+                    action.setRightValue(String.valueOf(seconds));
+                    showData();
+                }
+            }
+        }
         if (requestCode == REQUEST_CODE_HOTEL_WELCOME_ACTION && resultCode == RESULT_OK) {//酒店欢迎语动作添加返回
             BaseSceneBean.WelcomeAction welcomeAction = new BaseSceneBean.WelcomeAction();
             mRuleEngineBean.getActions().add(welcomeAction);
             showData();
         }
+    }
+
+    private void jump2DelayActionSetting(boolean position, int seconds) {
+        startActivityForResult(new Intent(this, SceneActionDelaySettingActivity.class)
+                .putExtra("seconds", seconds), REQUEST_CODE_SET_DELAY_ACTION);
     }
 
     @Override

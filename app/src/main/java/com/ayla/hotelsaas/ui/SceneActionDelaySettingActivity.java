@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.NumberPicker;
 
 import com.ayla.hotelsaas.R;
@@ -17,6 +18,16 @@ public class SceneActionDelaySettingActivity extends BaseMvpActivity {
     NumberPicker numberPickerMinute;
     @BindView(R.id.np_second)
     NumberPicker numberPickerSecond;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        int seconds = getIntent().getIntExtra("seconds", 0);
+        int minute = seconds / 60;
+        int second = seconds % 60;
+        numberPickerMinute.setValue(minute);
+        numberPickerSecond.setValue(second);
+    }
 
     @Override
     protected BasePresenter initPresenter() {
@@ -67,7 +78,7 @@ public class SceneActionDelaySettingActivity extends BaseMvpActivity {
             CustomToast.makeText(this, "无效的延时设置", R.drawable.ic_toast_warming);
             return;
         }
-        setResult(RESULT_OK, new Intent().putExtra("seconds", seconds));
+        setResult(RESULT_OK, new Intent().putExtras(getIntent()).putExtra("seconds", seconds));
         finish();
     }
 }
