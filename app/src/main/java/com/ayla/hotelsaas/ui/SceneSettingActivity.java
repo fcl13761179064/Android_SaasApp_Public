@@ -103,13 +103,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         } else {
             long scopeId = getIntent().getLongExtra("scopeId", 0);
             int siteType = getIntent().getIntExtra("siteType", 0);
-            if (siteType == BaseSceneBean.SITE_TYPE.LOCAL.code) {
+            if (siteType == BaseSceneBean.SITE_TYPE.LOCAL) {
                 mRuleEngineBean = new LocalSceneBean();
                 String targetGateway = getIntent().getStringExtra("targetGateway");
                 ((LocalSceneBean) mRuleEngineBean).setTargetGateway(targetGateway);
                 for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
                     if (devicesBean.getDeviceId().equals(targetGateway)) {
-                        ((LocalSceneBean) mRuleEngineBean).setTargetGatewayType(DeviceType.valueOf(devicesBean.getCuId()));
+                        ((LocalSceneBean) mRuleEngineBean).setTargetGatewayType(devicesBean.getCuId());
                         break;
                     }
                 }

@@ -91,7 +91,7 @@ public class BeanObtainCompactUtil {
                             condition.setOperator(conditionItem.getOperator());
                             condition.setRightValue(conditionItem.getRightValue());
                             condition.setSourceDeviceId(conditionItem.getSourceDeviceId());
-                            condition.setSourceDeviceType(DeviceType.valueOf(conditionItem.getSourceDeviceType()));
+                            condition.setSourceDeviceType(conditionItem.getSourceDeviceType());
                             condition.setBit(conditionItem.getBit());
                             condition.setCompareValue(conditionItem.getCompareValue());
                             sceneBean.getConditions().add(condition);
@@ -99,7 +99,7 @@ public class BeanObtainCompactUtil {
                     }
                 }
             }
-            if (ruleEngineBean.getRuleType() == BaseSceneBean.RULE_TYPE.ONE_KEY.code) {
+            if (ruleEngineBean.getRuleType() == BaseSceneBean.RULE_TYPE.ONE_KEY) {
                 BaseSceneBean.OneKeyCondition condition = new BaseSceneBean.OneKeyCondition();
                 sceneBean.getConditions().add(condition);
             }
@@ -120,7 +120,7 @@ public class BeanObtainCompactUtil {
                         action.setOperator(actionItem.getOperator());
                         action.setRightValue(actionItem.getRightValue());
                         action.setTargetDeviceId(actionItem.getTargetDeviceId());
-                        action.setTargetDeviceType(DeviceType.valueOf(actionItem.getTargetDeviceType()));
+                        action.setTargetDeviceType(actionItem.getTargetDeviceType());
                         action.setRightValueType(actionItem.getRightValueType());
                         sceneBean.getActions().add(action);
                     }
@@ -133,17 +133,17 @@ public class BeanObtainCompactUtil {
     public static RuleEngineBean obtainRuleEngineBean(BaseSceneBean baseSceneBean) {
         RuleEngineBean ruleEngineBean = new RuleEngineBean();
         ruleEngineBean.setRuleId(baseSceneBean.getRuleId());
-        ruleEngineBean.setRuleSetMode(baseSceneBean.getRuleSetMode().code);
+        ruleEngineBean.setRuleSetMode(baseSceneBean.getRuleSetMode());
         ruleEngineBean.setStatus(baseSceneBean.isEnable() ? 1 : 0);
         ruleEngineBean.setIconPath(baseSceneBean.getIconPath());
-        ruleEngineBean.setSiteType(baseSceneBean.getSiteType().code);
-        ruleEngineBean.setRuleType(baseSceneBean.getRuleType().code);
+        ruleEngineBean.setSiteType(baseSceneBean.getSiteType());
+        ruleEngineBean.setRuleType(baseSceneBean.getRuleType());
         ruleEngineBean.setRuleDescription(baseSceneBean.getRuleDescription());
         ruleEngineBean.setRuleName(baseSceneBean.getRuleName());
         ruleEngineBean.setScopeId(baseSceneBean.getScopeId());
         if (baseSceneBean instanceof LocalSceneBean) {
             ruleEngineBean.setTargetGateway(((LocalSceneBean) baseSceneBean).getTargetGateway());
-            ruleEngineBean.setTargetGatewayType(((LocalSceneBean) baseSceneBean).getTargetGatewayType().code);
+            ruleEngineBean.setTargetGatewayType(((LocalSceneBean) baseSceneBean).getTargetGatewayType());
         }
         if (baseSceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//构建条件集合，只有当自动化联动才传入conditions。
             RuleEngineBean.Condition _condition = new RuleEngineBean.Condition();
@@ -154,7 +154,7 @@ public class BeanObtainCompactUtil {
                 if (condition instanceof BaseSceneBean.DeviceCondition) {
                     RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();
                     conditionItem.setSourceDeviceId(((BaseSceneBean.DeviceCondition) condition).getSourceDeviceId());
-                    conditionItem.setSourceDeviceType(((BaseSceneBean.DeviceCondition) condition).getSourceDeviceType().code);
+                    conditionItem.setSourceDeviceType(((BaseSceneBean.DeviceCondition) condition).getSourceDeviceType());
                     conditionItem.setRightValue(((BaseSceneBean.DeviceCondition) condition).getRightValue());
                     conditionItem.setLeftValue(((BaseSceneBean.DeviceCondition) condition).getLeftValue());
                     conditionItem.setOperator(((BaseSceneBean.DeviceCondition) condition).getOperator());
@@ -219,7 +219,7 @@ public class BeanObtainCompactUtil {
                 BaseSceneBean.Action action = baseSceneBean.getActions().get(i);
                 RuleEngineBean.Action.ActionItem actionItem = new RuleEngineBean.Action.ActionItem();
                 actionItem.setTargetDeviceId(action.getTargetDeviceId());
-                actionItem.setTargetDeviceType(action.getTargetDeviceType().code);
+                actionItem.setTargetDeviceType(action.getTargetDeviceType());
                 actionItem.setRightValue(action.getRightValue());
                 actionItem.setLeftValue(action.getLeftValue());
                 actionItem.setOperator(action.getOperator());

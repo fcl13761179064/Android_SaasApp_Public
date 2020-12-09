@@ -15,11 +15,11 @@ public abstract class BaseSceneBean implements Serializable {
 
     protected String iconPath;
 
-    protected RULE_TYPE ruleType;//1:自动化 2:一键执行
+    protected int ruleType;//1:自动化 2:一键执行
 
-    protected SITE_TYPE siteType;//1:本地 2:云端
+    protected int siteType;//1:本地 2:云端
 
-    protected RULE_SET_MODE ruleSetMode;//    ALL(2,"多条条件全部命中")   ANY(3,"多条条件任一命中")
+    protected int ruleSetMode;//    ALL(2,"多条条件全部命中")   ANY(3,"多条条件任一命中")
 
     protected boolean enable;//0:不可用 1：可用
 
@@ -29,7 +29,7 @@ public abstract class BaseSceneBean implements Serializable {
 
     protected EnableTime enableTime;//生效时间段
 
-    public BaseSceneBean(SITE_TYPE siteType) {
+    public BaseSceneBean(int siteType) {
         this.siteType = siteType;
         conditions = new ArrayList<>();
         actions = new ArrayList<>();
@@ -75,27 +75,27 @@ public abstract class BaseSceneBean implements Serializable {
         this.iconPath = iconPath;
     }
 
-    public RULE_TYPE getRuleType() {
+    public int getRuleType() {
         return ruleType;
     }
 
-    public void setRuleType(RULE_TYPE ruleType) {
+    public void setRuleType(int ruleType) {
         this.ruleType = ruleType;
     }
 
-    public SITE_TYPE getSiteType() {
+    public int getSiteType() {
         return siteType;
     }
 
-    public void setSiteType(SITE_TYPE siteType) {
+    public void setSiteType(int siteType) {
         this.siteType = siteType;
     }
 
-    public RULE_SET_MODE getRuleSetMode() {
+    public int getRuleSetMode() {
         return ruleSetMode;
     }
 
-    public void setRuleSetMode(RULE_SET_MODE ruleSetMode) {
+    public void setRuleSetMode(int ruleSetMode) {
         this.ruleSetMode = ruleSetMode;
     }
 
@@ -165,7 +165,7 @@ public abstract class BaseSceneBean implements Serializable {
         private String leftValue;
         private String rightValue;
         private String sourceDeviceId;
-        private DeviceType sourceDeviceType;//0:艾拉 1：阿里
+        private int sourceDeviceType;//0:艾拉 1：阿里
 
         private int bit;
         private int compareValue;
@@ -218,17 +218,17 @@ public abstract class BaseSceneBean implements Serializable {
             this.sourceDeviceId = sourceDeviceId;
         }
 
-        public DeviceType getSourceDeviceType() {
+        public int getSourceDeviceType() {
             return sourceDeviceType;
         }
 
-        public void setSourceDeviceType(DeviceType sourceDeviceType) {
+        public void setSourceDeviceType(int sourceDeviceType) {
             this.sourceDeviceType = sourceDeviceType;
         }
     }
 
     public abstract static class Action implements Serializable {
-        private DeviceType targetDeviceType;
+        private int targetDeviceType;
 
         private String targetDeviceId;
 
@@ -259,11 +259,11 @@ public abstract class BaseSceneBean implements Serializable {
             this.valueName = valueName;
         }
 
-        public DeviceType getTargetDeviceType() {
+        public int getTargetDeviceType() {
             return targetDeviceType;
         }
 
-        public void setTargetDeviceType(DeviceType targetDeviceType) {
+        public void setTargetDeviceType(int targetDeviceType) {
             this.targetDeviceType = targetDeviceType;
         }
 
@@ -395,33 +395,17 @@ public abstract class BaseSceneBean implements Serializable {
         }
     }
 
-    public enum SITE_TYPE implements Serializable {
-        LOCAL(1), REMOTE(2);
-
-        public int code;
-
-        SITE_TYPE(int code) {
-            this.code = code;
-        }
+    public interface SITE_TYPE {
+        int LOCAL = 1, REMOTE = 2;
     }
 
-    public enum RULE_TYPE implements Serializable {
-        AUTO(1), ONE_KEY(2);
+    public interface RULE_TYPE {
+        int AUTO = 1, ONE_KEY = 2;
 
-        public int code;
-
-        RULE_TYPE(int code) {
-            this.code = code;
-        }
     }
 
-    public enum RULE_SET_MODE implements Serializable {
-        ALL(2), ANY(3);
+    public interface RULE_SET_MODE {
+        int ALL = 2, ANY = 3;
 
-        public int code;
-
-        RULE_SET_MODE(int code) {
-            this.code = code;
-        }
     }
 }
