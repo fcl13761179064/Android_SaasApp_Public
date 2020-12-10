@@ -58,6 +58,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private final int REQUEST_CODE_HOTEL_WELCOME_ACTION = 0X17;
     private final int REQUEST_CODE_EDIT_DELAY_ACTION = 0X18;
     private final int REQUEST_CODE_EDIT_DEVICE_ACTION = 0X19;
+    private final int REQUEST_CODE_EDIT_DEVICE_CONDITION = 0X20;
     @BindView(R.id.rv_condition)
     public RecyclerView mConditionRecyclerView;
     @BindView(R.id.rv_action)
@@ -320,6 +321,15 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 showData();
             }
         });
+        mConditionAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                BaseSceneBean.Condition condition = mRuleEngineBean.getConditions().get(position);
+                if (condition instanceof BaseSceneBean.DeviceCondition) {
+                    doJumpAddConditions((BaseSceneBean.DeviceCondition) condition, position);
+                }
+            }
+        });
         mActionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             private void doRemove(int position) {
                 mRuleEngineBean.getActions().remove(position);
@@ -383,7 +393,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 showData();
                 syncRuleTYpeShow();
             } else {
-                doJumpAddConditions();
+                doJumpAddConditions(null, -1);
             }
         }
         if (requestCode == REQUEST_CODE_SELECT_ACTION_TYPE && resultCode == RESULT_OK) {//选择动作类型返回结果
@@ -461,6 +471,66 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 mRuleEngineBean.getConditions().add(conditionItem);
             }
             showData();
+        }
+        if (requestCode == REQUEST_CODE_EDIT_DEVICE_CONDITION && resultCode == RESULT_OK) {//编辑设备条件返回结果
+            int position = data.getIntExtra("position", -1);
+            if (position >= 0) {
+                if (mRuleEngineBean.getConditions().get(position) instanceof BaseSceneBean.DeviceCondition) {
+                    BaseSceneBean.DeviceCondition conditionItem = (BaseSceneBean.DeviceCondition) mRuleEngineBean.getConditions().get(position);
+
+                    DeviceListBean.DevicesBean deviceBean = MyApplication.getInstance().getDevicesBean(data.getStringExtra("deviceId"));
+                    DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) data.getSerializableExtra("attributeBean");
+                    ISceneSettingFunctionDatumSet.CallBackBean datumBean = (ISceneSettingFunctionDatumSet.CallBackBean) data.getSerializableExtra("result");
+                    if (datumBean instanceof ISceneSettingFunctionDatumSet.ValueCallBackBean) {
+                        conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
+                        if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
+                            conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
+                        } else if (deviceBean.getCuId() == 0) {
+                            conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
+                        } else if (deviceBean.getCuId() == 1) {
+                            conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
+                        }
+                        conditionItem.setRightValue(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getValue());
+                        conditionItem.setLeftValue(attributesBean.getCode());
+                        conditionItem.setOperator(datumBean.getOperator());
+                        conditionItem.setFunctionName(attributesBean.getDisplayName());
+                        conditionItem.setValueName(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDisplayName());
+                    }
+                    if (datumBean instanceof ISceneSettingFunctionDatumSet.BitValueCallBackBean) {
+                        conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
+                        if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
+                            conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
+                        } else if (deviceBean.getCuId() == 0) {
+                            conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
+                        } else if (deviceBean.getCuId() == 1) {
+                            conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
+                        }
+                        conditionItem.setRightValue(String.valueOf(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getValue()));
+                        conditionItem.setLeftValue(attributesBean.getCode());
+                        conditionItem.setOperator(datumBean.getOperator());
+                        conditionItem.setFunctionName(attributesBean.getDisplayName());
+                        conditionItem.setValueName(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getDisplayName());
+                        conditionItem.setBit(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getBit());
+                        conditionItem.setCompareValue(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getCompareValue());
+                    }
+                    if (datumBean instanceof ISceneSettingFunctionDatumSet.SetupCallBackBean) {
+                        conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
+                        if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
+                            conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
+                        } else if (deviceBean.getCuId() == 0) {
+                            conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
+                        } else if (deviceBean.getCuId() == 1) {
+                            conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
+                        }
+                        conditionItem.setRightValue(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue());
+                        conditionItem.setLeftValue(attributesBean.getCode());
+                        conditionItem.setOperator(datumBean.getOperator());
+                        conditionItem.setFunctionName(attributesBean.getDisplayName());
+                        conditionItem.setValueName(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue() + ((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getSetupBean().getUnit());
+                    }
+                    showData();
+                }
+            }
         }
         if (requestCode == REQUEST_CODE_SELECT_ACTION && resultCode == RESULT_OK) {//选择动作返回结果
             DeviceListBean.DevicesBean deviceBean = MyApplication.getInstance().getDevicesBean(data.getStringExtra("deviceId"));
@@ -715,11 +785,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             Intent mainActivity = new Intent(this, RuleEngineConditionTypeGuideActivity.class);
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION_TYPE);
         } else {
-            doJumpAddConditions();
+            doJumpAddConditions(null, -1);
         }
     }
 
-    private void doJumpAddConditions() {
+    private void doJumpAddConditions(BaseSceneBean.DeviceCondition editCondition, int position) {
         Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
         mainActivity.putExtra("type", 0);
         mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
@@ -738,7 +808,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
         mainActivity.putStringArrayListExtra("selectedDatum", selectedDatum);
         mainActivity.putExtra("ruleSetMode", mRuleEngineBean.getRuleSetMode());
-        startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION);
+        if (editCondition != null) {
+            mainActivity.putExtra("condition", editCondition);
+            mainActivity.putExtra("position", position);
+            startActivityForResult(mainActivity, REQUEST_CODE_EDIT_DEVICE_CONDITION);
+        } else {
+            startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION);
+        }
     }
 
     @OnClick(R.id.v_add_action)

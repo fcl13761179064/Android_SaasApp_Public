@@ -116,11 +116,19 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
         this.properties = properties;
 
         BaseSceneBean.DeviceAction deviceAction = (BaseSceneBean.DeviceAction) getIntent().getSerializableExtra("action");
-        if (deviceAction != null) {//如果是编辑，就要直接跳转进去
+        BaseSceneBean.DeviceCondition deviceCondition = (BaseSceneBean.DeviceCondition) getIntent().getSerializableExtra("condition");
+
+        String deviceId = null;
+        if (deviceAction != null) {
+            deviceId = deviceAction.getTargetDeviceId();
+        } else if (deviceCondition != null) {
+            deviceId = deviceCondition.getSourceDeviceId();
+        }
+        if (!TextUtils.isEmpty(deviceId)) {//如果是编辑，就要直接跳转进去
             if (devices != null) {
                 for (int i = 0; i < devices.size(); i++) {
                     DeviceListBean.DevicesBean device = devices.get(i);
-                    if (TextUtils.equals(deviceAction.getTargetDeviceId(), device.getDeviceId())) {
+                    if (TextUtils.equals(deviceId, device.getDeviceId())) {
                         jumpNext(true, device, new ArrayList<>(properties.get(i)));
                         return;
                     }

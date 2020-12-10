@@ -75,6 +75,8 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
         attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
 
         BaseSceneBean.Action action = (BaseSceneBean.Action) getActivity().getIntent().getSerializableExtra("action");
+        BaseSceneBean.DeviceCondition condition = (BaseSceneBean.DeviceCondition) getActivity().getIntent().getSerializableExtra("condition");
+
         boolean autoJump = getActivity().getIntent().getBooleanExtra("autoJump", false);
 
         List<CheckableSupport<String>> data = new ArrayList<>();
@@ -85,10 +87,17 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
             beanType = 0;
             for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
                 CheckableSupport<String> checkableSupport = new CheckableSupport<>(valueBean.getDisplayName());
-                if (autoJump && action != null) {
-                    if (TextUtils.equals(action.getRightValue(), valueBean.getValue())) {
-                        isEditChecked = true;
-                        checkableSupport.setChecked(true);
+                if (autoJump) {
+                    if (action != null) {
+                        if (TextUtils.equals(action.getRightValue(), valueBean.getValue())) {
+                            isEditChecked = true;
+                            checkableSupport.setChecked(true);
+                        }
+                    } else if (condition != null) {
+                        if (TextUtils.equals(condition.getRightValue(), valueBean.getValue())) {
+                            isEditChecked = true;
+                            checkableSupport.setChecked(true);
+                        }
                     }
                 }
                 data.add(checkableSupport);
@@ -97,13 +106,23 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
             beanType = 1;
             for (DeviceTemplateBean.AttributesBean.BitValueBean bitValueBean : attributesBean.getBitValue()) {
                 CheckableSupport<String> checkableSupport = new CheckableSupport<>(bitValueBean.getDisplayName());
-                if (autoJump && action != null) {
-                    if (TextUtils.equals(action.getRightValue(), String.valueOf(bitValueBean.getValue()))) {
-                        isEditChecked = true;
-                        checkableSupport.setChecked(true);
+                if (autoJump) {
+                    if (action != null) {
+                        if (TextUtils.equals(action.getRightValue(), String.valueOf(bitValueBean.getValue()))) {
+                            isEditChecked = true;
+                            checkableSupport.setChecked(true);
+                        }
+
+                    } else if (condition != null) {
+                        if (TextUtils.equals(String.valueOf(bitValueBean.getValue()), condition.getRightValue())
+                                && bitValueBean.getCompareValue() == condition.getCompareValue()
+                                && bitValueBean.getBit() == condition.getBit()) {
+                            isEditChecked = true;
+                            checkableSupport.setChecked(true);
+                        }
                     }
+                    data.add(new CheckableSupport<>(bitValueBean.getDisplayName()));
                 }
-                data.add(new CheckableSupport<>(bitValueBean.getDisplayName()));
             }
         }
 

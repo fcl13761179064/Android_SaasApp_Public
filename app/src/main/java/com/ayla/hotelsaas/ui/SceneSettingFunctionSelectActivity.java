@@ -144,13 +144,22 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
         mAdapter.setNewData(data);
 
         BaseSceneBean.DeviceAction deviceAction = (BaseSceneBean.DeviceAction) getIntent().getSerializableExtra("action");
+        BaseSceneBean.DeviceCondition deviceCondition = (BaseSceneBean.DeviceCondition) getIntent().getSerializableExtra("condition");
+
+        String propertyCode = null;
+        if (deviceAction != null) {
+            propertyCode = deviceAction.getLeftValue();
+        } else if (deviceCondition != null) {
+            propertyCode = deviceCondition.getLeftValue();
+        }
+
         boolean autoJump = getIntent().getBooleanExtra("autoJump", false);
         if (autoJump) {
-            if (deviceAction != null) {//如果是编辑，就要直接跳转进去
+            if (!TextUtils.isEmpty(propertyCode)) {//如果是编辑，就要直接跳转进去
                 if (data != null) {
                     for (int i = 0; i < data.size(); i++) {
                         DeviceTemplateBean.AttributesBean attributesBean = data.get(i);
-                        if (TextUtils.equals(attributesBean.getCode(), deviceAction.getLeftValue())) {
+                        if (TextUtils.equals(attributesBean.getCode(), propertyCode)) {
                             jumpNext(true, attributesBean);
                             return;
                         }
