@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import com.ayla.hotelsaas.adapter.SceneSettingFunctionDatumSetAdapter;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -72,20 +74,40 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
 
         attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
 
+        BaseSceneBean.Action action = (BaseSceneBean.Action) getActivity().getIntent().getSerializableExtra("action");
+        boolean autoJump = getActivity().getIntent().getBooleanExtra("autoJump", false);
+
         List<CheckableSupport<String>> data = new ArrayList<>();
+
+        boolean isEditChecked = false;
 
         if (attributesBean.getValue() != null) {
             beanType = 0;
             for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
-                data.add(new CheckableSupport<>(valueBean.getDisplayName()));
+                CheckableSupport<String> checkableSupport = new CheckableSupport<>(valueBean.getDisplayName());
+                if (autoJump && action != null) {
+                    if (TextUtils.equals(action.getRightValue(), valueBean.getValue())) {
+                        isEditChecked = true;
+                        checkableSupport.setChecked(true);
+                    }
+                }
+                data.add(checkableSupport);
             }
         } else if (attributesBean.getBitValue() != null) {
             beanType = 1;
             for (DeviceTemplateBean.AttributesBean.BitValueBean bitValueBean : attributesBean.getBitValue()) {
+                CheckableSupport<String> checkableSupport = new CheckableSupport<>(bitValueBean.getDisplayName());
+                if (autoJump && action != null) {
+                    if (TextUtils.equals(action.getRightValue(), String.valueOf(bitValueBean.getValue()))) {
+                        isEditChecked = true;
+                        checkableSupport.setChecked(true);
+                    }
+                }
                 data.add(new CheckableSupport<>(bitValueBean.getDisplayName()));
             }
         }
-        if (data.size() > 0) {
+
+        if (data.size() > 0 && !isEditChecked) {
             data.get(0).setChecked(true);
         }
         mAdapter.setNewData(data);
@@ -115,10 +137,10 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
         for (int i = 0; i < mAdapter.getData().size(); i++) {
             CheckableSupport<String> item = mAdapter.getItem(i);
             if (item.isChecked()) {
-                if(beanType == 0){
+                if (beanType == 0) {
                     DeviceTemplateBean.AttributesBean.ValueBean valueBean = attributesBean.getValue().get(i);
                     return new ValueCallBackBean(valueBean);
-                }else if(beanType == 1){
+                } else if (beanType == 1) {
                     DeviceTemplateBean.AttributesBean.BitValueBean valueBean = attributesBean.getBitValue().get(i);
                     return new BitValueCallBackBean(valueBean);
                 }
