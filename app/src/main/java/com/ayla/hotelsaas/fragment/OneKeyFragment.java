@@ -68,6 +68,11 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 BaseSceneBean ruleEngineBean = (BaseSceneBean) adapter.getItem(position);
+                if (ruleEngineBean.getStatus() != 1) {
+                    mAdapter.getOnItemChildClickListener().onItemChildClick(adapter, view, position);
+                    return;
+                }
+
                 boolean needWarming = false;
                 s1:
                 for (BaseSceneBean.Action actionItem : ruleEngineBean.getActions()) {

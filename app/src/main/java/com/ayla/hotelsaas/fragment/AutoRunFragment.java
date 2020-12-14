@@ -56,18 +56,14 @@ public class AutoRunFragment extends BaseMvpFragment<AutoRunView, AutoRunFragmen
                 mPresenter.changeSceneStatus(ruleEngineBean, isChecked);
             }
         });
-        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                switch (view.getId()) {
-                    case R.id.tv_edit:
-                        BaseSceneBean ruleEngineBean = (BaseSceneBean) adapter.getItem(position);
-                        Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
-                        intent.putExtra("sceneBean", ruleEngineBean);
-                        if (getParentFragment() != null) {
-                            getParentFragment().startActivityForResult(intent, RuleEngineFragment.REQUEST_CODE_SETTING);
-                        }
-                        break;
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                BaseSceneBean ruleEngineBean = (BaseSceneBean) adapter.getItem(position);
+                Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
+                intent.putExtra("sceneBean", ruleEngineBean);
+                if (getParentFragment() != null) {
+                    getParentFragment().startActivityForResult(intent, RuleEngineFragment.REQUEST_CODE_SETTING);
                 }
             }
         });

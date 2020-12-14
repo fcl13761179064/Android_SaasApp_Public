@@ -21,7 +21,7 @@ public abstract class BaseSceneBean implements Serializable {
 
     protected int ruleSetMode;//    ALL(2,"多条条件全部命中")   ANY(3,"多条条件任一命中")
 
-    protected boolean enable;//0:不可用 1：可用
+    protected int status;//0:不可用 1：可用 2：异常 3：待激活
 
     protected List<Condition> conditions;
 
@@ -99,12 +99,12 @@ public abstract class BaseSceneBean implements Serializable {
         this.ruleSetMode = ruleSetMode;
     }
 
-    public boolean isEnable() {
-        return enable;
+    public int getStatus() {
+        return status;
     }
 
-    public void setEnable(boolean enable) {
-        this.enable = enable;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public List<Condition> getConditions() {

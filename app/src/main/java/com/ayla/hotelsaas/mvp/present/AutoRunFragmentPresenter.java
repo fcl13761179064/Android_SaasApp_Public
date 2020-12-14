@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers;
 public class AutoRunFragmentPresenter extends BasePresenter<AutoRunView> {
 
     public void changeSceneStatus(BaseSceneBean ruleEngineBean, boolean isChecked) {
-        ruleEngineBean.setEnable(isChecked);
+        ruleEngineBean.setStatus(isChecked ? 1 : 0);
         Disposable subscribe = RequestModel.getInstance().updateRuleEngine(BeanObtainCompactUtil.obtainRuleEngineBean(ruleEngineBean))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -40,7 +40,7 @@ public class AutoRunFragmentPresenter extends BasePresenter<AutoRunView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        ruleEngineBean.setEnable(!isChecked);
+                        ruleEngineBean.setStatus(isChecked ? 0 : 1);
                         mView.changeFailed(ruleEngineBean);
                     }
                 });

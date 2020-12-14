@@ -81,6 +81,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     TextView mEnableTimeTextView;
     @BindView(R.id.rl_enable_time)
     View rl_enable_time;
+    @BindView(R.id.tv_ill_state)
+    View tv_ill_state;
 
     private BaseSceneBean mRuleEngineBean;
     private SceneSettingConditionItemAdapter mConditionAdapter;
@@ -123,7 +125,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mRuleEngineBean.setRuleSetMode(BaseSceneBean.RULE_SET_MODE.ANY);
             mRuleEngineBean.setScopeId(scopeId);
             mRuleEngineBean.setRuleDescription("test");
-            mRuleEngineBean.setEnable(true);
+            mRuleEngineBean.setStatus(1);
             mRuleEngineBean.setIconPath(getIconPathByIndex(1));
             BaseSceneBean.EnableTime enableTime = new BaseSceneBean.EnableTime();
             mRuleEngineBean.setEnableTime(enableTime);
@@ -143,6 +145,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         } else {
             mSiteTextView.setText("云端");
         }
+        tv_ill_state.setVisibility((mRuleEngineBean.getStatus() == 0 || mRuleEngineBean.getStatus() == 1) ? View.GONE : View.VISIBLE);
         mEnableTimeTextView.setText(decodeCronExpression2(mRuleEngineBean.getEnableTime()));
         syncRuleTYpeShow();
     }
@@ -686,6 +689,27 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         if (lastAction instanceof BaseSceneBean.DelayAction) {//如果最后一个Action是延时，不允许
             CustomToast.makeText(getBaseContext(), "延时后必须添加一个设备类型的动作", R.drawable.ic_toast_warming);
             return;
+        }
+        for (BaseSceneBean.Condition condition : mRuleEngineBean.getConditions()) {
+            if (condition instanceof BaseSceneBean.DeviceCondition) {
+                DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(((BaseSceneBean.DeviceCondition) condition).getSourceDeviceId());
+                if (devicesBean == null) {
+                    CustomToast.makeText(getBaseContext(), "如想激活此联动，请先删除已移除的设备", R.drawable.ic_toast_warming);
+                    return;
+                }
+            }
+        }
+        for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
+            if (action instanceof BaseSceneBean.DeviceAction) {
+                DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(((BaseSceneBean.DeviceAction) action).getTargetDeviceId());
+                if (devicesBean == null) {
+                    CustomToast.makeText(getBaseContext(), "如想激活此联动，请先删除已移除的设备", R.drawable.ic_toast_warming);
+                    return;
+                }
+            }
+        }
+        if (mRuleEngineBean.getStatus() == 2) {
+            mRuleEngineBean.setStatus(0);
         }
         mPresenter.saveOrUpdateRuleEngine(mRuleEngineBean);
     }

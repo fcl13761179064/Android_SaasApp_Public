@@ -29,7 +29,7 @@ public class BeanObtainCompactUtil {
         sceneBean.setRuleId(ruleEngineBean.getRuleId());
         sceneBean.setScopeId(ruleEngineBean.getScopeId());
         sceneBean.setIconPath(ruleEngineBean.getIconPath());
-        sceneBean.setEnable(ruleEngineBean.getStatus() == 1);
+        sceneBean.setStatus(ruleEngineBean.getStatus());
         sceneBean.setRuleSetMode(ruleEngineBean.getRuleSetMode() == 2 ? BaseSceneBean.RULE_SET_MODE.ALL : BaseSceneBean.RULE_SET_MODE.ANY);
         sceneBean.setRuleType(ruleEngineBean.getRuleType() == 1 ? BaseSceneBean.RULE_TYPE.AUTO : BaseSceneBean.RULE_TYPE.ONE_KEY);
         sceneBean.setRuleDescription(ruleEngineBean.getRuleDescription());
@@ -134,7 +134,7 @@ public class BeanObtainCompactUtil {
         RuleEngineBean ruleEngineBean = new RuleEngineBean();
         ruleEngineBean.setRuleId(baseSceneBean.getRuleId());
         ruleEngineBean.setRuleSetMode(baseSceneBean.getRuleSetMode());
-        ruleEngineBean.setStatus(baseSceneBean.isEnable() ? 1 : 0);
+        ruleEngineBean.setStatus(baseSceneBean.getStatus());
         ruleEngineBean.setIconPath(baseSceneBean.getIconPath());
         ruleEngineBean.setSiteType(baseSceneBean.getSiteType());
         ruleEngineBean.setRuleType(baseSceneBean.getRuleType());

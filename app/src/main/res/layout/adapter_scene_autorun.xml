@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="130dp"
     android:layout_marginLeft="16dp"
     android:layout_marginTop="10dp"
     android:layout_marginRight="16dp"
-    android:background="@drawable/bg_device_item"
-    android:foreground="?android:selectableItemBackground">
+    android:background="@drawable/bg_device_item">
 
 
     <TextView
@@ -15,22 +15,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="37dp"
         android:layout_marginRight="16dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="单路开关 AZB-SW0-001"
         android:textColor="#ff333333"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="单路开关 AZB-SW0-001" />
+
 
     <TextView
-        android:id="@+id/tv_edit"
+        android:id="@+id/tv_sub_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="16dp"
-        android:text="编辑" />
+        android:layout_below="@id/tv_device_name"
+        android:layout_alignLeft="@id/tv_device_name"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_scene_ill_state_corner"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:text="异常"
+        android:visibility="invisible" />
+
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/sc_enable"
@@ -41,7 +48,17 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/selector_btn_toggle_highlight"
-        android:checked="false"
         android:thumb="@null"
-        app:track="@null" />
+        app:track="@null"
+        tools:checked="true" />
+
+    <ImageView
+        android:id="@+id/iv_ill_state"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="28dp"
+        android:src="@drawable/ic_scene_ill_state"
+        android:visibility="invisible" />
 </RelativeLayout>
