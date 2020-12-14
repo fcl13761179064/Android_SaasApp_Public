@@ -12,7 +12,7 @@
     android:layout_width="match_parent"
     android:layout_weight="0.9"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/dp_16"
+    android:layout_marginLeft="16dp"
     android:orientation="vertical">
 
     <TextView
@@ -31,7 +31,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -42,7 +42,7 @@
             android:singleLine="true"
             android:text="施工日期："
             android:textColor="@color/color_999999"
-            android:textSize="@dimen/sp_12" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/item_work_srart_date"
@@ -50,7 +50,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:gravity="bottom"
-            android:textSize="@dimen/sp_12"
+            android:textSize="12sp"
             android:textColor="@color/color_999999"
             android:text="2011-06-12" />
 
@@ -59,7 +59,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:gravity="bottom"
-            android:textSize="@dimen/sp_12"
+            android:textSize="12sp"
             android:textColor="@color/color_999999"
             android:text=" - " />
 
@@ -69,7 +69,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:gravity="bottom"
-            android:textSize="@dimen/sp_12"
+            android:textSize="12sp"
             android:textColor="@color/color_999999"
             tools:text="2011-06-12" />
     </LinearLayout>
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:textSize="@dimen/sp_12"
+            android:textSize="12sp"
             android:textColor="@color/color_999999"
             android:text="施工状态：" />
 
@@ -93,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:textSize="@dimen/sp_12"
+            android:textSize="12sp"
             android:textColor="@color/color_999999"
             android:gravity="center_vertical"
             tools:text="待施工" />
@@ -104,7 +104,7 @@
         android:layout_width="8dp"
         android:layout_height="14dp"
         android:layout_weight="0.1"
-        android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginRight="16dp"
         android:gravity="center_vertical"
         android:src="@mipmap/left_ico" />
 </LinearLayout>

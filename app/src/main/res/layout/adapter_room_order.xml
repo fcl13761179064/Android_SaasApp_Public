@@ -4,9 +4,9 @@
     android:layout_height="60dp"
     android:background="@drawable/room_num_shape"
     android:gravity="center_vertical"
-    android:layout_marginTop="@dimen/dp_10"
-    android:layout_marginLeft="@dimen/dp_16"
-    android:layout_marginRight="@dimen/dp_16"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
     android:orientation="horizontal">
 
 
@@ -15,19 +15,19 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginLeft="16dp"
         android:layout_alignParentRight="true"
         android:gravity="center_vertical"
-        android:elevation="@dimen/dp_10"
+        android:elevation="10dp"
         android:text="待施工"
-        android:textSize="@dimen/sp_12" />
+        android:textSize="12sp" />
 
     <ImageView
         android:layout_width="8dp"
         android:layout_height="14dp"
         android:layout_gravity="center"
         android:gravity="center_vertical"
-        android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginRight="16dp"
         android:src="@mipmap/left_ico" />
 
 </LinearLayout>

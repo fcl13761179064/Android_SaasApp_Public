@@ -18,7 +18,7 @@
         android:id="@+id/rl_device_rename"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginTop="16dp"
         android:background="@drawable/room_num_shape">
 
         <TextView
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_16"
+            android:paddingLeft="16dp"
             android:text="设备重命名"
             android:textColor="#333333"
             android:textSize="17sp" />
@@ -37,7 +37,7 @@
             android:layout_height="match_parent"
             android:layout_toRightOf="@+id/tv_device_show_name"
             android:gravity="right"
-            android:paddingRight="@dimen/dp_16">
+            android:paddingRight="16dp">
 
             <TextView
                 android:id="@+id/tv_device_name"
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_16"
+            android:paddingLeft="16dp"
             android:text="设备详情"
             android:textColor="#333333"
             android:textSize="17sp" />
@@ -88,7 +88,7 @@
         android:id="@+id/rl_device_function_rename"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginTop="16dp"
         android:background="@drawable/room_num_shape"
         android:visibility="gone">
 
@@ -96,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_16"
+            android:paddingLeft="16dp"
             android:text="开关重命名"
             android:textColor="#333333"
             android:textSize="17sp" />

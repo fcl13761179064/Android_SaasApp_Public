@@ -38,21 +38,21 @@
             android:id="@+id/rb_main_fragment_device"
             style="@style/tab_style"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginTop="8dp"
             android:drawableTop="@drawable/bar_bottom_device"
             android:text="设备" />
 
         <RadioButton
             android:id="@+id/rb_main_fragment_linkage"
             style="@style/tab_style"
-            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginTop="8dp"
             android:drawableTop="@drawable/bar_bottom_test"
             android:text="场景" />
 
         <RadioButton
             android:id="@+id/rb_main_fragment_test"
             style="@style/tab_style"
-            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginTop="8dp"
             android:drawableTop="@drawable/bar_bottom_test"
             android:text="测试" />
 
