@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
@@ -15,10 +16,10 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="深圳中南海怡酒店"
         android:textColor="#ff333333"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="深圳中南海怡酒店" />
 
     <TextView
         android:id="@+id/tv_date"
@@ -26,9 +27,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_title"
         android:layout_marginTop="4dp"
-        android:text="施工日期：2020/10/25"
         android:textColor="#ff999999"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        tools:text="施工日期：2020/10/25" />
 
     <TextView
         android:id="@+id/tv_sub_1"
@@ -37,9 +38,9 @@
         android:layout_below="@id/tv_date"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_project_item_sub1_corner"
-        android:text="酒店"
         android:textColor="#EB9016"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        tools:text="酒店" />
 
 
     <TextView
@@ -51,9 +52,9 @@
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/tv_sub_1"
         android:background="@drawable/bg_project_item_sub2_corner"
-        android:text="酒店"
         android:textColor="#648C1A"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        tools:text="酒店" />
 
     <TextView
         android:id="@+id/tv_status"
@@ -62,9 +63,10 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="28dp"
-        android:text="施工中"
         android:textColor="#ff648c1a"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="invisible"
+        tools:text="施工中" />
 
     <ImageView
         android:layout_width="8dp"
