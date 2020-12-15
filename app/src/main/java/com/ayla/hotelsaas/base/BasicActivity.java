@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.base;
 
 
-import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.widget.LoadingDialog;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 
@@ -92,15 +90,6 @@ abstract class BasicActivity extends AppCompatActivity {
                     }
                 });
             }
-        }
-    }
-
-    @TargetApi(17)
-    public boolean isFinished() {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return isDestroyed() || isFinishing();
-        } else {
-            return isFinishing();
         }
     }
 

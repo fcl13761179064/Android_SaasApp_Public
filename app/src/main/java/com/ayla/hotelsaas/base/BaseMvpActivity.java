@@ -2,8 +2,6 @@ package com.ayla.hotelsaas.base;
 
 import android.os.Bundle;
 
-import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.widget.LoadingDialog;
 
 /**
@@ -45,7 +43,7 @@ public abstract class BaseMvpActivity<V extends BaseView, T extends BasePresente
     }
 
     public void showProgress(String msg) {
-        if (isFinished() || isDestroyed()) {
+        if (isFinishing() || isDestroyed()) {
             return;
         }
         if (null != progressDialog) {

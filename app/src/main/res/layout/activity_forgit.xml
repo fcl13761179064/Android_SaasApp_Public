@@ -4,8 +4,7 @@
     android:id="@+id/rl_root_view"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <com.ayla.hotelsaas.widget.AppBar
         android:id="@+id/appBar"
