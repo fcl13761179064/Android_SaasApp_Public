@@ -31,6 +31,12 @@ public class AutoRunRuleEngineAdapter extends BaseQuickAdapter<BaseSceneBean, Ba
     protected void convert(BaseViewHolder helper, BaseSceneBean ruleEngineBeans) {
         helper.setText(R.id.tv_device_name, ruleEngineBeans.getRuleName());
 
+        if (helper.getAdapterPosition() % 2 == 0) {
+            helper.setImageResource(R.id.iv_bg, R.drawable.bg_scene_autorun_a);
+        } else {
+            helper.setImageResource(R.id.iv_bg, R.drawable.bg_scene_autorun_b);
+        }
+
         if (ruleEngineBeans.getStatus() == 0 || ruleEngineBeans.getStatus() == 1) {
             helper.setVisible(R.id.sc_enable, true);
             helper.setVisible(R.id.tv_sub_1, false);

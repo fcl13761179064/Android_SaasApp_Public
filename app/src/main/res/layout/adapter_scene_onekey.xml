@@ -12,7 +12,7 @@
         android:layout_width="163dp"
         android:layout_height="100dp"
         android:layout_alignParentRight="true"
-        tools:src="@drawable/ic_scene_onekey_enable" />
+        tools:src="@drawable/bg_scene_onekey_enable" />
 
     <TextView
         android:id="@+id/tv_device_name"

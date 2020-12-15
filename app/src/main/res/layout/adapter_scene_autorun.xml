@@ -5,10 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="130dp"
     android:layout_marginLeft="16dp"
-    android:layout_marginTop="10dp"
     android:layout_marginRight="16dp"
     android:background="@drawable/bg_device_item">
 
+    <ImageView
+        android:id="@+id/iv_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="130dp"
+        android:adjustViewBounds="true"
+        tools:src="@drawable/bg_scene_autorun_a" />
 
     <TextView
         android:id="@+id/tv_device_name"
