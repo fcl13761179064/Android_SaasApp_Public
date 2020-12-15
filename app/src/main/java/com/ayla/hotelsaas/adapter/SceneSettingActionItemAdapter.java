@@ -53,10 +53,9 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
 
                 helper.setGone(R.id.tv_should_delete_device, false);
             } else {
-                helper.setImageResource(R.id.left_iv, R.drawable.ic_empty_device);
+                helper.setImageResource(R.id.left_iv, R.drawable.ic_scene_removed_device_item);
                 helper.setText(R.id.tv_function_name, "无效设备");
                 helper.setText(R.id.tv_name, "XXX-000-000");
-                helper.setAlpha(R.id.left_iv, 0.7f);
                 helper.setAlpha(R.id.tv_name, 0.7f);
                 helper.setAlpha(R.id.tv_function_name, 0.7f);
 

@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:background="@drawable/bg_device_item">
+
+    <ImageView
+        android:id="@+id/iv_bg"
+        android:layout_width="163dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        tools:src="@drawable/ic_scene_onekey_enable" />
 
     <TextView
         android:id="@+id/tv_device_name"
@@ -15,7 +23,7 @@
         android:layout_toLeftOf="@id/iv_more"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="单路开关 AZB-SW0-001"
+        tools:text="单路开关 AZB-SW0-001"
         android:textColor="#ff333333"
         android:textSize="14sp"
         android:textStyle="bold" />
