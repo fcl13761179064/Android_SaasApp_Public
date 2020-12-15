@@ -67,29 +67,14 @@ public class RetrofitHelper {
         return apiService;
     }
 
-    public static void reset() {
-        apiService = null;
-    }
-
     /**
      * 获取 OkHttpClient * * @return OkHttpClient
      */
     private static OkHttpClient getOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-        LogUtils.getConfig().setLog2FileSwitch(false).setBorderSwitch(false).setLogHeadSwitch(false);
-        //HttpLoggingInterceptor打印网络日志的方法 默认日志拦截器普通版:OkHttp：
-        //自定义拦截器，小写日志
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(String message) {
-                LogUtils.dTag("okhttp", message);
-            }
-        });
         //添加请求头
         builder.addInterceptor(CommonParameterInterceptor);
-        //登录失败 重新登录
-        builder.addInterceptor(ReloginInterceptor);
         //拦截403无访问权限的异常
         builder.addInterceptor(new Interceptor() {
             @Override
@@ -99,18 +84,22 @@ public class RetrofitHelper {
                 //原始接口结果
                 Response originalResponse = chain.proceed(originalRequest);
 
-                MediaType mediaType = originalResponse.body().contentType();
-                String content = originalResponse.body().string();
-                originalResponse.body().close();
                 if (originalResponse.code() == 403) {
                     CustomToast.makeText(MyApplication.getContext(), "无访问权限", R.drawable.ic_toast_warming);
                     jump2Main();
                 }
-                return originalResponse.newBuilder().body(ResponseBody.create(mediaType, content)).build();
+                return originalResponse;
             }
         });
-        httpLoggingInterceptor.setLevel(Constance.isNetworkDebug() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.BASIC);
-        builder.addInterceptor(httpLoggingInterceptor);
+        //登录失败 重新登录
+        builder.addInterceptor(ReloginInterceptor);
+        LogUtils.getConfig().setLog2FileSwitch(false).setBorderSwitch(false).setLogHeadSwitch(false);
+        builder.addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                LogUtils.dTag("okhttp", message);
+            }
+        }).setLevel(Constance.isNetworkDebug() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.BASIC));
         builder.retryOnConnectionFailure(true);
         return builder.build();
     }
