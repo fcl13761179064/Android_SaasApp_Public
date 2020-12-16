@@ -1,0 +1,141 @@
+package com.ayla.hotelsaas.ui;
+
+import android.util.Log;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+
+import androidx.fragment.app.DialogFragment;
+
+import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.databinding.ActivitySwitchUsageSettingBinding;
+import com.ayla.hotelsaas.widget.ItemPickerDialog;
+import com.ayla.hotelsaas.widget.ValueChangeDialog;
+import com.blankj.utilcode.util.ResourceUtils;
+
+import java.util.Arrays;
+
+/**
+ * 开关用途设置
+ */
+public class SwitchUsageSettingActivity extends BaseMvpActivity {
+
+    private ActivitySwitchUsageSettingBinding mBinding;
+
+    private int type = 2;
+
+    @Override
+    protected BasePresenter initPresenter() {
+        return null;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_switch_usage_setting;
+    }
+
+    @Override
+    protected void initView() {
+        adjustShow(type, 1);
+    }
+
+    @Override
+    protected View getLayoutView() {
+        mBinding = ActivitySwitchUsageSettingBinding.inflate(getLayoutInflater());
+        return mBinding.getRoot();
+    }
+
+    @Override
+    protected void initListener() {
+
+    }
+
+    private static String[] names = new String[]{"①", "②", "③", "④"};
+
+    private void adjustShow(int type, int position) {
+        if (position > names.length) {
+            return;
+        }
+        {
+            mBinding.textView.setText("按键" + names[position - 1] + "控制的设备");
+
+            mBinding.button2.setText(position < type ? "下一步" : "保存设置");
+            mBinding.button2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (position < type) {
+                        adjustShow(type, position + 1);
+                    } else {
+                        Log.d(TAG, "onClick: ");
+                    }
+                }
+            });
+
+            mBinding.rlName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ValueChangeDialog.newInstance(new ValueChangeDialog.DoneCallback() {
+                        @Override
+                        public void onDone(DialogFragment dialog, String txt) {
+
+                        }
+                    }).setTitle("按键" + names[position - 1] + " 名称")
+                            .setMaxLength(10).show(getSupportFragmentManager(), "dialog");
+                }
+            });
+
+            mBinding.rlControl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ItemPickerDialog.newInstance()
+//                            .setData(Arrays.asList("1111", "222", "3333","1111", "222", "3333","1111", "222", "3333","1111", "222", "3333","1111", "222", "3333"))
+                            .setData(Arrays.asList("1111", "222", "3333"))
+                            .show(getSupportFragmentManager(), "dialog");
+                }
+            });
+        }
+
+        int imageId = ResourceUtils.getDrawableIdByName("ic_switch_" + type);
+        int imageSolidId = ResourceUtils.getDrawableIdByName("ic_switch_" + type + "_" + position);
+
+        mBinding.imageView.setImageResource(imageId);
+        mBinding.imageViewSolid.setImageResource(imageSolidId);
+
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0.2f);
+        alphaAnimation.setRepeatCount(Animation.INFINITE);
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1, 1.02f, 1, 1.02f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        scaleAnimation.setRepeatCount(Animation.INFINITE);
+
+        AnimationSet animationSet = new AnimationSet(true);
+        animationSet.addAnimation(alphaAnimation);
+        animationSet.addAnimation(scaleAnimation);
+
+        animationSet.setRepeatMode(Animation.REVERSE);
+        animationSet.setDuration(1000);
+
+        mBinding.imageViewSolid.clearAnimation();
+        mBinding.imageViewSolid.startAnimation(animationSet);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Animation animation = mBinding.imageViewSolid.getAnimation();
+        if (animation != null && !animation.hasStarted()) {
+            animation.start();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Animation animation = mBinding.imageViewSolid.getAnimation();
+        if (animation != null) {
+            animation.cancel();
+        }
+    }
+}

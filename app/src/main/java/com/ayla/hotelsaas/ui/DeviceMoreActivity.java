@@ -177,4 +177,10 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         intent.putExtra("deviceId", deviceId);
         startActivity(intent);
     }
+
+    @OnClick(R.id.rl_switch_usage)
+    public void handleSwitchUsage() {
+        Intent intent = new Intent(this, SwitchUsageSettingActivity.class);
+        startActivity(intent);
+    }
 }
