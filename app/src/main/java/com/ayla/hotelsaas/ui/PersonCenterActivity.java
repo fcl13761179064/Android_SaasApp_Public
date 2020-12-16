@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.UpgradeDownloadService;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -117,6 +118,9 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
 
     @OnClick(R.id.rl_check_upgrade)
     public void handleCheckUpgrade() {
+        if (UpgradeDownloadService.isWorking) {
+            return;
+        }
         mPresenter.fetchVersionUpdate();
     }
 }

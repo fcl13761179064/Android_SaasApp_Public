@@ -62,7 +62,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         super.onCreate(savedInstanceState);
         VersionUpgradeBean upgradeBean = (VersionUpgradeBean) getIntent().getSerializableExtra("upgrade");
         if (upgradeBean != null) {
-            UpgradeUnifiedCode.handleUpgrade(this, upgradeBean);
+             UpgradeUnifiedCode.handleUpgrade(this, upgradeBean);
         }
     }
 
