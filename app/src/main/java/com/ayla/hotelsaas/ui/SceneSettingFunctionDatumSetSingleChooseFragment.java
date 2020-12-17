@@ -121,8 +121,8 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
                             checkableSupport.setChecked(true);
                         }
                     }
-                    data.add(new CheckableSupport<>(bitValueBean.getDisplayName()));
                 }
+                data.add(checkableSupport);
             }
         }
 
