@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:background="@drawable/bg_device_item"
-    android:foreground="?android:selectableItemBackground">
+    android:background="@drawable/bg_device_item">
 
+    <ImageView
+        android:id="@+id/iv_bg"
+        android:layout_width="163dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        tools:src="@drawable/bg_scene_onekey_enable" />
 
     <TextView
         android:id="@+id/tv_device_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
-        android:layout_toLeftOf="@id/rl_edit_btn"
+        android:layout_marginTop="28dp"
+        android:layout_toLeftOf="@id/iv_more"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="单路开关 AZB-SW0-001"
+        tools:text="单路开关 AZB-SW0-001"
         android:textColor="#ff333333"
         android:textSize="14sp"
         android:textStyle="bold" />
 
     <LinearLayout
+        android:id="@+id/ll_enable_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_device_name"
         android:layout_alignStart="@id/tv_device_name"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -47,18 +54,26 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_edit_btn"
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:gravity="center"
-        android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_sub_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_device_name"
+        android:layout_alignLeft="@id/tv_device_name"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_scene_ill_state_corner"
+        android:text="异常"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:visibility="invisible" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="编辑"
-            android:textSize="@dimen/sp_12" />
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/iv_more"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_more" />
 </RelativeLayout>

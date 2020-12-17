@@ -15,7 +15,7 @@
         android:src="@mipmap/add_device_btn"
         app:backgroundTint="@color/colorAccent"
         app:fabSize="mini"
-        app:maxImageSize="@dimen/dp_16" />
+        app:maxImageSize="16dp" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tl_tabs"

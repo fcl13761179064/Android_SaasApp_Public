@@ -15,6 +15,16 @@
         app:left_iv="@mipmap/icon_back_black"
         app:right_tv="保存" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="#FBC14D"
+        android:id="@+id/tv_ill_state"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="当前场景存在异常，无法正常使用"
+        android:textColor="@color/white" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

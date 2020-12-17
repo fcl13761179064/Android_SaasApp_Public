@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.SceneSettingDeviceSelectAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingDeviceSelectPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
 import com.ayla.hotelsaas.widget.AppBar;
@@ -34,6 +36,7 @@ import butterknife.BindView;
  * selectedDatum {@link ArrayList<String>} 已经选择了的栏目。"dsn propertyName" 格式
  * ruleSetMode 条件组合方式。 ALL(2,"多条条件全部命中")   ANY(3,"多条条件任一命中")
  * String targetGateway 网关设备的deviceID
+ * action {@link com.ayla.hotelsaas.localBean.BaseSceneBean.DeviceAction} 正在编辑的action ，如果为null，就是新创建。
  */
 public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSettingDeviceSelectView, SceneSettingDeviceSelectPresenter> implements SceneSettingDeviceSelectView {
     @BindView(R.id.rv)
@@ -78,15 +81,24 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 DeviceListBean.DevicesBean deviceBean = (DeviceListBean.DevicesBean) adapter.getItem(position);
-                Intent mainActivity = new Intent(SceneSettingDeviceSelectActivity.this, SceneSettingFunctionSelectActivity.class);
-                mainActivity.putExtra("deviceId", deviceBean.getDeviceId());
+                ArrayList<String> prop = null;
                 if (properties.get(position) != null) {
-                    mainActivity.putStringArrayListExtra("properties", new ArrayList<>(properties.get(position)));
+                    prop = new ArrayList<>(properties.get(position));
                 }
-                mainActivity.putExtras(getIntent());
-                startActivityForResult(mainActivity, 0);
+                jumpNext(false, deviceBean, prop);
             }
         });
+    }
+
+    private void jumpNext(boolean autoJump, DeviceListBean.DevicesBean deviceBean, ArrayList<String> properties) {
+        Intent mainActivity = new Intent(SceneSettingDeviceSelectActivity.this, SceneSettingFunctionSelectActivity.class);
+        mainActivity.putExtras(getIntent());
+        mainActivity.putExtra("autoJump", autoJump);
+        mainActivity.putExtra("deviceId", deviceBean.getDeviceId());
+        if (properties != null) {
+            mainActivity.putStringArrayListExtra("properties", properties);
+        }
+        startActivityForResult(mainActivity, 0);
     }
 
     @Override
@@ -102,6 +114,27 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     public void showDevices(List<DeviceListBean.DevicesBean> devices, List<List<String>> properties) {
         mAdapter.setNewData(devices);
         this.properties = properties;
+
+        BaseSceneBean.DeviceAction deviceAction = (BaseSceneBean.DeviceAction) getIntent().getSerializableExtra("action");
+        BaseSceneBean.DeviceCondition deviceCondition = (BaseSceneBean.DeviceCondition) getIntent().getSerializableExtra("condition");
+
+        String deviceId = null;
+        if (deviceAction != null) {
+            deviceId = deviceAction.getTargetDeviceId();
+        } else if (deviceCondition != null) {
+            deviceId = deviceCondition.getSourceDeviceId();
+        }
+        if (!TextUtils.isEmpty(deviceId)) {//如果是编辑，就要直接跳转进去
+            if (devices != null) {
+                for (int i = 0; i < devices.size(); i++) {
+                    DeviceListBean.DevicesBean device = devices.get(i);
+                    if (TextUtils.equals(deviceId, device.getDeviceId())) {
+                        jumpNext(true, device, new ArrayList<>(properties.get(i)));
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     @Override

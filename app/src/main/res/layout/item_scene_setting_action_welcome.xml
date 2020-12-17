@@ -1,61 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:background="@drawable/bg_device_item">
+    android:layout_height="wrap_content"
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/left_iv"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:padding="15dp"
-        android:layout_margin="16dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="9dp"
+        android:padding="6dp"
         android:src="@drawable/ic_scene_action_type_welcome" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_function_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toStartOf="@id/tv_delete"
-        android:layout_toEndOf="@id/left_iv"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_function_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="酒店欢迎语"
-            android:textColor="#ff333333"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:orientation="horizontal"
-            android:text="小度酒店版"
-            android:textColor="#ff91909a"
-            android:textSize="12sp" />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_toLeftOf="@id/iv_delete"
+        android:layout_toRightOf="@id/left_iv"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="酒店欢迎语"
+        android:textColor="#ff333333"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tv_delete"
+        android:id="@+id/tv_name"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_function_name"
+        android:layout_alignBottom="@id/left_iv"
+        android:layout_toLeftOf="@id/iv_delete"
+        android:ellipsize="middle"
+        android:orientation="horizontal"
+        android:singleLine="true"
+        android:textColor="#ff91909a"
+        android:textSize="12sp"
+        tools:text="小度酒店版" />
+
+    <ImageView
+        android:id="@+id/iv_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:gravity="center"
         android:padding="16dp"
-        android:text="删除"
-        android:textColor="#ff91909a"
-        android:textSize="12sp" />
+        android:src="@drawable/ic_scene_device_item_delete"
+        android:textColor="#ff91909a" />
+
+
+    <TextView
+        android:id="@+id/tv_should_delete_device"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_alignLeft="@id/tv_name"
+        android:layout_marginTop="4dp"
+        android:text="*需要删除该设备，场景才能正常使用"
+        android:textColor="#fff55a4c"
+        android:textSize="12sp"
+        android:visibility="gone" />
 </RelativeLayout>

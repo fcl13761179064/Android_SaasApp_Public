@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_root_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:orientation="vertical"
+    android:layout_height="match_parent">
 
     <com.ayla.hotelsaas.widget.AppBar
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:center_tv="@string/exit"
         app:appbar_bottom_line="false"
         app:left_iv="@mipmap/icon_back_black"
         app:left_tv="返回登录" />
@@ -26,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="42dp"
             android:text="@string/forgit_tv_show"
             android:textColor="@color/loginLogoColor"
@@ -37,8 +36,8 @@
             android:id="@+id/ll_forgit_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_40"
-            android:layout_marginRight="@dimen/dp_40"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
             android:gravity="top"
             android:orientation="vertical"
             android:visibility="visible">
@@ -49,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:text="手机号"
                 android:textColor="@color/color_333333"
-                android:textSize="@dimen/sp_12"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -61,8 +60,8 @@
                     android:id="@+id/et_user_name"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:background="@null"
                     android:gravity="center|left"
@@ -71,19 +70,19 @@
                     android:singleLine="true"
                     android:textColor="@color/login_text_percent"
                     android:textColorHint="@color/login_text_percent"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="14sp" />
 
 
                 <TextView
                     android:id="@+id/tv_send_code"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
-                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginTop="10dp"
                     android:gravity="center|left"
                     android:singleLine="true"
                     android:text="发送验证码"
                     android:textColor="@color/loginLogoColor"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
 
@@ -96,10 +95,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginTop="10dp"
                 android:text="验证码"
                 android:textColor="@color/color_333333"
-                android:textSize="@dimen/sp_12"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
 
@@ -107,7 +106,7 @@
                 android:id="@+id/rt_yanzhengma"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginTop="10dp"
                 android:background="@null"
                 android:gravity="center|left"
                 android:hint="请输入验证码"
@@ -116,7 +115,7 @@
                 android:singleLine="true"
                 android:textColor="@color/login_text_percent"
                 android:textColorHint="@color/login_text_percent"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="14sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -130,8 +129,8 @@
             android:id="@+id/ll_new_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_40"
-            android:layout_marginRight="@dimen/dp_40"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
             android:gravity="top"
             android:orientation="vertical"
             android:visibility="gone">
@@ -139,10 +138,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginTop="10dp"
                 android:text="新密码"
                 android:textColor="@color/color_333333"
-                android:textSize="@dimen/sp_12"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
 
@@ -150,14 +149,14 @@
                 android:id="@+id/et_new_password"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginTop="10dp"
                 android:background="@null"
                 android:gravity="center|left"
                 android:hint="请输入新密码"
                 android:singleLine="true"
                 android:textColor="@color/login_text_percent"
                 android:textColorHint="@color/login_text_percent"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="14sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -173,7 +172,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="11111"
-            android:layout_marginLeft="@dimen/dp_40"
+            android:layout_marginLeft="40dp"
             android:textColor="@color/login_error_show"
             android:textSize="14sp"
             android:visibility="invisible" />
@@ -183,9 +182,9 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginLeft="@dimen/dp_40"
+            android:layout_marginLeft="40dp"
             android:enabled="false"
-            android:layout_marginRight="@dimen/dp_40"
+            android:layout_marginRight="40dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="10dp"
@@ -194,4 +193,4 @@
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>
