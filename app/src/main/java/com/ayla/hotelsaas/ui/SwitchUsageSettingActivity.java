@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -10,27 +11,57 @@ import android.view.animation.ScaleAnimation;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.databinding.ActivitySwitchUsageSettingBinding;
+import com.ayla.hotelsaas.mvp.present.SwitchUsageSettingPresenter;
+import com.ayla.hotelsaas.mvp.view.SwitchUsageSettingView;
 import com.ayla.hotelsaas.widget.ItemPickerDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.blankj.utilcode.util.ResourceUtils;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 开关用途设置
  */
-public class SwitchUsageSettingActivity extends BaseMvpActivity {
+public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSettingView, SwitchUsageSettingPresenter> implements SwitchUsageSettingView {
 
     private ActivitySwitchUsageSettingBinding mBinding;
 
-    private int type = 2;
+    private int type = 0;//区分是几路开关
 
     @Override
-    protected BasePresenter initPresenter() {
-        return null;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        String deviceId = getIntent().getStringExtra("deviceId");
+        DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
+        if (devicesBean == null) {
+            return;
+        }
+        {
+            if (devicesBean.getDeviceName().startsWith("一")) {
+                type = 1;
+            } else if (devicesBean.getDeviceName().startsWith("二")) {
+                type = 2;
+            } else if (devicesBean.getDeviceName().startsWith("三")) {
+                type = 3;
+            } else if (devicesBean.getDeviceName().startsWith("四")) {
+                type = 4;
+            }
+        }
+        if (type == 0) {
+            return;
+        }
+        mPresenter.getPurposeCategory();
+    }
+
+    @Override
+    protected SwitchUsageSettingPresenter initPresenter() {
+        return new SwitchUsageSettingPresenter();
     }
 
     @Override
@@ -40,7 +71,7 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity {
 
     @Override
     protected void initView() {
-        adjustShow(type, 1);
+
     }
 
     @Override
@@ -92,8 +123,7 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity {
                 @Override
                 public void onClick(View v) {
                     ItemPickerDialog.newInstance()
-//                            .setData(Arrays.asList("1111", "222", "3333","1111", "222", "3333","1111", "222", "3333","1111", "222", "3333","1111", "222", "3333"))
-                            .setData(Arrays.asList("1111", "222", "3333"))
+                            .setData(purposeCategory)
                             .show(getSupportFragmentManager(), "dialog");
                 }
             });
@@ -137,5 +167,12 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity {
         if (animation != null) {
             animation.cancel();
         }
+    }
+
+    private List<String> purposeCategory = Arrays.asList("1111", "222", "3333");
+
+    @Override
+    public void showPurposeCategory() {
+        adjustShow(type, 1);
     }
 }

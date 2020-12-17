@@ -827,4 +827,8 @@ public class RequestModel {
         return getApiService().checkVoiceRule(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
         });
     }
+
+    public Observable getPurposeCategory( ) {
+      return Observable.just(1);
+    }
 }
