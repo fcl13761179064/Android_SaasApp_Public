@@ -12,16 +12,19 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
-
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
+import com.ayla.hotelsaas.widget.ItemPickerDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -41,6 +44,10 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     TextView my_account_button;
     @BindView(R.id.rl_device_function_rename)
     View rl_function_rename;
+    @BindView(R.id.rl_switch_usage)
+    View rl_switch_usage;
+    @BindView(R.id.rl_purpose_change)
+    View rl_purpose_change;
     @BindView(R.id.rl_device_detail)
     RelativeLayout rl_device_detail;
 
@@ -63,6 +70,16 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         DeviceListBean.DevicesBean mDevicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
         mScopeId = getIntent().getLongExtra("scopeId", 0);
         if (mDevicesBean != null) {
+            if (mDevicesBean.getIsPurposeDevice() == 1) {
+                rl_switch_usage.setVisibility(View.VISIBLE);
+            } else {
+                rl_switch_usage.setVisibility(View.GONE);
+            }
+            if (mDevicesBean.getDeviceUseType() == 1 && !TextUtils.isEmpty(mDevicesBean.getPurposeName())) {
+                rl_purpose_change.setVisibility(View.VISIBLE);
+            } else {
+                rl_purpose_change.setVisibility(View.GONE);
+            }
             tv_device_name.setText(mDevicesBean.getNickname());
             if (!TempUtils.isDeviceGateway(mDevicesBean)) {
                 mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getDeviceCategory(), mDevicesBean.getDeviceId());
@@ -171,6 +188,43 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         rl_function_rename.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void showPurposeCategory(List<PurposeCategoryBean> purposeCategoryBeans) {
+        deviceId = getIntent().getStringExtra("deviceId");
+        DeviceListBean.DevicesBean mDevicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
+        int defIndex = -1;
+        String purposeName = mDevicesBean.getPurposeName();
+        for (int i = 0; i < purposeCategoryBeans.size(); i++) {
+            if (TextUtils.equals(purposeCategoryBeans.get(i).getPurposeName(), purposeName)) {
+                defIndex = i;
+                break;
+            }
+        }
+        ItemPickerDialog.newInstance()
+                .setData(purposeCategoryBeans)
+                .setDefaultIndex(defIndex)
+                .setCallback(new ItemPickerDialog.Callback<PurposeCategoryBean>() {
+                    @Override
+                    public void onCallback(PurposeCategoryBean object) {
+                        mPresenter.updatePurpose(deviceId, object.getId());
+                    }
+                })
+                .show(getSupportFragmentManager(), "dialog");
+    }
+
+    @Override
+    public void updatePurposeSuccess() {
+        CustomToast.makeText(this, "更新成功", R.drawable.ic_success);
+        setResult(RESULT_OK);
+        EventBus.getDefault().post(new DeviceRemovedEvent(deviceId));
+        finish();
+    }
+
+    @Override
+    public void updatePurposeFailed(Throwable throwable) {
+        CustomToast.makeText(this, "更新失败", R.drawable.ic_toast_warming);
+    }
+
     @OnClick(R.id.rl_device_function_rename)
     public void handleFunctionRenameJump() {
         Intent intent = new Intent(this, FunctionRenameActivity.class);
@@ -182,6 +236,15 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     public void handleSwitchUsage() {
         Intent intent = new Intent(this, SwitchUsageSettingActivity.class);
         intent.putExtra("deviceId", deviceId);
+        intent.putExtra("scopeId", mScopeId);
         startActivity(intent);
+    }
+
+    /**
+     * 控制设备切换
+     */
+    @OnClick(R.id.rl_purpose_change)
+    public void handlePurposeChange() {
+        mPresenter.getPurposeCategory();
     }
 }

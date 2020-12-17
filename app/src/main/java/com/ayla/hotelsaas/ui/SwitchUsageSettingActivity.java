@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -13,8 +14,8 @@ import androidx.fragment.app.DialogFragment;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.databinding.ActivitySwitchUsageSettingBinding;
 import com.ayla.hotelsaas.mvp.present.SwitchUsageSettingPresenter;
 import com.ayla.hotelsaas.mvp.view.SwitchUsageSettingView;
@@ -22,11 +23,12 @@ import com.ayla.hotelsaas.widget.ItemPickerDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.blankj.utilcode.util.ResourceUtils;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 开关用途设置
+ * 进入需要带上 deviceId  scopeId
  */
 public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSettingView, SwitchUsageSettingPresenter> implements SwitchUsageSettingView {
 
@@ -56,8 +58,13 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
         if (type == 0) {
             return;
         }
+        selfNames = new String[type];
+        selfPurposeCategories = new PurposeCategoryBean[type];
         mPresenter.getPurposeCategory();
     }
+
+    private String[] selfNames;//设置的名称
+    private PurposeCategoryBean[] selfPurposeCategories;
 
     @Override
     protected SwitchUsageSettingPresenter initPresenter() {
@@ -91,6 +98,9 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
         if (position > names.length) {
             return;
         }
+        selfPurposeCategories[position - 1] = purposeCategory.get(0);
+        mBinding.tvControl.setText(selfPurposeCategories[position - 1].getPurposeName());
+        mBinding.tvName.setText(null);
         {
             mBinding.textView.setText("按键" + names[position - 1] + "控制的设备");
 
@@ -98,10 +108,26 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
             mBinding.button2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String name = selfNames[position - 1];
+                    if (TextUtils.isEmpty(name)) {
+                        CustomToast.makeText(getApplicationContext(), "名称不能为空", R.drawable.ic_toast_warming);
+                        return;
+                    }
+                    for (int i = 0; i < selfNames.length; i++) {
+                        if (i < position - 1) {
+                            if (TextUtils.equals(name, selfNames[i])) {
+                                CustomToast.makeText(getApplicationContext(), "该名称已被使用", R.drawable.ic_toast_warming);
+                                return;
+                            }
+                        }
+                    }
+
                     if (position < type) {
                         adjustShow(type, position + 1);
                     } else {
-                        Log.d(TAG, "onClick: ");
+                        Log.d(TAG, "onClick: " + selfNames + "  " + selfPurposeCategories);
+
+                        handleSave();
                     }
                 }
             });
@@ -109,21 +135,42 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
             mBinding.rlName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ValueChangeDialog.newInstance(new ValueChangeDialog.DoneCallback() {
-                        @Override
-                        public void onDone(DialogFragment dialog, String txt) {
-
-                        }
-                    }).setTitle("按键" + names[position - 1] + " 名称")
-                            .setMaxLength(10).show(getSupportFragmentManager(), "dialog");
+                    ValueChangeDialog
+                            .newInstance(new ValueChangeDialog.DoneCallback() {
+                                @Override
+                                public void onDone(DialogFragment dialog, String txt) {
+                                    dialog.dismissAllowingStateLoss();
+                                    selfNames[position - 1] = txt;
+                                    mBinding.tvName.setText(txt);
+                                }
+                            }).setTitle("按键" + names[position - 1] + " 名称")
+                            .setMaxLength(10)
+                            .setEditValue(selfNames[position - 1])
+                            .show(getSupportFragmentManager(), "dialog");
                 }
             });
 
             mBinding.rlControl.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int defIndex = -1;
+                    PurposeCategoryBean selfPurposeCategory = selfPurposeCategories[position - 1];
+                    for (int i = 0; i < purposeCategory.size(); i++) {
+                        if (purposeCategory.get(i).getId() == selfPurposeCategory.getId()) {
+                            defIndex = i;
+                        }
+                    }
+
                     ItemPickerDialog.newInstance()
                             .setData(purposeCategory)
+                            .setDefaultIndex(defIndex)
+                            .setCallback(new ItemPickerDialog.Callback<PurposeCategoryBean>() {
+                                @Override
+                                public void onCallback(PurposeCategoryBean object) {
+                                    mBinding.tvControl.setText(object.getPurposeName());
+                                    selfPurposeCategories[position - 1] = object;
+                                }
+                            })
                             .show(getSupportFragmentManager(), "dialog");
                 }
             });
@@ -151,6 +198,12 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
         mBinding.imageViewSolid.startAnimation(animationSet);
     }
 
+    private void handleSave() {
+        String deviceId = getIntent().getStringExtra("deviceId");
+        long scopeId = getIntent().getLongExtra("scopeId", 0);
+        mPresenter.handleSave(scopeId, deviceId, selfNames, selfPurposeCategories);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -169,10 +222,11 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
         }
     }
 
-    private List<String> purposeCategory = Arrays.asList("1111", "222", "3333");
+    private List<PurposeCategoryBean> purposeCategory = new ArrayList<>();
 
     @Override
-    public void showPurposeCategory() {
+    public void showPurposeCategory(List<PurposeCategoryBean> purposeCategoryBeans) {
+        purposeCategory.addAll(purposeCategoryBeans);
         adjustShow(type, 1);
     }
 }

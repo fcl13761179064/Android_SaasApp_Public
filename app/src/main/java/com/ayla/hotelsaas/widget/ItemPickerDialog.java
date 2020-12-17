@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.adapter.CheckableSupport;
 import com.ayla.hotelsaas.databinding.LayoutItemPickDialogBinding;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -28,6 +29,10 @@ public class ItemPickerDialog extends DialogFragment {
     LayoutItemPickDialogBinding binding;
 
     List data = new ArrayList<>();
+
+    private int defaultIndex = -1;//默认选中的下标
+
+    private Callback callback;
 
     public static ItemPickerDialog newInstance() {
 
@@ -49,13 +54,31 @@ public class ItemPickerDialog extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.rv.setLayoutManager(new LinearLayoutManager(getContext()){
+        binding.rv.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public void setMeasuredDimension(Rect childrenBounds, int wSpec, int hSpec) {
                 super.setMeasuredDimension(childrenBounds, wSpec, View.MeasureSpec.makeMeasureSpec(SizeUtils.dp2px(300), View.MeasureSpec.AT_MOST));
             }
         });
-        binding.rv.setAdapter(new esss(R.layout.itme_picker_enum, data));
+        List<CheckableSupport> supports = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            CheckableSupport support = new CheckableSupport(data.get(i));
+            if (i == defaultIndex) {
+                support.setChecked(true);
+            }
+            supports.add(support);
+        }
+        esss adapter = new esss(R.layout.itme_picker_enum, supports);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                dismissAllowingStateLoss();
+                if (callback != null) {
+                    callback.onCallback(data.get(position));
+                }
+            }
+        });
+        binding.rv.setAdapter(adapter);
         binding.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -66,6 +89,7 @@ public class ItemPickerDialog extends DialogFragment {
                 outRect.set(0, (position == 0) ? size : 0, 0, size);
             }
         });
+
     }
 
     @Override
@@ -84,16 +108,31 @@ public class ItemPickerDialog extends DialogFragment {
         return this;
     }
 
-    private static class esss extends BaseQuickAdapter {
+    public ItemPickerDialog setDefaultIndex(int defaultIndex) {
+        this.defaultIndex = defaultIndex;
+        return this;
+    }
+
+    public ItemPickerDialog setCallback(Callback callback) {
+        this.callback = callback;
+        return this;
+    }
+
+    private static class esss extends BaseQuickAdapter<CheckableSupport, BaseViewHolder> {
 
 
-        public esss(int layoutResId, @Nullable List data) {
+        public esss(int layoutResId, @Nullable List<CheckableSupport> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, Object item) {
-            helper.setText(R.id.iv, item.toString());
+        protected void convert(BaseViewHolder helper, CheckableSupport item) {
+            helper.setText(R.id.tv, item.getData().toString());
+            helper.setVisible(R.id.iv, item.isChecked());
         }
+    }
+
+    public static interface Callback<T> {
+        void onCallback(T object);
     }
 }

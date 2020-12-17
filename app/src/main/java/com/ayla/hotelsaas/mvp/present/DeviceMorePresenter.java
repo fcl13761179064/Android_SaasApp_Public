@@ -6,6 +6,7 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
@@ -64,7 +65,6 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                 });
         addSubscrebe(subscribe);
     }
-
 
     public void deviceRemove(String deviceId, long scopeId, String scopeType) {
         RequestModel.getInstance().deviceRemove(deviceId, scopeId, scopeType)
@@ -174,5 +174,65 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                 });
         addSubscrebe(subscribe);
 
+    }
+
+    public void getPurposeCategory() {
+        Disposable subscribe = RequestModel.getInstance().getPurposeCategory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<List<PurposeCategoryBean>>() {
+                    @Override
+                    public void accept(List<PurposeCategoryBean> purposeCategoryBeans) throws Exception {
+                        mView.showPurposeCategory(purposeCategoryBeans);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
+
+    public void updatePurpose(String deviceId, int purposeCategory) {
+        Disposable subscribe = RequestModel.getInstance().updatePurpose(deviceId, purposeCategory)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        mView.updatePurposeSuccess();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.updatePurposeFailed(throwable);
+                    }
+                });
+        addSubscrebe(subscribe);
     }
 }
