@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
@@ -35,6 +36,7 @@ import butterknife.OnClick;
  * long scopeId
  */
 public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMorePresenter> implements DeviceMoreView {
+    private final int REQUEST_CODE_SWITCH_USAGE_SET = 0X10;
 
     @BindView(R.id.rl_device_rename)
     RelativeLayout rl_device_rename;
@@ -70,7 +72,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         DeviceListBean.DevicesBean mDevicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
         mScopeId = getIntent().getLongExtra("scopeId", 0);
         if (mDevicesBean != null) {
-            if (mDevicesBean.getIsPurposeDevice() == 1) {
+            if (mDevicesBean.getIsPurposeDevice() == 1 && mDevicesBean.getDeviceUseType() == 0) {//支持创建用途设备、并且现在不是用途设备的源设备，就可以进行用途设备配置
                 rl_switch_usage.setVisibility(View.VISIBLE);
             } else {
                 rl_switch_usage.setVisibility(View.GONE);
@@ -237,7 +239,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         Intent intent = new Intent(this, SwitchUsageSettingActivity.class);
         intent.putExtra("deviceId", deviceId);
         intent.putExtra("scopeId", mScopeId);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_SWITCH_USAGE_SET);
     }
 
     /**
@@ -246,5 +248,15 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     @OnClick(R.id.rl_purpose_change)
     public void handlePurposeChange() {
         mPresenter.getPurposeCategory();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SWITCH_USAGE_SET && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            EventBus.getDefault().post(new DeviceRemovedEvent(deviceId));
+            finish();
+        }
     }
 }

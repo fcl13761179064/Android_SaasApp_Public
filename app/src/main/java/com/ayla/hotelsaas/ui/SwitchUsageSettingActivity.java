@@ -35,19 +35,20 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
     private ActivitySwitchUsageSettingBinding mBinding;
 
     private int type = 0;//区分是几路开关
+    String deviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String deviceId = getIntent().getStringExtra("deviceId");
+        deviceId = getIntent().getStringExtra("deviceId");
         DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
         if (devicesBean == null) {
             return;
         }
         {
-            if (devicesBean.getDeviceName().startsWith("一")) {
+            if (devicesBean.getDeviceName().startsWith("单")) {
                 type = 1;
-            } else if (devicesBean.getDeviceName().startsWith("二")) {
+            } else if (devicesBean.getDeviceName().startsWith("双")) {
                 type = 2;
             } else if (devicesBean.getDeviceName().startsWith("三")) {
                 type = 3;
@@ -116,7 +117,7 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
                     for (int i = 0; i < selfNames.length; i++) {
                         if (i < position - 1) {
                             if (TextUtils.equals(name, selfNames[i])) {
-                                CustomToast.makeText(getApplicationContext(), "该名称已被使用", R.drawable.ic_toast_warming);
+                                CustomToast.makeText(getApplicationContext(), "名称重复，请修改", R.drawable.ic_toast_warming);
                                 return;
                             }
                         }
@@ -199,7 +200,6 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
     }
 
     private void handleSave() {
-        String deviceId = getIntent().getStringExtra("deviceId");
         long scopeId = getIntent().getLongExtra("scopeId", 0);
         mPresenter.handleSave(scopeId, deviceId, selfNames, selfPurposeCategories);
     }
@@ -228,5 +228,17 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
     public void showPurposeCategory(List<PurposeCategoryBean> purposeCategoryBeans) {
         purposeCategory.addAll(purposeCategoryBeans);
         adjustShow(type, 1);
+    }
+
+    @Override
+    public void saveFailed(Throwable throwable) {
+        CustomToast.makeText(getApplicationContext(), "保存失败", R.drawable.ic_toast_warming);
+    }
+
+    @Override
+    public void saveSuccess() {
+        CustomToast.makeText(getApplicationContext(), "保存成功", R.drawable.ic_toast_warming);
+        setResult(RESULT_OK);
+        finish();
     }
 }

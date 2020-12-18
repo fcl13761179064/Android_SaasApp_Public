@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface SwitchUsageSettingView extends BaseView {
     void showPurposeCategory(List<PurposeCategoryBean> purposeCategoryBeans);
+
+    void saveFailed(Throwable throwable);
+
+    void saveSuccess();
 }

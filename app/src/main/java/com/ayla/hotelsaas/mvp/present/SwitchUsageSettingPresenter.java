@@ -54,31 +54,58 @@ public class SwitchUsageSettingPresenter extends BasePresenter<SwitchUsageSettin
         addSubscrebe(subscribe);
     }
 
+    //PowerSwitch_3
     public void handleSave(long scopeId, String deviceId, String[] selfNames, PurposeCategoryBean[] selfPurposeCategories) {
-        Disposable subscribe = Observable
-                .fromCallable(new Callable<String>() {
+        Observable<String[]> purposeIdObservable = Observable
+                .fromCallable(new Callable<DeviceListBean.DevicesBean>() {
                     @Override
-                    public String call() throws Exception {
-                        DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
-                        return devicesBean.getDeviceCategory();
+                    public DeviceListBean.DevicesBean call() throws Exception {
+                        return MyApplication.getInstance().getDevicesBean(deviceId);
                     }
                 })
-                .flatMap(new Function<String, ObservableSource<DeviceTemplateBean>>() {
+                .flatMap(new Function<DeviceListBean.DevicesBean, ObservableSource<String[]>>() {
                     @Override
-                    public ObservableSource<DeviceTemplateBean> apply(@NonNull String s) throws Exception {
-                        return RequestModel.getInstance().fetchDeviceTemplate(s)
-                                .compose(new BaseResultTransformer<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
-                                });
+                    public ObservableSource<String[]> apply(@NonNull DeviceListBean.DevicesBean devicesBean) throws Exception {
+                        if (devicesBean.getCuId() == 0) {//艾拉设备
+                            return RequestModel.getInstance()
+                                    .fetchDeviceTemplate(devicesBean.getDeviceCategory())
+                                    .compose(new BaseResultTransformer<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
+                                    })
+                                    .flatMap(new Function<DeviceTemplateBean, ObservableSource<String[]>>() {
+                                        @Override
+                                        public ObservableSource<String[]> apply(@NonNull DeviceTemplateBean deviceTemplateBean) throws Exception {
+                                            String[] purposeId = new String[selfNames.length];
+                                            for (int i = 0; i < purposeId.length; i++) {
+                                                for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                                    if (attribute.getCode().endsWith(":Onoff") && attribute.getCode().startsWith(String.valueOf(i + 1) + ":")) {
+                                                        purposeId[i] = attribute.getCode();
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            return Observable.just(purposeId);
+                                        }
+                                    });
+                        } else if (devicesBean.getCuId() == 1) {//阿里设备
+                            String[] purposeId = new String[selfNames.length];
+                            for (int i = 0; i < purposeId.length; i++) {
+                                purposeId[i] = "PowerSwitch_" + (i + 1);
+                            }
+                            return Observable.just(purposeId);
+                        }
+                        return Observable.error(new Exception("不支持的设备"));
                     }
-                })//查询出物模板信息
-                .flatMap(new Function<DeviceTemplateBean, ObservableSource<?>>() {
+                });//查询出需要设置的 String[] purposeId
+
+        Disposable subscribe = purposeIdObservable
+                .flatMap(new Function<String[], ObservableSource<?>>() {
                     @Override
-                    public ObservableSource<?> apply(@NonNull DeviceTemplateBean deviceTemplateBean) throws Exception {
+                    public ObservableSource<?> apply(@NonNull String[] purposeId) throws Exception {
                         int[] purposeCategory = new int[selfNames.length];
                         for (int i = 0; i < selfPurposeCategories.length; i++) {
                             purposeCategory[i] = selfPurposeCategories[i].getId();
                         }
-                        return RequestModel.getInstance().purposeBatchSave(scopeId, deviceId, selfNames, selfNames, purposeCategory);
+                        return RequestModel.getInstance().purposeBatchSave(scopeId, deviceId, selfNames, purposeId, purposeCategory);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -86,12 +113,12 @@ public class SwitchUsageSettingPresenter extends BasePresenter<SwitchUsageSettin
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-
+                        mView.saveSuccess();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        mView.saveFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);
