@@ -25,4 +25,5 @@ public class RxjavaFlatmapThrowable extends IOException {
     public String getMsg() {
         return msg;
     }
+
 }

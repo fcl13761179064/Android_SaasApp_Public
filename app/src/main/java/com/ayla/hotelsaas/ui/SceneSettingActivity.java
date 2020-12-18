@@ -708,8 +708,12 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 }
             }
         }
-        if (mRuleEngineBean.getStatus() == 2) {
-            mRuleEngineBean.setStatus(0);
+        if (mRuleEngineBean.getRuleType() == 2) {//一键执行
+            mRuleEngineBean.setStatus(1);
+        } else if (mRuleEngineBean.getRuleType() == 1) {//自动化
+            if(mRuleEngineBean.getStatus() == 2){//如果是异常状态，就要更改为 不可用的正常状态
+                mRuleEngineBean.setStatus(0);
+            }
         }
         mPresenter.saveOrUpdateRuleEngine(mRuleEngineBean);
     }

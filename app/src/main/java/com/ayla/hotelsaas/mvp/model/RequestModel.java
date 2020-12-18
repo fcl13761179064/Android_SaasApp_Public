@@ -25,6 +25,7 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
+import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -36,8 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import carlwu.top.lib_device_add.exceptions.AlreadyBoundException;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
@@ -240,7 +244,7 @@ public class RequestModel {
      * @param scopeId
      * @return
      */
-    public Observable<BaseResult<DeviceListBean.DevicesBean>> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
+    public Observable<DeviceListBean.DevicesBean> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
                                                                                 int scopeType, String deviceCategory, String deviceName, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
@@ -251,7 +255,20 @@ public class RequestModel {
         body.addProperty("deviceName", deviceName);
         body.addProperty("nickName", nickName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().bindDeviceWithDSN(body111);
+        return getApiService().bindDeviceWithDSN(body111)
+                .onErrorResumeNext(new Function<Throwable, ObservableSource<? extends BaseResult<DeviceListBean.DevicesBean>>>() {
+                    @Override
+                    public ObservableSource<? extends BaseResult<DeviceListBean.DevicesBean>> apply(@NonNull Throwable throwable) throws Exception {
+                        if (throwable instanceof RxjavaFlatmapThrowable) {
+                            if (((RxjavaFlatmapThrowable) throwable).getMsg().contains("该设备已经绑定，解绑后方能重新绑定")) {
+                                return Observable.error(new AlreadyBoundException(throwable.getMessage()));
+                            }
+                        }
+                        return Observable.error(throwable);
+                    }
+                })
+                .compose(new BaseResultTransformer<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
+                });
     }
 
 
