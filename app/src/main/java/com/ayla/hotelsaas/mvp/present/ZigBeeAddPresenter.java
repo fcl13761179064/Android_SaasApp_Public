@@ -107,9 +107,9 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                             }
                             Observable<String[]> task = RequestModel.getInstance()
                                     .bindDeviceWithDSN(deviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickname)
-                                    .map(new Function<BaseResult<DeviceListBean.DevicesBean>, String[]>() {
+                                    .map(new Function<DeviceListBean.DevicesBean, String[]>() {
                                         @Override
-                                        public String[] apply(BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
+                                        public String[] apply(DeviceListBean.DevicesBean devicesBeanBaseResult) throws Exception {
                                             return new String[]{deviceId, newNickname};
                                         }
                                     })
@@ -208,7 +208,11 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.bindFailed(null);
+                        if (throwable instanceof AlreadyBoundException) {
+                            mView.bindFailed("该设备已在别处绑定，请先解绑后再重试");
+                        } else {
+                            mView.bindFailed(null);
+                        }
                     }
                 });
         addSubscrebe(subscribe);
@@ -306,9 +310,9 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         String newNickName = deviceName + "_" + subDeviceName;
                         return RequestModel.getInstance()
                                 .bindDeviceWithDSN(subIotId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName)
-                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, String[]>() {
+                                .map(new Function<DeviceListBean.DevicesBean, String[]>() {
                                     @Override
-                                    public String[] apply(@NonNull BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
+                                    public String[] apply(@NonNull DeviceListBean.DevicesBean devicesBeanBaseResult) throws Exception {
                                         return new String[]{subIotId, newNickName};
                                     }
                                 });

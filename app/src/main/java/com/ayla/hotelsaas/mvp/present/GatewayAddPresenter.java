@@ -5,7 +5,6 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
-import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.GatewayAddView;
 
@@ -38,25 +37,25 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
         } else {
             newNickname = deviceName + "_" + dsn;
         }
-        RequestModel.getInstance().bindDeviceWithDSN(dsn, cuId, scopeId, 2, deviceCategory, deviceName, newNickname)
+        Disposable subscribe = RequestModel.getInstance().bindDeviceWithDSN(dsn, cuId, scopeId, 2, deviceCategory, deviceName, newNickname)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new RxjavaObserver() {
+                .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
-                    }
-
-                    @Override
-                    public void _onNext(Object data) {
+                    public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
                         mView.bindSuccess(dsn, newNickname);
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void _onError(String code, String msg) {
-                        mView.bindFailed(null);
+                    public void accept(Throwable throwable) throws Exception {
+                        if (throwable instanceof AlreadyBoundException) {
+                            mView.bindFailed("该设备已在别处绑定，请先解绑后再重试");
+                        } else {
+                            mView.bindFailed(null);
+                        }
                     }
                 });
+        addSubscrebe(subscribe);
     }
 
     public void bindHongYanGateway(AApplication application, long cuId, long scopeId, String deviceCategory, String deviceName, String HYproductkey, String HYdeviceName) {
@@ -108,9 +107,9 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                         String newNickName = deviceName + "_" + deviceInfo[2];
                         return RequestModel.getInstance()
                                 .bindDeviceWithDSN(deviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName)
-                                .map(new Function<BaseResult<DeviceListBean.DevicesBean>, String[]>() {
+                                .map(new Function<DeviceListBean.DevicesBean,  String[]>() {
                                     @Override
-                                    public String[] apply(@NonNull BaseResult<DeviceListBean.DevicesBean> devicesBeanBaseResult) throws Exception {
+                                    public String[] apply(@NonNull DeviceListBean.DevicesBean devicesBean) throws Exception {
                                         return new String[]{deviceId, newNickName};
                                     }
                                 });

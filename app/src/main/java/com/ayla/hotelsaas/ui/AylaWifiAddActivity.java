@@ -146,11 +146,11 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
     }
 
     @Override
-    public void bindFailed(String msg) {
+    public void bindFailed(String errorMsg) {
         mImageView.setImageResource(R.drawable.ic_device_bind_failed);
         mLoadingTextView.setVisibility(View.INVISIBLE);
         mProgressView.setVisibility(View.VISIBLE);
-        mProgressTextView.setText("设备绑定失败，请确认设备状态后重试");
+        mProgressTextView.setText(TextUtils.isEmpty(errorMsg) ? "设备绑定失败\n请再检查设备状态后重试" : errorMsg);
         mFinishButton.setVisibility(View.VISIBLE);
         mFinishButton.setText("重试");
 
