@@ -11,6 +11,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.xw.repo.BubbleSeekBar;
 
 import butterknife.BindView;
@@ -70,7 +71,18 @@ public class SceneSettingFunctionDatumSetRangeFragment extends BaseMvpFragment i
                 mValueTextView.setText(String.format("%s%s", progress, TextUtils.isEmpty(unit) ? "" : unit));
             }
         });
-        mAppCompatSeekBar.setProgress(Double.valueOf((max + min) / 2).floatValue());
+
+        boolean autoJump = getActivity().getIntent().getBooleanExtra("autoJump", false);
+        BaseSceneBean.Action action = (BaseSceneBean.Action) getActivity().getIntent().getSerializableExtra("action");
+        float targetValue = Double.valueOf((max + min) / 2).floatValue();
+        if (autoJump && action != null) {
+            String rightValue = action.getRightValue();
+            try {
+                targetValue = Float.parseFloat(rightValue);
+            } catch (Exception ignored) {
+            }
+        }
+        mAppCompatSeekBar.setProgress(targetValue);
     }
 
     @Override

@@ -38,7 +38,6 @@ public class SceneSettingConditionItemAdapter extends BaseMultiItemQuickAdapter<
             if (TextUtils.equals("==", option)) {
                 option = ":";
             }
-            helper.setText(R.id.tv_function_name, String.format("%s%s%s", condition.getFunctionName(), option, condition.getValueName()));
 
             DeviceListBean.DevicesBean devicesBean = null;
             for (DeviceListBean.DevicesBean bean : MyApplication.getInstance().getDevicesBean()) {
@@ -48,14 +47,25 @@ public class SceneSettingConditionItemAdapter extends BaseMultiItemQuickAdapter<
             }
             if (devicesBean != null) {
                 ImageLoader.loadImg(helper.getView(R.id.left_iv), devicesBean.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
+                helper.setText(R.id.tv_function_name, String.format("%s%s%s", condition.getFunctionName(), option, condition.getValueName()));
                 helper.setText(R.id.tv_name, TextUtils.isEmpty(devicesBean.getNickname()) ? devicesBean.getDeviceId() : devicesBean.getNickname());
+                helper.setAlpha(R.id.left_iv, 1);
+                helper.setAlpha(R.id.tv_name, 1);
+                helper.setAlpha(R.id.tv_function_name, 1);
+
+                helper.setGone(R.id.tv_should_delete_device, false);
             } else {
-                helper.setImageResource(R.id.left_iv, R.drawable.ic_empty_device);
-                helper.setText(R.id.tv_name, ((BaseSceneBean.DeviceCondition) condition).getSourceDeviceId());
+                helper.setImageResource(R.id.left_iv, R.drawable.ic_scene_removed_device_item);
+                helper.setText(R.id.tv_function_name, "无效设备");
+                helper.setText(R.id.tv_name, "XXX-000-000");
+                helper.setAlpha(R.id.tv_name, 0.7f);
+                helper.setAlpha(R.id.tv_function_name, 0.7f);
+
+                helper.setGone(R.id.tv_should_delete_device, true);
             }
 
         }
-        helper.addOnClickListener(R.id.tv_delete);
+        helper.addOnClickListener(R.id.iv_delete);
     }
 
     public static class ConditionItem implements MultiItemEntity {

@@ -158,7 +158,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
     public void loadDataSuccess(DeviceListBean data) {
         MyApplication.getInstance().setDevicesBean(data.getDevices());
 
-        mAdapter.setEmptyView(R.layout.empty_project_list);
+        mAdapter.setEmptyView(R.layout.empty_device_order);
         mSmartRefreshLayout.setEnableRefresh(true);
 
         if (mSmartRefreshLayout.isRefreshing()) {
@@ -180,7 +180,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
             });
         } else {
             mSmartRefreshLayout.setEnableRefresh(true);
-            mAdapter.setEmptyView(R.layout.empty_project_list);
+            mAdapter.setEmptyView(R.layout.empty_device_order);
             CustomToast.makeText(getContext(),R.string.request_not_connect, R.drawable.ic_toast_warming);
         }
         if (mSmartRefreshLayout.isRefreshing()) {

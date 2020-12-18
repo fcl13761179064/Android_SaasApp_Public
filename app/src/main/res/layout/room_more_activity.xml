@@ -27,7 +27,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_16"
             android:text="房间名称"
             android:textColor="#333333"
             android:textSize="17sp" />
@@ -72,11 +71,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_16"
             android:text="分配"
             android:textColor="#333333"
             android:textSize="17sp" />
-
 
         <ImageView
             android:layout_width="8dp"
@@ -99,5 +96,3 @@
         android:textSize="18sp" />
 
 </RelativeLayout>
-
-

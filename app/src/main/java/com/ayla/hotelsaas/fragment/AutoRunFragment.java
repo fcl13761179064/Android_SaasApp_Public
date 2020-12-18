@@ -1,10 +1,12 @@
 package com.ayla.hotelsaas.fragment;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +19,7 @@ import com.ayla.hotelsaas.mvp.present.AutoRunFragmentPresenter;
 import com.ayla.hotelsaas.mvp.view.AutoRunView;
 import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.SceneSettingActivity;
+import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.List;
@@ -41,6 +44,16 @@ public class AutoRunFragment extends BaseMvpFragment<AutoRunView, AutoRunFragmen
     @Override
     protected void initView(View view) {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int size = SizeUtils.dp2px(10);
+                int position = parent.getChildAdapterPosition(view);
+
+                outRect.set(0, (position == 0) ? size : 0, 0, size);
+            }
+        });
         mAdapter = new AutoRunRuleEngineAdapter();
         mAdapter.bindToRecyclerView(mRecyclerView);
         mAdapter.setEmptyView(R.layout.empty_scene_page);
@@ -56,18 +69,14 @@ public class AutoRunFragment extends BaseMvpFragment<AutoRunView, AutoRunFragmen
                 mPresenter.changeSceneStatus(ruleEngineBean, isChecked);
             }
         });
-        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                switch (view.getId()) {
-                    case R.id.tv_edit:
-                        BaseSceneBean ruleEngineBean = (BaseSceneBean) adapter.getItem(position);
-                        Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
-                        intent.putExtra("sceneBean", ruleEngineBean);
-                        if (getParentFragment() != null) {
-                            getParentFragment().startActivityForResult(intent, RuleEngineFragment.REQUEST_CODE_SETTING);
-                        }
-                        break;
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                BaseSceneBean ruleEngineBean = (BaseSceneBean) adapter.getItem(position);
+                Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
+                intent.putExtra("sceneBean", ruleEngineBean);
+                if (getParentFragment() != null) {
+                    getParentFragment().startActivityForResult(intent, RuleEngineFragment.REQUEST_CODE_SETTING);
                 }
             }
         });

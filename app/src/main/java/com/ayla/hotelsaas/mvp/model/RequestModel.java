@@ -4,8 +4,6 @@ package com.ayla.hotelsaas.mvp.model;
 import android.text.TextUtils;
 
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.VersionUpgradeBean;
-import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
@@ -22,6 +20,8 @@ import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
+import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
@@ -793,8 +793,21 @@ public class RequestModel {
      * @return
      */
     public Observable<VersionUpgradeBean> getAppVersion(int versionCode) {
-//        return getApiService().getAppVersion(0,versionCode).compose(new BaseResultTransformer<BaseResult<VersionUpgradeBean>, VersionUpgradeBean>() {
-//        });
-        return Observable.error(new Throwable());
+        return getApiService().getAppVersion(0, versionCode).compose(new BaseResultTransformer<BaseResult<VersionUpgradeBean>, VersionUpgradeBean>() {
+        });
+    }
+
+    public Observable<Boolean> checkRadioExists(long scopeId) {
+        return getApiService().checkRadioExists(scopeId).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
+    }
+
+    public Observable<Boolean> checkVoiceRule(long scopeId) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("scopeId", scopeId);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().checkVoiceRule(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 }

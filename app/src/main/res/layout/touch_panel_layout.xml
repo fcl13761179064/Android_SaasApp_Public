@@ -18,7 +18,7 @@
         android:id="@+id/iv_touch_panel"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center"
         android:layout_marginBottom="30dp"
         android:background="@drawable/ic_empty_device"/>
@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="16dp"
-        android:verticalSpacing="@dimen/dp_4"
-        android:horizontalSpacing="@dimen/dp_4"
+        android:verticalSpacing="4dp"
+        android:horizontalSpacing="4dp"
         android:layout_marginRight="16dp"
         android:numColumns="2" />
 

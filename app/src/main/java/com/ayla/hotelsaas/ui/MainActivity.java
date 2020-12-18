@@ -8,6 +8,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
@@ -69,21 +70,21 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         rgIndicators.check(R.id.rb_main_fragment_device);
 
         //定义底部标签图片大小和位置
-        Drawable drawable_news = getResources().getDrawable(R.drawable.bar_bottom_device);
+        Drawable drawable_news = ResourcesCompat.getDrawable(getResources(),R.drawable.bar_bottom_device,null);
         //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
         drawable_news.setBounds(0, 0, 48, 48);
         //设置图片在文字的哪个方向
         main_device.setCompoundDrawables(null, drawable_news, null, null);
 
         //定义底部标签图片大小和位置
-        Drawable drawable_live = getResources().getDrawable(R.drawable.bar_bottom_linkage);
+        Drawable drawable_live = ResourcesCompat.getDrawable(getResources(),R.drawable.bar_bottom_linkage,null);
         //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
         drawable_live.setBounds(0, 0, 48, 48);
         //设置图片在文字的哪个方向
         main_likeage.setCompoundDrawables(null, drawable_live, null, null);
 
         //定义底部标签图片大小和位置
-        Drawable drawable_tuijian = getResources().getDrawable(R.drawable.bar_bottom_test);
+        Drawable drawable_tuijian = ResourcesCompat.getDrawable(getResources(),R.drawable.bar_bottom_test,null);
         //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
         drawable_tuijian.setBounds(0, 0, 48, 48);
         //设置图片在文字的哪个方向

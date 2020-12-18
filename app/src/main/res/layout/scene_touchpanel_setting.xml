@@ -18,7 +18,7 @@
         android:id="@+id/rl_touchpanel_rename"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginTop="16dp"
         android:background="@drawable/room_num_shape">
 
         <TextView
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_16"
+            android:paddingLeft="16dp"
             android:text="场景按键名称："
             android:textColor="#333333"
             android:textSize="17sp" />
@@ -37,21 +37,21 @@
             android:layout_height="match_parent"
             android:gravity="right"
             android:layout_toRightOf="@+id/tv_scene_title"
-            android:paddingRight="@dimen/dp_16">
+            android:paddingRight="16dp">
 
             <TextView
                 android:id="@+id/tv_touchpanel_rename"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingRight="@dimen/dp_16"
+                android:paddingRight="16dp"
                 android:gravity="center|right"
                 android:text="场景"
                 android:maxLength="20"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:drawableRight="@mipmap/left_ico"
+                app:drawableRightCompat="@mipmap/left_ico"
                 android:textColor="#999999"
-                android:drawablePadding="@dimen/dp_16"
+                android:drawablePadding="16dp"
                 android:textSize="17sp" />
 
         </RelativeLayout>
@@ -63,7 +63,7 @@
         android:id="@+id/rl_touchpanel_icon"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginTop="16dp"
         android:background="@drawable/room_num_shape">
 
         <TextView
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_16"
+            android:paddingLeft="16dp"
             android:text="场景按键icon："
             android:textColor="#333333"
             android:textSize="17sp" />
@@ -83,22 +83,22 @@
             android:orientation="horizontal"
             android:gravity="center|right"
             android:layout_toRightOf="@+id/tv_scene_two_title"
-            android:layout_marginRight="@dimen/dp_16">
+            android:layout_marginRight="16dp">
 
             <ImageView
                 android:id="@+id/iv_scene_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:background="@color/loginLogoColor"
-                android:layout_marginRight="@dimen/dp_16"
+                android:layout_marginRight="16dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/one" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dp_16"
-                android:drawableRight="@mipmap/left_ico"/>
+                android:layout_marginRight="16dp"
+                app:drawableRightCompat="@mipmap/left_ico"/>
 
         </LinearLayout>
     </RelativeLayout>

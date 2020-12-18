@@ -20,6 +20,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.ayla.hotelsaas.R;
 
@@ -146,7 +147,7 @@ public class BiuEditTextUtils extends AppCompatEditText implements View.OnFocusC
         mClearDrawable = getCompoundDrawables()[2];
         if (mClearDrawable == null) {
             // 获取删除的图片资源，可以自己找一张图片放到drawable文件夹下 ;
-            mClearDrawable = getResources().getDrawable(R.drawable.delete_selector);
+            mClearDrawable = ResourcesCompat.getDrawable(getResources(),R.drawable.delete_selector,null);
         }
         //设置图片的固有宽高
         mClearDrawable.setBounds(0, 0, (int) (mClearDrawable.getIntrinsicWidth() / 1f), (int) (mClearDrawable.getIntrinsicHeight() / 1f));

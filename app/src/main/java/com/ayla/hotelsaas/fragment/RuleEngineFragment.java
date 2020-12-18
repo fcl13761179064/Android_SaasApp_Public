@@ -4,6 +4,7 @@ package com.ayla.hotelsaas.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -19,6 +20,8 @@ import com.ayla.hotelsaas.adapter.RuleEnginePagerAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.RuleEnginePresenter;
 import com.ayla.hotelsaas.mvp.view.RuleEngineView;
@@ -32,6 +35,10 @@ import com.google.android.material.tabs.TabLayout;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -61,6 +68,18 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
 
     public RuleEngineFragment(long mRoom_ID) {
         this.mRoom_ID = mRoom_ID;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     @Override
@@ -223,6 +242,16 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
      * subFragment 通知刷新的入口
      */
     public final void notifyRefresh() {
-        mSmartRefreshLayout.autoRefresh();//自动刷新
+        mSmartRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSmartRefreshLayout.autoRefresh();//自动刷新
+            }
+        });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleDeviceRemoved(DeviceRemovedEvent event) {
+        notifyRefresh();
     }
 }

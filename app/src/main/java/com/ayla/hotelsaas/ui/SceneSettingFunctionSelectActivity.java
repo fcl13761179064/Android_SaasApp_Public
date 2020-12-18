@@ -83,41 +83,53 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 DeviceTemplateBean.AttributesBean attributesBean = mAdapter.getItem(position);
+                jumpNext(false, attributesBean);
+            }
+        });
+    }
 
-                boolean nest = true;
-                int type = getIntent().getIntExtra("type", 0);//选择的功能作为条件还是动作。
-                if (type == 0) {//条件
-                    BaseSceneBean.RULE_SET_MODE ruleSetMode = (BaseSceneBean.RULE_SET_MODE) getIntent().getSerializableExtra("ruleSetMode");//选择的功能作为条件还是动作。
-                    if (ruleSetMode == BaseSceneBean.RULE_SET_MODE.ANY) {//满足任意
-                        nest = false;
-                    }
-                }
+    private void jumpNext(boolean autoJump, DeviceTemplateBean.AttributesBean attributesBean) {
+        BaseSceneBean.DeviceAction deviceAction = (BaseSceneBean.DeviceAction) getIntent().getSerializableExtra("action");
 
-                if (nest) {
-                    ArrayList<String> selectedDatum = getIntent().getStringArrayListExtra("selectedDatum");
-                    if (selectedDatum != null) {
-                        for (String s : selectedDatum) {
-                            String[] split = s.split(" ");
-                            String dsn = split[0];
-                            String property = split[1];
+        boolean nest = true;
+        int type = getIntent().getIntExtra("type", 0);//选择的功能作为条件还是动作。
+        if (type == 0) {//条件
+            int ruleSetMode = (int) getIntent().getIntExtra("ruleSetMode", BaseSceneBean.RULE_SET_MODE.ANY);//选择的功能作为条件还是动作。
+            if (ruleSetMode == BaseSceneBean.RULE_SET_MODE.ANY) {//满足任意
+                nest = false;
+            }
+        }
 
-                            if (TextUtils.equals(deviceBean.getDeviceId(), dsn)) {
-                                if (TextUtils.equals(attributesBean.getCode(), property)) {
-                                    CustomToast.makeText(getBaseContext(), "不可重复添加", R.drawable.ic_toast_warming);
-                                    return;
+        if (nest) {//满足任意时，不可以重复添加
+            ArrayList<String> selectedDatum = getIntent().getStringArrayListExtra("selectedDatum");
+            if (selectedDatum != null) {
+                for (String s : selectedDatum) {
+                    String[] split = s.split(" ");
+                    String dsn = split[0];
+                    String property = split[1];
+
+                    if (TextUtils.equals(deviceBean.getDeviceId(), dsn)) {
+                        if (TextUtils.equals(attributesBean.getCode(), property)) {
+                            if (deviceAction != null) {
+                                if (TextUtils.equals(deviceAction.getLeftValue(), property)) {
+                                    break;
                                 }
                             }
+                            CustomToast.makeText(getBaseContext(), "不可重复添加", R.drawable.ic_toast_warming);
+                            return;
                         }
                     }
                 }
-
-                Intent mainActivity = new Intent(SceneSettingFunctionSelectActivity.this, SceneSettingFunctionDatumSetActivity.class);
-                mainActivity.putExtra("deviceId", deviceBean.getDeviceId());
-                mainActivity.putExtra("attributeBean", attributesBean);
-                mainActivity.putExtra("type", type);
-                startActivityForResult(mainActivity, 0);
             }
-        });
+        }
+
+        Intent mainActivity = new Intent(SceneSettingFunctionSelectActivity.this, SceneSettingFunctionDatumSetActivity.class);
+        mainActivity.putExtras(getIntent());
+        mainActivity.putExtra("autoJump", autoJump);
+        mainActivity.putExtra("deviceId", deviceBean.getDeviceId());
+        mainActivity.putExtra("attributeBean", attributesBean);
+        mainActivity.putExtra("type", type);
+        startActivityForResult(mainActivity, 0);
     }
 
     @Override
@@ -130,6 +142,31 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     @Override
     public void showFunctions(List<DeviceTemplateBean.AttributesBean> data) {
         mAdapter.setNewData(data);
+
+        BaseSceneBean.DeviceAction deviceAction = (BaseSceneBean.DeviceAction) getIntent().getSerializableExtra("action");
+        BaseSceneBean.DeviceCondition deviceCondition = (BaseSceneBean.DeviceCondition) getIntent().getSerializableExtra("condition");
+
+        String propertyCode = null;
+        if (deviceAction != null) {
+            propertyCode = deviceAction.getLeftValue();
+        } else if (deviceCondition != null) {
+            propertyCode = deviceCondition.getLeftValue();
+        }
+
+        boolean autoJump = getIntent().getBooleanExtra("autoJump", false);
+        if (autoJump) {
+            if (!TextUtils.isEmpty(propertyCode)) {//如果是编辑，就要直接跳转进去
+                if (data != null) {
+                    for (int i = 0; i < data.size(); i++) {
+                        DeviceTemplateBean.AttributesBean attributesBean = data.get(i);
+                        if (TextUtils.equals(attributesBean.getCode(), propertyCode)) {
+                            jumpNext(true, attributesBean);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override

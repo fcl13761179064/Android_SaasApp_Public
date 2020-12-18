@@ -29,13 +29,13 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
         super(data);
         addItemType(0, R.layout.item_scene_setting_action_device);
         addItemType(1, R.layout.item_scene_setting_action_delay);
+        addItemType(2, R.layout.item_scene_setting_action_welcome);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, ActionItem item) {
         BaseSceneBean.Action action = item.action;
         if (action instanceof BaseSceneBean.DeviceAction) {
-            helper.setText(R.id.tv_function_name, String.format("%s:%s", action.getFunctionName(), action.getValueName()));
 
             DeviceListBean.DevicesBean devicesBean = null;
             for (DeviceListBean.DevicesBean bean : MyApplication.getInstance().getDevicesBean()) {
@@ -45,11 +45,23 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
             }
             if (devicesBean != null) {
                 ImageLoader.loadImg(helper.getView(R.id.left_iv), devicesBean.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
+                helper.setText(R.id.tv_function_name, String.format("%s:%s", action.getFunctionName(), action.getValueName()));
                 helper.setText(R.id.tv_name, TextUtils.isEmpty(devicesBean.getNickname()) ? devicesBean.getDeviceId() : devicesBean.getNickname());
+                helper.setAlpha(R.id.left_iv, 1);
+                helper.setAlpha(R.id.tv_name, 1);
+                helper.setAlpha(R.id.tv_function_name, 1);
+
+                helper.setGone(R.id.tv_should_delete_device, false);
             } else {
-                helper.setImageResource(R.id.left_iv, R.drawable.ic_empty_device);
-                helper.setText(R.id.tv_name, action.getTargetDeviceId());
+                helper.setImageResource(R.id.left_iv, R.drawable.ic_scene_removed_device_item);
+                helper.setText(R.id.tv_function_name, "无效设备");
+                helper.setText(R.id.tv_name, "XXX-000-000");
+                helper.setAlpha(R.id.tv_name, 0.7f);
+                helper.setAlpha(R.id.tv_function_name, 0.7f);
+
+                helper.setGone(R.id.tv_should_delete_device, true);
             }
+
         } else if (action instanceof BaseSceneBean.DelayAction) {
             String rightValue = action.getRightValue();
             int seconds = 0;
@@ -62,9 +74,12 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
             int second = seconds % 60;
             String _minute = minute < 10 ? "0" + minute : String.valueOf(minute);
             String _second = second < 10 ? "0" + second : String.valueOf(second);
+
             helper.setText(R.id.tv_name, String.format("%s分%s秒", _minute, _second));
+        } else if (action instanceof BaseSceneBean.WelcomeAction) {
+
         }
-        helper.addOnClickListener(R.id.tv_delete);
+        helper.addOnClickListener(R.id.iv_delete);
     }
 
     public static class ActionItem implements MultiItemEntity {
@@ -76,7 +91,16 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
 
         @Override
         public int getItemType() {
-            return (action instanceof BaseSceneBean.DeviceAction) ? 0 : 1;
+            if (action instanceof BaseSceneBean.DeviceAction) {
+                return 0;
+            }
+            if (action instanceof BaseSceneBean.DelayAction) {
+                return 1;
+            }
+            if (action instanceof BaseSceneBean.WelcomeAction) {
+                return 2;
+            }
+            return -1;
         }
     }
 }

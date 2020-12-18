@@ -69,17 +69,16 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity {
 
     @Override
     protected void initListener() {
-        appBar.rightTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment contentFragment = getSupportFragmentManager().findFragmentByTag("content");
-                if (contentFragment instanceof ISceneSettingFunctionDatumSet) {
-                    Intent data = new Intent(getIntent());
-                    data.putExtra("result", ((ISceneSettingFunctionDatumSet) contentFragment).getDatum());
-                    setResult(Activity.RESULT_OK, data);
-                    finish();
-                }
-            }
-        });
+    }
+
+    @Override
+    protected void appBarRightTvClicked() {
+        Fragment contentFragment = getSupportFragmentManager().findFragmentByTag("content");
+        if (contentFragment instanceof ISceneSettingFunctionDatumSet) {
+            Intent data = new Intent(getIntent());
+            data.putExtra("result", ((ISceneSettingFunctionDatumSet) contentFragment).getDatum());
+            setResult(Activity.RESULT_OK, data);
+            finish();
+        }
     }
 }

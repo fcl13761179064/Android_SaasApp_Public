@@ -9,9 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/dp_16"
-        android:layout_marginBottom="@dimen/dp_10"
-        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical">
 
         <TextView
@@ -28,7 +28,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -38,7 +38,7 @@
                 android:gravity="bottom"
                 android:singleLine="true"
                 android:text="施工日期："
-                android:textSize="@dimen/sp_12" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/item_room_srart_date"
@@ -47,7 +47,7 @@
                 android:layout_alignParentRight="true"
                 android:gravity="bottom"
                 android:text="2011-06-12"
-                android:textSize="@dimen/sp_12" />
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
                 android:layout_alignParentRight="true"
                 android:gravity="bottom"
                 android:text=" - "
-                android:textSize="@dimen/sp_12" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/item_room_end_date"
@@ -63,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:gravity="bottom"
-                android:textSize="@dimen/sp_12"
+                android:textSize="12sp"
                 tools:text="2011-06-12" />
         </LinearLayout>
 
@@ -78,7 +78,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="施工状态："
-                android:textSize="@dimen/sp_12" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/item_work_status"
@@ -88,7 +88,7 @@
                 android:gravity="center_vertical"
                 android:text="待施工"
                 android:textColor="@color/loginLogoColor"
-                android:textSize="@dimen/sp_12" />
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
