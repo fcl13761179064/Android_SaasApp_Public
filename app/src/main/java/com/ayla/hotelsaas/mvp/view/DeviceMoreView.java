@@ -1,6 +1,9 @@
 package com.ayla.hotelsaas.mvp.view;
 
 import com.ayla.hotelsaas.base.BaseView;
+import com.ayla.hotelsaas.bean.PurposeCategoryBean;
+
+import java.util.List;
 
 public interface DeviceMoreView extends BaseView {
 
@@ -19,4 +22,10 @@ public interface DeviceMoreView extends BaseView {
     void cannotRenameFunction();
 
     void canRenameFunction();
+
+    void showPurposeCategory(List<PurposeCategoryBean> purposeCategoryBeans);
+
+    void updatePurposeSuccess();
+
+    void updatePurposeFailed(Throwable throwable);
 }

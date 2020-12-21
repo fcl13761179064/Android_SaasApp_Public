@@ -13,6 +13,7 @@ import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
+import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
@@ -826,5 +827,39 @@ public class RequestModel {
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().checkVoiceRule(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
         });
+    }
+
+    public Observable<List<PurposeCategoryBean>> getPurposeCategory() {
+        return getApiService().getPurposeCategory().compose(new BaseResultTransformer<BaseResult<List<PurposeCategoryBean>>, List<PurposeCategoryBean>>() {
+        });
+    }
+
+    public Observable<BaseResult> purposeBatchSave(long scopeId, String deviceId, String[] purposeName, String[] purposeId, int[] purposeCategory) throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        JSONArray purPoseInfoListJsonArray = new JSONArray();
+        for (int i = 0; i < purposeName.length; i++) {
+            JSONObject purPoseInfoJsonObject = new JSONObject();
+            purPoseInfoJsonObject.put("deviceId", deviceId);
+            purPoseInfoJsonObject.put("purposeCategory", purposeCategory[i]);
+            purPoseInfoJsonObject.put("purposeId", purposeId[i]);
+            purPoseInfoJsonObject.put("purposeName", purposeName[i]);
+            purPoseInfoJsonObject.put("purposeSourceDeviceType", 0);
+            purPoseInfoJsonObject.put("scopeId", scopeId);
+            purPoseInfoJsonObject.put("scopeType", 2);
+            purPoseInfoListJsonArray.put(purPoseInfoJsonObject);
+        }
+        jsonObject.put("purPoseInfoList", purPoseInfoListJsonArray);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().purposeBatchSave(body111);
+    }
+
+    public Observable updatePurpose(String deviceId,int purposeCategory) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("deviceId", deviceId);
+        jsonObject.addProperty("purposeCategory", purposeCategory);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().updatePurpose(body111);
     }
 }

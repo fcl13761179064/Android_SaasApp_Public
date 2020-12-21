@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.base;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.ayla.hotelsaas.widget.LoadingDialog;
 
@@ -20,6 +21,11 @@ public abstract class BaseMvpActivity<V extends BaseView, T extends BasePresente
         mPresenter = initPresenter();
         attachView();
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected View getLayoutView() {
+        return null;
     }
 
     private void attachView() {

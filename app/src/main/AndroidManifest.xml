@@ -205,6 +205,9 @@
         <activity
             android:name=".ui.RuleEngineActionHotelWelcomeActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.SwitchUsageSettingActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
