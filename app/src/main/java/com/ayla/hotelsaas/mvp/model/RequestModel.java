@@ -41,7 +41,6 @@ import java.util.concurrent.Callable;
 import carlwu.top.lib_device_add.exceptions.AlreadyBoundException;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -246,7 +245,7 @@ public class RequestModel {
      * @return
      */
     public Observable<DeviceListBean.DevicesBean> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
-                                                                                int scopeType, String deviceCategory, String deviceName, String nickName) {
+                                                                    int scopeType, String deviceCategory, String deviceName, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("scopeId", scopeId);
@@ -854,7 +853,7 @@ public class RequestModel {
         return getApiService().purposeBatchSave(body111);
     }
 
-    public Observable updatePurpose(String deviceId,int purposeCategory) {
+    public Observable updatePurpose(String deviceId, int purposeCategory) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("deviceId", deviceId);
         jsonObject.addProperty("purposeCategory", purposeCategory);

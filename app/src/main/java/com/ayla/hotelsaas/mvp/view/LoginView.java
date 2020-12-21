@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.mvp.view;
 
 import com.ayla.hotelsaas.base.BaseView;
 import com.ayla.hotelsaas.bean.User;
+import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 
 /**
  * @描述
@@ -14,4 +15,10 @@ public interface LoginView extends BaseView {
     void loginSuccess(User data);
 
     void loginFailed(Throwable throwable);
+
+    void shouldForceUpgrade(VersionUpgradeBean versionUpgradeBean);
+
+    void notForceUpgrade();
+
+    void checkVersionFailed(Throwable throwable);
 }
