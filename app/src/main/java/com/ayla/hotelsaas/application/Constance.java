@@ -26,7 +26,7 @@ public class Constance {
     }
 
     public static String sProdUrl = "https://abp-prod.ayla.com.cn";//正式环境
-    public static String sQaUrl = "https://abp.ayla.com.cn";//测试环境
+    public static String sQaUrl = "https://abp-test.ayla.com.cn";//测试环境
     public static String sDevUrl = "http://106.15.231.103";//DEV环境
 
     public static String getBaseUrl() {
