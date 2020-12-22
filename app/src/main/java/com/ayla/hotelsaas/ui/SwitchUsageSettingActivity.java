@@ -140,9 +140,14 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
                             .newInstance(new ValueChangeDialog.DoneCallback() {
                                 @Override
                                 public void onDone(DialogFragment dialog, String txt) {
+                                    if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
+                                        CustomToast.makeText(getBaseContext(), "名称不能为空", R.drawable.ic_toast_warming);
+                                        return;
+                                    } else {
+                                        selfNames[position - 1] = txt;
+                                        mBinding.tvName.setText(txt);
+                                    }
                                     dialog.dismissAllowingStateLoss();
-                                    selfNames[position - 1] = txt;
-                                    mBinding.tvName.setText(txt);
                                 }
                             }).setTitle("按键" + names[position - 1] + " 名称")
                             .setMaxLength(10)
