@@ -25,6 +25,7 @@ import java.util.Set;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.BiFunction;
@@ -147,51 +148,22 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                                 return deviceTemplateBeanBaseResult.data;
                                             }
                                         })
+                                        .compose(RequestModel.getInstance().modifyTemplateDisplayName(enableDevice.getDeviceId()))
                                 );
                                 continue;
                             }
                             for (DeviceCategoryDetailBean deviceCategoryDetailBean : deviceCategoryDetailBeans) {
                                 if (enableDevice.getCuId() == deviceCategoryDetailBean.getCuId()
                                         && TextUtils.equals(deviceCategoryDetailBean.getOemModel(), enableDevice.getDeviceCategory())) {
-                                    Observable<DeviceTemplateBean> task = RequestModel.getInstance()
+                                    tasks.add(RequestModel.getInstance()
                                             .fetchDeviceTemplate(deviceCategoryDetailBean.getOemModel())
                                             .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                                                 @Override
-                                                public DeviceTemplateBean apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
+                                                public DeviceTemplateBean apply(@NonNull BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
                                                     return deviceTemplateBeanBaseResult.data;
                                                 }
                                             })
-                                            .zipWith(RequestModel.getInstance()
-                                                    .getALlTouchPanelDeviceInfo(enableDevice.getCuId(), enableDevice.getDeviceId())
-                                                    .map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
-                                                        @Override
-                                                        public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
-                                                            return listBaseResult.data;
-                                                        }
-                                                    }), new BiFunction<DeviceTemplateBean, List<TouchPanelDataBean>, DeviceTemplateBean>() {
-                                                @Override
-                                                public DeviceTemplateBean apply(DeviceTemplateBean deviceTemplateBean, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
-                                                    for (DeviceTemplateBean.AttributesBean attributesBean : deviceTemplateBean.getAttributes()) {
-                                                        for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
-                                                            if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
-                                                                    TextUtils.equals(attributesBean.getCode(), touchPanelDataBean.getPropertyName())) {
-                                                                attributesBean.setDisplayName(touchPanelDataBean.getPropertyValue());
-                                                            }
-                                                            if ("Words".equals(touchPanelDataBean.getPropertyType())) {
-                                                                if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
-                                                                    for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
-                                                                        if (TextUtils.equals(valueBean.getValue(), touchPanelDataBean.getPropertyName())) {
-                                                                            valueBean.setDisplayName(touchPanelDataBean.getPropertyValue());
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    return deviceTemplateBean;
-                                                }
-                                            });//根据功能的别名，篡改物模板里面的displayname。
-                                    tasks.add(task);
+                                            .compose(RequestModel.getInstance().modifyTemplateDisplayName(enableDevice.getDeviceId())));
                                     break;
                                 }
                             }

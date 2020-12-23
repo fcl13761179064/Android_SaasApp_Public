@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.mvp.model;
 
 import android.text.TextUtils;
 
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -41,7 +42,9 @@ import java.util.concurrent.Callable;
 import carlwu.top.lib_device_add.exceptions.AlreadyBoundException;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
@@ -402,9 +405,9 @@ public class RequestModel {
                         }
                     }
                 })//特别处理：红外家电设备自学习的功能在物模板里面定义在extendAttributes 字段中，需要把它融合到字段attributes 里面。
-                .map(new Function<BaseResult<DeviceTemplateBean>, BaseResult<DeviceTemplateBean>>() {
+                .doOnNext(new Consumer<BaseResult<DeviceTemplateBean>>() {
                     @Override
-                    public BaseResult<DeviceTemplateBean> apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
+                    public void accept(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
                         if ("a1UR1BjfznK".equals(oemModel)) {//触控面板
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
@@ -589,7 +592,6 @@ public class RequestModel {
                                 }
                             }
                         }
-                        return deviceTemplateBeanBaseResult;
                     }
                 })//特别处理：如果是智镜设备，要强行加上 场景的支持。
                 ;
@@ -806,7 +808,9 @@ public class RequestModel {
         return getApiService().createWorkOrder(body111);
     }
 
-    /** 当没有新版本信息时，data = null 。
+    /**
+     * 当没有新版本信息时，data = null 。
+     *
      * @return
      */
     public Observable<BaseResult<VersionUpgradeBean>> getAppVersion(int versionCode) {
@@ -859,5 +863,53 @@ public class RequestModel {
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().updatePurpose(body111);
+    }
+
+    /**
+     * 根据设置的功能别名，篡改物模板里面的displayname。
+     *
+     * @param deviceId
+     */
+    public ObservableTransformer<DeviceTemplateBean, DeviceTemplateBean> modifyTemplateDisplayName(String deviceId) {
+        DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
+        return new ObservableTransformer<DeviceTemplateBean, DeviceTemplateBean>() {
+            @NonNull
+            @Override
+            public ObservableSource<DeviceTemplateBean> apply(@NonNull Observable<DeviceTemplateBean> upstream) {
+                return upstream.zipWith(RequestModel.getInstance()
+                                .getALlTouchPanelDeviceInfo(devicesBean.getCuId(), deviceId)
+                                .map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
+                                    @Override
+                                    public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
+                                        return listBaseResult.data;
+                                    }
+                                }),
+                        new BiFunction<DeviceTemplateBean, List<TouchPanelDataBean>, DeviceTemplateBean>() {
+                            @Override
+                            public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
+                                for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans.getAttributes()) {
+                                    for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
+                                        if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
+                                                TextUtils.equals(attributesBean.getCode(), touchPanelDataBean.getPropertyName())) {
+                                            attributesBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                        }
+                                        if ("Words".equals(touchPanelDataBean.getPropertyType())) {
+                                            if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
+                                                if (attributesBean.getValue() != null) {
+                                                    for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
+                                                        if (TextUtils.equals(valueBean.getValue(), touchPanelDataBean.getPropertyName())) {
+                                                            valueBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                return attributesBeans;
+                            }
+                        });
+            }
+        };
     }
 }

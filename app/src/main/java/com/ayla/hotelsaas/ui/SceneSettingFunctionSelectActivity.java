@@ -32,9 +32,9 @@ import butterknife.BindView;
 /**
  * 场景创建，选择功能菜单的页面
  * 进入时，必须带上:
- * 1.支持的条件或者功能的propertiesName集合 。{@link java.util.ArrayList<String>}    properties 。
+ * 1.long scopeId
+ * 2.int type  ，0：condition  1：action
  * 3.String deviceId
- * 4.int type  ，0：condition  1：action
  * 可选参数
  * 1.selectedDatum {@link ArrayList<String>} 已选择的栏目
  * 2.ruleSetMode  ALL(2,"多条条件全部命中")   ANY(3,"多条条件任一命中")
@@ -89,7 +89,6 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     }
 
     private void jumpNext(boolean autoJump, DeviceTemplateBean.AttributesBean attributesBean) {
-        BaseSceneBean.DeviceAction deviceAction = (BaseSceneBean.DeviceAction) getIntent().getSerializableExtra("action");
 
         boolean nest = true;
         int type = getIntent().getIntExtra("type", 0);//选择的功能作为条件还是动作。
@@ -100,8 +99,9 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
             }
         }
 
-        if (nest) {//满足任意时，不可以重复添加
+        if (nest) {//满足所有时，不可以重复添加
             ArrayList<String> selectedDatum = getIntent().getStringArrayListExtra("selectedDatum");
+            String editProperty = getIntent().getStringExtra("property");//编辑时 ，原来的属性名。
             if (selectedDatum != null) {
                 for (String s : selectedDatum) {
                     String[] split = s.split(" ");
@@ -110,10 +110,8 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
 
                     if (TextUtils.equals(deviceBean.getDeviceId(), dsn)) {
                         if (TextUtils.equals(attributesBean.getCode(), property)) {
-                            if (deviceAction != null) {
-                                if (TextUtils.equals(deviceAction.getLeftValue(), property)) {
-                                    break;
-                                }
+                            if (TextUtils.equals(editProperty, property)) {
+                                break;
                             }
                             CustomToast.makeText(getBaseContext(), "不可重复添加", R.drawable.ic_toast_warming);
                             return;
@@ -127,16 +125,16 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
         mainActivity.putExtras(getIntent());
         mainActivity.putExtra("autoJump", autoJump);
         mainActivity.putExtra("deviceId", deviceBean.getDeviceId());
-        mainActivity.putExtra("attributeBean", attributesBean);
         mainActivity.putExtra("type", type);
+        mainActivity.putExtra("property", attributesBean.getCode());
         startActivityForResult(mainActivity, 0);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ArrayList<String> properties = getIntent().getStringArrayListExtra("properties");
-        mPresenter.loadFunction(deviceBean.getCuId(), deviceBean.getDeviceId(), deviceBean.getDeviceCategory(), properties);
+        int type = getIntent().getIntExtra("type", 0);//选择的功能作为条件还是动作。
+        mPresenter.loadFunction(type == 0, deviceBean.getCuId(), deviceBean.getDeviceId(), deviceBean.getDeviceCategory());
     }
 
     @Override
@@ -175,6 +173,17 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
         if (requestCode == 0 && resultCode == RESULT_OK) {
             setResult(RESULT_OK, data);
             finish();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        boolean editMode = getIntent().getBooleanExtra("editMode", false);
+        if (editMode) {//如果是再编辑模式
+            Intent intent = new Intent(this, SceneSettingDeviceSelectActivity.class);
+            intent.putExtras(getIntent());
+            startActivity(intent);
         }
     }
 }
