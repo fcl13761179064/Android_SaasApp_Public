@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
@@ -67,13 +68,18 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<VersionUpgradeBean>() {
+                .subscribe(new Consumer<BaseResult<VersionUpgradeBean>>() {
                     @Override
-                    public void accept(VersionUpgradeBean versionUpgradeBean) throws Exception {
-                        if (versionUpgradeBean.getIsForce() != 0) {
-                            mView.shouldForceUpgrade(versionUpgradeBean);
-                        } else {
+                    public void accept(BaseResult<VersionUpgradeBean> versionUpgradeBeanBaseResult) throws Exception {
+                        VersionUpgradeBean upgradeBean = versionUpgradeBeanBaseResult.data;
+                        if (upgradeBean == null) {
                             mView.notForceUpgrade();
+                        }else{
+                            if (upgradeBean.getIsForce() != 0) {
+                                mView.shouldForceUpgrade(upgradeBean);
+                            } else {
+                                mView.notForceUpgrade();
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {

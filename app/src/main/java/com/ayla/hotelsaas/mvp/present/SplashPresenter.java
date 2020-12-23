@@ -24,10 +24,11 @@ public class SplashPresenter extends BasePresenter<SplashView> {
                 .delay(System.currentTimeMillis() - start > default_delay_time_millis ? 0 : default_delay_time_millis - (System.currentTimeMillis() - start), TimeUnit.MILLISECONDS, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<VersionUpgradeBean>() {
+                .subscribe(new Consumer<BaseResult<VersionUpgradeBean>>() {
                     @Override
-                    public void accept(VersionUpgradeBean baseResult) throws Exception {
-                        mView.onVersionResult(baseResult);
+                    public void accept(BaseResult<VersionUpgradeBean> versionUpgradeBeanBaseResult) throws Exception {
+                        VersionUpgradeBean upgradeBean = versionUpgradeBeanBaseResult.data;
+                        mView.onVersionResult(upgradeBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

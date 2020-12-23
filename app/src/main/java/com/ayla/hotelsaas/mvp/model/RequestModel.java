@@ -806,12 +806,11 @@ public class RequestModel {
         return getApiService().createWorkOrder(body111);
     }
 
-    /**
+    /** 当没有新版本信息时，data = null 。
      * @return
      */
-    public Observable<VersionUpgradeBean> getAppVersion(int versionCode) {
-        return getApiService().getAppVersion(0, versionCode).compose(new BaseResultTransformer<BaseResult<VersionUpgradeBean>, VersionUpgradeBean>() {
-        });
+    public Observable<BaseResult<VersionUpgradeBean>> getAppVersion(int versionCode) {
+        return getApiService().getAppVersion(0, versionCode);
     }
 
     public Observable<Boolean> checkRadioExists(long scopeId) {

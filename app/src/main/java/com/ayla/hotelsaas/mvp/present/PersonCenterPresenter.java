@@ -2,12 +2,11 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.PersonCenterView;
-
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -68,10 +67,11 @@ public class PersonCenterPresenter extends BasePresenter<PersonCenterView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<VersionUpgradeBean>() {
+                .subscribe(new Consumer<BaseResult<VersionUpgradeBean>>() {
                     @Override
-                    public void accept(VersionUpgradeBean baseResult) throws Exception {
-                        mView.onVersionResult(baseResult);
+                    public void accept(BaseResult<VersionUpgradeBean> versionUpgradeBeanBaseResult) throws Exception {
+                        VersionUpgradeBean upgradeBean = versionUpgradeBeanBaseResult.data;
+                        mView.onVersionResult(upgradeBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
