@@ -28,6 +28,7 @@ import com.ayla.hotelsaas.localBean.LocalSceneBean;
 import com.ayla.hotelsaas.localBean.RemoteSceneBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.CustomSheet;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
@@ -541,12 +542,14 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             ISceneSettingFunctionDatumSet.CallBackBean datumBean = (ISceneSettingFunctionDatumSet.CallBackBean) data.getSerializableExtra("result");
             if (datumBean instanceof ISceneSettingFunctionDatumSet.ValueCallBackBean) {
                 BaseSceneBean.DeviceAction actionItem = new BaseSceneBean.DeviceAction();
-                if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
+                if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
                     actionItem.setTargetDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
                 } else if (deviceBean.getCuId() == 0) {
                     actionItem.setTargetDeviceType(DeviceType.AYLA_DEVICE_ID);
                 } else if (deviceBean.getCuId() == 1) {
                     actionItem.setTargetDeviceType(DeviceType.ALI_DEVICE_ID);
+                } else if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
+                    actionItem.setTargetDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
                 }
                 actionItem.setTargetDeviceId(deviceBean.getDeviceId());
                 actionItem.setRightValueType(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDataType());
@@ -559,12 +562,14 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             }
             if (datumBean instanceof ISceneSettingFunctionDatumSet.SetupCallBackBean) {
                 BaseSceneBean.DeviceAction actionItem = new BaseSceneBean.DeviceAction();
-                if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
+                if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
                     actionItem.setTargetDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
                 } else if (deviceBean.getCuId() == 0) {
                     actionItem.setTargetDeviceType(DeviceType.AYLA_DEVICE_ID);
                 } else if (deviceBean.getCuId() == 1) {
                     actionItem.setTargetDeviceType(DeviceType.ALI_DEVICE_ID);
+                } else if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
+                    actionItem.setTargetDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
                 }
                 actionItem.setTargetDeviceId(deviceBean.getDeviceId());
                 actionItem.setRightValueType(attributesBean.getDataType());
@@ -586,12 +591,14 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) data.getSerializableExtra("attributeBean");
                 ISceneSettingFunctionDatumSet.CallBackBean datumBean = (ISceneSettingFunctionDatumSet.CallBackBean) data.getSerializableExtra("result");
                 if (datumBean instanceof ISceneSettingFunctionDatumSet.ValueCallBackBean) {
-                    if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
+                    if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
                         actionItem.setTargetDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
                     } else if (deviceBean.getCuId() == 0) {
                         actionItem.setTargetDeviceType(DeviceType.AYLA_DEVICE_ID);
                     } else if (deviceBean.getCuId() == 1) {
                         actionItem.setTargetDeviceType(DeviceType.ALI_DEVICE_ID);
+                    } else if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
+                        actionItem.setTargetDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
                     }
                     actionItem.setTargetDeviceId(deviceBean.getDeviceId());
                     actionItem.setRightValueType(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDataType());
@@ -602,12 +609,14 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     actionItem.setValueName(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDisplayName());
                 }
                 if (datumBean instanceof ISceneSettingFunctionDatumSet.SetupCallBackBean) {
-                    if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
+                    if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
                         actionItem.setTargetDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
                     } else if (deviceBean.getCuId() == 0) {
                         actionItem.setTargetDeviceType(DeviceType.AYLA_DEVICE_ID);
                     } else if (deviceBean.getCuId() == 1) {
                         actionItem.setTargetDeviceType(DeviceType.ALI_DEVICE_ID);
+                    } else if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
+                        actionItem.setTargetDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
                     }
                     actionItem.setTargetDeviceId(deviceBean.getDeviceId());
                     actionItem.setRightValueType(attributesBean.getDataType());
@@ -711,7 +720,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         if (mRuleEngineBean.getRuleType() == 2) {//一键执行
             mRuleEngineBean.setStatus(1);
         } else if (mRuleEngineBean.getRuleType() == 1) {//自动化
-            if(mRuleEngineBean.getStatus() == 2){//如果是异常状态，就要更改为 不可用的正常状态
+            if (mRuleEngineBean.getStatus() == 2) {//如果是异常状态，就要更改为 不可用的正常状态
                 mRuleEngineBean.setStatus(0);
             }
         }
