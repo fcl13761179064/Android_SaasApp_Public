@@ -103,22 +103,32 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         my_account_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomAlarmDialog
-                        .newInstance(new CustomAlarmDialog.Callback() {
-                            @Override
-                            public void onDone(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                                mPresenter.deviceRemove(deviceId, mScopeId, "2");
-                            }
+                DeviceListBean.DevicesBean mDevicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
+                if (mDevicesBean != null) {
+                    String msg = getResources().getString(R.string.remove_device_content);
+                    if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(mDevicesBean)) {
+                        msg = "将移除此设备的所有用途设备，移除不可恢复是否继续？";
+                    }
+                    if (mDevicesBean.getDeviceUseType() == 3) {//用途源设备
+                        msg = "移除此设备将同步移除相关用途设备，移除不可恢复是否继续？";
+                    }
+                    CustomAlarmDialog
+                            .newInstance(new CustomAlarmDialog.Callback() {
+                                @Override
+                                public void onDone(CustomAlarmDialog dialog) {
+                                    dialog.dismissAllowingStateLoss();
+                                    mPresenter.deviceRemove(deviceId, mScopeId, "2");
+                                }
 
-                            @Override
-                            public void onCancel(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                            }
-                        })
-                        .setTitle(getResources().getString(R.string.remove_device_title))
-                        .setContent(getResources().getString(R.string.remove_device_content))
-                        .show(getSupportFragmentManager(), "");
+                                @Override
+                                public void onCancel(CustomAlarmDialog dialog) {
+                                    dialog.dismissAllowingStateLoss();
+                                }
+                            })
+                            .setTitle(getResources().getString(R.string.remove_device_title))
+                            .setContent(msg)
+                            .show(getSupportFragmentManager(), "");
+                }
             }
         });
 
