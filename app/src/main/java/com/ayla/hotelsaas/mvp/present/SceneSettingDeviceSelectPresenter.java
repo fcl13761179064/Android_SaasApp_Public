@@ -11,6 +11,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
+import com.ayla.hotelsaas.utils.TempUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
     public void loadDevice(long scopeId, String gateway, boolean condition) {
         Observable<List<DeviceListBean.DevicesBean>> observable;
         if (gateway != null) {//如果是网关的联动，需要首先过滤出网关的子设备
-         observable = RequestModel.getInstance()
+            observable = RequestModel.getInstance()
                     .getGatewayNodes(gateway, scopeId)
                     .map(new Function<BaseResult<List<GatewayNodeBean>>, List<GatewayNodeBean>>() {
                         @Override
@@ -58,7 +59,7 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                             return devicesBeans;
                         }
                     });
-        }else{
+        } else {
             observable = Observable.just(MyApplication.getInstance().getDevicesBean());
         }
         Disposable subscribe = RequestModel.getInstance().getDeviceCategoryDetail()
@@ -73,7 +74,7 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                     public List<DeviceListBean.DevicesBean> apply(List<DeviceCategoryDetailBean> deviceCategoryDetailBeans, List<DeviceListBean.DevicesBean> devicesBeans) throws Exception {
                         List<DeviceListBean.DevicesBean> enableDevices = new ArrayList<>();//可以显示在列表里面的设备
                         for (DeviceListBean.DevicesBean devicesBean : devicesBeans) {
-                            if (devicesBean.getDeviceUseType() == 1 && !condition) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
+                            if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(devicesBean) && !condition) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
                                 enableDevices.add(devicesBean);
                                 continue;
                             }

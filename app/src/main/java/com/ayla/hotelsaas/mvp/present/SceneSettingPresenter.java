@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
 import com.ayla.hotelsaas.utils.BeanObtainCompactUtil;
+import com.ayla.hotelsaas.utils.TempUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -139,7 +140,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                     public ObservableSource<DeviceTemplateBean[]> apply(List<DeviceCategoryDetailBean> deviceCategoryDetailBeans) throws Exception {
                         List<Observable<DeviceTemplateBean>> tasks = new ArrayList<>();
                         for (DeviceListBean.DevicesBean enableDevice : enableDevices) {
-                            if (enableDevice.getDeviceUseType() == 1) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
+                            if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(enableDevice)) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
                                 tasks.add(RequestModel.getInstance()
                                         .fetchDeviceTemplate(enableDevice.getDeviceCategory())
                                         .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {

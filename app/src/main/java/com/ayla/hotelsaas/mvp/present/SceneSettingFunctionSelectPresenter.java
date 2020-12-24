@@ -11,6 +11,7 @@ import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionSelectView;
+import com.ayla.hotelsaas.utils.TempUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
                     public List<DeviceTemplateBean.AttributesBean> apply(@NonNull List<String> properties, @NonNull DeviceTemplateBean deviceTemplateBean) throws Exception {
                         DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
                         List<DeviceTemplateBean.AttributesBean> data = new ArrayList<>();
-                        if (devicesBean.getDeviceUseType() == 1 && !condition) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
+                        if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(devicesBean) && !condition) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
                             data.addAll(deviceTemplateBean.getAttributes());
                         } else {
                             for (String property : properties) {
