@@ -35,6 +35,9 @@ public class TempUtils {
      * @return
      */
     public static boolean isINFRARED_VIRTUAL_SUB_DEVICE(DeviceListBean.DevicesBean deviceBean) {
+        if (isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {//如果是 开关用途设备
+            return false;
+        }
         return deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0;
     }
 
