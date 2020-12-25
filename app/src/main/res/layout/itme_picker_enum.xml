@@ -16,12 +16,14 @@
         android:textSize="17sp"
         tools:text="吸顶灯" />
 
+
     <ImageView
         android:id="@+id/iv"
-        android:layout_width="18dp"
+        android:layout_width="22dp"
         android:layout_height="22dp"
         android:layout_gravity="center_vertical|right"
         android:layout_marginRight="16dp"
+        android:scaleType="fitXY"
         android:src="@drawable/bg_checkbox_checked"
         android:visibility="invisible"
         tools:visibility="visible" />

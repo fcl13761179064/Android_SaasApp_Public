@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -33,6 +34,11 @@ public class ItemPickerDialog extends DialogFragment {
     private int defaultIndex = -1;//默认选中的下标
 
     private Callback callback;
+
+    private @DrawableRes
+    int iconRes;
+
+    private String title, subTitle;
 
     public static ItemPickerDialog newInstance() {
 
@@ -89,7 +95,15 @@ public class ItemPickerDialog extends DialogFragment {
                 outRect.set(0, (position == 0) ? size : 0, 0, size);
             }
         });
-
+        binding.imageView2.setImageResource(iconRes);
+        binding.textView2.setText(title);
+        binding.textView3.setText(subTitle);
+        binding.imageView3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissAllowingStateLoss();
+            }
+        });
     }
 
     @Override
@@ -105,6 +119,21 @@ public class ItemPickerDialog extends DialogFragment {
 
     public ItemPickerDialog setData(List data) {
         this.data = data;
+        return this;
+    }
+
+    public ItemPickerDialog setIconRes(int iconRes) {
+        this.iconRes = iconRes;
+        return this;
+    }
+
+    public ItemPickerDialog setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public ItemPickerDialog setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
         return this;
     }
 
@@ -132,7 +161,7 @@ public class ItemPickerDialog extends DialogFragment {
         }
     }
 
-    public static interface Callback<T> {
+    public interface Callback<T> {
         void onCallback(T object);
     }
 }

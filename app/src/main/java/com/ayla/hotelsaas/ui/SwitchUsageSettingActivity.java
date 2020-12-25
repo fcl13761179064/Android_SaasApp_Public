@@ -168,6 +168,9 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
                     }
 
                     ItemPickerDialog.newInstance()
+                            .setSubTitle("请选择按键控制的设备")
+                            .setTitle("控制设备")
+                            .setIconRes(R.drawable.ic_purpose_select)
                             .setData(purposeCategory)
                             .setDefaultIndex(defIndex)
                             .setCallback(new ItemPickerDialog.Callback<PurposeCategoryBean>() {
