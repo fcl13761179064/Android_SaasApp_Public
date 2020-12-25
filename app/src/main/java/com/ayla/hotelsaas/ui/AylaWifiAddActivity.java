@@ -63,7 +63,7 @@ public class AylaWifiAddActivity extends BaseMvpActivity<AylaWifiAddView, AylaWi
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_zigbee_add;
+        return R.layout.activity_device_add;
     }
 
     @Override

@@ -43,8 +43,4 @@ public interface ZigBeeAddView extends BaseView {
      * 1.开始连接网关
      */
     void step1Start();
-
-    void renameSuccess(String nickName);
-
-    void renameFailed(String code, String msg);
 }

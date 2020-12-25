@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,7 +15,6 @@ import androidx.core.content.ContextCompat;
 import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.GlideApp;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.ZigBeeAddPresenter;
 import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * ZigBee添加页面
+ * 设备添加处理页面
  * 进入时必须带入:
  * 参数 int networkType 1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉节点 4、鸿雁节点 5、艾拉wifi设备
  * <p>
@@ -44,8 +44,8 @@ import butterknife.OnClick;
  * networkType = 5 时，必须传入
  * wifiName、wifiPassword
  */
-public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddPresenter> implements ZigBeeAddView {
-    private static final String TAG = "ZigBeeAddActivity";
+public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddPresenter> implements ZigBeeAddView {
+    private static final String TAG = "DeviceAddActivity";
     @BindView(R.id.iv_01)
     public ImageView mImageView;
     @BindView(R.id.tv_loading)
@@ -60,10 +60,6 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     public ImageView mP1View;
     @BindView(R.id.tv_p1)
     public TextView mP1TextView;
-    @BindView(R.id.ll_success_name_input)
-    public View ll_success_name_input;
-    @BindView(R.id.et_input)
-    EditText mEditText;
 
     @BindView(R.id.iv_p2)
     public ImageView mP2View;
@@ -83,7 +79,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_zigbee_add;
+        return R.layout.activity_device_add;
     }
 
     @Override
@@ -153,18 +149,7 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
 
     @OnClick(R.id.bt_bind)
     public void handleButton() {
-        if (bindProgress == 6) {
-            String newName = mEditText.getText().toString();
-            if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
-                CustomToast.makeText(MyApplication.getContext(), "设备名称不能为空", R.drawable.ic_toast_warming);
-                return;
-            }
-            if (TextUtils.equals(newName, bondDeviceName)) {
-                finish();
-                return;
-            }
-            mPresenter.deviceRenameMethod(bondDeviceId, newName);
-        } else if (bindProgress == -1) {
+        if (bindProgress == -1) {
             startBind();
         }
     }
@@ -186,7 +171,6 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                 mP3View.setImageResource(R.drawable.ic_progress_dot_ready);
                 mP3TextView.setTextColor(ContextCompat.getColor(this, R.color.color_999999));
                 mFinishButton.setVisibility(View.INVISIBLE);
-                ll_success_name_input.setVisibility(View.INVISIBLE);
                 break;
             case 1:
                 mP1View.setImageResource(R.drawable.ic_progress_dot_finish);
@@ -208,15 +192,6 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                 mP3View.setImageResource(R.drawable.ic_progress_dot_finish);
                 mP3TextView.setTextColor(ContextCompat.getColor(this, R.color.color_333333));
                 break;
-            case 6:
-                mImageView.setImageResource(R.drawable.ic_device_bind_success);
-                mLoadingTextView.setVisibility(View.INVISIBLE);
-                mProgressView.setVisibility(View.INVISIBLE);
-                mProgressTextView.setText("设备绑定成功");
-                mFinishButton.setVisibility(View.VISIBLE);
-                mFinishButton.setText("完成");
-                ll_success_name_input.setVisibility(View.VISIBLE);
-                break;
             case -1:
                 mImageView.setImageResource(R.drawable.ic_device_bind_failed);
                 mLoadingTextView.setVisibility(View.INVISIBLE);
@@ -227,18 +202,11 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         }
     }
 
-    private String bondDeviceName;
-    private String bondDeviceId;
-
     @Override
     public void bindSuccess(String deviceId, String deviceName) {
-        Log.d(TAG, "zigBeeDeviceBindFinished: ");
-        bondDeviceId = deviceId;
-        bondDeviceName = deviceName;
-        bindProgress = 6;
-        mEditText.setText(deviceName);
+        startActivity(new Intent(this, DeviceAddSuccessActivity.class).putExtra("deviceId", deviceId).putExtra("deviceName", deviceName));
         setResult(RESULT_OK);
-        refreshBindShow();
+        finish();
     }
 
     private String errorMsg;
@@ -308,17 +276,4 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         refreshBindShow();
     }
 
-    @Override
-    public void renameSuccess(String nickName) {
-        finish();
-    }
-
-    @Override
-    public void renameFailed(String code, String msg) {
-        if ("140001".equals(code)) {
-            CustomToast.makeText(this, "该名称不能重复使用", R.drawable.ic_toast_warming);
-        } else {
-            CustomToast.makeText(MyApplication.getContext(), "修改失败", R.drawable.ic_toast_warming);
-        }
-    }
 }

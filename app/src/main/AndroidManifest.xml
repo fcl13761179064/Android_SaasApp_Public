@@ -60,7 +60,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/WhiteBgAppTheme" />
         <activity
-            android:name=".ui.ZigBeeAddActivity"
+            android:name=".ui.DeviceAddActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -205,6 +205,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SwitchUsageSettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.DeviceAddSuccessActivity"
             android:screenOrientation="portrait" />
 
         <service

@@ -56,7 +56,7 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
                         deviceId = deviceId.substring(9, deviceId.length() - 2).trim();
                     }
                     if (!TextUtils.isEmpty(deviceId)) {
-                        Intent mainActivity = new Intent(this, ZigBeeAddActivity.class);
+                        Intent mainActivity = new Intent(this, DeviceAddActivity.class);
                         mainActivity.putExtra("networkType",2);
                         mainActivity.putExtra("deviceId", deviceId);
                         mainActivity.putExtras(getIntent());

@@ -1,6 +1,5 @@
 package com.ayla.hotelsaas.ui;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -140,7 +139,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
         } else {
             saveWifiPwd(name, pwd);
 
-            Intent intent = new Intent(this, ZigBeeAddActivity.class);
+            Intent intent = new Intent(this, DeviceAddActivity.class);
             intent.putExtra("wifiName", name);
             intent.putExtra("wifiPassword", pwd);
             intent.putExtras(getIntent());

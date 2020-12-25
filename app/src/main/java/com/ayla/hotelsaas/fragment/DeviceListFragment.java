@@ -181,7 +181,7 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         } else {
             mSmartRefreshLayout.setEnableRefresh(true);
             mAdapter.setEmptyView(R.layout.empty_device_order);
-            CustomToast.makeText(getContext(),R.string.request_not_connect, R.drawable.ic_toast_warming);
+            CustomToast.makeText(getContext(), R.string.request_not_connect, R.drawable.ic_toast_warming);
         }
         if (mSmartRefreshLayout.isRefreshing()) {
             mSmartRefreshLayout.finishRefresh(false);
