@@ -62,12 +62,6 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
         final GatewayHelper.BindHelper[] bindHelper = new GatewayHelper.BindHelper[1];
         Disposable subscribe = RequestModel.getInstance()
                 .getAuthCode(String.valueOf(scopeId))
-                .map(new Function<BaseResult<String>, String>() {
-                    @Override
-                    public String apply(BaseResult<String> stringBaseResult) throws Exception {
-                        return stringBaseResult.data;
-                    }
-                })
                 .flatMap(new Function<String, ObservableSource<String[]>>() {
                     @Override
                     public ObservableSource<String[]> apply(String authCode) throws Exception {

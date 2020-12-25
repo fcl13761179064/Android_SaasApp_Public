@@ -95,7 +95,7 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
 
     public void handleJump(String productKey, String deviceName) {
         discoverHelper.stopDiscoverGateway();
-        Intent intent = new Intent(this, GatewayAddActivity.class);
+        Intent intent = new Intent(this, ZigBeeAddActivity.class);
         intent.putExtra("networkType",1);
         intent.putExtra("HYproductKey", productKey);
         intent.putExtra("HYdeviceName", deviceName);

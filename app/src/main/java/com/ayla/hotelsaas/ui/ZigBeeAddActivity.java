@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
+import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -24,9 +25,24 @@ import butterknife.OnClick;
 /**
  * ZigBee添加页面
  * 进入时必须带入:
- * 参数 int networkType 1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉zigbee配网 4、鸿雁节点 5、艾拉wifi设备
+ * 参数 int networkType 1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉节点 4、鸿雁节点 5、艾拉wifi设备
  * <p>
- * 网关deviceId 、cuId 、scopeId、deviceName、deviceCategory
+ * cuId 、scopeId、deviceName、deviceCategory
+ * <p>
+ * networkType = 1 时，必须传入
+ * HYproductKey、HYdeviceName
+ * <p>
+ * networkType = 2 时，必须传入
+ * deviceId 网关deviceId
+ * <p>
+ * networkType = 3 时，必须传入
+ * deviceId
+ * <p>
+ * networkType = 4 时，必须传入
+ * deviceId
+ * <p>
+ * networkType = 5 时，必须传入
+ * wifiName、wifiPassword
  */
 public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddPresenter> implements ZigBeeAddView {
     private static final String TAG = "ZigBeeAddActivity";
@@ -90,20 +106,48 @@ public class ZigBeeAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
 
     private void startBind() {
         int networkType = getIntent().getIntExtra("networkType", 0);
-        if (networkType == 4) {//鸿雁节点
-            mPresenter.bindHongYanNode(
+        int cuId = getIntent().getIntExtra("cuId", 0);
+        long scopeId = getIntent().getLongExtra("scopeId", 0);
+        String deviceCategory = getIntent().getStringExtra("deviceCategory");
+        String deviceName = getIntent().getStringExtra("deviceName");
+
+        if (networkType == 1) {//鸿雁网关
+            mPresenter.bindHongYanGateway((AApplication) getApplication(),
+                    cuId,
+                    scopeId,
+                    deviceCategory,
+                    deviceName,
+                    getIntent().getStringExtra("HYproductKey"),
+                    getIntent().getStringExtra("HYdeviceName"));
+        } else if (networkType == 2) {//顺舟网关
+            mPresenter.bindAylaGateway(
                     getIntent().getStringExtra("deviceId"),
-                    getIntent().getIntExtra("cuId", 0),
-                    getIntent().getLongExtra("scopeId", 0),
-                    getIntent().getStringExtra("deviceCategory"),
-                    getIntent().getStringExtra("deviceName"));
+                    cuId,
+                    scopeId,
+                    deviceCategory,
+                    deviceName);
         } else if (networkType == 3) {//艾拉节点
             mPresenter.bindAylaNode(
                     getIntent().getStringExtra("deviceId"),
-                    getIntent().getIntExtra("cuId", 0),
-                    getIntent().getLongExtra("scopeId", 0),
-                    getIntent().getStringExtra("deviceCategory"),
-                    getIntent().getStringExtra("deviceName"));
+                    cuId,
+                    scopeId,
+                    deviceCategory,
+                    deviceName);
+        } else if (networkType == 4) {//鸿雁节点
+            mPresenter.bindHongYanNode(
+                    getIntent().getStringExtra("deviceId"),
+                    cuId,
+                    scopeId,
+                    deviceCategory,
+                    deviceName);
+        } else if (networkType == 5) {//艾拉WiFi
+            mPresenter.bindAylaWiFi(
+                    getIntent().getStringExtra("wifiName"),
+                    getIntent().getStringExtra("wifiPassword"),
+                    cuId,
+                    scopeId,
+                    deviceCategory,
+                    deviceName);
         }
     }
 

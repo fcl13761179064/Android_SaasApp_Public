@@ -194,10 +194,10 @@ public class RequestModel {
     /**
      * 获取authcode
      */
-    public Observable<BaseResult<String>> getAuthCode(String roomId) {
-        return getApiService().authCode(roomId);
+    public Observable<String> getAuthCode(String roomId) {
+        return getApiService().authCode(roomId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
+        });
     }
-
 
     /**
      * 获取房间号的条数

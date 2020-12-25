@@ -140,10 +140,11 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
         } else {
             saveWifiPwd(name, pwd);
 
-            Intent intent = new Intent(this, AylaWifiAddActivity.class);
+            Intent intent = new Intent(this, ZigBeeAddActivity.class);
             intent.putExtra("wifiName", name);
             intent.putExtra("wifiPassword", pwd);
             intent.putExtras(getIntent());
+            intent.putExtra("networkType", 5);
             startActivityForResult(intent, REQUEST_CODE_START_ADD);
         }
     }
