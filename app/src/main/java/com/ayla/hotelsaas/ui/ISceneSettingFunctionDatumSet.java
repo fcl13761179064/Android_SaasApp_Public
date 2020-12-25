@@ -4,7 +4,7 @@ import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 
 import java.io.Serializable;
 
-interface ISceneSettingFunctionDatumSet {
+public interface ISceneSettingFunctionDatumSet {
     CallBackBean getDatum();
 
     abstract class CallBackBean implements Serializable {

@@ -22,17 +22,23 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
+import com.ayla.hotelsaas.events.SceneItemEvent;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.localBean.DeviceType;
 import com.ayla.hotelsaas.localBean.LocalSceneBean;
 import com.ayla.hotelsaas.localBean.RemoteSceneBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingPresenter;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.CustomSheet;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -48,8 +54,6 @@ import butterknife.OnClick;
  * 进入时必须带入(创建：scopeId、siteType ,如果是创建本地联动，还要带上网关的deviceId：targetGateway) 或者 更新：sceneBean
  */
 public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, SceneSettingPresenter> implements SceneSettingView {
-    private final int REQUEST_CODE_SELECT_CONDITION = 0X10;
-    private final int REQUEST_CODE_SELECT_ACTION = 0X11;
     private final int REQUEST_CODE_SELECT_ICON = 0X12;
     private final int REQUEST_CODE_SELECT_CONDITION_TYPE = 0X13;
     private final int REQUEST_CODE_SELECT_ENABLE_TIME = 0X14;
@@ -57,8 +61,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private final int REQUEST_CODE_SET_DELAY_ACTION = 0X16;
     private final int REQUEST_CODE_HOTEL_WELCOME_ACTION = 0X17;
     private final int REQUEST_CODE_EDIT_DELAY_ACTION = 0X18;
-    private final int REQUEST_CODE_EDIT_DEVICE_ACTION = 0X19;
-    private final int REQUEST_CODE_EDIT_DEVICE_CONDITION = 0X20;
     @BindView(R.id.rv_condition)
     public RecyclerView mConditionRecyclerView;
     @BindView(R.id.rv_action)
@@ -148,6 +150,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         tv_ill_state.setVisibility((mRuleEngineBean.getStatus() == 0 || mRuleEngineBean.getStatus() == 1) ? View.GONE : View.VISIBLE);
         mEnableTimeTextView.setText(decodeCronExpression2(mRuleEngineBean.getEnableTime()));
         syncRuleTYpeShow();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private String decodeCronExpression2(BaseSceneBean.EnableTime enableTime) {
@@ -329,7 +338,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 BaseSceneBean.Condition condition = mRuleEngineBean.getConditions().get(position);
                 if (condition instanceof BaseSceneBean.DeviceCondition) {
-                    doJumpAddConditions((BaseSceneBean.DeviceCondition) condition, position);
+                    jumpEditConditionDeviceItem((BaseSceneBean.DeviceCondition) condition, position);
                 }
             }
         });
@@ -377,282 +386,35 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     startActivityForResult(new Intent(SceneSettingActivity.this, SceneActionDelaySettingActivity.class)
                             .putExtra("seconds", seconds)
                             .putExtra("position", position), REQUEST_CODE_EDIT_DELAY_ACTION);
-                }
-                if (action instanceof BaseSceneBean.DeviceAction) {
-                    doJumpAddActions((BaseSceneBean.DeviceAction) action, position);
+                } else if (action instanceof BaseSceneBean.DeviceAction) {
+                    jumpEditActionDeviceItem((BaseSceneBean.DeviceAction) action, position);
                 }
             }
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SELECT_CONDITION_TYPE && resultCode == RESULT_OK) {//选择条件类型返回结果
-            boolean onekey = data.getBooleanExtra("onekey", false);
-            if (onekey) {
-                mRuleEngineBean.setRuleType(BaseSceneBean.RULE_TYPE.ONE_KEY);
-                mRuleEngineBean.getConditions().add(new BaseSceneBean.OneKeyCondition());
-                showData();
-                syncRuleTYpeShow();
-            } else {
-                doJumpAddConditions(null, -1);
-            }
-        }
-        if (requestCode == REQUEST_CODE_SELECT_ACTION_TYPE && resultCode == RESULT_OK) {//选择动作类型返回结果
-            int type = data.getIntExtra("type", 0);
-            switch (type) {
-                case 0: {
-                    doJumpAddActions(null, -1);
-                }
-                break;
-                case 1: {
-                    startActivityForResult(new Intent(this, SceneActionDelaySettingActivity.class), REQUEST_CODE_SET_DELAY_ACTION);
-                }
-                break;
-                case 2: {
-                    startActivityForResult(new Intent(this, RuleEngineActionHotelWelcomeActivity.class), REQUEST_CODE_HOTEL_WELCOME_ACTION);
-                }
-                break;
-            }
-        }
-        if (requestCode == REQUEST_CODE_SELECT_CONDITION && resultCode == RESULT_OK) {//选择条件返回结果
-            DeviceListBean.DevicesBean deviceBean = MyApplication.getInstance().getDevicesBean(data.getStringExtra("deviceId"));
-            DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) data.getSerializableExtra("attributeBean");
-            ISceneSettingFunctionDatumSet.CallBackBean datumBean = (ISceneSettingFunctionDatumSet.CallBackBean) data.getSerializableExtra("result");
-            if (datumBean instanceof ISceneSettingFunctionDatumSet.ValueCallBackBean) {
-                BaseSceneBean.DeviceCondition conditionItem = new BaseSceneBean.DeviceCondition();
-                conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
-                if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
-                    conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
-                } else if (deviceBean.getCuId() == 0) {
-                    conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
-                } else if (deviceBean.getCuId() == 1) {
-                    conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
-                }
-                conditionItem.setRightValue(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getValue());
-                conditionItem.setLeftValue(attributesBean.getCode());
-                conditionItem.setOperator(datumBean.getOperator());
-                conditionItem.setFunctionName(attributesBean.getDisplayName());
-                conditionItem.setValueName(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDisplayName());
-                mRuleEngineBean.getConditions().add(conditionItem);
-            }
-            if (datumBean instanceof ISceneSettingFunctionDatumSet.BitValueCallBackBean) {
-                BaseSceneBean.DeviceCondition conditionItem = new BaseSceneBean.DeviceCondition();
-                conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
-                if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
-                    conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
-                } else if (deviceBean.getCuId() == 0) {
-                    conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
-                } else if (deviceBean.getCuId() == 1) {
-                    conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
-                }
-                conditionItem.setRightValue(String.valueOf(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getValue()));
-                conditionItem.setLeftValue(attributesBean.getCode());
-                conditionItem.setOperator(datumBean.getOperator());
-                conditionItem.setFunctionName(attributesBean.getDisplayName());
-                conditionItem.setValueName(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getDisplayName());
-                conditionItem.setBit(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getBit());
-                conditionItem.setCompareValue(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getCompareValue());
-                mRuleEngineBean.getConditions().add(conditionItem);
-            }
-            if (datumBean instanceof ISceneSettingFunctionDatumSet.SetupCallBackBean) {
-                BaseSceneBean.DeviceCondition conditionItem = new BaseSceneBean.DeviceCondition();
-                conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
-                if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
-                    conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
-                } else if (deviceBean.getCuId() == 0) {
-                    conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
-                } else if (deviceBean.getCuId() == 1) {
-                    conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
-                }
-                conditionItem.setRightValue(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue());
-                conditionItem.setLeftValue(attributesBean.getCode());
-                conditionItem.setOperator(datumBean.getOperator());
-                conditionItem.setFunctionName(attributesBean.getDisplayName());
-                conditionItem.setValueName(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue() + ((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getSetupBean().getUnit());
-                mRuleEngineBean.getConditions().add(conditionItem);
-            }
-            showData();
-        }
-        if (requestCode == REQUEST_CODE_EDIT_DEVICE_CONDITION && resultCode == RESULT_OK) {//编辑设备条件返回结果
-            int position = data.getIntExtra("position", -1);
-            if (position >= 0) {
-                if (mRuleEngineBean.getConditions().get(position) instanceof BaseSceneBean.DeviceCondition) {
-                    BaseSceneBean.DeviceCondition conditionItem = (BaseSceneBean.DeviceCondition) mRuleEngineBean.getConditions().get(position);
+    private void jumpEditConditionDeviceItem(BaseSceneBean.DeviceCondition condition, int position) {
+        Intent intent = addDeviceConditionIntent();
 
-                    DeviceListBean.DevicesBean deviceBean = MyApplication.getInstance().getDevicesBean(data.getStringExtra("deviceId"));
-                    DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) data.getSerializableExtra("attributeBean");
-                    ISceneSettingFunctionDatumSet.CallBackBean datumBean = (ISceneSettingFunctionDatumSet.CallBackBean) data.getSerializableExtra("result");
-                    if (datumBean instanceof ISceneSettingFunctionDatumSet.ValueCallBackBean) {
-                        conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
-                        if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
-                            conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
-                        } else if (deviceBean.getCuId() == 0) {
-                            conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
-                        } else if (deviceBean.getCuId() == 1) {
-                            conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
-                        }
-                        conditionItem.setRightValue(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getValue());
-                        conditionItem.setLeftValue(attributesBean.getCode());
-                        conditionItem.setOperator(datumBean.getOperator());
-                        conditionItem.setFunctionName(attributesBean.getDisplayName());
-                        conditionItem.setValueName(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDisplayName());
-                    }
-                    if (datumBean instanceof ISceneSettingFunctionDatumSet.BitValueCallBackBean) {
-                        conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
-                        if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
-                            conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
-                        } else if (deviceBean.getCuId() == 0) {
-                            conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
-                        } else if (deviceBean.getCuId() == 1) {
-                            conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
-                        }
-                        conditionItem.setRightValue(String.valueOf(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getValue()));
-                        conditionItem.setLeftValue(attributesBean.getCode());
-                        conditionItem.setOperator(datumBean.getOperator());
-                        conditionItem.setFunctionName(attributesBean.getDisplayName());
-                        conditionItem.setValueName(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getDisplayName());
-                        conditionItem.setBit(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getBit());
-                        conditionItem.setCompareValue(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getCompareValue());
-                    }
-                    if (datumBean instanceof ISceneSettingFunctionDatumSet.SetupCallBackBean) {
-                        conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
-                        if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
-                            conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
-                        } else if (deviceBean.getCuId() == 0) {
-                            conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
-                        } else if (deviceBean.getCuId() == 1) {
-                            conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
-                        }
-                        conditionItem.setRightValue(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue());
-                        conditionItem.setLeftValue(attributesBean.getCode());
-                        conditionItem.setOperator(datumBean.getOperator());
-                        conditionItem.setFunctionName(attributesBean.getDisplayName());
-                        conditionItem.setValueName(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue() + ((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getSetupBean().getUnit());
-                    }
-                    showData();
-                }
-            }
-        }
-        if (requestCode == REQUEST_CODE_SELECT_ACTION && resultCode == RESULT_OK) {//选择动作返回结果
-            DeviceListBean.DevicesBean deviceBean = MyApplication.getInstance().getDevicesBean(data.getStringExtra("deviceId"));
-            DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) data.getSerializableExtra("attributeBean");
-            ISceneSettingFunctionDatumSet.CallBackBean datumBean = (ISceneSettingFunctionDatumSet.CallBackBean) data.getSerializableExtra("result");
-            if (datumBean instanceof ISceneSettingFunctionDatumSet.ValueCallBackBean) {
-                BaseSceneBean.DeviceAction actionItem = new BaseSceneBean.DeviceAction();
-                if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
-                    actionItem.setTargetDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
-                } else if (deviceBean.getCuId() == 0) {
-                    actionItem.setTargetDeviceType(DeviceType.AYLA_DEVICE_ID);
-                } else if (deviceBean.getCuId() == 1) {
-                    actionItem.setTargetDeviceType(DeviceType.ALI_DEVICE_ID);
-                }
-                actionItem.setTargetDeviceId(deviceBean.getDeviceId());
-                actionItem.setRightValueType(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDataType());
-                actionItem.setOperator(datumBean.getOperator());
-                actionItem.setLeftValue(attributesBean.getCode());
-                actionItem.setRightValue(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getValue());
-                actionItem.setFunctionName(attributesBean.getDisplayName());
-                actionItem.setValueName(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDisplayName());
-                mRuleEngineBean.getActions().add(actionItem);
-            }
-            if (datumBean instanceof ISceneSettingFunctionDatumSet.SetupCallBackBean) {
-                BaseSceneBean.DeviceAction actionItem = new BaseSceneBean.DeviceAction();
-                if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
-                    actionItem.setTargetDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
-                } else if (deviceBean.getCuId() == 0) {
-                    actionItem.setTargetDeviceType(DeviceType.AYLA_DEVICE_ID);
-                } else if (deviceBean.getCuId() == 1) {
-                    actionItem.setTargetDeviceType(DeviceType.ALI_DEVICE_ID);
-                }
-                actionItem.setTargetDeviceId(deviceBean.getDeviceId());
-                actionItem.setRightValueType(attributesBean.getDataType());
-                actionItem.setOperator(datumBean.getOperator());
-                actionItem.setLeftValue(attributesBean.getCode());
-                actionItem.setRightValue(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue());
-                actionItem.setFunctionName(attributesBean.getDisplayName());
-                actionItem.setValueName(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue() + ((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getSetupBean().getUnit());
-                mRuleEngineBean.getActions().add(actionItem);
-            }
-            showData();
-        }
-        if (requestCode == REQUEST_CODE_EDIT_DEVICE_ACTION && resultCode == RESULT_OK) {//编辑设备动作返回结果
-            int position = data.getIntExtra("position", -1);
-            if (position >= 0) {
-                BaseSceneBean.Action actionItem = mRuleEngineBean.getActions().get(position);
+        intent.setClass(getApplicationContext(), SceneSettingFunctionDatumSetActivity.class);
+        intent.putExtra("editMode", true);
+        intent.putExtra("condition", condition);
+        intent.putExtra("editPosition", position);
+        intent.putExtra("property", condition.getLeftValue());
+        intent.putExtra("deviceId", condition.getSourceDeviceId());
+        startActivity(intent);
+    }
 
-                DeviceListBean.DevicesBean deviceBean = MyApplication.getInstance().getDevicesBean(data.getStringExtra("deviceId"));
-                DeviceTemplateBean.AttributesBean attributesBean = (DeviceTemplateBean.AttributesBean) data.getSerializableExtra("attributeBean");
-                ISceneSettingFunctionDatumSet.CallBackBean datumBean = (ISceneSettingFunctionDatumSet.CallBackBean) data.getSerializableExtra("result");
-                if (datumBean instanceof ISceneSettingFunctionDatumSet.ValueCallBackBean) {
-                    if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
-                        actionItem.setTargetDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
-                    } else if (deviceBean.getCuId() == 0) {
-                        actionItem.setTargetDeviceType(DeviceType.AYLA_DEVICE_ID);
-                    } else if (deviceBean.getCuId() == 1) {
-                        actionItem.setTargetDeviceType(DeviceType.ALI_DEVICE_ID);
-                    }
-                    actionItem.setTargetDeviceId(deviceBean.getDeviceId());
-                    actionItem.setRightValueType(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDataType());
-                    actionItem.setOperator(datumBean.getOperator());
-                    actionItem.setLeftValue(attributesBean.getCode());
-                    actionItem.setRightValue(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getValue());
-                    actionItem.setFunctionName(attributesBean.getDisplayName());
-                    actionItem.setValueName(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDisplayName());
-                }
-                if (datumBean instanceof ISceneSettingFunctionDatumSet.SetupCallBackBean) {
-                    if (deviceBean.getDeviceUseType() == 1 && deviceBean.getCuId() == 0) {
-                        actionItem.setTargetDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
-                    } else if (deviceBean.getCuId() == 0) {
-                        actionItem.setTargetDeviceType(DeviceType.AYLA_DEVICE_ID);
-                    } else if (deviceBean.getCuId() == 1) {
-                        actionItem.setTargetDeviceType(DeviceType.ALI_DEVICE_ID);
-                    }
-                    actionItem.setTargetDeviceId(deviceBean.getDeviceId());
-                    actionItem.setRightValueType(attributesBean.getDataType());
-                    actionItem.setOperator(datumBean.getOperator());
-                    actionItem.setLeftValue(attributesBean.getCode());
-                    actionItem.setRightValue(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue());
-                    actionItem.setFunctionName(attributesBean.getDisplayName());
-                    actionItem.setValueName(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue() + ((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getSetupBean().getUnit());
-                }
-                showData();
-            }
-        }
-        if (requestCode == REQUEST_CODE_SELECT_ICON && resultCode == RESULT_OK) {//选择ICON返回结果
-            int index = data.getIntExtra("index", 1);
-            mRuleEngineBean.setIconPath(getIconPathByIndex(index));
-            mIconImageView.setImageResource(getIconResByIndex(index));
-        }
-        if (requestCode == REQUEST_CODE_SELECT_ENABLE_TIME && resultCode == RESULT_OK) {//选择生效时间段返回
-            BaseSceneBean.EnableTime enableTime = (BaseSceneBean.EnableTime) data.getSerializableExtra("enableTime");
-            mRuleEngineBean.setEnableTime(enableTime);
-            mEnableTimeTextView.setText(decodeCronExpression2(enableTime));
-        }
-        if (requestCode == REQUEST_CODE_SET_DELAY_ACTION && resultCode == RESULT_OK) {//延时动作添加返回
-            int seconds = data.getIntExtra("seconds", 0);
-            BaseSceneBean.DelayAction delayAction = new BaseSceneBean.DelayAction();
-            delayAction.setRightValue(String.valueOf(seconds));
-            mRuleEngineBean.getActions().add(delayAction);
-            showData();
-        }
-        if (requestCode == REQUEST_CODE_EDIT_DELAY_ACTION && resultCode == RESULT_OK) {//延时动作编辑返回
-            int seconds = data.getIntExtra("seconds", 0);
-            int position = data.getIntExtra("position", -1);
-            if (position >= 0) {
-                BaseSceneBean.Action action = mRuleEngineBean.getActions().get(position);
-                if (action instanceof BaseSceneBean.DelayAction) {
-                    action.setRightValue(String.valueOf(seconds));
-                    showData();
-                }
-            }
-        }
-        if (requestCode == REQUEST_CODE_HOTEL_WELCOME_ACTION && resultCode == RESULT_OK) {//酒店欢迎语动作添加返回
-            BaseSceneBean.WelcomeAction welcomeAction = new BaseSceneBean.WelcomeAction();
-            mRuleEngineBean.getActions().add(welcomeAction);
-            showData();
-        }
+    private void jumpEditActionDeviceItem(BaseSceneBean.DeviceAction action, int position) {
+        Intent intent = addDeviceActionIntent();
+
+        intent.setClass(getApplicationContext(), SceneSettingFunctionDatumSetActivity.class);
+        intent.putExtra("editMode", true);
+        intent.putExtra("action", action);
+        intent.putExtra("editPosition", position);
+        intent.putExtra("property", action.getLeftValue());
+        intent.putExtra("deviceId", action.getTargetDeviceId());
+        startActivity(intent);
     }
 
     @Override
@@ -711,7 +473,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         if (mRuleEngineBean.getRuleType() == 2) {//一键执行
             mRuleEngineBean.setStatus(1);
         } else if (mRuleEngineBean.getRuleType() == 1) {//自动化
-            if(mRuleEngineBean.getStatus() == 2){//如果是异常状态，就要更改为 不可用的正常状态
+            if (mRuleEngineBean.getStatus() == 2) {//如果是异常状态，就要更改为 不可用的正常状态
                 mRuleEngineBean.setStatus(0);
             }
         }
@@ -813,11 +575,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             Intent mainActivity = new Intent(this, RuleEngineConditionTypeGuideActivity.class);
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION_TYPE);
         } else {
-            doJumpAddConditions(null, -1);
+            doJumpAddConditions();
         }
     }
 
-    private void doJumpAddConditions(BaseSceneBean.DeviceCondition editCondition, int position) {
+    private Intent addDeviceConditionIntent() {
         Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
         mainActivity.putExtra("type", 0);
         mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
@@ -836,13 +598,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
         mainActivity.putStringArrayListExtra("selectedDatum", selectedDatum);
         mainActivity.putExtra("ruleSetMode", mRuleEngineBean.getRuleSetMode());
-        if (editCondition != null) {
-            mainActivity.putExtra("condition", editCondition);
-            mainActivity.putExtra("position", position);
-            startActivityForResult(mainActivity, REQUEST_CODE_EDIT_DEVICE_CONDITION);
-        } else {
-            startActivityForResult(mainActivity, REQUEST_CODE_SELECT_CONDITION);
-        }
+
+        return mainActivity;
+    }
+
+    private void doJumpAddConditions() {
+        Intent mainActivity = addDeviceConditionIntent();
+        startActivity(mainActivity);
     }
 
     @OnClick(R.id.v_add_action)
@@ -854,14 +616,15 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mainActivity.putExtra("hasWelcomeAction", actualHasWelcomeAction);
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
         } else {
-            doJumpAddActions(null, -1);
+            doJumpAddDeviceActions();
         }
     }
 
-    private void doJumpAddActions(BaseSceneBean.DeviceAction editAction, int position) {
+    private Intent addDeviceActionIntent() {
         Intent mainActivity = new Intent(this, SceneSettingDeviceSelectActivity.class);
-        mainActivity.putExtra("type", 1);
         mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
+        mainActivity.putExtra("type", 1);
+
         if (mRuleEngineBean instanceof LocalSceneBean) {
             mainActivity.putExtra("targetGateway", ((LocalSceneBean) mRuleEngineBean).getTargetGateway());
         }
@@ -872,15 +635,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             String leftValue = action.getLeftValue();
             selectedDatum.add(targetDeviceId + " " + leftValue);
         }
-
         mainActivity.putStringArrayListExtra("selectedDatum", selectedDatum);
-        if (editAction != null) {
-            mainActivity.putExtra("action", editAction);
-            mainActivity.putExtra("position", position);
-            startActivityForResult(mainActivity, REQUEST_CODE_EDIT_DEVICE_ACTION);
-        } else {
-            startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION);
-        }
+        return mainActivity;
+    }
+
+    private void doJumpAddDeviceActions() {
+        Intent intent = addDeviceActionIntent();
+        startActivity(intent);
     }
 
     @OnClick(R.id.tv_delete)
@@ -924,6 +685,215 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         Intent intent = new Intent(this, SceneSettingEnableTimeActivity.class);
         intent.putExtra("enableTime", mRuleEngineBean.getEnableTime());
         startActivityForResult(intent, REQUEST_CODE_SELECT_ENABLE_TIME);
+    }
+
+    private void mergeDeviceConditionItem(BaseSceneBean.DeviceCondition conditionItem, DeviceListBean.DevicesBean deviceBean,
+                                          DeviceTemplateBean.AttributesBean attributesBean,
+                                          ISceneSettingFunctionDatumSet.CallBackBean datumBean) {
+        if (datumBean instanceof ISceneSettingFunctionDatumSet.ValueCallBackBean) {
+            conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
+            if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
+                conditionItem.setSourceDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
+            } else if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
+                conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
+            } else if (deviceBean.getCuId() == 0) {
+                conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
+            } else if (deviceBean.getCuId() == 1) {
+                conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
+            }
+            conditionItem.setRightValue(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getValue());
+            conditionItem.setLeftValue(attributesBean.getCode());
+            conditionItem.setOperator(datumBean.getOperator());
+            conditionItem.setFunctionName(attributesBean.getDisplayName());
+            conditionItem.setValueName(((ISceneSettingFunctionDatumSet.ValueCallBackBean) datumBean).getValueBean().getDisplayName());
+        }
+        if (datumBean instanceof ISceneSettingFunctionDatumSet.BitValueCallBackBean) {
+            conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
+            if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
+                conditionItem.setSourceDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
+            } else if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
+                conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
+            } else if (deviceBean.getCuId() == 0) {
+                conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
+            } else if (deviceBean.getCuId() == 1) {
+                conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
+            }
+            conditionItem.setRightValue(String.valueOf(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getValue()));
+            conditionItem.setLeftValue(attributesBean.getCode());
+            conditionItem.setOperator(datumBean.getOperator());
+            conditionItem.setFunctionName(attributesBean.getDisplayName());
+            conditionItem.setValueName(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getDisplayName());
+            conditionItem.setBit(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getBit());
+            conditionItem.setCompareValue(((ISceneSettingFunctionDatumSet.BitValueCallBackBean) datumBean).getBitValueBean().getCompareValue());
+        }
+        if (datumBean instanceof ISceneSettingFunctionDatumSet.SetupCallBackBean) {
+            conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
+            if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
+                conditionItem.setSourceDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
+            } else if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
+                conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
+            } else if (deviceBean.getCuId() == 0) {
+                conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
+            } else if (deviceBean.getCuId() == 1) {
+                conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
+            }
+            conditionItem.setRightValue(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue());
+            conditionItem.setLeftValue(attributesBean.getCode());
+            conditionItem.setOperator(datumBean.getOperator());
+            conditionItem.setFunctionName(attributesBean.getDisplayName());
+            conditionItem.setValueName(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue() + ((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getSetupBean().getUnit());
+        }
+    }
+
+    private void mergeDeviceActionItem(BaseSceneBean.DeviceAction actionItem, DeviceListBean.DevicesBean deviceBean,
+                                       DeviceTemplateBean.AttributesBean attributesBean,
+                                       ISceneSettingFunctionDatumSet.CallBackBean callBackBean) {
+        if (callBackBean instanceof ISceneSettingFunctionDatumSet.ValueCallBackBean) {
+            if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
+                actionItem.setTargetDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
+            } else if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
+                actionItem.setTargetDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
+            } else if (deviceBean.getCuId() == 0) {
+                actionItem.setTargetDeviceType(DeviceType.AYLA_DEVICE_ID);
+            } else if (deviceBean.getCuId() == 1) {
+                actionItem.setTargetDeviceType(DeviceType.ALI_DEVICE_ID);
+            }
+            actionItem.setTargetDeviceId(deviceBean.getDeviceId());
+            actionItem.setRightValueType(((ISceneSettingFunctionDatumSet.ValueCallBackBean) callBackBean).getValueBean().getDataType());
+            actionItem.setOperator(callBackBean.getOperator());
+            actionItem.setLeftValue(attributesBean.getCode());
+            actionItem.setRightValue(((ISceneSettingFunctionDatumSet.ValueCallBackBean) callBackBean).getValueBean().getValue());
+            actionItem.setFunctionName(attributesBean.getDisplayName());
+            actionItem.setValueName(((ISceneSettingFunctionDatumSet.ValueCallBackBean) callBackBean).getValueBean().getDisplayName());
+        }
+        if (callBackBean instanceof ISceneSettingFunctionDatumSet.SetupCallBackBean) {
+            if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
+                actionItem.setTargetDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
+            } else if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
+                actionItem.setTargetDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
+            } else if (deviceBean.getCuId() == 0) {
+                actionItem.setTargetDeviceType(DeviceType.AYLA_DEVICE_ID);
+            } else if (deviceBean.getCuId() == 1) {
+                actionItem.setTargetDeviceType(DeviceType.ALI_DEVICE_ID);
+            }
+            actionItem.setTargetDeviceId(deviceBean.getDeviceId());
+            actionItem.setRightValueType(attributesBean.getDataType());
+            actionItem.setOperator(callBackBean.getOperator());
+            actionItem.setLeftValue(attributesBean.getCode());
+            actionItem.setRightValue(((ISceneSettingFunctionDatumSet.SetupCallBackBean) callBackBean).getTargetValue());
+            actionItem.setFunctionName(attributesBean.getDisplayName());
+            actionItem.setValueName(((ISceneSettingFunctionDatumSet.SetupCallBackBean) callBackBean).getTargetValue() + ((ISceneSettingFunctionDatumSet.SetupCallBackBean) callBackBean).getSetupBean().getUnit());
+        }
+    }
+
+    /**
+     * 处理设备类型的条件、动作 变化
+     *
+     * @param sceneItemEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleSceneItemEvent(SceneItemEvent sceneItemEvent) {
+        DeviceListBean.DevicesBean deviceBean = MyApplication.getInstance().getDevicesBean(sceneItemEvent.deviceId);
+        DeviceTemplateBean.AttributesBean attributesBean = sceneItemEvent.attributesBean;
+        ISceneSettingFunctionDatumSet.CallBackBean datumBean = sceneItemEvent.callBackBean;
+
+        if (sceneItemEvent.condition) {
+            if (sceneItemEvent.editMode) {
+                int position = sceneItemEvent.editPosition;
+                if (position >= 0) {
+                    if (mRuleEngineBean.getConditions().get(position) instanceof BaseSceneBean.DeviceCondition) {
+                        BaseSceneBean.DeviceCondition conditionItem = (BaseSceneBean.DeviceCondition) mRuleEngineBean.getConditions().get(position);
+                        mergeDeviceConditionItem(conditionItem, deviceBean, attributesBean, datumBean);
+                        showData();
+                    }
+                }
+            } else {
+                BaseSceneBean.DeviceCondition conditionItem = new BaseSceneBean.DeviceCondition();
+                mergeDeviceConditionItem(conditionItem, deviceBean, attributesBean, datumBean);
+                mRuleEngineBean.getConditions().add(conditionItem);
+                showData();
+            }
+        } else {
+            if (sceneItemEvent.editMode) {
+                int position = sceneItemEvent.editPosition;
+                if (position >= 0) {
+                    BaseSceneBean.DeviceAction actionItem = (BaseSceneBean.DeviceAction) mRuleEngineBean.getActions().get(position);
+                    mergeDeviceActionItem(actionItem, deviceBean, attributesBean, datumBean);
+                    showData();
+                }
+            } else {
+                BaseSceneBean.DeviceAction actionItem = new BaseSceneBean.DeviceAction();
+                mergeDeviceActionItem(actionItem, deviceBean, attributesBean, datumBean);
+                mRuleEngineBean.getActions().add(actionItem);
+                showData();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SELECT_CONDITION_TYPE && resultCode == RESULT_OK) {//选择条件类型返回结果
+            boolean onekey = data.getBooleanExtra("onekey", false);
+            if (onekey) {
+                mRuleEngineBean.setRuleType(BaseSceneBean.RULE_TYPE.ONE_KEY);
+                mRuleEngineBean.getConditions().add(new BaseSceneBean.OneKeyCondition());
+                showData();
+                syncRuleTYpeShow();
+            } else {
+                doJumpAddConditions();
+            }
+        }
+        if (requestCode == REQUEST_CODE_SELECT_ACTION_TYPE && resultCode == RESULT_OK) {//选择动作类型返回结果
+            int type = data.getIntExtra("type", 0);
+            switch (type) {
+                case 0: {
+                    doJumpAddDeviceActions();
+                }
+                break;
+                case 1: {
+                    startActivityForResult(new Intent(this, SceneActionDelaySettingActivity.class), REQUEST_CODE_SET_DELAY_ACTION);
+                }
+                break;
+                case 2: {
+                    startActivityForResult(new Intent(this, RuleEngineActionHotelWelcomeActivity.class), REQUEST_CODE_HOTEL_WELCOME_ACTION);
+                }
+                break;
+            }
+        }
+        if (requestCode == REQUEST_CODE_SELECT_ICON && resultCode == RESULT_OK) {//选择ICON返回结果
+            int index = data.getIntExtra("index", 1);
+            mRuleEngineBean.setIconPath(getIconPathByIndex(index));
+            mIconImageView.setImageResource(getIconResByIndex(index));
+        }
+        if (requestCode == REQUEST_CODE_SELECT_ENABLE_TIME && resultCode == RESULT_OK) {//选择生效时间段返回
+            BaseSceneBean.EnableTime enableTime = (BaseSceneBean.EnableTime) data.getSerializableExtra("enableTime");
+            mRuleEngineBean.setEnableTime(enableTime);
+            mEnableTimeTextView.setText(decodeCronExpression2(enableTime));
+        }
+        if (requestCode == REQUEST_CODE_SET_DELAY_ACTION && resultCode == RESULT_OK) {//延时动作添加返回
+            int seconds = data.getIntExtra("seconds", 0);
+            BaseSceneBean.DelayAction delayAction = new BaseSceneBean.DelayAction();
+            delayAction.setRightValue(String.valueOf(seconds));
+            mRuleEngineBean.getActions().add(delayAction);
+            showData();
+        }
+        if (requestCode == REQUEST_CODE_EDIT_DELAY_ACTION && resultCode == RESULT_OK) {//延时动作编辑返回
+            int seconds = data.getIntExtra("seconds", 0);
+            int position = data.getIntExtra("position", -1);
+            if (position >= 0) {
+                BaseSceneBean.Action action = mRuleEngineBean.getActions().get(position);
+                if (action instanceof BaseSceneBean.DelayAction) {
+                    action.setRightValue(String.valueOf(seconds));
+                    showData();
+                }
+            }
+        }
+        if (requestCode == REQUEST_CODE_HOTEL_WELCOME_ACTION && resultCode == RESULT_OK) {//酒店欢迎语动作添加返回
+            BaseSceneBean.WelcomeAction welcomeAction = new BaseSceneBean.WelcomeAction();
+            mRuleEngineBean.getActions().add(welcomeAction);
+            showData();
+        }
     }
 
     /**

@@ -19,12 +19,8 @@ public class BaseResult<T> implements Serializable {
     public boolean isSuccess() {
         if (code.equals("0")) {
             return true;
-        } else{
+        } else {
             return false;
         }
-    }
-
-    public boolean needLogin() {
-        return code.equals("5001");
     }
 }

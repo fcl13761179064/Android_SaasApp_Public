@@ -21,7 +21,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode Integer.parseInt(new Date().format("yyyyMMdd"))
-        versionName "1.8.0"
+        versionName "1.8.1"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
@@ -81,6 +81,10 @@ android {
     }
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+
+    viewBinding{
+        enabled = true
     }
 }
 

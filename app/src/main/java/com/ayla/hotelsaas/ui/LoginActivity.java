@@ -54,7 +54,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     @BindView(R.id.tv_register)
     TextView tv_register;
 
-
     private TranslateAnimation mShakeAnimation;
 
     @Override
@@ -62,7 +61,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
         super.onCreate(savedInstanceState);
         VersionUpgradeBean upgradeBean = (VersionUpgradeBean) getIntent().getSerializableExtra("upgrade");
         if (upgradeBean != null) {
-             UpgradeUnifiedCode.handleUpgrade(this, upgradeBean);
+            UpgradeUnifiedCode.handleUpgrade(this, upgradeBean);
         }
     }
 
@@ -96,7 +95,11 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             return;
         }
         SoftInputUtil.hideSysSoftInput(LoginActivity.this);
-        mPresenter.login(account, password);
+        if (!getIntent().hasExtra("upgrade")) {//没有请求过版本更新
+            mPresenter.checkVersion();
+        } else {
+            mPresenter.login(account, password);
+        }
     }
 
     @Override
@@ -163,6 +166,28 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             msg = getString(R.string.request_not_connect);
         }
         errorShake(0, 2, msg);
+    }
+
+    @Override
+    public void shouldForceUpgrade(VersionUpgradeBean versionUpgradeBean) {
+        UpgradeUnifiedCode.handleUpgrade(this, versionUpgradeBean);
+    }
+
+    @Override
+    public void notForceUpgrade() {
+        String account = edite_count.getText().toString();
+        String password = edit_password.getText().toString();
+
+        mPresenter.login(account, password);
+    }
+
+    @Override
+    public void checkVersionFailed(Throwable throwable) {
+        String msg = "未知错误";
+        if (throwable instanceof UnknownHostException) {
+            msg = getString(R.string.request_not_connect);
+        }
+        CustomToast.makeText(this, msg, R.drawable.ic_toast_warming);
     }
 
     private void errorShake(int type, int CycleTimes, String msg) {

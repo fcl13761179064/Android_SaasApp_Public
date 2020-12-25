@@ -77,7 +77,7 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
         BaseSceneBean.Action action = (BaseSceneBean.Action) getActivity().getIntent().getSerializableExtra("action");
         BaseSceneBean.DeviceCondition condition = (BaseSceneBean.DeviceCondition) getActivity().getIntent().getSerializableExtra("condition");
 
-        boolean autoJump = getActivity().getIntent().getBooleanExtra("autoJump", false);
+        boolean editMode = getActivity().getIntent().getBooleanExtra("editMode", false);
 
         List<CheckableSupport<String>> data = new ArrayList<>();
 
@@ -87,7 +87,7 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
             beanType = 0;
             for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
                 CheckableSupport<String> checkableSupport = new CheckableSupport<>(valueBean.getDisplayName());
-                if (autoJump) {
+                if (editMode) {
                     if (action != null) {
                         if (TextUtils.equals(action.getRightValue(), valueBean.getValue())) {
                             isEditChecked = true;
@@ -106,7 +106,7 @@ public class SceneSettingFunctionDatumSetSingleChooseFragment extends BaseMvpFra
             beanType = 1;
             for (DeviceTemplateBean.AttributesBean.BitValueBean bitValueBean : attributesBean.getBitValue()) {
                 CheckableSupport<String> checkableSupport = new CheckableSupport<>(bitValueBean.getDisplayName());
-                if (autoJump) {
+                if (editMode) {
                     if (action != null) {
                         if (TextUtils.equals(action.getRightValue(), String.valueOf(bitValueBean.getValue()))) {
                             isEditChecked = true;

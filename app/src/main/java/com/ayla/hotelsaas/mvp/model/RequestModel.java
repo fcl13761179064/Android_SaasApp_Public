@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.mvp.model;
 
 import android.text.TextUtils;
 
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -13,6 +14,7 @@ import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
+import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
@@ -42,6 +44,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
@@ -245,7 +248,7 @@ public class RequestModel {
      * @return
      */
     public Observable<DeviceListBean.DevicesBean> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
-                                                                                int scopeType, String deviceCategory, String deviceName, String nickName) {
+                                                                    int scopeType, String deviceCategory, String deviceName, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("scopeId", scopeId);
@@ -402,9 +405,9 @@ public class RequestModel {
                         }
                     }
                 })//特别处理：红外家电设备自学习的功能在物模板里面定义在extendAttributes 字段中，需要把它融合到字段attributes 里面。
-                .map(new Function<BaseResult<DeviceTemplateBean>, BaseResult<DeviceTemplateBean>>() {
+                .doOnNext(new Consumer<BaseResult<DeviceTemplateBean>>() {
                     @Override
-                    public BaseResult<DeviceTemplateBean> apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
+                    public void accept(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
                         if ("a1UR1BjfznK".equals(oemModel)) {//触控面板
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
@@ -589,7 +592,6 @@ public class RequestModel {
                                 }
                             }
                         }
-                        return deviceTemplateBeanBaseResult;
                     }
                 })//特别处理：如果是智镜设备，要强行加上 场景的支持。
                 ;
@@ -807,11 +809,12 @@ public class RequestModel {
     }
 
     /**
+     * 当没有新版本信息时，data = null 。
+     *
      * @return
      */
-    public Observable<VersionUpgradeBean> getAppVersion(int versionCode) {
-        return getApiService().getAppVersion(0, versionCode).compose(new BaseResultTransformer<BaseResult<VersionUpgradeBean>, VersionUpgradeBean>() {
-        });
+    public Observable<BaseResult<VersionUpgradeBean>> getAppVersion(int versionCode) {
+        return getApiService().getAppVersion(0, versionCode);
     }
 
     public Observable<Boolean> checkRadioExists(long scopeId) {
@@ -826,5 +829,87 @@ public class RequestModel {
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().checkVoiceRule(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
         });
+    }
+
+    public Observable<List<PurposeCategoryBean>> getPurposeCategory() {
+        return getApiService().getPurposeCategory().compose(new BaseResultTransformer<BaseResult<List<PurposeCategoryBean>>, List<PurposeCategoryBean>>() {
+        });
+    }
+
+    public Observable<BaseResult> purposeBatchSave(long scopeId, String deviceId, String[] purposeName, String[] purposeId, int[] purposeCategory) throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        JSONArray purPoseInfoListJsonArray = new JSONArray();
+        for (int i = 0; i < purposeName.length; i++) {
+            JSONObject purPoseInfoJsonObject = new JSONObject();
+            purPoseInfoJsonObject.put("deviceId", deviceId);
+            purPoseInfoJsonObject.put("purposeCategory", purposeCategory[i]);
+            purPoseInfoJsonObject.put("purposeId", purposeId[i]);
+            purPoseInfoJsonObject.put("purposeName", purposeName[i]);
+            purPoseInfoJsonObject.put("purposeSourceDeviceType", 0);
+            purPoseInfoJsonObject.put("scopeId", scopeId);
+            purPoseInfoJsonObject.put("scopeType", 2);
+            purPoseInfoListJsonArray.put(purPoseInfoJsonObject);
+        }
+        jsonObject.put("purPoseInfoList", purPoseInfoListJsonArray);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().purposeBatchSave(body111);
+    }
+
+    public Observable updatePurpose(String deviceId, int purposeCategory) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("deviceId", deviceId);
+        jsonObject.addProperty("purposeCategory", purposeCategory);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().updatePurpose(body111);
+    }
+
+    /**
+     * 根据设置的功能别名，篡改物模板里面的displayname。
+     *
+     * @param deviceId
+     */
+    public ObservableTransformer<DeviceTemplateBean, DeviceTemplateBean> modifyTemplateDisplayName(String deviceId) {
+        DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
+        return new ObservableTransformer<DeviceTemplateBean, DeviceTemplateBean>() {
+            @NonNull
+            @Override
+            public ObservableSource<DeviceTemplateBean> apply(@NonNull Observable<DeviceTemplateBean> upstream) {
+                return upstream.zipWith(RequestModel.getInstance()
+                                .getALlTouchPanelDeviceInfo(devicesBean.getCuId(), deviceId)
+                                .map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
+                                    @Override
+                                    public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
+                                        return listBaseResult.data;
+                                    }
+                                }),
+                        new BiFunction<DeviceTemplateBean, List<TouchPanelDataBean>, DeviceTemplateBean>() {
+                            @Override
+                            public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
+                                for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans.getAttributes()) {
+                                    for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
+                                        if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
+                                                TextUtils.equals(attributesBean.getCode(), touchPanelDataBean.getPropertyName())) {
+                                            attributesBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                        }
+                                        if ("Words".equals(touchPanelDataBean.getPropertyType())) {
+                                            if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
+                                                if (attributesBean.getValue() != null) {
+                                                    for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
+                                                        if (TextUtils.equals(valueBean.getValue(), touchPanelDataBean.getPropertyName())) {
+                                                            valueBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                return attributesBeans;
+                            }
+                        });
+            }
+        };
     }
 }
