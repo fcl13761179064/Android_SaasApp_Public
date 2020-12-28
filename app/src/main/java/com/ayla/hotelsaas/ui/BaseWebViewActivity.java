@@ -29,6 +29,7 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
         View emptyView = getEmptyView();
         mWebView.getSettings().setCacheMode(Constance.isNetworkDebug() ? WebSettings.LOAD_NO_CACHE : WebSettings.LOAD_DEFAULT);
         mWebView.getSettings().setDomStorageEnabled(true);
+        mWebView.getSettings().setMediaPlaybackRequiresUserGesture(false);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             // 加载主框架出错时会被回调的方法 API<23
