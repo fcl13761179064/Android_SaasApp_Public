@@ -394,27 +394,31 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     }
 
     private void jumpEditConditionDeviceItem(BaseSceneBean.DeviceCondition condition, int position) {
-        Intent intent = addDeviceConditionIntent();
+        if (MyApplication.getInstance().getDevicesBean(condition.getSourceDeviceId()) != null) {
+            Intent intent = addDeviceConditionIntent();
 
-        intent.setClass(getApplicationContext(), SceneSettingFunctionDatumSetActivity.class);
-        intent.putExtra("editMode", true);
-        intent.putExtra("condition", condition);
-        intent.putExtra("editPosition", position);
-        intent.putExtra("property", condition.getLeftValue());
-        intent.putExtra("deviceId", condition.getSourceDeviceId());
-        startActivity(intent);
+            intent.setClass(getApplicationContext(), SceneSettingFunctionDatumSetActivity.class);
+            intent.putExtra("editMode", true);
+            intent.putExtra("condition", condition);
+            intent.putExtra("editPosition", position);
+            intent.putExtra("property", condition.getLeftValue());
+            intent.putExtra("deviceId", condition.getSourceDeviceId());
+            startActivity(intent);
+        }
     }
 
     private void jumpEditActionDeviceItem(BaseSceneBean.DeviceAction action, int position) {
-        Intent intent = addDeviceActionIntent();
+        if (MyApplication.getInstance().getDevicesBean(action.getTargetDeviceId()) != null) {
+            Intent intent = addDeviceActionIntent();
 
-        intent.setClass(getApplicationContext(), SceneSettingFunctionDatumSetActivity.class);
-        intent.putExtra("editMode", true);
-        intent.putExtra("action", action);
-        intent.putExtra("editPosition", position);
-        intent.putExtra("property", action.getLeftValue());
-        intent.putExtra("deviceId", action.getTargetDeviceId());
-        startActivity(intent);
+            intent.setClass(getApplicationContext(), SceneSettingFunctionDatumSetActivity.class);
+            intent.putExtra("editMode", true);
+            intent.putExtra("action", action);
+            intent.putExtra("editPosition", position);
+            intent.putExtra("property", action.getLeftValue());
+            intent.putExtra("deviceId", action.getTargetDeviceId());
+            startActivity(intent);
+        }
     }
 
     @Override
