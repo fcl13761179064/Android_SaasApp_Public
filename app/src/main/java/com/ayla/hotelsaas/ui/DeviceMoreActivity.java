@@ -171,7 +171,6 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     public void renameSuccess(String newNickName) {
         tv_device_name.setText(newNickName);
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
-        setResult(RESULT_OK);
         MyApplication.getInstance().getDevicesBean(deviceId).setNickname(newNickName);
         EventBus.getDefault().post(new DeviceChangedEvent(deviceId));
         finish();
@@ -180,7 +179,6 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     @Override
     public void removeSuccess(Boolean is_rename) {
         CustomToast.makeText(this, "移除成功", R.drawable.ic_success);
-        setResult(RESULT_OK);
         EventBus.getDefault().post(new DeviceRemovedEvent(deviceId));
         finish();
     }

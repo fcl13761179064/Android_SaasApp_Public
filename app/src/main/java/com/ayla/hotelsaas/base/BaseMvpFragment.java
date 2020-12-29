@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.base;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
@@ -31,6 +33,11 @@ public abstract class BaseMvpFragment<V extends BaseView, T extends BasePresente
             mPresenter.detachView();
             mPresenter = null;
         }
+    }
+
+    @Override
+    protected View getLayoutView() {
+        return null;
     }
 
     @Override

@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
+import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
 import com.ayla.hotelsaas.fragment.DeviceListFragment;
 import com.ayla.hotelsaas.fragment.RuleEngineFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
@@ -179,7 +180,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     private BaseMvpFragment createBaseFragment(int type) {
         switch (type) {
             case GO_HOME_TYPE: {
-                return new DeviceListFragment(mRoom_ID);
+                return new DeviceListContainerFragment(mRoom_ID);
             }
             case GO_SECOND_TYPE: {
                 return new RuleEngineFragment(mRoom_ID);
