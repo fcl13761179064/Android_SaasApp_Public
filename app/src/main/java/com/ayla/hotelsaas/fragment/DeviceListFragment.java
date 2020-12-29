@@ -37,6 +37,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.net.UnknownHostException;
+
 import butterknife.BindView;
 
 public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceListShowPresenter> implements DeviceListView {
@@ -181,7 +183,9 @@ public class DeviceListFragment extends BaseMvpFragment<DeviceListView, DeviceLi
         } else {
             mSmartRefreshLayout.setEnableRefresh(true);
             mAdapter.setEmptyView(R.layout.empty_device_order);
-            CustomToast.makeText(getContext(),R.string.request_not_connect, R.drawable.ic_toast_warming);
+            if (throwable instanceof UnknownHostException) {
+                CustomToast.makeText(getContext(), R.string.request_not_connect, R.drawable.ic_toast_warming);
+            }
         }
         if (mSmartRefreshLayout.isRefreshing()) {
             mSmartRefreshLayout.finishRefresh(false);
