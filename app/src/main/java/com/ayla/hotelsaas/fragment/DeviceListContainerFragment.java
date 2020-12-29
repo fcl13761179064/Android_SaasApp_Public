@@ -36,6 +36,8 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
     private final int REQUEST_CODE_DEVICE_ADD = 0X10;
 
+    public static int[] drawableIcon = new int[]{R.drawable.one, R.drawable.two, R.drawable.three, R.drawable.four, R.drawable.five, R.drawable.six, R.drawable.seven, R.drawable.eight, R.drawable.nine, R.drawable.ten, R.drawable.eleven, R.drawable.tween};
+
     private final Long room_id;
     FragmentDeviceContainerBinding binding;
     ViewStubDeviceListContainerBinding deviceListContainerBinding;
@@ -192,7 +194,6 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
                 deviceListContainerBinding.emptyDeviceViewStub.setVisibility(View.VISIBLE);
                 deviceListContainerBinding.viewPager.setVisibility(View.GONE);
             }
-            CustomToast.makeText(getContext(), R.string.request_not_connect, R.drawable.ic_toast_warming);
         } else {
             binding.netErrorViewStub.setVisibility(View.VISIBLE);
         }

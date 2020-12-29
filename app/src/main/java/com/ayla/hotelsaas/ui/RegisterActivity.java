@@ -1,13 +1,9 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
-import android.graphics.Rect;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
@@ -18,11 +14,13 @@ import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.mvp.present.RegisterPresenter;
 import com.ayla.hotelsaas.mvp.view.RegisterView;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
 import com.ayla.hotelsaas.widget.AppBar;
+import com.blankj.utilcode.util.RegexUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -65,7 +63,7 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
                 startActivity(intent);
                 break;
             case R.id.register_submitBtn:
-                mPresenter.register();
+                register();
                 SoftIntPutUtils.closeKeyboard(RegisterActivity.this);
                 break;
             default:
@@ -76,14 +74,12 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
 
     @Override
     protected void initListener() {
-        registerPass.addTextChangedListener(edtWatcher);
-        registeraccount.addTextChangedListener(edtWatcher);
         registerPass.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction()))) {
-                    mPresenter.register();
+                    register();
                     SoftInputUtil.hideSysSoftInput(RegisterActivity.this);
                     return true;
                 }
@@ -93,46 +89,9 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
 
     }
 
-
-    private TextWatcher edtWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            tv_error_show.setVisibility(View.INVISIBLE);
-            if (!TextUtils.isEmpty(getAccount()) && !TextUtils.isEmpty(getPassword())) {
-                register_submitBtn.setEnabled(true);
-            } else {
-                register_submitBtn.setEnabled(false);
-            }
-        }
-    };
-
     @Override
     protected RegisterPresenter initPresenter() {
         return new RegisterPresenter();
-    }
-
-
-    @Override
-    public String getUserName() {
-        return et_user_name.getText().toString();
-    }
-
-    @Override
-    public String getAccount() {
-        return registeraccount.getText().toString();
-    }
-
-    @Override
-    public String getPassword() {
-        return registerPass.getText().toString();
     }
 
     @Override
@@ -142,15 +101,17 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
     }
 
     @Override
-    public void errorShake(int type, int CycleTimes, String code) {
-        tv_error_show.setVisibility(View.VISIBLE);
-        if ("171000".equals(code)) {
-            tv_error_show.setText("用户已存在");
-        } else if (TextUtils.isEmpty(code)) {
-
-        } else {
-            tv_error_show.setText("服务异常");
+    public void registerFailed(Throwable throwable) {
+        String msg = "服务异常";
+        if (throwable instanceof ServerBadException) {
+            msg = ((ServerBadException) throwable).getMsg();
         }
+        errorShake(0, 2, msg);
+    }
+
+    private void errorShake(int type, int CycleTimes, String msg) {
+        tv_error_show.setVisibility(View.VISIBLE);
+        tv_error_show.setText(msg);
 
         // CycleTimes动画重复的次数
         if (null == mShakeAnimation) {
@@ -160,42 +121,47 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
             mShakeAnimation.setRepeatMode(Animation.REVERSE);//设置反方向执行
         }
         if (type == 1) {
-            registeraccount.startAnimation(mShakeAnimation);
+            et_user_name.startAnimation(mShakeAnimation);
         } else if (type == 2) {
-            registerPass.startAnimation(mShakeAnimation);
-        } else {
             registeraccount.startAnimation(mShakeAnimation);
+        } else if (type == 3) {
             registerPass.startAnimation(mShakeAnimation);
         }
     }
 
-    /**
-     * 保持登录按钮始终不会被覆盖
-     *
-     * @param root
-     * @param subView
-     */
-    private void keepLoginBtnNotOver(final View root, final View subView) {
-        root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect rect = new Rect();
-                // 获取root在窗体的可视区域
-                root.getWindowVisibleDisplayFrame(rect);
-                // 获取root在窗体的不可视区域高度(被其他View遮挡的区域高度)
-                int rootInvisibleHeight = root.getRootView().getHeight() - rect.bottom;
-                // 若不可视区域高度大于200，则键盘显示,其实相当于键盘的高度
-                if (rootInvisibleHeight > 200) {
-                    // 显示键盘时
-                    int srollHeight = rootInvisibleHeight - (root.getHeight() - subView.getHeight()) - SoftIntPutUtils.getNavigationBarHeight(root.getContext());
-                    if (srollHeight > 0) {//当键盘高度覆盖按钮时
-                        root.scrollTo(0, srollHeight + 10);
-                    }
-                } else {
-                    // 隐藏键盘时
-                    root.scrollTo(0, 0);
-                }
-            }
-        });
+    private void register() {
+        tv_error_show.setVisibility(View.INVISIBLE);
+
+        String userName = et_user_name.getText().toString();
+        String account = registeraccount.getText().toString();
+        String password = registerPass.getText().toString();
+        if (TextUtils.isEmpty(userName)) {
+            String s = "用户名不能为空";
+            errorShake(1, 2, s);
+            return;
+        }
+        if (TextUtils.isEmpty(account)) {
+            String s = "账号不能为空";
+            errorShake(2, 2, s);
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            String s = "密码不能为空";
+            errorShake(3, 2, s);
+            return;
+        }
+        if (password.length() < 6) {
+            String s = "密码长度不能小于6位";
+            errorShake(3, 2, s);
+            return;
+        }
+        if (RegexUtils.isEmail(account)) {
+            mPresenter.register(userName, account, password);
+        } else if (RegexUtils.isMobileSimple(account)) {
+            mPresenter.register(userName, account, password);
+        } else {
+            String s = getString(R.string.account_error);
+            errorShake(3, 2, s);
+        }
     }
 }

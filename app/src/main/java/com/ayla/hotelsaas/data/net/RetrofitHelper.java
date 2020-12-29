@@ -31,6 +31,7 @@ import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @描述 Retrofit 帮助类
@@ -58,7 +59,7 @@ public class RetrofitHelper {
         if (apiService == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .client(getOkHttpClient())
-                    .addConverterFactory(CustomGsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .baseUrl(Constance.getBaseUrl())
                     .build();
@@ -116,8 +117,7 @@ public class RetrofitHelper {
             if (MyApplication.getInstance() != null) {
                 final String sava_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
                 if (sava_token != null) {
-                    requestBuilder.header("Authorization", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjk4NDU3NDI2NjQ2ODQ3NTc5IiwidXNlck5hbWUiOiLmtYvor5UiLCJsb2dpblR5cGUiOiIxIiwibG9naW5Tb3VyY2UiOiIxIiwidHlwZSI6ImF1dGhfdG9rZW4iLCJpYXQiOjE2MDkxMzY5Njh9.Eo9K1Oakhshmq0TiQT_GzwkdKVPHZMiz1bM6NGqLPnk").build();
-//                    requestBuilder.header("Authorization", sava_token).build();
+                    requestBuilder.header("Authorization", sava_token).build();
                 }
             }
             return chain.proceed(requestBuilder.build());

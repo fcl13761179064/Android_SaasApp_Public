@@ -15,10 +15,9 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.TouchPanelBean;
-import com.ayla.hotelsaas.fragment.DeviceListFragment;
+import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
 import com.ayla.hotelsaas.mvp.present.TourchPanelPresenter;
 import com.ayla.hotelsaas.mvp.view.TourchPanelView;
-
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
@@ -130,7 +129,7 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SELECT_ICON && resultCode == RESULT_OK) {//选择ICON返回结果
             int index = data.getIntExtra("index", 0);
-            iv_scene_icon.setImageResource(DeviceListFragment.drawableIcon[index]);
+            iv_scene_icon.setImageResource(DeviceListContainerFragment.drawableIcon[index]);
             mTouchPanelBean.setPictureCode(String.valueOf(index + 1));
             mPresenter.TourchPanelRenameInsertMethod(mTouchPanelBean.getPictureCodeId(), mDevicesBean.getDeviceId(),
                     mDevicesBean.getCuId(), String.valueOf(mTouchPanelBean.getSequence()), "PictureCode",

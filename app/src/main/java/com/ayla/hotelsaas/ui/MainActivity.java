@@ -15,7 +15,6 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
-import com.ayla.hotelsaas.fragment.DeviceListFragment;
 import com.ayla.hotelsaas.fragment.RuleEngineFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
 import com.ayla.hotelsaas.mvp.present.MainPresenter;
@@ -71,21 +70,21 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         rgIndicators.check(R.id.rb_main_fragment_device);
 
         //定义底部标签图片大小和位置
-        Drawable drawable_news = ResourcesCompat.getDrawable(getResources(),R.drawable.bar_bottom_device,null);
+        Drawable drawable_news = ResourcesCompat.getDrawable(getResources(), R.drawable.bar_bottom_device, null);
         //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
         drawable_news.setBounds(0, 0, 48, 48);
         //设置图片在文字的哪个方向
         main_device.setCompoundDrawables(null, drawable_news, null, null);
 
         //定义底部标签图片大小和位置
-        Drawable drawable_live = ResourcesCompat.getDrawable(getResources(),R.drawable.bar_bottom_linkage,null);
+        Drawable drawable_live = ResourcesCompat.getDrawable(getResources(), R.drawable.bar_bottom_linkage, null);
         //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
         drawable_live.setBounds(0, 0, 48, 48);
         //设置图片在文字的哪个方向
         main_likeage.setCompoundDrawables(null, drawable_live, null, null);
 
         //定义底部标签图片大小和位置
-        Drawable drawable_tuijian = ResourcesCompat.getDrawable(getResources(),R.drawable.bar_bottom_test,null);
+        Drawable drawable_tuijian = ResourcesCompat.getDrawable(getResources(), R.drawable.bar_bottom_test, null);
         //当这个图片被绘制时，给他绑定一个矩形 ltrb规定这个矩形
         drawable_tuijian.setBounds(0, 0, 48, 48);
         //设置图片在文字的哪个方向

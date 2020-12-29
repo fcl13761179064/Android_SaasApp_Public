@@ -3,9 +3,9 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
-import com.ayla.hotelsaas.mvp.view.DeviceListView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -34,9 +34,9 @@ public class DeviceListContainerPresenter extends BasePresenter<DeviceListContai
                     public void accept(DeviceListBean deviceListBean) throws Exception {
                         mView.loadDataSuccess(deviceListBean);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void handle(Throwable throwable) throws Exception {
                         mView.loadDataFinish(throwable);
                     }
                 });

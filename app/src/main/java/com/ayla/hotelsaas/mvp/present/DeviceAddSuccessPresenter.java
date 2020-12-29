@@ -1,7 +1,7 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
+import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView;
 
@@ -36,8 +36,8 @@ public class DeviceAddSuccessPresenter extends BasePresenter<DeviceAddSuccessVie
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (throwable instanceof RxjavaFlatmapThrowable) {
-                            mView.renameFailed(((RxjavaFlatmapThrowable) throwable).getCode(), ((RxjavaFlatmapThrowable) throwable).getMsg());
+                        if (throwable instanceof ServerBadException) {
+                            mView.renameFailed(((ServerBadException) throwable).getCode(), ((ServerBadException) throwable).getMsg());
                         } else {
                             mView.renameFailed(null, throwable.getMessage());
                         }

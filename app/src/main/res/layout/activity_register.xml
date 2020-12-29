@@ -169,7 +169,6 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="40dp"
                 android:background="@drawable/green_btn_bg"
-                android:enabled="false"
                 android:text="@string/register_btn"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />

@@ -7,7 +7,7 @@ import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
-import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
+import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
@@ -56,8 +56,8 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (throwable instanceof RxjavaFlatmapThrowable) {
-                            mView.renameFailed(((RxjavaFlatmapThrowable) throwable).getCode(), ((RxjavaFlatmapThrowable) throwable).getMsg());
+                        if (throwable instanceof ServerBadException) {
+                            mView.renameFailed(((ServerBadException) throwable).getCode(), ((ServerBadException) throwable).getMsg());
                         } else {
                             mView.renameFailed(null, throwable.getMessage());
                         }

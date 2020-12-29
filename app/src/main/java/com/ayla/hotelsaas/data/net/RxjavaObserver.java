@@ -16,6 +16,7 @@ import io.reactivex.Observer;
  * @user fanchunlei
  * @date 2017/7/2
  */
+@Deprecated
 public abstract class RxjavaObserver<T> implements Observer<BaseResult<T>> {
 
     @Override
@@ -30,8 +31,8 @@ public abstract class RxjavaObserver<T> implements Observer<BaseResult<T>> {
     @Override
     public void onError(Throwable t) {
         Log.e("error occur", "onError: ", t);
-        if (t instanceof RxjavaFlatmapThrowable) {
-            RxjavaFlatmapThrowable throwable = (RxjavaFlatmapThrowable) t;
+        if (t instanceof ServerBadException) {
+            ServerBadException throwable = (ServerBadException) t;
             _onFlatmap(throwable);
             _onError(throwable.getCode(), throwable.getMsg());
         } else if (!NetworkUtils.isConnected()) {
@@ -46,7 +47,7 @@ public abstract class RxjavaObserver<T> implements Observer<BaseResult<T>> {
     public void onComplete() {
     }
 
-    protected void _onFlatmap(RxjavaFlatmapThrowable t) {
+    protected void _onFlatmap(ServerBadException t) {
 
     }
 

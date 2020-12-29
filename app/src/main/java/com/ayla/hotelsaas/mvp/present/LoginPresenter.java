@@ -5,6 +5,7 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.LoginView;
 
@@ -43,9 +44,9 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                     public void accept(User user) throws Exception {
                         mView.loginSuccess(user);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void handle(Throwable throwable) throws Exception {
                         mView.loginFailed(throwable);
                     }
                 });
@@ -74,7 +75,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                         VersionUpgradeBean upgradeBean = versionUpgradeBeanBaseResult.data;
                         if (upgradeBean == null) {
                             mView.notForceUpgrade();
-                        }else{
+                        } else {
                             if (upgradeBean.getIsForce() != 0) {
                                 mView.shouldForceUpgrade(upgradeBean);
                             } else {
@@ -82,9 +83,15 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                             }
                         }
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void handle(Throwable throwable) throws Exception {
+
+                    }
+
+                    @Override
+                    public void handleOtherException(Throwable throwable) {
                         mView.checkVersionFailed(throwable);
                     }
                 });

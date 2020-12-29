@@ -22,7 +22,7 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
-import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
+import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.mvp.present.LoginPresenter;
 import com.ayla.hotelsaas.mvp.view.LoginView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
@@ -159,8 +159,8 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     @Override
     public void loginFailed(Throwable throwable) {
         String msg = "未知错误";
-        if (throwable instanceof RxjavaFlatmapThrowable) {
-            msg = ((RxjavaFlatmapThrowable) throwable).getMsg();
+        if (throwable instanceof ServerBadException) {
+            msg = ((ServerBadException) throwable).getMsg();
         }
         if (throwable instanceof UnknownHostException) {
             msg = getString(R.string.request_not_connect);
@@ -184,9 +184,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     @Override
     public void checkVersionFailed(Throwable throwable) {
         String msg = "未知错误";
-        if (throwable instanceof UnknownHostException) {
-            msg = getString(R.string.request_not_connect);
-        }
         CustomToast.makeText(this, msg, R.drawable.ic_toast_warming);
     }
 

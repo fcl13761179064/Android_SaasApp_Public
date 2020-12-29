@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +15,19 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
 import com.ayla.hotelsaas.R;
+import com.blankj.utilcode.util.Utils;
 
 public class CustomToast {
+    private static final String TAG = "CustomToast";
+
+    @Deprecated
     public static void makeText(Context context, @StringRes int resId, @DrawableRes int dResId) {
         makeText(context, context.getResources().getText(resId), dResId);
     }
 
+    @Deprecated
     public static void makeText(Context context, CharSequence tex, @DrawableRes int dResId) {
+        Log.d(TAG, "makeText: " + tex);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -35,5 +42,13 @@ public class CustomToast {
                 toast.show();
             }
         });
+    }
+
+    public static void makeText(@StringRes int resId, @DrawableRes int dResId) {
+        makeText(Utils.getApp(), resId, dResId);
+    }
+
+    public static void makeText(CharSequence tex, @DrawableRes int dResId) {
+        makeText(Utils.getApp(), tex, dResId);
     }
 }

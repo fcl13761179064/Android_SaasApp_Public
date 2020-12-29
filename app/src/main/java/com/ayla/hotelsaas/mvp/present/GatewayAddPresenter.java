@@ -2,9 +2,8 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
+import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.GatewayAddView;
 
@@ -153,8 +152,8 @@ public class GatewayAddPresenter extends BasePresenter<GatewayAddView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        if (throwable instanceof RxjavaFlatmapThrowable) {
-                            mView.renameFailed(((RxjavaFlatmapThrowable) throwable).getCode(), ((RxjavaFlatmapThrowable) throwable).getMsg());
+                        if (throwable instanceof ServerBadException) {
+                            mView.renameFailed(((ServerBadException) throwable).getCode(), ((ServerBadException) throwable).getMsg());
                         } else {
                             mView.renameFailed(null, throwable.getMessage());
                         }

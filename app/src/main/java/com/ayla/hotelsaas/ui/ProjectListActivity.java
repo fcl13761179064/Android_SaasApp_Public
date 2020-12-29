@@ -22,8 +22,6 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
 
-import java.net.UnknownHostException;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -140,9 +138,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else {
             mSmartRefreshLayout.setEnableRefresh(true);
             mAdapter.setEmptyView(R.layout.empty_project_list);
-            if (throwable instanceof UnknownHostException) {
-                CustomToast.makeText(this, R.string.request_not_connect, R.drawable.ic_toast_warming);
-            }
         }
         if (mSmartRefreshLayout.isRefreshing()) {
             mSmartRefreshLayout.finishRefresh(false);

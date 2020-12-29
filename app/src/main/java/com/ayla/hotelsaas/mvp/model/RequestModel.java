@@ -27,7 +27,7 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
-import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
+import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -89,13 +89,14 @@ public class RequestModel {
         });
     }
 
-    public Observable<BaseResult<Boolean>> register(String user_name, String account, String password) {
+    public Observable<Boolean> register(String user_name, String account, String password) {
         JsonObject body = new JsonObject();
         body.addProperty("userName", user_name);
         body.addProperty("account", account);
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().register(new_body);
+        return getApiService().register(new_body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
 
@@ -262,8 +263,8 @@ public class RequestModel {
                 .onErrorResumeNext(new Function<Throwable, ObservableSource<? extends BaseResult<DeviceListBean.DevicesBean>>>() {
                     @Override
                     public ObservableSource<? extends BaseResult<DeviceListBean.DevicesBean>> apply(@NonNull Throwable throwable) throws Exception {
-                        if (throwable instanceof RxjavaFlatmapThrowable) {
-                            if (((RxjavaFlatmapThrowable) throwable).getMsg().contains("该设备已经绑定，解绑后方能重新绑定")) {
+                        if (throwable instanceof ServerBadException) {
+                            if (((ServerBadException) throwable).getMsg().contains("该设备已经绑定，解绑后方能重新绑定")) {
                                 return Observable.error(new AlreadyBoundException(throwable.getMessage()));
                             }
                         }

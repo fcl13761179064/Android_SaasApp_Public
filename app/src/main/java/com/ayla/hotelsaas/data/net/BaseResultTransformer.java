@@ -18,7 +18,7 @@ public abstract class BaseResultTransformer<Upstream extends BaseResult<Downstre
                 if (upstream.isSuccess()) {
                     return Observable.just(upstream.data);
                 }
-                return Observable.error(new RxjavaFlatmapThrowable(upstream.code, upstream.msg));
+                return Observable.error(new ServerBadException(upstream.code, upstream.msg));
             }
         });
     }
