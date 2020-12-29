@@ -18,21 +18,20 @@
         app:maxImageSize="16dp" />
 
     <ViewStub
-        android:id="@+id/net_error_view_stub"
+        android:id="@+id/content_view_stub"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout="@layout/widget_empty_view" />
+        android:layout="@layout/view_stub_device_list_container" />
 
     <ViewStub
         android:id="@+id/loading_view_stub"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout="@layout/layout_loading" />
-
     <ViewStub
-        android:id="@+id/content_view_stub"
+        android:id="@+id/net_error_view_stub"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout="@layout/view_stub_device_list_container" />
+        android:layout="@layout/widget_empty_view" />
 
 </RelativeLayout>

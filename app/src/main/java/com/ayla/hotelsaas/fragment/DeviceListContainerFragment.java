@@ -1,7 +1,9 @@
 package com.ayla.hotelsaas.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
@@ -31,6 +33,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListContainerView, DeviceListContainerPresenter> implements DeviceListContainerView {
+
+    private final int REQUEST_CODE_DEVICE_ADD = 0X10;
+
     private final Long room_id;
     FragmentDeviceContainerBinding binding;
     ViewStubDeviceListContainerBinding deviceListContainerBinding;
@@ -55,6 +60,14 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_DEVICE_ADD && resultCode == Activity.RESULT_OK){
+            loadData();
+        }
+    }
+
+    @Override
     protected DeviceListContainerPresenter initPresenter() {
         return new DeviceListContainerPresenter();
     }
@@ -73,7 +86,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
     @Override
     protected void initView(View view) {
-        binding.loadingViewStub.setVisibility(View.VISIBLE);
+        loadData();
     }
 
     @Override
@@ -81,10 +94,9 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         binding.floatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
                 intent.putExtra("scopeId", room_id);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_DEVICE_ADD);
             }
         });
         binding.contentViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
@@ -95,7 +107,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
                 deviceListContainerBinding.deviceRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
                     @Override
                     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                        mPresenter.refresh(room_id);
+                        mPresenter.loadData(room_id);
                     }
                 });
                 deviceListContainerBinding.viewPager.setAdapter(mAdapter);
@@ -105,13 +117,12 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         binding.netErrorViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
             @Override
             public void onInflate(ViewStub stub, View inflated) {
+                Log.d(TAG, "onInflate: 1111111");
                 WidgetEmptyViewBinding emptyViewBinding = WidgetEmptyViewBinding.bind(inflated);
                 emptyViewBinding.btRefresh.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        binding.loadingViewStub.setVisibility(View.VISIBLE);
-                        binding.netErrorViewStub.setVisibility(View.GONE);
-                        mPresenter.loadData(room_id);
+                      loadData();
                     }
                 });
             }
@@ -143,7 +154,6 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
                 return "全部";
             }
         };
-        mPresenter.refresh(room_id);
     }
 
     private DeviceListBean deviceListBean;
@@ -190,6 +200,16 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceRemoved(DeviceRemovedEvent event) {
-        deviceListContainerBinding.deviceRefreshLayout.autoRefresh();
+
+    }
+
+    private void loadData(){
+        if (deviceListContainerBinding != null) {
+            deviceListContainerBinding.deviceRefreshLayout.autoRefresh();
+        }else {
+            binding.loadingViewStub.setVisibility(View.VISIBLE);
+            binding.netErrorViewStub.setVisibility(View.GONE);
+            mPresenter.loadData(room_id);
+        }
     }
 }

@@ -18,16 +18,6 @@ import io.reactivex.schedulers.Schedulers;
  * @时间 2020/7/14
  */
 public class DeviceListContainerPresenter extends BasePresenter<DeviceListContainerView> {
-    //页码
-    private int pageNum = 1;
-
-    /**
-     * 加载第一页
-     */
-    public void refresh(long resourceRoomId) {
-        pageNum = 1;
-        loadData(resourceRoomId);
-    }
 
     /**
      * 加载列表
@@ -36,13 +26,12 @@ public class DeviceListContainerPresenter extends BasePresenter<DeviceListContai
      */
     public void loadData(long resourceRoomId) {
         Disposable subscribe = RequestModel.getInstance()
-                .getDeviceList(resourceRoomId, pageNum, Integer.MAX_VALUE)
+                .getDeviceList(resourceRoomId, 1, Integer.MAX_VALUE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DeviceListBean>() {
                     @Override
                     public void accept(DeviceListBean deviceListBean) throws Exception {
-                        pageNum++;
                         mView.loadDataSuccess(deviceListBean);
                     }
                 }, new Consumer<Throwable>() {

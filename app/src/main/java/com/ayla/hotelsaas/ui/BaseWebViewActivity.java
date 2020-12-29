@@ -20,7 +20,7 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
 
     private DWebView mWebView;
 
-    private boolean hasError;
+    private boolean hasError, hasLoaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +62,15 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onPageFinished(view, url);
                 Log.d(TAG, "onPageFinished: ");
                 hideProgress();
-                if (hasError) {
-                    mWebView.setVisibility(View.INVISIBLE);
-                    emptyView.setVisibility(View.VISIBLE);
-                } else {
-                    mWebView.setVisibility(View.VISIBLE);
-                    emptyView.setVisibility(View.INVISIBLE);
+                if (!hasLoaded) {
+                    if (hasError) {
+                        mWebView.setVisibility(View.INVISIBLE);
+                        emptyView.setVisibility(View.VISIBLE);
+                    } else {
+                        hasLoaded = true;
+                        mWebView.setVisibility(View.VISIBLE);
+                        emptyView.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         });

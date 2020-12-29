@@ -6,10 +6,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.aliyun.iot.aep.sdk.framework.AApplication;
@@ -46,6 +46,9 @@ import butterknife.OnClick;
  */
 public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddPresenter> implements ZigBeeAddView {
     private static final String TAG = "DeviceAddActivity";
+
+    private final int REQUEST_CODE_ADD_SUCCESS = 0X10;
+
     @BindView(R.id.iv_01)
     public ImageView mImageView;
     @BindView(R.id.tv_loading)
@@ -96,6 +99,15 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startBind();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD_SUCCESS) {
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 
     private int bindProgress;//记录进度
@@ -204,9 +216,9 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
 
     @Override
     public void bindSuccess(String deviceId, String deviceName) {
-        startActivity(new Intent(this, DeviceAddSuccessActivity.class).putExtra("deviceId", deviceId).putExtra("deviceName", deviceName));
-        setResult(RESULT_OK);
-        finish();
+        startActivityForResult(new Intent(this, DeviceAddSuccessActivity.class)
+                        .putExtra("deviceId", deviceId).putExtra("deviceName", deviceName),
+                REQUEST_CODE_ADD_SUCCESS);
     }
 
     private String errorMsg;
