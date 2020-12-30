@@ -7,6 +7,8 @@ import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.data.net.SelfMsgException;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
 import com.sunseaiot.larkairkiss.LarkConfigCallback;
@@ -54,14 +56,15 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
                         mView.bindSuccess(dsn, newNickname);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (throwable instanceof AlreadyBoundException) {
-                            mView.bindFailed("该设备已在别处绑定，请先解绑后再重试");
-                        } else {
-                            mView.bindFailed(null);
-                        }
+                    public void handleDefault(Throwable throwable) throws Exception {
+
+                    }
+
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
+                        mView.bindFailed(getLocalErrorMsg(null, throwable));
                     }
                 });
         addSubscrebe(subscribe);
@@ -92,6 +95,9 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                             @Override
                                             public void onFailure(Exception e) {
                                                 if (!emitter.isDisposed()) {
+                                                    if (e instanceof AlreadyBoundException) {
+                                                        e = new SelfMsgException("该设备已在别处绑定，请先解绑后再重试", e);
+                                                    }
                                                     emitter.onError(e);
                                                 }
                                             }
@@ -162,14 +168,15 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void accept(String[] strings) throws Exception {
                         mView.bindSuccess(strings[0], strings[1]);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (throwable instanceof AlreadyBoundException) {
-                            mView.bindFailed("该设备已在别处绑定，请先解绑后再重试");
-                        } else {
-                            mView.bindFailed(null);
-                        }
+                    public void handleDefault(Throwable throwable) throws Exception {
+
+                    }
+
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
+                        mView.bindFailed(getLocalErrorMsg(null, throwable));
                     }
                 });
         addSubscrebe(subscribe);
@@ -352,14 +359,15 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void accept(String[] bean) throws Exception {
                         mView.bindSuccess(bean[0], bean[1]);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (throwable instanceof AlreadyBoundException) {
-                            mView.bindFailed("该设备已在别处绑定，请先解绑后再重试");
-                        } else {
-                            mView.bindFailed(null);
-                        }
+                    public void handleDefault(Throwable throwable) throws Exception {
+
+                    }
+
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
+                        mView.bindFailed(getLocalErrorMsg(null, throwable));
                     }
                 });
         addSubscrebe(subscribe);
@@ -392,15 +400,15 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                                     .toFuture().get();
                                             return aBoolean;
                                         } catch (Exception e) {
-                                            if (!emitter.isDisposed()) {
-                                                emitter.onError(e);
-                                            }
                                             return true;
                                         }
                                     }
 
                                     @Override
                                     public void onFailure(Exception e) {
+                                        if (e instanceof AlreadyBoundException) {
+                                            e = new SelfMsgException("该设备已在别处绑定，请先解绑后再重试", e);
+                                        }
                                         emitter.onError(e);
                                     }
 
@@ -471,18 +479,17 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void accept(String[] subDeviceInfo) throws Exception {
                         mView.bindSuccess(subDeviceInfo[0], subDeviceInfo[1]);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (throwable instanceof AlreadyBoundException) {
-                            mView.bindFailed("该设备已在别处绑定，请先解绑后再重试");
-                        } else {
-                            mView.bindFailed(null);
-                        }
+                    public void handleDefault(Throwable throwable) throws Exception {
+                    }
+
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
+                        mView.bindFailed(getLocalErrorMsg(null, throwable));
                     }
                 });
         addSubscrebe(subscribe);
-
     }
 
     public void bindAylaWiFi(String wifiName, String wifiPassword, long cuId, long scopeId, String deviceCategory, String deviceName) {
@@ -565,14 +572,15 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void accept(String[] s) throws Exception {
                         mView.bindSuccess(s[0], s[1]);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (throwable instanceof AlreadyBoundException) {
-                            mView.bindFailed("该设备已在别处绑定，请先解绑后再重试");
-                        } else {
-                            mView.bindFailed(null);
-                        }
+                    public void handleDefault(Throwable throwable) throws Exception {
+
+                    }
+
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
+                        mView.bindFailed(getLocalErrorMsg(null, throwable));
                     }
                 });
         addSubscrebe(subscribe);

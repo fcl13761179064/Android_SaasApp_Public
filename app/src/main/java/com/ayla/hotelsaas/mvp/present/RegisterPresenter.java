@@ -42,8 +42,8 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
                     }
                 }, new UnifiedErrorConsumer() {
                     @Override
-                    public boolean shouldHandleDefault(Throwable throwable) {
-                        return false;
+                    public void handleDefault(Throwable throwable) throws Exception {
+
                     }
 
                     @Override

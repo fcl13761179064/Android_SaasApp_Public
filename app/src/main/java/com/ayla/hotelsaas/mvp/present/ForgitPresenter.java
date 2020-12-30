@@ -42,8 +42,8 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
                     }
                 }, new UnifiedErrorConsumer() {
                     @Override
-                    public boolean shouldHandleDefault(Throwable throwable) {
-                        return false;
+                    public void handleDefault(Throwable throwable) throws Exception {
+
                     }
 
                     @Override
@@ -77,8 +77,8 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
                     }
                 }, new UnifiedErrorConsumer() {
                     @Override
-                    public boolean shouldHandleDefault(Throwable throwable) {
-                        return false;
+                    public void handleDefault(Throwable throwable) throws Exception {
+
                     }
 
                     @Override
