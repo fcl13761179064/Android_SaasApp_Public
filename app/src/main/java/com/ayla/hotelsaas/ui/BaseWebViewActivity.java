@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.tencent.smtt.export.external.extension.interfaces.IX5WebViewExtension;
 import com.tencent.smtt.export.external.interfaces.WebResourceError;
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
 import com.tencent.smtt.sdk.WebSettings;
@@ -74,6 +75,8 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 }
             }
         });
+        IX5WebViewExtension x5WebViewExtension = mWebView.getX5WebViewExtension();
+        Log.d(TAG, "onCreate: "+x5WebViewExtension);
         WebView.setWebContentsDebuggingEnabled(Constance.isNetworkDebug());
     }
 
