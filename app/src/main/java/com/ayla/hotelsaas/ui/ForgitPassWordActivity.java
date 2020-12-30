@@ -94,7 +94,7 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
         tv_send_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                tv_error_show.setText(null);
                 SoftIntPutUtils.closeKeyboard(ForgitPassWordActivity.this);
                 String userName = getUserName();
                 if (TextUtils.isEmpty(userName)) {
@@ -113,6 +113,8 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     }
 
     private void modifyPassword() {
+        tv_error_show.setText(null);
+
         String userName = getUserName();
         String yanzhengma = getYanzhengMa();
         if (TextUtils.isEmpty(userName)) {
@@ -149,11 +151,6 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
 
 
     private void errorShake(int type, int CycleTimes, String msg) {
-        if (type == -1) {
-            tv_send_code.setText("发送验证码");
-            tv_send_code.setClickable(true);
-            mTimer.cancel();
-        }
         tv_error_show.setVisibility(View.VISIBLE);
         tv_error_show.setText(msg);
 
@@ -179,6 +176,7 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
 
     @Override
     public void sendCodeFailed(String msg) {
+        mTimer.onFinish();
         errorShake(0, 2, msg);
     }
 
@@ -216,6 +214,8 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     }
 
     public void resetPassword(String phone) {
+        tv_error_show.setText(null);
+
         String new_password = resetPassword();
         if (TextUtils.isEmpty(new_password)) {
             CustomToast.makeText(MyApplication.getContext(), "密码不能为空", R.drawable.ic_toast_warming);
