@@ -83,7 +83,7 @@ android {
         unitTests.returnDefaultValues = true
     }
 
-    viewBinding{
+    viewBinding {
         enabled = true
     }
 }
@@ -128,14 +128,15 @@ dependencies {
     implementation rootProject.libraries.adapter_rxjava
     implementation rootProject.libraries.autosize
     implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
-    implementation  'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
-    implementation  'com.scwang.smart:refresh-footer-classics:2.0.1'    //经典加载
+    implementation 'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
+    implementation 'com.scwang.smart:refresh-footer-classics:2.0.1'    //经典加载
     implementation rootProject.libraries.BaseRyViewAdapHelper
     implementation rootProject.libraries.utilcode
     implementation rootProject.libraries.eventbus
     implementation 'com.xw.repo:bubbleseekbar:3.20'
     implementation 'com.tencent.bugly:crashreport:3.1.9'
-    implementation 'com.github.wendux:DSBridge-Android:x5-3.0-SNAPSHOT'
+    implementation project(':dsbridge')
+
     implementation 'com.github.AylaAsia:HongYanConfigLib:0.0.10'
 }
 
