@@ -105,6 +105,7 @@ public class MyApplication extends AApplication {
 
     private void initX5() {
         // 在调用TBS初始化、创建WebView之前进行如下配置
+        QbSdk.setDownloadWithoutWifi(true);
         HashMap map = new HashMap();
         map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
         map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
