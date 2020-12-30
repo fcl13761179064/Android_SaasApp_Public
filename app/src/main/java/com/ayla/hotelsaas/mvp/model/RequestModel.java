@@ -100,29 +100,32 @@ public class RequestModel {
     }
 
 
-    public Observable<BaseResult<Boolean>> modifyForgitPassword(String user_name, String yanzhengma) {
+    public Observable<Boolean> modifyForgitPassword(String user_name, String yanzhengma) {
         JsonObject body = new JsonObject();
         body.addProperty("phone", user_name);
         body.addProperty("code", yanzhengma);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().modifyForgitPassword(new_body);
+        return getApiService().modifyForgitPassword(new_body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
 
-    public Observable<BaseResult<Boolean>> send_sms(String user_name) {
+    public Observable<Boolean> send_sms(String user_name) {
         JsonObject body = new JsonObject();
         body.addProperty("phone", user_name);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().sendSmsCode(new_body);
+        return getApiService().sendSmsCode(new_body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
 
-    public Observable<BaseResult<Boolean>> resert_passwoed(String phone, String new_password) {
+    public Observable<Boolean> resert_passwoed(String phone, String new_password) {
         JsonObject body = new JsonObject();
         body.addProperty("phone", phone);
         body.addProperty("password", new_password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().modifyOldPassword(new_body);
+        return getApiService().modifyOldPassword(new_body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
     public Observable<User> refreshToken(String refreshToken) {
@@ -702,13 +705,14 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> deviceRemove(String deviceId, long scopeId, String scopeType) {
+    public Observable<Boolean> deviceRemove(String deviceId, long scopeId, String scopeType) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("deviceId", deviceId);
         jsonObject.addProperty("scopeId", scopeId + "");
         jsonObject.addProperty("scopeType", scopeType);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().removeDevice(body111);
+        return getApiService().removeDevice(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
 
@@ -814,8 +818,9 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<VersionUpgradeBean>> getAppVersion(int versionCode) {
-        return getApiService().getAppVersion(0, versionCode);
+    public Observable<VersionUpgradeBean> getAppVersion(int versionCode) {
+        return getApiService().getAppVersion(0, versionCode).compose(new BaseResultTransformer<BaseResult<VersionUpgradeBean>, VersionUpgradeBean>() {
+        });
     }
 
     public Observable<Boolean> checkRadioExists(long scopeId) {

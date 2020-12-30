@@ -9,7 +9,6 @@ import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.UpgradeDownloadService;
 import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
@@ -19,8 +18,6 @@ import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
-
-import java.net.UnknownHostException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -94,17 +91,11 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
 
     @Override
     public void getUserInfoFail(Throwable throwable) {
-        String msg = "未知错误";
-        if (throwable instanceof UnknownHostException) {
-            msg = getString(R.string.request_not_connect);
-        }
-        CustomToast.makeText(MyApplication.getContext(), msg, R.drawable.ic_toast_warming);
     }
 
     @Override
     public void getUserInfoFailSuccess(PersonCenter personCenter) {
         tv_default_username.setText(personCenter.getFullName());
-
     }
 
     @Override

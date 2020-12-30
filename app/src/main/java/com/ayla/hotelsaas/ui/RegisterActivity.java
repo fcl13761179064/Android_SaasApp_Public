@@ -101,11 +101,7 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
     }
 
     @Override
-    public void registerFailed(Throwable throwable) {
-        String msg = "服务异常";
-        if (throwable instanceof ServerBadException) {
-            msg = ((ServerBadException) throwable).getMsg();
-        }
+    public void registerFailed(String msg) {
         errorShake(0, 2, msg);
     }
 

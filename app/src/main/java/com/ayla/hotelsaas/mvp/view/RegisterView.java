@@ -12,5 +12,5 @@ public interface RegisterView extends BaseView {
     //注册成功
     void RegistSuccess(Boolean data);
 
-    void registerFailed(Throwable throwable);
+    void registerFailed(String msg);
 }

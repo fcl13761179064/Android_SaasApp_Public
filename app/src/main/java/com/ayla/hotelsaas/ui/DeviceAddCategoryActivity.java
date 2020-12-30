@@ -20,7 +20,6 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddCategoryPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
-
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -244,7 +243,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_ADD_DEVICE && resultCode == RESULT_OK) {
-            setResult(RESULT_OK);
             finish();
         } else if (requestCode == REQUEST_CODE_SELECT_GATEWAY && resultCode == RESULT_OK) {
             Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);

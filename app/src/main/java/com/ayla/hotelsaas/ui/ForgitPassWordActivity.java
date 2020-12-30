@@ -2,9 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
@@ -19,7 +17,6 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.ForgitPresenter;
 import com.ayla.hotelsaas.mvp.view.ForgitView;
-
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.blankj.utilcode.util.RegexUtils;
@@ -80,9 +77,9 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
             case R.id.register_submitBtn:
 
                 if (is_forgit_password) {
-                    mPresenter.modifyPassword();
+                    modifyPassword();
                 } else {
-                    mPresenter.resetPassword(getUserName());
+                    resetPassword(getUserName());
                 }
 
                 SoftIntPutUtils.closeKeyboard(ForgitPassWordActivity.this);
@@ -92,11 +89,8 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
         }
     }
 
-
     @Override
     protected void initListener() {
-        et_user_name.addTextChangedListener(edtWatcher);
-        rt_yanzhengma.addTextChangedListener(edtWatcher);
         tv_send_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,31 +106,32 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
                 }
                 tv_send_code.setClickable(false);
                 mTimer.start();
-                mPresenter.send_sms();
+                String iphone_youxiang = getUserName();
+                mPresenter.send_sms(iphone_youxiang);
             }
         });
     }
 
-
-    private TextWatcher edtWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    private void modifyPassword() {
+        String userName = getUserName();
+        String yanzhengma = getYanzhengMa();
+        if (TextUtils.isEmpty(userName)) {
+            CustomToast.makeText(MyApplication.getContext(), "手机号不能为空", R.drawable.ic_toast_warming);
+            errorShake(1, 2, "");
+            return;
         }
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (TextUtils.isEmpty(yanzhengma)) {
+            CustomToast.makeText(MyApplication.getContext(), "验证码不能为空", R.drawable.ic_toast_warming);
+            errorShake(2, 2, "");
+            return;
         }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            tv_error_show.setVisibility(View.INVISIBLE);
-            if (!TextUtils.isEmpty(getUserName()) && !TextUtils.isEmpty(getYanzhengMa())) {
-                register_submitBtn.setEnabled(true);
-            } else {
-                register_submitBtn.setEnabled(false);
-            }
+        if (RegexUtils.isMobileSimple(userName)) {
+            mPresenter.modifyforgit(userName, yanzhengma);
+        } else {
+            CustomToast.makeText(MyApplication.getContext(), R.string.account_forgit_password, R.drawable.ic_toast_warming);
         }
-    };
+    }
 
     @Override
     protected ForgitPresenter initPresenter() {
@@ -144,19 +139,16 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     }
 
 
-    @Override
-    public String getUserName() {
+    private String getUserName() {
         return et_user_name.getText().toString();
     }
 
-    @Override
-    public String getYanzhengMa() {
+    private String getYanzhengMa() {
         return rt_yanzhengma.getText().toString();
     }
 
 
-    @Override
-    public void errorShake(int type, int CycleTimes, String msg) {
+    private void errorShake(int type, int CycleTimes, String msg) {
         if (type == -1) {
             tv_send_code.setText("发送验证码");
             tv_send_code.setClickable(true);
@@ -186,11 +178,21 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     }
 
     @Override
+    public void sendCodeFailed(String msg) {
+        errorShake(0, 2, msg);
+    }
+
+    @Override
     public void modifyPasswordSuccess(Boolean data) {
         is_forgit_password = false;
         ll_forgit_password.setVisibility(View.GONE);
         ll_new_password.setVisibility(View.VISIBLE);
         register_submitBtn.setText("重置密码");
+    }
+
+    @Override
+    public void modifyPasswordFailed(String msg) {
+        errorShake(0, 2, msg);
     }
 
     @Override
@@ -211,5 +213,17 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     protected void onDestroy() {
         super.onDestroy();
         mTimer.cancel();
+    }
+
+    public void resetPassword(String phone) {
+        String new_password = resetPassword();
+        if (TextUtils.isEmpty(new_password)) {
+            CustomToast.makeText(MyApplication.getContext(), "密码不能为空", R.drawable.ic_toast_warming);
+            return;
+        } else if (new_password.length() < 6) {
+            CustomToast.makeText(MyApplication.getContext(), "密码至少为6位", R.drawable.ic_toast_warming);
+            return;
+        }
+        mPresenter.reset_Password(phone, new_password);
     }
 }

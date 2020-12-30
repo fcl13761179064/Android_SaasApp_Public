@@ -2,9 +2,9 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.LoginView;
@@ -44,10 +44,10 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                     public void accept(User user) throws Exception {
                         mView.loginSuccess(user);
                     }
-                }, new UnifiedErrorConsumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
                     public void handle(Throwable throwable) throws Exception {
-                        mView.loginFailed(throwable);
+                        mView.loginFailed(getLocalErrorMsg(throwable));
                     }
                 });
         addSubscrebe(subscribe);
@@ -69,29 +69,24 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<BaseResult<VersionUpgradeBean>>() {
+                .subscribe(new Consumer<VersionUpgradeBean>() {
                     @Override
-                    public void accept(BaseResult<VersionUpgradeBean> versionUpgradeBeanBaseResult) throws Exception {
-                        VersionUpgradeBean upgradeBean = versionUpgradeBeanBaseResult.data;
-                        if (upgradeBean == null) {
-                            mView.notForceUpgrade();
+                    public void accept(VersionUpgradeBean versionUpgradeBean) throws Exception {
+                        if (versionUpgradeBean.getIsForce() != 0) {
+                            mView.shouldForceUpgrade(versionUpgradeBean);
                         } else {
-                            if (upgradeBean.getIsForce() != 0) {
-                                mView.shouldForceUpgrade(upgradeBean);
-                            } else {
-                                mView.notForceUpgrade();
-                            }
+                            mView.notForceUpgrade();
                         }
                     }
-                }, new UnifiedErrorConsumer<Throwable>() {
-
+                }, new UnifiedErrorConsumer() {
                     @Override
                     public void handle(Throwable throwable) throws Exception {
-
-                    }
-
-                    @Override
-                    public void handleOtherException(Throwable throwable) {
+                        if (throwable instanceof ServerBadException) {
+                            if (((ServerBadException) throwable).isSuccess()) {
+                                mView.notForceUpgrade();
+                                return;
+                            }
+                        }
                         mView.checkVersionFailed(throwable);
                     }
                 });

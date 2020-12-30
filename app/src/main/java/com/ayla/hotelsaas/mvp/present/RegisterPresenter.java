@@ -40,7 +40,7 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
                     public void accept(Boolean aBoolean) throws Exception {
                         mView.RegistSuccess(aBoolean);
                     }
-                }, new UnifiedErrorConsumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
                     public boolean shouldHandleDefault(Throwable throwable) {
                         return false;
@@ -48,7 +48,7 @@ public class RegisterPresenter extends BasePresenter<RegisterView> {
 
                     @Override
                     public void handle(Throwable throwable) {
-                        mView.registerFailed(throwable);
+                        mView.registerFailed(getLocalErrorMsg(throwable));
                     }
                 });
         addSubscrebe(subscribe);

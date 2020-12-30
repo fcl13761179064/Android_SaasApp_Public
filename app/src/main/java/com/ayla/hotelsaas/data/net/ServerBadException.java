@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.data.net;
 
+import com.ayla.hotelsaas.bean.BaseResult;
+
 import java.io.IOException;
 
 /**
@@ -7,21 +9,22 @@ import java.io.IOException;
  */
 public class ServerBadException extends IOException {
 
-    private String code;
-    private String msg;
+    private BaseResult baseResult;
 
-    public ServerBadException(String code, String msg) {
-        super(msg);
-        this.code = code;
-        this.msg = msg;
+    public ServerBadException(BaseResult baseResult) {
+        super(baseResult.msg);
+        this.baseResult = baseResult;
     }
 
     public String getCode() {
-        return code;
+        return baseResult.code;
     }
 
     public String getMsg() {
-        return msg;
+        return baseResult.msg;
     }
 
+    public boolean isSuccess() {
+        return baseResult.isSuccess();
+    }
 }

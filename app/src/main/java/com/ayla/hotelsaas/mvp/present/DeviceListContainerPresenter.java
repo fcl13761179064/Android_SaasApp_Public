@@ -34,7 +34,7 @@ public class DeviceListContainerPresenter extends BasePresenter<DeviceListContai
                     public void accept(DeviceListBean deviceListBean) throws Exception {
                         mView.loadDataSuccess(deviceListBean);
                     }
-                }, new UnifiedErrorConsumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
                     public void handle(Throwable throwable) throws Exception {
                         mView.loadDataFinish(throwable);

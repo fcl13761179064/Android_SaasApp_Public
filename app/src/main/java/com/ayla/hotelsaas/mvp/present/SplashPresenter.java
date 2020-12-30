@@ -4,6 +4,8 @@ import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.ayla.hotelsaas.data.net.ServerBadException;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SplashView;
 
@@ -24,15 +26,25 @@ public class SplashPresenter extends BasePresenter<SplashView> {
                 .delay(System.currentTimeMillis() - start > default_delay_time_millis ? 0 : default_delay_time_millis - (System.currentTimeMillis() - start), TimeUnit.MILLISECONDS, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<BaseResult<VersionUpgradeBean>>() {
+                .subscribe(new Consumer<VersionUpgradeBean>() {
                     @Override
-                    public void accept(BaseResult<VersionUpgradeBean> versionUpgradeBeanBaseResult) throws Exception {
-                        VersionUpgradeBean upgradeBean = versionUpgradeBeanBaseResult.data;
-                        mView.onVersionResult(true, upgradeBean);
+                    public void accept(VersionUpgradeBean versionUpgradeBean) throws Exception {
+                        mView.onVersionResult(true, versionUpgradeBean);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public boolean shouldHandleDefault(Throwable throwable) {
+                        return false;
+                    }
+
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
+                        if (throwable instanceof ServerBadException) {
+                            if (((ServerBadException) throwable).isSuccess()) {
+                                mView.onVersionResult(true, null);
+                                return;
+                            }
+                        }
                         mView.onVersionResult(false, null);
                     }
                 });

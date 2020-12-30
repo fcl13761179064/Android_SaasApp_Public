@@ -31,8 +31,6 @@ import com.ayla.hotelsaas.utils.SoftIntPutUtils;
 import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
 import com.blankj.utilcode.util.RegexUtils;
 
-import java.net.UnknownHostException;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -157,14 +155,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     }
 
     @Override
-    public void loginFailed(Throwable throwable) {
-        String msg = "未知错误";
-        if (throwable instanceof ServerBadException) {
-            msg = ((ServerBadException) throwable).getMsg();
-        }
-        if (throwable instanceof UnknownHostException) {
-            msg = getString(R.string.request_not_connect);
-        }
+    public void loginFailed(String msg) {
         errorShake(0, 2, msg);
     }
 
@@ -183,8 +174,6 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     public void checkVersionFailed(Throwable throwable) {
-        String msg = "未知错误";
-        CustomToast.makeText(this, msg, R.drawable.ic_toast_warming);
     }
 
     private void errorShake(int type, int CycleTimes, String msg) {

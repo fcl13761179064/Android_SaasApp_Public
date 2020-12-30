@@ -14,6 +14,7 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
+import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceMorePresenter;
@@ -184,8 +185,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     }
 
     @Override
-    public void removeFailed(String code, String msg) {
-        CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming);
+    public void removeFailed(Throwable throwable) {
     }
 
     @Override
@@ -266,7 +266,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SWITCH_USAGE_SET && resultCode == RESULT_OK) {
             setResult(RESULT_OK);
-            EventBus.getDefault().post(new DeviceRemovedEvent(deviceId));
+            EventBus.getDefault().post(new DeviceAddEvent());
             finish();
         }
     }

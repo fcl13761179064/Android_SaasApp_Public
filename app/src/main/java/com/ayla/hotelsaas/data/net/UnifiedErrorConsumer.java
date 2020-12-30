@@ -7,9 +7,9 @@ import java.net.UnknownHostException;
 
 import io.reactivex.functions.Consumer;
 
-public abstract class UnifiedErrorConsumer<T> implements Consumer<T> {
+public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
     @Override
-    public final void accept(T throwable) throws Exception {
+    public final void accept(Throwable throwable) throws Exception {
         handle(throwable);
 
         if (shouldHandleDefault(throwable)) {
@@ -23,21 +23,34 @@ public abstract class UnifiedErrorConsumer<T> implements Consumer<T> {
         }
     }
 
-    public abstract void handle(T throwable) throws Exception;
+    public abstract void handle(Throwable throwable) throws Exception;
 
-    public boolean shouldHandleDefault(T throwable) {
+    public boolean shouldHandleDefault(Throwable throwable) {
         return true;
     }
 
     public void handleUnknownHostException(UnknownHostException exception) {
-        CustomToast.makeText(R.string.request_not_connect, R.drawable.ic_toast_warming);
+        CustomToast.makeText(getLocalErrorMsg(exception), R.drawable.ic_toast_warming);
     }
 
     public void handleServerBadException(ServerBadException exception) {
-        CustomToast.makeText(exception.getMsg(), R.drawable.ic_toast_warming);
+        if (!exception.isSuccess()) {
+            CustomToast.makeText(getLocalErrorMsg(exception), R.drawable.ic_toast_warming);
+        }
     }
 
-    public void handleOtherException(T throwable) {
+    public void handleOtherException(Throwable throwable) {
+        CustomToast.makeText(getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
+    }
 
+    public final String getLocalErrorMsg(Throwable throwable) {
+        String msg = "未知错误";
+        if (throwable instanceof UnknownHostException) {
+            msg = "网络连接失败，请检查网络";
+        }
+        if (throwable instanceof ServerBadException) {
+            msg = ((ServerBadException) throwable).getMsg();
+        }
+        return msg;
     }
 }

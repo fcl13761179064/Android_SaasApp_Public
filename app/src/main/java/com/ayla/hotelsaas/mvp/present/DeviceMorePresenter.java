@@ -8,7 +8,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.data.net.ServerBadException;
-import com.ayla.hotelsaas.data.net.RxjavaObserver;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 
@@ -67,7 +67,7 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
     }
 
     public void deviceRemove(String deviceId, long scopeId, String scopeType) {
-        RequestModel.getInstance().deviceRemove(deviceId, scopeId, scopeType)
+        Disposable subscribe = RequestModel.getInstance().deviceRemove(deviceId, scopeId, scopeType)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -76,26 +76,24 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                         mView.showProgress("移除中...");
                     }
                 })
-                .subscribe(new RxjavaObserver<Boolean>() {
-
+                .doFinally(new Action() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
-
-                    }
-
-                    @Override
-                    public void _onNext(Boolean data) {
+                    public void run() throws Exception {
                         mView.hideProgress();
-                        mView.removeSuccess(data);
                     }
-
+                })
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void _onError(String code, String msg) {
-                        mView.hideProgress();
-                        mView.removeFailed(code, msg);
+                    public void accept(Boolean aBoolean) throws Exception {
+                        mView.removeSuccess(aBoolean);
+                    }
+                }, new UnifiedErrorConsumer() {
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
+                        mView.removeFailed(throwable);
                     }
                 });
+        addSubscrebe(subscribe);
     }
 
     public void getRenameAbleFunctions(int cuId, String deviceCategory, String deviceId) {

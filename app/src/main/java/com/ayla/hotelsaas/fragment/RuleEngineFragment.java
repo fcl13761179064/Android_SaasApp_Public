@@ -20,7 +20,7 @@ import com.ayla.hotelsaas.adapter.RuleEnginePagerAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.RuleEnginePresenter;
@@ -40,7 +40,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -215,10 +214,6 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                 }
             });
             mSmartRefreshLayout.setVisibility(View.INVISIBLE);
-        } else {
-            if (throwable instanceof UnknownHostException) {
-                CustomToast.makeText(getContext(), R.string.request_not_connect, R.drawable.ic_toast_warming);
-            }
         }
         if (mSmartRefreshLayout.isRefreshing()) {
             mSmartRefreshLayout.finishRefresh(false);
@@ -252,6 +247,11 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceRemoved(DeviceRemovedEvent event) {
+        notifyRefresh();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleDeviceRemoved(DeviceAddEvent event) {
         notifyRefresh();
     }
 }
