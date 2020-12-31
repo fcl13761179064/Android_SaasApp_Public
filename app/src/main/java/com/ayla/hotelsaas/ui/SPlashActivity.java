@@ -41,7 +41,7 @@ public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter>
     }
 
     @Override
-    public void onVersionResult(VersionUpgradeBean baseResult) {
+    public void onVersionResult(boolean requireSuccess, VersionUpgradeBean baseResult) {
         if (baseResult != null) {//请求到了版本信息
             if (baseResult.getIsForce() != 0) {//强制更新
                 UpgradeUnifiedCode.handleUpgrade(this, baseResult);
@@ -53,7 +53,7 @@ public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter>
         Intent intent;
         if (TextUtils.isEmpty(sava_token)) {
             intent = new Intent(SPlashActivity.this, LoginActivity.class);
-        } else if (baseResult == null) {//没有请求到版本信息
+        } else if (!requireSuccess) {//没有请求到版本信息
             intent = new Intent(SPlashActivity.this, LoginActivity.class);
         } else {
             intent = new Intent(SPlashActivity.this, ProjectListActivity.class);

@@ -28,12 +28,12 @@ public class SplashPresenter extends BasePresenter<SplashView> {
                     @Override
                     public void accept(BaseResult<VersionUpgradeBean> versionUpgradeBeanBaseResult) throws Exception {
                         VersionUpgradeBean upgradeBean = versionUpgradeBeanBaseResult.data;
-                        mView.onVersionResult(upgradeBean);
+                        mView.onVersionResult(true, upgradeBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.onVersionResult(null);
+                        mView.onVersionResult(false, null);
                     }
                 });
         addSubscrebe(subscribe);

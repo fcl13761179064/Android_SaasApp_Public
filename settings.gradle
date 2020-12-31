@@ -1,2 +1,7 @@
 include ':app'
-rootProject.name='Android_SaasApp_Public'
+include ':dsbridge'
+
+project(':dsbridge').projectDir = new File(rootDir, 'libs/dsbridge')
+
+
+rootProject.name = 'Android_SaasApp_Public'
