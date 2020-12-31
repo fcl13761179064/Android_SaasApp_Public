@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.data.net;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.ui.CustomToast;
 
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import io.reactivex.functions.Consumer;
@@ -37,6 +38,8 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
             }
         } else if (throwable instanceof SelfMsgException) {
             msg = throwable.getLocalizedMessage();
+        } else if (throwable instanceof SocketTimeoutException) {
+            msg = "请求超时，请稍后重试";
         }
         return msg;
     }
