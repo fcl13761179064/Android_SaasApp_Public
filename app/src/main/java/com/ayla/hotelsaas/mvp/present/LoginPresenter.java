@@ -1,7 +1,10 @@
 package com.ayla.hotelsaas.mvp.present;
 
+import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.User;
+import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.LoginView;
 
@@ -44,6 +47,45 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         mView.loginFailed(throwable);
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
+
+    public void checkVersion() {
+        Disposable subscribe = RequestModel.getInstance().getAppVersion(BuildConfig.VERSION_CODE)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<BaseResult<VersionUpgradeBean>>() {
+                    @Override
+                    public void accept(BaseResult<VersionUpgradeBean> versionUpgradeBeanBaseResult) throws Exception {
+                        VersionUpgradeBean upgradeBean = versionUpgradeBeanBaseResult.data;
+                        if (upgradeBean == null) {
+                            mView.notForceUpgrade();
+                        }else{
+                            if (upgradeBean.getIsForce() != 0) {
+                                mView.shouldForceUpgrade(upgradeBean);
+                            } else {
+                                mView.notForceUpgrade();
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.checkVersionFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);

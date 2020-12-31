@@ -1,17 +1,16 @@
 package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.bean.VersionUpgradeBean;
-import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
+import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
-import com.ayla.hotelsaas.bean.HotelListBean;
+import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
@@ -19,6 +18,8 @@ import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
+import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 
 import java.util.List;
 
@@ -102,7 +103,7 @@ public interface ApiService {
     @GET("api/v1/construction/billrooms")
     Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("billId") String billId);
 
-    @POST("api/v1/construction/device/list")
+    @POST("api/v1/build/device/list")
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
     @POST("api/v1/construction/device/bind")
@@ -214,6 +215,7 @@ public interface ApiService {
 
     /**
      * 校验是房间是否绑定音响
+     *
      * @param scopeId
      * @return
      */
@@ -222,8 +224,29 @@ public interface ApiService {
 
     /**
      * 校验房间是否设置了欢迎语
+     *
      * @return
      */
     @POST("/api/v1/build/scene/voiceRule")
     Observable<BaseResult<Boolean>> checkVoiceRule(@Body RequestBody body);
+
+    @GET("/api/v1/build/device/purpose/list")
+    Observable<BaseResult<List<PurposeCategoryBean>>> getPurposeCategory();
+
+    /**
+     * 批量保存用途设备
+     *
+     * @param body
+     * @return
+     */
+    @POST("/api/v1/build/device/purpose/batch")
+    Observable<BaseResult> purposeBatchSave(@Body RequestBody body);
+
+    /**
+     * 更新用途设备
+     * @param body
+     * @return
+     */
+    @PUT("/api/v1/build/device/purpose")
+    Observable<BaseResult> updatePurpose(@Body RequestBody body);
 }

@@ -72,10 +72,10 @@ public class SceneSettingFunctionDatumSetRangeFragment extends BaseMvpFragment i
             }
         });
 
-        boolean autoJump = getActivity().getIntent().getBooleanExtra("autoJump", false);
+        boolean editMode = getActivity().getIntent().getBooleanExtra("editMode", false);
         BaseSceneBean.Action action = (BaseSceneBean.Action) getActivity().getIntent().getSerializableExtra("action");
         float targetValue = Double.valueOf((max + min) / 2).floatValue();
-        if (autoJump && action != null) {
+        if (editMode && action != null) {
             String rightValue = action.getRightValue();
             try {
                 targetValue = Float.parseFloat(rightValue);

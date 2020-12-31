@@ -11,6 +11,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
+import com.ayla.hotelsaas.utils.TempUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
     public void loadDevice(long scopeId, String gateway, boolean condition) {
         Observable<List<DeviceListBean.DevicesBean>> observable;
         if (gateway != null) {//如果是网关的联动，需要首先过滤出网关的子设备
-         observable = RequestModel.getInstance()
+            observable = RequestModel.getInstance()
                     .getGatewayNodes(gateway, scopeId)
                     .map(new Function<BaseResult<List<GatewayNodeBean>>, List<GatewayNodeBean>>() {
                         @Override
@@ -58,7 +59,7 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                             return devicesBeans;
                         }
                     });
-        }else{
+        } else {
             observable = Observable.just(MyApplication.getInstance().getDevicesBean());
         }
         Disposable subscribe = RequestModel.getInstance().getDeviceCategoryDetail()
@@ -68,15 +69,13 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                         return listBaseResult.data;
                     }
                 })//查询出设备对条件、动作的支持情况
-                .zipWith(observable, new BiFunction<List<DeviceCategoryDetailBean>, List<DeviceListBean.DevicesBean>, Object[]>() {
+                .zipWith(observable, new BiFunction<List<DeviceCategoryDetailBean>, List<DeviceListBean.DevicesBean>, List<DeviceListBean.DevicesBean>>() {
                     @Override
-                    public Object[] apply(List<DeviceCategoryDetailBean> deviceCategoryDetailBeans, List<DeviceListBean.DevicesBean> devicesBeans) throws Exception {
+                    public List<DeviceListBean.DevicesBean> apply(List<DeviceCategoryDetailBean> deviceCategoryDetailBeans, List<DeviceListBean.DevicesBean> devicesBeans) throws Exception {
                         List<DeviceListBean.DevicesBean> enableDevices = new ArrayList<>();//可以显示在列表里面的设备
-                        List<List<String>> others = new ArrayList<>();
                         for (DeviceListBean.DevicesBean devicesBean : devicesBeans) {
-                            if (devicesBean.getDeviceUseType() == 1 && !condition) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
+                            if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(devicesBean) && !condition) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
                                 enableDevices.add(devicesBean);
-                                others.add(null);
                                 continue;
                             }
                             for (DeviceCategoryDetailBean categoryDetailBean : deviceCategoryDetailBeans) {
@@ -86,20 +85,18 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                                         List<String> conditionProperties = categoryDetailBean.getConditionProperties();
                                         if (conditionProperties != null && conditionProperties.size() != 0) {
                                             enableDevices.add(devicesBean);
-                                            others.add(categoryDetailBean.getConditionProperties());
                                         }
                                     } else {
                                         List<String> actionProperties = categoryDetailBean.getActionProperties();
                                         if (actionProperties != null && actionProperties.size() != 0) {
                                             enableDevices.add(devicesBean);
-                                            others.add(categoryDetailBean.getActionProperties());
                                         }
                                     }
                                     break;
                                 }
                             }
                         }
-                        return new Object[]{enableDevices, others};
+                        return enableDevices;
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -116,15 +113,15 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<Object[]>() {
+                .subscribe(new Consumer<List<DeviceListBean.DevicesBean>>() {
                     @Override
-                    public void accept(Object[] data) throws Exception {
-                        mView.showDevices((List<DeviceListBean.DevicesBean>) data[0], (List<List<String>>) data[1]);
+                    public void accept(List<DeviceListBean.DevicesBean> data) throws Exception {
+                        mView.showDevices(data);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.showDevices(null, null);
+                        mView.showDevices(null);
                     }
                 });
         addSubscrebe(subscribe);

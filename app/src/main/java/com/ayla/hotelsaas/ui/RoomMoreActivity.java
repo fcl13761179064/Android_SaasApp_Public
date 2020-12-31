@@ -64,7 +64,8 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
         tv_room_name.setText(mRoom_name);
         boolean removeEnable = getIntent().getBooleanExtra("removeEnable", false);
         btn_remove_room.setVisibility(removeEnable ? View.VISIBLE : View.GONE);
-        rl_room_distribution.setVisibility(removeEnable ? View.VISIBLE : View.GONE);
+        //暂时没有这个需求，屏蔽入口
+//        rl_room_distribution.setVisibility(removeEnable ? View.VISIBLE : View.GONE);
     }
 
     @Override

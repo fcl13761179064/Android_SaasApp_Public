@@ -30,7 +30,13 @@ abstract class BasicActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutId());
+        int layoutId = getLayoutId();
+        View layoutView = getLayoutView();
+        if (layoutView != null) {
+            setContentView(layoutView);
+        } else {
+            setContentView(layoutId);
+        }
         unbinder = ButterKnife.bind(this);
         initAppbar();
         initView();
@@ -45,7 +51,10 @@ abstract class BasicActivity extends AppCompatActivity {
         }
     }
 
+    @Deprecated
     protected abstract int getLayoutId();
+
+    protected abstract View getLayoutView();
 
     protected abstract void initView();
 

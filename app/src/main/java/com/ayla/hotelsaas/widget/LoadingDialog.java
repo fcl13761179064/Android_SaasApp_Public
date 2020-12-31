@@ -32,7 +32,6 @@ public class LoadingDialog extends DialogFragment {
         TextView msgText = (TextView) view.findViewById(R.id.tv);
         msgText.setText(getArguments().getString("msg"));
         loadingDailog.setContentView(view);
-        loadingDailog.setCancelable(false);
         loadingDailog.setCanceledOnTouchOutside(false);
         return loadingDailog;
     }

@@ -2,25 +2,16 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 
-import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
-import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.present.SplashPresenter;
 import com.ayla.hotelsaas.mvp.view.SplashView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
 
 public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter> implements SplashView {
     @Override
@@ -50,10 +41,19 @@ public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter>
     }
 
     @Override
-    public void onVersionResult(VersionUpgradeBean baseResult) {
+    public void onVersionResult(boolean requireSuccess, VersionUpgradeBean baseResult) {
+        if (baseResult != null) {//请求到了版本信息
+            if (baseResult.getIsForce() != 0) {//强制更新
+                UpgradeUnifiedCode.handleUpgrade(this, baseResult);
+                return;
+            }
+        }
+
         final String sava_token = SharePreferenceUtils.getString(SPlashActivity.this, Constance.SP_Login_Token, null);
         Intent intent;
         if (TextUtils.isEmpty(sava_token)) {
+            intent = new Intent(SPlashActivity.this, LoginActivity.class);
+        } else if (!requireSuccess) {//没有请求到版本信息
             intent = new Intent(SPlashActivity.this, LoginActivity.class);
         } else {
             intent = new Intent(SPlashActivity.this, ProjectListActivity.class);
