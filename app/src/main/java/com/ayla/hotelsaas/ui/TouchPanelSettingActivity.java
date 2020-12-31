@@ -115,7 +115,6 @@ public class TouchPanelSettingActivity extends BaseMvpActivity<TourchPanelView, 
 
     @Override
     public void operateError(String msg) {
-        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming);
     }
 
     @Override

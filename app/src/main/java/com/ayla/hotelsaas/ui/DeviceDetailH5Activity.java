@@ -11,6 +11,7 @@ import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
@@ -130,6 +131,13 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
                 SharePreferenceUtils.saveString(getApplicationContext(), Constance.SP_Login_Token, token);
             }
         }, "miya.h5.dataShare");
+        mWebView.addJavascriptObject(new Object() {
+            @JavascriptInterface
+            public void refreshDeviceList(Object msg) {
+                Log.d(TAG, "refreshDeviceList: " + msg);
+                EventBus.getDefault().post(new DeviceAddEvent());
+            }
+        }, "miya.h5.event");
     }
 
     @Override

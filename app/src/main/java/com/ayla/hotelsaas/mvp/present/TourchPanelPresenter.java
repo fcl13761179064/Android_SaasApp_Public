@@ -2,11 +2,13 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.TourchPanelView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -18,7 +20,7 @@ import io.reactivex.schedulers.Schedulers;
 public class TourchPanelPresenter extends BasePresenter<TourchPanelView> {
 
     public void TourchPanelRenameInsertMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue, String deviceCategory) {
-        RequestModel.getInstance().touchPanelRenameMethod(id, deviceId, cuId, propertyName, propertyType, propertyValue, deviceCategory, true)
+        Disposable subscribe = RequestModel.getInstance().touchPanelRenameMethod(id, deviceId, cuId, propertyName, propertyType, propertyValue)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -27,26 +29,28 @@ public class TourchPanelPresenter extends BasePresenter<TourchPanelView> {
                         mView.showProgress("修改中...");
                     }
                 })
-                .subscribe(new RxjavaObserver<Boolean>() {
-
+                .doFinally(new Action() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
-
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        mView.operateSuccess(aBoolean);
+                    }
+                }, new UnifiedErrorConsumer() {
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
                     }
 
                     @Override
-                    public void _onNext(Boolean data) {
-                        mView.hideProgress();
-                        mView.operateSuccess(data);
-                    }
-
-                    @Override
-                    public void _onError(String code, String msg) {
-                        mView.hideProgress();
-                        mView.operateError(msg);
+                    public String getLocalErrorMsg(Throwable throwable) {
+                        return super.getLocalErrorMsg("修改失败", throwable);
                     }
                 });
+        addSubscrebe(subscribe);
     }
 
 }

@@ -43,7 +43,6 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
         return R.layout.touch_panel_select_layout;
     }
 
-
     @Override
     protected void initView() {
         appBar.setCenterText("场景按键设置");

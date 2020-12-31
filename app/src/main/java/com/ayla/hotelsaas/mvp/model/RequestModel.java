@@ -367,12 +367,13 @@ public class RequestModel {
         return getApiService().runRuleEngine(body111);
     }
 
-    public Observable<BaseResult<Boolean>> deleteRuleEngine(long ruleId) {
+    public Observable<Boolean> deleteRuleEngine(long ruleId) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("ruleId", ruleId);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().deleteRuleEngine(body111);
+        return getApiService().deleteRuleEngine(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
     /**
@@ -609,7 +610,7 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> touchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue, String deviceCategory, boolean needHandleAliService) {
+    public Observable<Boolean> touchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue) {
         return Observable
                 .fromCallable(new Callable<RequestBody>() {
                     @Override
@@ -620,7 +621,7 @@ public class RequestModel {
                         if (id != 0) {
                             jsonObject.put("id", id);
                         }
-                        uploadParams.put("needHandleAliService", needHandleAliService);
+                        uploadParams.put("needHandleAliService", true);
                         jsonObject.put("deviceId", deviceId);
                         jsonObject.put("cuId", cuId);
                         jsonObject.put("propertyName", propertyName);
@@ -631,10 +632,11 @@ public class RequestModel {
                         return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
                     }
                 })
-                .flatMap(new Function<RequestBody, ObservableSource<BaseResult<Boolean>>>() {
+                .flatMap(new Function<RequestBody, ObservableSource<Boolean>>() {
                     @Override
-                    public ObservableSource<BaseResult<Boolean>> apply(RequestBody body) throws Exception {
-                        return getApiService().tourchPanelRenameAndIcon(body);
+                    public ObservableSource<Boolean> apply(RequestBody body) throws Exception {
+                        return getApiService().tourchPanelRenameAndIcon(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                        });
                     }
                 });
     }
@@ -670,13 +672,12 @@ public class RequestModel {
                         return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
                     }
                 })
-                .flatMap(new Function<RequestBody, ObservableSource<BaseResult<Boolean>>>() {
+                .flatMap(new Function<RequestBody, ObservableSource<Boolean>>() {
                     @Override
-                    public ObservableSource<BaseResult<Boolean>> apply(RequestBody body) throws Exception {
-                        return getApiService().tourchPanelRenameAndIcon(body);
+                    public ObservableSource<Boolean> apply(RequestBody body) throws Exception {
+                        return getApiService().tourchPanelRenameAndIcon(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                        });
                     }
-                })
-                .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
                 });
     }
 
@@ -685,8 +686,10 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<List<TouchPanelDataBean>>> getALlTouchPanelDeviceInfo(int cuId, String deviceId) {
-        return getApiService().touchpanelALlDevice(cuId, deviceId);
+    public Observable<List<TouchPanelDataBean>> getALlTouchPanelDeviceInfo(int cuId, String deviceId) {
+        return getApiService().touchpanelALlDevice(cuId, deviceId)
+                .compose(new BaseResultTransformer<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
+                });
     }
 
     /**
@@ -872,13 +875,7 @@ public class RequestModel {
             @Override
             public ObservableSource<DeviceTemplateBean> apply(@NonNull Observable<DeviceTemplateBean> upstream) {
                 return upstream.zipWith(RequestModel.getInstance()
-                                .getALlTouchPanelDeviceInfo(devicesBean.getCuId(), deviceId)
-                                .map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
-                                    @Override
-                                    public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
-                                        return listBaseResult.data;
-                                    }
-                                }),
+                                .getALlTouchPanelDeviceInfo(devicesBean.getCuId(), deviceId),
                         new BiFunction<DeviceTemplateBean, List<TouchPanelDataBean>, DeviceTemplateBean>() {
                             @Override
                             public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {

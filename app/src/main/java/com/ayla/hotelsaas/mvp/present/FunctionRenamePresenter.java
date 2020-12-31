@@ -7,6 +7,7 @@ import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.FunctionRenameView;
 
@@ -73,13 +74,7 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                                 });
                     }
                 })//然后结合物模板查询出功能默认名称
-                .zipWith(RequestModel.getInstance().getALlTouchPanelDeviceInfo(cuId, deviceId)
-                        .map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
-                            @Override
-                            public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
-                                return listBaseResult.data;
-                            }
-                        }), new BiFunction<List<DeviceTemplateBean.AttributesBean>, List<TouchPanelDataBean>, List<Map<String, String>>>() {
+                .zipWith(RequestModel.getInstance().getALlTouchPanelDeviceInfo(cuId, deviceId), new BiFunction<List<DeviceTemplateBean.AttributesBean>, List<TouchPanelDataBean>, List<Map<String, String>>>() {
                     @Override
                     public List<Map<String, String>> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
                         List<Map<String, String>> result = new ArrayList<>();
@@ -152,10 +147,14 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                     public void accept(Boolean aBoolean) throws Exception {
                         mView.renameSuccess();
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        mView.renameFailed();
+                    public void handle(Throwable throwable) throws Exception {
+                    }
+
+                    @Override
+                    public String getLocalErrorMsg(Throwable throwable) {
+                        return super.getLocalErrorMsg("修改失败", throwable);
                     }
                 });
         addSubscrebe(subscribe);

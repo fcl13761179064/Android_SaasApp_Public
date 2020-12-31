@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.mvp.present;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.data.net.RxjavaObserver;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.TourchPanelSelectView;
 import com.ayla.hotelsaas.mvp.view.TourchPanelView;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -23,7 +25,7 @@ public class TourchPanelSelectPresenter extends BasePresenter<TourchPanelSelectV
 
 
     public void getTouchPanelData(int cuId, String deviceId) {
-        RequestModel.getInstance().getALlTouchPanelDeviceInfo(cuId, deviceId)
+        Disposable subscribe = RequestModel.getInstance().getALlTouchPanelDeviceInfo(cuId, deviceId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -32,26 +34,23 @@ public class TourchPanelSelectPresenter extends BasePresenter<TourchPanelSelectV
                         mView.showProgress();
                     }
                 })
-                .subscribe(new RxjavaObserver<List<TouchPanelDataBean>>() {
-
+                .doFinally(new Action() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
-
-                    }
-
-                    @Override
-                    public void _onNext(List<TouchPanelDataBean> data) {
+                    public void run() throws Exception {
                         mView.hideProgress();
-                        mView.operateSuccess(data);
                     }
-
+                })
+                .subscribe(new Consumer<List<TouchPanelDataBean>>() {
                     @Override
-                    public void _onError(String code, String msg) {
-                        mView.hideProgress();
-                        mView.operateError(msg);
+                    public void accept(List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
+                        mView.operateSuccess(touchPanelDataBeans);
+                    }
+                }, new UnifiedErrorConsumer() {
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
                     }
                 });
+        addSubscrebe(subscribe);
     }
 
 
