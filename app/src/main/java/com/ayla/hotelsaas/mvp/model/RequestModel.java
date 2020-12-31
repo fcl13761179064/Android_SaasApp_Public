@@ -176,11 +176,12 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<String>> roomRename(long roomId, String rename) {
+    public Observable<String> roomRename(long roomId, String rename) {
         JsonObject body = new JsonObject();
         body.addProperty("roomName", rename);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().roomRename(roomId, body111);
+        return getApiService().roomRename(roomId, body111).compose(new BaseResultTransformer<BaseResult<String>, String>() {
+        });
     }
 
 
@@ -189,8 +190,9 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<String>> deleteRoomNum(long roomId) {
-        return getApiService().deleteRoomNum(roomId);
+    public Observable<String> deleteRoomNum(long roomId) {
+        return getApiService().deleteRoomNum(roomId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
+        });
     }
 
     /**
@@ -230,8 +232,9 @@ public class RequestModel {
         });
     }
 
-    public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
-        return getApiService().fetchDeviceCategory();
+    public Observable<List<DeviceCategoryBean>> getDeviceCategory() {
+        return getApiService().fetchDeviceCategory().compose(new BaseResultTransformer<BaseResult<List<DeviceCategoryBean>>, List<DeviceCategoryBean>>() {
+        });
     }
 
     /**

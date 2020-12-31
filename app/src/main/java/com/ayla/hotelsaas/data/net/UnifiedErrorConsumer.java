@@ -44,7 +44,7 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
         return msg;
     }
 
-    public final String getLocalErrorMsg(Throwable throwable) {
+    public String getLocalErrorMsg(Throwable throwable) {
         return getLocalErrorMsg("未知错误", throwable);
     }
 }

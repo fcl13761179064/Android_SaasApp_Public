@@ -2,7 +2,7 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
-import com.ayla.hotelsaas.data.net.RxjavaObserver;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
 
@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 public class DeviceAddCategoryPresenter extends BasePresenter<DeviceAddCategoryView> {
 
     public void loadCategory() {
-        RequestModel.getInstance()
+        Disposable subscribe = RequestModel.getInstance()
                 .getDeviceCategory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -33,21 +33,17 @@ public class DeviceAddCategoryPresenter extends BasePresenter<DeviceAddCategoryV
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new RxjavaObserver<List<DeviceCategoryBean>>() {
+                .subscribe(new Consumer<List<DeviceCategoryBean>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
+                    public void accept(List<DeviceCategoryBean> deviceCategoryBeans) throws Exception {
+                        mView.showCategory(deviceCategoryBeans);
                     }
-
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void _onNext(List<DeviceCategoryBean> data) {
-                        mView.showCategory(data);
-                    }
-
-                    @Override
-                    public void _onError(String code, String msg) {
+                    public void handle(Throwable throwable) throws Exception {
                         mView.categoryLoadFail();
                     }
                 });
+        addSubscrebe(subscribe);
     }
 }
