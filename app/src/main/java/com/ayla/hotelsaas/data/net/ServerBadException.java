@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * 服务端错误
  */
-public class ServerBadException extends IOException {
+public final class ServerBadException extends IOException {
 
     private BaseResult baseResult;
 
