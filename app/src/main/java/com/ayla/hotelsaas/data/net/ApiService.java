@@ -84,9 +84,14 @@ public interface ApiService {
     @DELETE("api/v1/construction/hotelcontent/approom/{id}")
     Observable<BaseResult<String>> deleteRoomNum(@Path("id") long roomId);
 
+    @Deprecated
     @GET("/api/v1/construction/devicetypes")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
+    @GET("/api/v1/miya/devicetypes")
+    Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategoryNew();
+
+    @Deprecated
     @GET("/api/v1/construction/devicetypes/list")
     Observable<BaseResult<List<DeviceCategoryDetailBean>>> fetchDeviceCategoryDetail();
 
@@ -137,6 +142,12 @@ public interface ApiService {
     @PUT("api/v1/construction/device/{deviceId}/property")
     Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
 
+    /**
+     * 参数换成PID
+     * @param oemModel
+     * @return
+     */
+    @Deprecated
     @GET("api/v1/construction/device/queryModelTemplate/{oemModel}")
     Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("oemModel") String oemModel);
 
@@ -208,6 +219,7 @@ public interface ApiService {
      *
      * @return
      */
+    @Deprecated
     @GET("/api/v1/construction/devicetypes/{categoryId}/networkguide")
     Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(@Path("categoryId") String categoryId);
 
@@ -245,6 +257,7 @@ public interface ApiService {
 
     /**
      * 更新用途设备
+     *
      * @param body
      * @return
      */
