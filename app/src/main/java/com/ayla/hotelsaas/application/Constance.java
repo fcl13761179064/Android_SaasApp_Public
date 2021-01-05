@@ -1,6 +1,11 @@
 package com.ayla.hotelsaas.application;
 
+import android.text.TextUtils;
+
 import com.ayla.hotelsaas.BuildConfig;
+import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.SPUtils;
 
 /**
  * @描述 常量类
@@ -90,4 +95,22 @@ public class Constance {
     //refresh token
     public static String SP_Refresh_Token = "refresh_token";
 
+    public static void saveVersionUpgradeInfo(VersionUpgradeBean versionUpgradeBean) {
+        if (versionUpgradeBean != null) {
+            SPUtils.getInstance().put("versionUpgradeBean", GsonUtils.toJson(versionUpgradeBean), true);
+        } else {
+            SPUtils.getInstance().remove("versionUpgradeBean", true);
+        }
+    }
+
+    public static VersionUpgradeBean getVersionUpgradeInfo() {
+        String s = SPUtils.getInstance().getString("versionUpgradeBean");
+        try {
+            VersionUpgradeBean upgradeBean = GsonUtils.fromJson(s, VersionUpgradeBean.class);
+            return upgradeBean;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -34,6 +34,14 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
     RelativeLayout rl_log_out;
     @BindView(R.id.rl_help_center)
     RelativeLayout rl_help_center;
+    @BindView(R.id.v_new_vesion)
+    View v_new_vesion;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handleVersionTip();
+    }
 
     @Override
     protected PersonCenterPresenter initPresenter() {
@@ -50,6 +58,15 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
         appBar.setCenterText("个人中心");
         tv_version_code.setText(String.format("Version:%s %s", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
         mPresenter.getUserInfo();
+    }
+
+    private void handleVersionTip() {
+        VersionUpgradeBean versionUpgradeInfo = Constance.getVersionUpgradeInfo();
+        if (versionUpgradeInfo != null) {
+            v_new_vesion.setVisibility(View.VISIBLE);
+        } else {
+            v_new_vesion.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -100,6 +117,8 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
 
     @Override
     public void onVersionResult(VersionUpgradeBean baseResult) {
+        Constance.saveVersionUpgradeInfo(baseResult);
+        handleVersionTip();
         if (baseResult != null) {
             UpgradeUnifiedCode.handleUpgrade(this, baseResult);
         } else {

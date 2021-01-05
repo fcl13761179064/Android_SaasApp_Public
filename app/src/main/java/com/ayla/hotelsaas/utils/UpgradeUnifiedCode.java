@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.UpgradeDownloadService;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
@@ -34,6 +35,8 @@ public class UpgradeUnifiedCode {
                     public void onDone(CustomAlarmDialog dialog) {
 
                         dialog.dismissAllowingStateLoss();
+
+                        Constance.saveVersionUpgradeInfo(null);
 
                         LoadingDialog loadingDialog = LoadingDialog.newInstance("更新中...");
                         loadingDialog.setCancelable(false);

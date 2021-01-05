@@ -75,7 +75,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                         if (versionUpgradeBean.getIsForce() != 0) {
                             mView.shouldForceUpgrade(versionUpgradeBean);
                         } else {
-                            mView.notForceUpgrade();
+                            mView.notForceUpgrade(versionUpgradeBean);
                         }
                     }
                 }, new UnifiedErrorConsumer() {
@@ -83,7 +83,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                     public void handle(Throwable throwable) throws Exception {
                         if (throwable instanceof ServerBadException) {
                             if (((ServerBadException) throwable).isSuccess()) {
-                                mView.notForceUpgrade();
+                                mView.notForceUpgrade(null);
                                 return;
                             }
                         }

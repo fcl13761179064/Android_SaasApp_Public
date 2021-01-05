@@ -58,9 +58,7 @@ public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter>
         } else {
             intent = new Intent(SPlashActivity.this, ProjectListActivity.class);
         }
-        if (baseResult != null) {//如果有更新信息，就携带更新信息到下一个页面。
-            intent.putExtra("upgrade", baseResult);
-        }
+        intent.putExtra("upgrade", baseResult);
         startActivity(intent);
         finish();
     }
