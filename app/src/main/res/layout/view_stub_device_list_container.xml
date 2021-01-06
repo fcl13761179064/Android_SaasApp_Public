@@ -27,7 +27,7 @@
                 android:id="@+id/empty_device_view_stub"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout="@layout/empty_device_order" />
+                android:layout="@layout/empty_device_list" />
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewPager"
