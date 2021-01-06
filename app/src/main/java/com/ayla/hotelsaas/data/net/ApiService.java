@@ -48,49 +48,49 @@ public interface ApiService {
     @GET("api/v2/sso/{resourceId}")
     Observable<BaseResult<String>> authCode(@Path("resourceId") String scopeId);
 
-    @GET("api/v1/construction/hotelcontent/approom")
+    @GET("api/v1/build/hotelcontent/approom")
     Observable<BaseResult<RoomManageBean>> getcreateRoom(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
 
-    @POST("api/v1/construction/hotelcontent/approom")
+    @POST("api/v1/build/hotelcontent/approom")
     Observable<BaseResult<String>> createRoom(@Body RequestBody body);
 
-    @POST("api/v1/construction/device/bingingRemove")
+    @POST("api/v1/build/device/bingingRemove")
     Observable<BaseResult<String>> removeDeviceAllReleate(@Body RequestBody body);//移除鸿雁解绑关系接口
 
-    @PUT("api/v1/construction/user/register")
+    @PUT("api/v1/build/user/register")
     Observable<BaseResult<Boolean>> register(@Body RequestBody body);
 
-    @POST("api/v1/construction/appuser/sendcode")
+    @POST("api/v1/build/appuser/sendcode")
     Observable<BaseResult<Boolean>> sendSmsCode(@Body RequestBody body);
 
-    @POST("api/v1/construction/appuser/verificationcode")
+    @POST("api/v1/build/appuser/verificationcode")
     Observable<BaseResult<Boolean>> modifyForgitPassword(@Body RequestBody body);
 
-    @POST("api/v1/construction/appuser/newpassword")
+    @POST("api/v1/build/appuser/newpassword")
     Observable<BaseResult<Boolean>> modifyOldPassword(@Body RequestBody body);
 
-    @GET("api/v1/construction/user/mybaseinfo")
+    @GET("api/v1/build/user/mybaseinfo")
     Observable<BaseResult<PersonCenter>> getUserInfo();
 
-    @GET("api/v1/construction/device/{deviceId}/{scopeId}/nodes")
+    @GET("api/v1/build/device/{deviceId}/{scopeId}/nodes")
     Observable<BaseResult<List<GatewayNodeBean>>> getGatewayNodes(@Path("deviceId") String deviceId, @Path("scopeId") long scopeId);
 
     @POST("api/v2/sso/refresh")
     Observable<BaseResult<User>> refreshToken(@Body RequestBody body);
 
-    @PUT("api/v1/construction/hotelcontent/approom/{id}")
+    @PUT("api/v1/build/hotelcontent/approom/{id}")
     Observable<BaseResult<String>> roomRename(@Path("id") long roomId, @Body RequestBody body);
 
-    @DELETE("api/v1/construction/hotelcontent/approom/{id}")
+    @DELETE("api/v1/build/hotelcontent/approom/{id}")
     Observable<BaseResult<String>> deleteRoomNum(@Path("id") long roomId);
 
-    @GET("/api/v1/construction/devicetypes")
+    @GET("/api/v1/build/devicetypes")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
-    @GET("/api/v1/construction/devicetypes/list")
+    @GET("/api/v1/build/devicetypes/list")
     Observable<BaseResult<List<DeviceCategoryDetailBean>>> fetchDeviceCategoryDetail();
 
-    @GET("api/v1/construction/constructbill")
+    @GET("api/v1/build/constructbill")
     Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
 
     /**
@@ -98,61 +98,61 @@ public interface ApiService {
      *
      * @return
      */
-    @POST("/api/v1/construction/constructbill")
+    @POST("/api/v1/build/constructbill")
     Observable<BaseResult> createWorkOrder(@Body RequestBody body);
 
-    @GET("api/v1/construction/billrooms")
+    @GET("api/v1/build/billrooms")
     Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("billId") String billId);
 
     @POST("api/v1/build/device/list")
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
-    @POST("api/v1/construction/device/bind")
+    @POST("api/v1/build/device/bind")
     Observable<BaseResult<DeviceListBean.DevicesBean>> bindDeviceWithDSN(@Body RequestBody body);
 
     @POST("unbind_device")
     Observable<BaseResult<Boolean>> unbindDeviceWithDSN(@Body RequestBody body);
 
-    @GET("api/v1/construction/device/{deviceId}/candidates/{deviceCategory}")
+    @GET("api/v1/build/device/{deviceId}/candidates/{deviceCategory}")
     Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(@Path("deviceId") String deviceId, @Path("deviceCategory") String deviceCategory);
 
     @POST("notify_gateway_config_exit")
     Observable<BaseResult<Boolean>> notifyGatewayConfigExit(@Body RequestBody body);
 
-    @GET("api/v1/construction/scene/list/{scopeId}")
+    @GET("api/v1/build/scene/list/{scopeId}")
     Observable<BaseResult<List<RuleEngineBean>>> fetchRuleEngines(@Path("scopeId") long scopeId);
 
     @POST("api/v1/build/scene/save")
     Observable<BaseResult<Boolean>> saveRuleEngine(@Body RequestBody body);
 
-    @POST("api/v1/construction/scene/update")
+    @POST("api/v1/build/scene/update")
     Observable<BaseResult<Boolean>> updateRuleEngine(@Body RequestBody body);
 
-    @POST("api/v1/construction/scene/delete")
+    @POST("api/v1/build/scene/delete")
     Observable<BaseResult<Boolean>> deleteRuleEngine(@Body RequestBody body);
 
-    @POST("api/v1/construction/scene/excute")
+    @POST("api/v1/build/scene/excute")
     Observable<BaseResult<Boolean>> runRuleEngine(@Body RequestBody body);
 
-    @PUT("api/v1/construction/device/{deviceId}/property")
+    @PUT("api/v1/build/device/{deviceId}/property")
     Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
 
-    @GET("api/v1/construction/device/queryModelTemplate/{oemModel}")
+    @GET("api/v1/build/device/queryModelTemplate/{oemModel}")
     Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("oemModel") String oemModel);
 
-    @GET("api/v1/construction/device/{deviceId}")
+    @GET("api/v1/build/device/{deviceId}")
     Observable<BaseResult<DeviceFirmwareVersionBean>> fetchDeviceDetail(@Path("deviceId") String deviceId);
 
-    @PUT("api/v1/construction/device/{deviceId}/info")
+    @PUT("api/v1/build/device/{deviceId}/info")
     Observable<BaseResult<Boolean>> deviceRename(@Path("deviceId") String deviceId, @Body RequestBody body);
 
-    @POST("api/v1/construction/device/unregister")
+    @POST("api/v1/build/device/unregister")
     Observable<BaseResult<Boolean>> removeDevice(@Body RequestBody body);
 
-    @POST("/api/v1/construction/device/deviceProperties")
+    @POST("/api/v1/build/device/deviceProperties")
     Observable<BaseResult<Boolean>> tourchPanelRenameAndIcon(@Body RequestBody body);
 
-    @GET("/api/v1/construction/device/deviceProperties/{cuId}/{deviceId}")
+    @GET("/api/v1/build/device/deviceProperties/{cuId}/{deviceId}")
     Observable<BaseResult<List<TouchPanelDataBean>>> touchpanelALlDevice(@Path("cuId") int oemModel, @Path("deviceId") String ss);
 
     /**
@@ -160,7 +160,7 @@ public interface ApiService {
      *
      * @return
      */
-    @GET("/api/v1/construction/device/transfer/hotellist")
+    @GET("/api/v1/build/device/transfer/hotellist")
     Observable<BaseResult<HotelListBean>> fetchTransferHotelList(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
 
     /**
@@ -168,7 +168,7 @@ public interface ApiService {
      *
      * @return
      */
-    @GET("/api/v1/construction/device/transfer/treelist")
+    @GET("/api/v1/build/device/transfer/treelist")
     Observable<BaseResult<List<TreeListBean>>> fetchTransferTreeList(@Query("billId") String billId, @Query("hotelId") String hotelId);
 
     /**
@@ -176,7 +176,7 @@ public interface ApiService {
      *
      * @return
      */
-    @GET("/api/v1/construction/device/transfer/roomlist")
+    @GET("/api/v1/build/device/transfer/roomlist")
     Observable<BaseResult<TransferRoomListBean>> fetchTransferRoomList(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("hotelId") String hotelId);
 
     /**
@@ -184,7 +184,7 @@ public interface ApiService {
      *
      * @return
      */
-    @POST("/api/v1/construction/device/transfer/room")
+    @POST("/api/v1/build/device/transfer/room")
     Observable<BaseResult> transferToRoom(@Body RequestBody body);
 
     /**
@@ -192,7 +192,7 @@ public interface ApiService {
      *
      * @return
      */
-    @POST("/api/v1/construction/device/transfer/hotel")
+    @POST("/api/v1/build/device/transfer/hotel")
     Observable<BaseResult> transferToHotel(@Body RequestBody body);
 
     /**
@@ -200,7 +200,7 @@ public interface ApiService {
      *
      * @return
      */
-    @POST("/api/v1/construction/device/transfer/struct")
+    @POST("/api/v1/build/device/transfer/struct")
     Observable<BaseResult> transferToStruct(@Body RequestBody body);
 
     /**
@@ -208,7 +208,7 @@ public interface ApiService {
      *
      * @return
      */
-    @GET("/api/v1/construction/devicetypes/{categoryId}/networkguide")
+    @GET("/api/v1/build/devicetypes/{categoryId}/networkguide")
     Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(@Path("categoryId") String categoryId);
 
     @GET("/api/v1/build/version")
