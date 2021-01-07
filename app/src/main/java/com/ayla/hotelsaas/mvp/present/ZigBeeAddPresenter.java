@@ -229,12 +229,6 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                             }
                                         });
                                     }
-                                })
-                                .map(new Function<BaseResult<List<DeviceListBean.DevicesBean>>, List<DeviceListBean.DevicesBean>>() {
-                                    @Override
-                                    public List<DeviceListBean.DevicesBean> apply(BaseResult<List<DeviceListBean.DevicesBean>> listBaseResult) throws Exception {
-                                        return listBaseResult.data;
-                                    }
                                 });
                     }
                 })//轮询候选节点，然后绑定候选节点

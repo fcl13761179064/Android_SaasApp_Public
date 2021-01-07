@@ -288,8 +288,9 @@ public class RequestModel {
      * @param deviceCategory 需要绑定节点设备的oemModel
      * @return
      */
-    public Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(String dsn, String deviceCategory) {
-        return getApiService().fetchCandidateNodes(dsn, deviceCategory);
+    public Observable<List<DeviceListBean.DevicesBean>> fetchCandidateNodes(String dsn, String deviceCategory) {
+        return getApiService().fetchCandidateNodes(dsn, deviceCategory).compose(new BaseResultTransformer<BaseResult<List<DeviceListBean.DevicesBean>>, List<DeviceListBean.DevicesBean>>() {
+        });
     }
 
     /**
