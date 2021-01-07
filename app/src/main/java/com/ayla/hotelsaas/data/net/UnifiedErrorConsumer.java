@@ -36,7 +36,9 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
             if (serverMsg.contains("该设备已经绑定，解绑后方能重新绑定")) {
                 msg = "该设备已在别处绑定，请先解绑后再重试";
             } else if ("Devices with the same device name under the same resource".equals(serverMsg)) {
-                msg = "设备名称不能重复";
+                msg = "设备名称已被占用";
+            }else if ("PointName already exists".equals(serverMsg)) {
+                msg = "设备点位已被占用";
             }
         } else if (throwable instanceof SelfMsgException) {
             msg = throwable.getLocalizedMessage();

@@ -85,7 +85,7 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                                     CustomToast.makeText(getBaseContext(), "设备点位不能为空", R.drawable.ic_toast_warming);
                                     return;
                                 }
-                                binding.etInput.setText(txt);
+                                binding.tvLocationName.setText(txt);
                                 dialog.dismissAllowingStateLoss();
                             }
                         })

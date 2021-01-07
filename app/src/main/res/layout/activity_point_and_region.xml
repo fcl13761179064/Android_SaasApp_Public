@@ -35,7 +35,7 @@
             android:textSize="17sp" />
 
         <TextView
-            android:id="@+id/tv_pointname_right"
+            android:id="@+id/tv_regionname_right"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -71,7 +71,7 @@
             android:textSize="17sp" />
 
         <TextView
-            android:id="@+id/tv_regionname_right"
+            android:id="@+id/tv_pointname_right"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
