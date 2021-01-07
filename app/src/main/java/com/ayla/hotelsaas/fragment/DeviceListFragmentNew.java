@@ -95,13 +95,14 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
-                if (devicesBean.getCuId() == 1 && "a1UR1BjfznK".equals(devicesBean.getDeviceCategory())) {
-                    Intent intent = new Intent(getContext(), TouchPanelActivity.class);
-                    intent.putExtra("deviceId", devicesBean.getDeviceId());
-                    intent.putExtra("scopeId", room_id);
-                    intent.putExtra("pannel_type", "1");
-                    startActivity(intent);
-                } else if (devicesBean.isHasH5()) {
+//                if (devicesBean.getCuId() == 1 && "a1UR1BjfznK".equals(devicesBean.getDeviceCategory())) {
+//                    Intent intent = new Intent(getContext(), TouchPanelActivity.class);
+//                    intent.putExtra("deviceId", devicesBean.getDeviceId());
+//                    intent.putExtra("scopeId", room_id);
+//                    intent.putExtra("pannel_type", "1");
+//                    startActivity(intent);
+//                } else
+                    if (devicesBean.isHasH5()) {
                     Intent intent = new Intent(getContext(), DeviceDetailH5Activity.class);
                     intent.putExtra("deviceId", devicesBean.getDeviceId());
                     intent.putExtra("scopeId", room_id);

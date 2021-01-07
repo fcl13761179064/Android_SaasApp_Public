@@ -136,36 +136,33 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         rl_device_rename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                ValueChangeDialog
-                        .newInstance(new ValueChangeDialog.DoneCallback() {
-                            @Override
-                            public void onDone(DialogFragment dialog, String newName) {
-                                if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
-                                    CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming);
-                                    return;
-                                } else {
-                                    mPresenter.deviceRenameMethod(deviceId, newName);
+                DeviceListBean.DevicesBean mDevicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
+                if (mDevicesBean != null) {
+                    ValueChangeDialog
+                            .newInstance(new ValueChangeDialog.DoneCallback() {
+                                @Override
+                                public void onDone(DialogFragment dialog, String newName) {
+                                    if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
+                                        CustomToast.makeText(getBaseContext(), "修改设备名称不能为空", R.drawable.ic_toast_warming);
+                                        return;
+                                    } else {
+                                        mPresenter.deviceRenameMethod(deviceId, newName, mDevicesBean.getPointName(), mDevicesBean.getRegionId(), mDevicesBean.getRegionName());
+                                    }
+                                    dialog.dismissAllowingStateLoss();
                                 }
-                                dialog.dismissAllowingStateLoss();
-                            }
-                        })
-                        .setEditValue(tv_device_name.getText().toString())
-                        .setTitle("修改名称")
-                        .setEditHint("请输入名称")
-                        .setMaxLength(20)
-                        .show(getSupportFragmentManager(), "scene_name");
+                            })
+                            .setEditValue(tv_device_name.getText().toString())
+                            .setTitle("修改名称")
+                            .setEditHint("请输入名称")
+                            .setMaxLength(20)
+                            .show(getSupportFragmentManager(), "scene_name");
+                }
             }
         });
     }
 
     @Override
     public void renameFailed(String code, String msg) {
-        if ("140001".equals(code)) {
-            CustomToast.makeText(this, "该名称不能重复使用", R.drawable.ic_toast_warming);
-        } else {
-            CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming);
-        }
     }
 
     @Override
@@ -260,6 +257,14 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     public void handlePurposeChange() {
         mPresenter.getPurposeCategory();
     }
+
+    @OnClick(R.id.rl_location)
+    public void handlePointChange() {
+        Intent intent = new Intent(this, PointAndRegionActivity.class);
+        intent.putExtra("deviceId", deviceId);
+        startActivityForResult(intent, REQUEST_CODE_SWITCH_USAGE_SET);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

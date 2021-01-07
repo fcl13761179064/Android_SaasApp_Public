@@ -16,6 +16,7 @@ import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.ZigBeeAddPresenter;
 import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
 
@@ -215,9 +216,9 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     }
 
     @Override
-    public void bindSuccess(String deviceId, String deviceName) {
+    public void bindSuccess(DeviceListBean.DevicesBean devicesBean) {
         startActivityForResult(new Intent(this, DeviceAddSuccessActivity.class)
-                        .putExtra("deviceId", deviceId).putExtra("deviceName", deviceName),
+                        .putExtra("device",devicesBean),
                 REQUEST_CODE_ADD_SUCCESS);
     }
 

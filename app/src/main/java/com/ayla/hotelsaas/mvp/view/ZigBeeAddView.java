@@ -1,12 +1,13 @@
 package com.ayla.hotelsaas.mvp.view;
 
 import com.ayla.hotelsaas.base.BaseView;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 
 public interface ZigBeeAddView extends BaseView {
     /**
      * 节点绑定流程结束
      */
-    void bindSuccess(String deviceId, String deviceName);
+    void bindSuccess(DeviceListBean.DevicesBean devicesBean);
 
     /**
      * 节点绑定流程失败

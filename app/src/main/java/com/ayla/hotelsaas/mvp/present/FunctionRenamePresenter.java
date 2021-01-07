@@ -151,10 +151,9 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                     @Override
                     public void handle(Throwable throwable) throws Exception {
                     }
-
                     @Override
-                    public String getLocalErrorMsg(Throwable throwable) {
-                        return super.getLocalErrorMsg("修改失败", throwable);
+                    public String getDefaultErrorMsg() {
+                        return "修改失败";
                     }
                 });
         addSubscrebe(subscribe);

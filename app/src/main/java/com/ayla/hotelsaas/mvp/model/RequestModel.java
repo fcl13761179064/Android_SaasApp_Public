@@ -264,6 +264,11 @@ public class RequestModel {
         body.addProperty("nickName", nickName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().bindDeviceWithDSN(body111).compose(new BaseResultTransformer<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
+        }).doOnNext(new Consumer<DeviceListBean.DevicesBean>() {
+            @Override
+            public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
+                devicesBean.setNickname(nickName);
+            }
         });
     }
 
@@ -597,9 +602,12 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<Boolean> deviceRename(String deviceId, String nickName) {
+    public Observable<Boolean> deviceRename(String deviceId, String nickName, String pointName, long regionId, String regionName) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("nickName", nickName);
+        jsonObject.addProperty("pointName", pointName);
+        jsonObject.addProperty("regionId", regionId);
+        jsonObject.addProperty("regionName", regionName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().deviceRename(deviceId, body111)
                 .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {

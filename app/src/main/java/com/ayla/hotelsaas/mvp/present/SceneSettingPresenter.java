@@ -98,8 +98,8 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                     }
 
                     @Override
-                    public String getLocalErrorMsg(Throwable throwable) {
-                        return super.getLocalErrorMsg("删除失败", throwable);
+                    public String getDefaultErrorMsg() {
+                        return "删除失败";
                     }
                 });
         addSubscrebe(subscribe);

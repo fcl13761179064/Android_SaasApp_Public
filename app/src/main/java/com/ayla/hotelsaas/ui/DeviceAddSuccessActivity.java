@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.databinding.ActivityDeviceAddSuccessBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceAddSuccessPresenter;
@@ -15,6 +16,8 @@ import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.io.Serializable;
 
 public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessView, DeviceAddSuccessPresenter> implements DeviceAddSuccessView {
     private ActivityDeviceAddSuccessBinding binding;
@@ -35,10 +38,14 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
         return 0;
     }
 
+    private DeviceListBean.DevicesBean device;
+
     @Override
     protected void initView() {
-        String deviceName = getIntent().getStringExtra("deviceName");
-        binding.etInput.setText(deviceName);
+        device = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("device");
+        binding.etInput.setText(device.getNickname());
+        binding.tvLocationPoint.setText(device.getRegionName());
+        binding.tvLocationName.setText(device.getPointName());
     }
 
     @Override
@@ -66,20 +73,49 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                         .show(getSupportFragmentManager(), "设备名称");
             }
         });
+        binding.tvLocationName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = binding.tvLocationName.getText().toString();
+                ValueChangeDialog
+                        .newInstance(new ValueChangeDialog.DoneCallback() {
+                            @Override
+                            public void onDone(DialogFragment dialog, String txt) {
+                                if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
+                                    CustomToast.makeText(getBaseContext(), "设备点位不能为空", R.drawable.ic_toast_warming);
+                                    return;
+                                }
+                                binding.etInput.setText(txt);
+                                dialog.dismissAllowingStateLoss();
+                            }
+                        })
+                        .setTitle("设备点位")
+                        .setEditHint("请输入设备点位")
+                        .setEditValue(name)
+                        .setMaxLength(20)
+                        .show(getSupportFragmentManager(), "设备点位");
+            }
+        });
+
         binding.btBind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String deviceName = getIntent().getStringExtra("deviceName");
-                String deviceId = getIntent().getStringExtra("deviceId");
-                String newName = binding.etInput.getText().toString();
-                if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
+                String nickname = device.getNickname();
+                String newNickname = binding.etInput.getText().toString();
+                if (TextUtils.isEmpty(newNickname) || newNickname.trim().isEmpty()) {
                     CustomToast.makeText(MyApplication.getContext(), "设备名称不能为空", R.drawable.ic_toast_warming);
                     return;
                 }
-                if (TextUtils.equals(newName, deviceName)) {
+                String pointName = device.getPointName();
+                String newLocationName = binding.tvLocationName.getText().toString();
+                if (TextUtils.isEmpty(newLocationName) || newLocationName.trim().isEmpty()) {
+                    CustomToast.makeText(MyApplication.getContext(), "设备点位不能为空", R.drawable.ic_toast_warming);
+                    return;
+                }
+                if (TextUtils.equals(newNickname, nickname) && TextUtils.equals(newLocationName, pointName)) {
                     finish();
                 } else {
-                    mPresenter.deviceRenameMethod(deviceId, newName);
+                    mPresenter.deviceRenameMethod(device.getDeviceId(), newNickname, newLocationName, device.getRegionId(), device.getRegionName());
                 }
             }
         });

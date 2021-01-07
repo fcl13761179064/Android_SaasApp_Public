@@ -5,7 +5,7 @@ import android.widget.EditText;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.GatewayAddPresenter;
+import com.ayla.hotelsaas.base.BasePresenter;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -19,7 +19,7 @@ public class GatewayAddDsnInputActivity extends BaseMvpActivity {
     public EditText mDSNEditText;
 
     @Override
-    protected GatewayAddPresenter initPresenter() {
+    protected BasePresenter initPresenter() {
         return null;
     }
 

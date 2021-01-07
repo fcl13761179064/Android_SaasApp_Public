@@ -32,9 +32,11 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
         if (throwable instanceof UnknownHostException) {
             msg = "网络连接失败，请检查网络";
         } else if (throwable instanceof ServerBadException) {
-            msg = ((ServerBadException) throwable).getMsg();
-            if (msg.contains("该设备已经绑定，解绑后方能重新绑定")) {
+            String serverMsg = ((ServerBadException) throwable).getMsg();
+            if (serverMsg.contains("该设备已经绑定，解绑后方能重新绑定")) {
                 msg = "该设备已在别处绑定，请先解绑后再重试";
+            } else if ("Devices with the same device name under the same resource".equals(serverMsg)) {
+                msg = "设备名称不能重复";
             }
         } else if (throwable instanceof SelfMsgException) {
             msg = throwable.getLocalizedMessage();
@@ -44,7 +46,11 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
         return msg;
     }
 
-    public String getLocalErrorMsg(Throwable throwable) {
-        return getLocalErrorMsg("未知错误", throwable);
+    public final String getLocalErrorMsg(Throwable throwable) {
+        return getLocalErrorMsg(getDefaultErrorMsg(), throwable);
+    }
+
+    public String getDefaultErrorMsg() {
+        return "操作失败";
     }
 }

@@ -32,8 +32,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
 
-    public void deviceRenameMethod(String dsn, String nickName) {
-        Disposable subscribe = RequestModel.getInstance().deviceRename(dsn, nickName)
+    public void deviceRenameMethod(String deviceId, String nickName, String pointName, long regionId, String regionName) {
+        Disposable subscribe = RequestModel.getInstance().deviceRename(deviceId, nickName, pointName, regionId, regionName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -53,14 +53,14 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                     public void accept(Boolean aBoolean) throws Exception {
                         mView.renameSuccess(nickName);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (throwable instanceof ServerBadException) {
-                            mView.renameFailed(((ServerBadException) throwable).getCode(), ((ServerBadException) throwable).getMsg());
-                        } else {
-                            mView.renameFailed(null, throwable.getMessage());
-                        }
+                    public void handle(Throwable throwable) throws Exception {
+
+                    }
+                    @Override
+                    public String getDefaultErrorMsg() {
+                        return "修改失败";
                     }
                 });
         addSubscrebe(subscribe);

@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
@@ -54,7 +53,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                 .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
                     @Override
                     public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
-                        mView.bindSuccess(dsn, newNickname);
+                        mView.bindSuccess(devicesBean);
                     }
                 }, new UnifiedErrorConsumer() {
                     @Override
@@ -132,25 +131,19 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     }
                 })
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<String[], ObservableSource<String[]>>() {
+                .flatMap(new Function<String[], ObservableSource<DeviceListBean.DevicesBean>>() {
                     @Override
-                    public ObservableSource<String[]> apply(String[] deviceInfo) throws Exception {
+                    public ObservableSource<DeviceListBean.DevicesBean> apply(String[] deviceInfo) throws Exception {
                         String deviceId = deviceInfo[0];
                         String newNickName = deviceName + "_" + deviceInfo[2];
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(deviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName)
-                                .map(new Function<DeviceListBean.DevicesBean, String[]>() {
-                                    @Override
-                                    public String[] apply(@NonNull DeviceListBean.DevicesBean devicesBean) throws Exception {
-                                        return new String[]{deviceId, newNickName};
-                                    }
-                                });
+                                .bindDeviceWithDSN(deviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName);
                     }
                 })//通知中台绑定
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<String[]>() {
+                .doOnNext(new Consumer<DeviceListBean.DevicesBean>() {
                     @Override
-                    public void accept(String[] strings) throws Exception {
+                    public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
                         mView.step3Finish();
                     }
                 })
@@ -163,10 +156,10 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         mView.step1Start();
                     }
                 })
-                .subscribe(new Consumer<String[]>() {
+                .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
                     @Override
-                    public void accept(String[] strings) throws Exception {
-                        mView.bindSuccess(strings[0], strings[1]);
+                    public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
+                        mView.bindSuccess(devicesBean);
                     }
                 }, new UnifiedErrorConsumer() {
                     @Override
@@ -241,10 +234,10 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     }
                 })//通知候选节点查找成功
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<List<DeviceListBean.DevicesBean>, ObservableSource<String[]>>() {
+                .flatMap(new Function<List<DeviceListBean.DevicesBean>, ObservableSource<DeviceListBean.DevicesBean>>() {
                     @Override
-                    public ObservableSource<String[]> apply(List<DeviceListBean.DevicesBean> devices) throws Exception {
-                        List<Observable<String[]>> tasks = new ArrayList<>();
+                    public ObservableSource<DeviceListBean.DevicesBean> apply(List<DeviceListBean.DevicesBean> devices) throws Exception {
+                        List<Observable<DeviceListBean.DevicesBean>> tasks = new ArrayList<>();
                         for (DeviceListBean.DevicesBean device : devices) {
                             String deviceId = device.getDeviceId();
                             String newNickname;
@@ -253,35 +246,17 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                             } else {
                                 newNickname = deviceName + "_" + deviceId;
                             }
-                            Observable<String[]> task = RequestModel.getInstance()
-                                    .bindDeviceWithDSN(deviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickname)
-                                    .map(new Function<DeviceListBean.DevicesBean, String[]>() {
-                                        @Override
-                                        public String[] apply(DeviceListBean.DevicesBean devicesBeanBaseResult) throws Exception {
-                                            return new String[]{deviceId, newNickname};
-                                        }
-                                    })
-                                    .doOnError(new Consumer<Throwable>() {
-                                        @Override
-                                        public void accept(Throwable throwable) throws Exception {
-                                            Log.d("候选节点绑定失败", "accept: " + throwable + " " + deviceId);
-                                        }
-                                    })
-                                    .doOnNext(new Consumer<String[]>() {
-                                        @Override
-                                        public void accept(String[] baseResult) throws Exception {
-                                            Log.d("候选节点绑定成功", "accept: " + deviceId);
-                                        }
-                                    });
+                            Observable<DeviceListBean.DevicesBean> task = RequestModel.getInstance()
+                                    .bindDeviceWithDSN(deviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickname);
                             tasks.add(task);
                         }
                         if (tasks.size() == 0) {
                             return Observable.error(new Throwable("没有候选节点"));
                         } else {
-                            return Observable.zip(tasks, new Function<Object[], String[]>() {
+                            return Observable.zip(tasks, new Function<Object[], DeviceListBean.DevicesBean>() {
                                 @Override
-                                public String[] apply(Object[] objects) throws Exception {
-                                    return (String[]) objects[0];
+                                public DeviceListBean.DevicesBean apply(@NonNull Object[] objects) throws Exception {
+                                    return (DeviceListBean.DevicesBean) objects[0];
                                 }
                             });
                         }
@@ -333,25 +308,25 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                 });
                     }
                 })//当直接退出时，通知网关退出配网模式。
-                .concatMap(new Function<String[], ObservableSource<String[]>>() {
+                .concatMap(new Function<DeviceListBean.DevicesBean, ObservableSource<DeviceListBean.DevicesBean>>() {
                     @Override
-                    public ObservableSource<String[]> apply(String[] bean) throws Exception {
+                    public ObservableSource<DeviceListBean.DevicesBean> apply(@NonNull DeviceListBean.DevicesBean devicesBean) throws Exception {
                         return RequestModel.getInstance()
                                 .updateProperty(dsn, "zb_join_enable", "0")
-                                .map(new Function<BaseResult<Boolean>, String[]>() {
+                                .map(new Function<BaseResult<Boolean>, DeviceListBean.DevicesBean>() {
                                     @Override
-                                    public String[] apply(BaseResult<Boolean> booleanBaseResult) throws Exception {
-                                        return bean;
+                                    public DeviceListBean.DevicesBean apply(BaseResult<Boolean> booleanBaseResult) throws Exception {
+                                        return devicesBean;
                                     }
                                 })
-                                .onErrorReturnItem(bean);
+                                .onErrorReturnItem(devicesBean);
                     }
                 })//前面步骤正常时，通知网关退出配网模式。
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String[]>() {
+                .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
                     @Override
-                    public void accept(String[] bean) throws Exception {
-                        mView.bindSuccess(bean[0], bean[1]);
+                    public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
+                        mView.bindSuccess(devicesBean);
                     }
                 }, new UnifiedErrorConsumer() {
                     @Override
@@ -442,9 +417,9 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     }
                 })//通知网关连接成功
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<String[], ObservableSource<String[]>>() {
+                .flatMap(new Function<String[], ObservableSource<DeviceListBean.DevicesBean>>() {
                     @Override
-                    public ObservableSource<String[]> apply(String subDeviceInfo[]) throws Exception {
+                    public ObservableSource<DeviceListBean.DevicesBean> apply(String subDeviceInfo[]) throws Exception {
                         String subIotId = subDeviceInfo[0];
                         String subDeviceName = subDeviceInfo[2];
                         if (subDeviceName != null && subDeviceName.length() > 4) {
@@ -452,13 +427,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         }
                         String newNickName = deviceName + "_" + subDeviceName;
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(subIotId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName)
-                                .map(new Function<DeviceListBean.DevicesBean, String[]>() {
-                                    @Override
-                                    public String[] apply(@NonNull DeviceListBean.DevicesBean devicesBeanBaseResult) throws Exception {
-                                        return new String[]{subIotId, newNickName};
-                                    }
-                                });
+                                .bindDeviceWithDSN(subIotId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -468,10 +437,10 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         mView.step2Finish();
                     }
                 })//通知子节点绑定成功
-                .subscribe(new Consumer<String[]>() {
+                .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
                     @Override
-                    public void accept(String[] subDeviceInfo) throws Exception {
-                        mView.bindSuccess(subDeviceInfo[0], subDeviceInfo[1]);
+                    public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
+                        mView.bindSuccess(devicesBean);
                     }
                 }, new UnifiedErrorConsumer() {
                     @Override
@@ -533,9 +502,9 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     }
                 })//设备airkiss过程完成
                 .observeOn(Schedulers.io())
-                .flatMap(new Function<String[], ObservableSource<String[]>>() {
+                .flatMap(new Function<String[], ObservableSource<DeviceListBean.DevicesBean>>() {
                     @Override
-                    public ObservableSource<String[]> apply(String[] strings) throws Exception {
+                    public ObservableSource<DeviceListBean.DevicesBean> apply(String[] strings) throws Exception {
                         String deviceId = strings[0];
                         String newNickname;
                         if (deviceId.length() > 4) {
@@ -545,26 +514,20 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         }
                         return RequestModel.getInstance()
                                 .bindDeviceWithDSN(deviceId, cuId, scopeId, 2,
-                                        deviceCategory, deviceName, newNickname)
-                                .map(new Function<DeviceListBean.DevicesBean, String[]>() {
-                                    @Override
-                                    public String[] apply(DeviceListBean.DevicesBean devicesBeanBaseResult) throws Exception {
-                                        return new String[]{deviceId, newNickname};
-                                    }
-                                });
+                                        deviceCategory, deviceName, newNickname);
                     }
                 })//绑定设备
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<String[]>() {
+                .doOnNext(new Consumer<DeviceListBean.DevicesBean>() {
                     @Override
-                    public void accept(String[] s) throws Exception {
+                    public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
                         mView.step2Finish();
                     }
                 })
-                .subscribe(new Consumer<String[]>() {
+                .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
                     @Override
-                    public void accept(String[] s) throws Exception {
-                        mView.bindSuccess(s[0], s[1]);
+                    public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
+                        mView.bindSuccess(devicesBean);
                     }
                 }, new UnifiedErrorConsumer() {
                     @Override

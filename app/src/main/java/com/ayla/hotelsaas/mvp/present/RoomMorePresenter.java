@@ -46,8 +46,8 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
                     }
 
                     @Override
-                    public String getLocalErrorMsg(Throwable throwable) {
-                        return super.getLocalErrorMsg("修改失败", throwable);
+                    public String getDefaultErrorMsg() {
+                        return "修改失败";
                     }
                 });
         addSubscrebe(subscribe);
@@ -82,8 +82,8 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
                     }
 
                     @Override
-                    public String getLocalErrorMsg(Throwable throwable) {
-                        return super.getLocalErrorMsg("移除失败", throwable);
+                    public String getDefaultErrorMsg() {
+                        return "移除失败";
                     }
                 });
         addSubscrebe(subscribe);

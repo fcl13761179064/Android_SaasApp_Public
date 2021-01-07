@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -64,7 +65,7 @@ public class DeviceListBean {
         this.devices = devices;
     }
 
-    public static class DevicesBean {
+    public static class DevicesBean implements Serializable {
         /**
          * cuId : null
          * deviceId : SC000W000194710
@@ -85,6 +86,9 @@ public class DeviceListBean {
         private int deviceUseType;//0:常规设备      1:用途设备      2:红外源设备   3:用途源设备。      用途设备在联动里面，直接可以作为联动动作，支持的动作以物模型为准。
         private int isPurposeDevice;//0:普通   1：可以创建用途设备的设备
         private String purposeName;//用途名称  et:吸顶灯 、吊灯
+        private String pointName;
+        private long regionId;
+        private String regionName;
 
         public String getPurposeName() {
             return purposeName;
@@ -164,6 +168,22 @@ public class DeviceListBean {
 
         public int getDeviceUseType() {
             return deviceUseType;
+        }
+
+        public String getPointName() {
+            return pointName;
+        }
+
+        public long getRegionId() {
+            return regionId;
+        }
+
+        public String getRegionName() {
+            return regionName;
+        }
+
+        public void setPointName(String pointName) {
+            this.pointName = pointName;
         }
     }
 }
