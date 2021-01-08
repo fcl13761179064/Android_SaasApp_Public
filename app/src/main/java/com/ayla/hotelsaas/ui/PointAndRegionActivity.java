@@ -74,7 +74,7 @@ public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, 
                             .setEditValue(mBinding.tvPointnameRight.getText().toString())
                             .setTitle("设备点位")
                             .setEditHint("请输入设备点位")
-                            .setMaxLength(20)
+                            .setMaxLength(12)
                             .show(getSupportFragmentManager(), "设备点位");
                 }
             }

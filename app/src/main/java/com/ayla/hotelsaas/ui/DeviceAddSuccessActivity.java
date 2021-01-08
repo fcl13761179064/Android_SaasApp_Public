@@ -92,7 +92,7 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                         .setTitle("设备点位")
                         .setEditHint("请输入设备点位")
                         .setEditValue(name)
-                        .setMaxLength(20)
+                        .setMaxLength(12)
                         .show(getSupportFragmentManager(), "设备点位");
             }
         });
