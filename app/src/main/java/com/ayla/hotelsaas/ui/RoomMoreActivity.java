@@ -22,6 +22,7 @@ import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * removeEnable ,标记是否支持删除
@@ -163,5 +164,11 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
             startActivity(mainActivity);
             finish();
         }
+    }
+
+    @OnClick(R.id.rl_room_plan)
+    public void handleRoomPlanJump(){
+        Intent intent = new Intent(RoomMoreActivity.this, RoomPlanSettingActivity.class);
+        startActivity(intent);
     }
 }

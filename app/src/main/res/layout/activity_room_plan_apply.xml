@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:left_iv="@drawable/back_arrow"
+        app:left_iv="@mipmap/icon_back_black"
         app:right_tv="导入"
         app:right_tv_color="@color/colorAccent" />
 
@@ -48,9 +48,9 @@
             android:ellipsize="end"
             android:gravity="right"
             android:maxLines="1"
-            tools:text="总统套房"
             android:textColor="#ff999999"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="总统套房" />
     </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,6 +68,7 @@
             android:id="@+id/imageView6"
             android:layout_width="18dp"
             android:layout_height="18dp"
+            android:src="@drawable/ic_linkage"
             app:layout_constraintBottom_toBottomOf="@+id/textView7"
             app:layout_constraintStart_toStartOf="@+id/editText"
             app:layout_constraintTop_toTopOf="@+id/textView7" />
@@ -125,8 +126,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
         android:text="2. 请确认方案房型，房型方案才可使用"
         android:textColor="#ff666666"

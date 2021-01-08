@@ -138,7 +138,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="52dp"
-        android:background="@drawable/green_btn_bg"
+        android:background="@drawable/green_btn_bg_small_corner"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

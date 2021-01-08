@@ -30,7 +30,7 @@
         android:layout_below="@id/iv_image"
         android:layout_centerInParent="true"
         android:layout_marginTop="84dp"
-        android:background="@drawable/bg_big_corners_button"
+        android:background="@drawable/green_btn_bg_big_corner"
         android:gravity="center"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
