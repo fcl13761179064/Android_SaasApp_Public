@@ -99,7 +99,7 @@ public interface ApiService {
      * @return
      */
     @POST("/api/v1/build/constructbill")
-    Observable<BaseResult> createWorkOrder(@Body RequestBody body);
+    Observable<BaseResult<Object>> createWorkOrder(@Body RequestBody body);
 
     @GET("api/v1/build/billrooms")
     Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("billId") String billId);

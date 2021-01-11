@@ -804,14 +804,15 @@ public class RequestModel {
     /**
      * @return
      */
-    public Observable<BaseResult> createBill(String title, int trade, int type) {
+    public Observable<Object> createBill(String title, int trade, int type) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("title", title);
         jsonObject.addProperty("trade", trade);
         jsonObject.addProperty("type", type);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().createWorkOrder(body111);
+        return getApiService().createWorkOrder(body111).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
+        });
     }
 
     /**

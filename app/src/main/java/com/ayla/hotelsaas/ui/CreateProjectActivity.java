@@ -132,11 +132,7 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
 
     @Override
     public void onFailed(Throwable throwable) {
-        String msg = "创建失败";
-        if (throwable instanceof ServerBadException) {
-            msg = ((ServerBadException) throwable).getMsg();
-        }
-        CustomToast.makeText(this, msg, R.drawable.ic_toast_warming);
+
     }
 
     @Override

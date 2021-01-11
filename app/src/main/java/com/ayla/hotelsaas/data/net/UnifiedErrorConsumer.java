@@ -57,6 +57,8 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
                 msg = "设备名称已被占用";
             } else if ("PointName already exists".equals(serverMsg)) {
                 msg = "设备点位已被占用";
+            } else if ("房间名已存在".equals(serverMsg)) {
+                msg = "房间名已存在";
             }
         } else if (throwable instanceof SelfMsgException) {
             msg = throwable.getLocalizedMessage();
