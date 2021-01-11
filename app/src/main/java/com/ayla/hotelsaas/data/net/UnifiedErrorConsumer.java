@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.data.net;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.ui.CustomToast;
 
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
@@ -29,15 +30,23 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
 
     public final String getLocalErrorMsg(String defaultMsg, Throwable throwable) {
         String msg = defaultMsg;
-        if (throwable instanceof UnknownHostException) {
+        if (throwable instanceof ConnectException) {
+            msg = "网络连接失败，请检查网络";
+        } else if (throwable instanceof UnknownHostException) {
             msg = "网络连接失败，请检查网络";
         } else if (throwable instanceof ServerBadException) {
+            String serverMsg = ((ServerBadException) throwable).getMsg();
+
             switch (((ServerBadException) throwable).getCode()) {
                 case "121001":
                     msg = "登录过期";
                     break;
+                case "121004"://登陆账户不存在
+                case "121005"://密码错误
+                    msg = serverMsg;
+                    break;
             }
-            String serverMsg = ((ServerBadException) throwable).getMsg();
+
             if (serverMsg.contains("该设备已经绑定，解绑后方能重新绑定")) {
                 msg = "该设备已在别处绑定，请先解绑后再重试";
             } else if ("Devices with the same device name under the same resource".equals(serverMsg)) {
