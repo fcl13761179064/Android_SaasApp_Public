@@ -266,4 +266,12 @@ public interface ApiService {
      */
     @GET("/api/v1/build/batch/export/{roomId}")
     Observable<BaseResult<String>> roomExport(@Path("roomId") long roomId);
+
+    /**
+     * 房间方案导出
+     *
+     * @return
+     */
+    @POST("/api/v1/build/batch/import")
+    Observable<BaseResult<Void>> roomPlanImport(@Body RequestBody body);
 }

@@ -924,4 +924,14 @@ public class RequestModel {
         return getApiService().roomExport(scopeId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
         });
     }
+
+    public Observable<Void> roomPlanImport(long scopeId, String shareCode) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("scopeId", scopeId);
+        jsonObject.addProperty("shareCode", shareCode);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().roomPlanImport(body111).compose(new BaseResultTransformer<BaseResult<Void>, Void>() {
+        });
+    }
 }

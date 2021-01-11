@@ -9,4 +9,6 @@ import com.ayla.hotelsaas.base.BaseView;
  * @作者 fanchunlei
  * @时间 2020/7/14
  */
-public interface RoomPlanApplyView extends BaseView {}
+public interface RoomPlanApplyView extends BaseView {
+    void importPlanSuccess();
+}

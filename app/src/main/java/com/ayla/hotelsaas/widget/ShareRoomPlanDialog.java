@@ -1,6 +1,9 @@
 package com.ayla.hotelsaas.widget;
 
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -26,6 +29,14 @@ public class ShareRoomPlanDialog extends DialogFragment {
         ShareRoomPlanDialog fragment = new ShareRoomPlanDialog();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ClipboardManager cm  = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("share", getArguments().getString("msg"));
+        cm.setPrimaryClip(clipData);
     }
 
     @Nullable

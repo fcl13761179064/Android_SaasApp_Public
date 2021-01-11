@@ -31,6 +31,7 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
     public static final int RESULT_CODE_REMOVED = 0X10;
     public static final int RESULT_CODE_RENAMED = 0X11;
     private final int REQUEST_CODE_DISTRIBUTION_ROOM = 0x12;
+    private final int REQUEST_CODE_ROOM_PLAN_SETTING = 0x13;
 
     @BindView(R.id.appBar)
     AppBar appBar;
@@ -160,7 +161,7 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
     public void planCheckResult(boolean s) {
         Intent intent = new Intent(RoomMoreActivity.this, RoomPlanSettingActivity.class);
         intent.putExtra("scopeId", mRoom_ID).putExtra("hasPlan", s);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_ROOM_PLAN_SETTING);
     }
 
     @Override
@@ -169,6 +170,8 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
         if (requestCode == REQUEST_CODE_DISTRIBUTION_ROOM && resultCode == RESULT_OK) {
             Intent mainActivity = new Intent(this, ProjectListActivity.class);
             startActivity(mainActivity);
+            finish();
+        } else if (requestCode == REQUEST_CODE_ROOM_PLAN_SETTING && resultCode == RESULT_OK) {
             finish();
         }
     }
