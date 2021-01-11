@@ -914,4 +914,14 @@ public class RequestModel {
             }
         };
     }
+
+    public Observable<Boolean> roomPlanCheck(long scopeId) {
+        return getApiService().roomPlanCheck(scopeId).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
+    }
+
+    public Observable<String> roomPlanExport(long scopeId) {
+        return getApiService().roomExport(scopeId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
+        });
+    }
 }

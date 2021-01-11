@@ -157,6 +157,13 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
     }
 
     @Override
+    public void planCheckResult(boolean s) {
+        Intent intent = new Intent(RoomMoreActivity.this, RoomPlanSettingActivity.class);
+        intent.putExtra("scopeId", mRoom_ID).putExtra("hasPlan", s);
+        startActivity(intent);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_DISTRIBUTION_ROOM && resultCode == RESULT_OK) {
@@ -167,8 +174,7 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
     }
 
     @OnClick(R.id.rl_room_plan)
-    public void handleRoomPlanJump(){
-        Intent intent = new Intent(RoomMoreActivity.this, RoomPlanSettingActivity.class);
-        startActivity(intent);
+    public void handleRoomPlanJump() {
+        mPresenter.checkPlan(mRoom_ID);
     }
 }

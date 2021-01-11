@@ -22,7 +22,6 @@ import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 
 import java.util.List;
-import java.util.Optional;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
@@ -245,9 +244,26 @@ public interface ApiService {
 
     /**
      * 更新用途设备
+     *
      * @param body
      * @return
      */
     @PUT("/api/v1/build/device/purpose")
     Observable<BaseResult> updatePurpose(@Body RequestBody body);
+
+    /**
+     * 房间是否应用过方案
+     *
+     * @return
+     */
+    @GET("/api/v1/build/batch/check/{roomId}")
+    Observable<BaseResult<Boolean>> roomPlanCheck(@Path("roomId") long roomId);
+
+    /**
+     * 房间方案导出
+     *
+     * @return
+     */
+    @GET("/api/v1/build/batch/export/{roomId}")
+    Observable<BaseResult<String>> roomExport(@Path("roomId") long roomId);
 }

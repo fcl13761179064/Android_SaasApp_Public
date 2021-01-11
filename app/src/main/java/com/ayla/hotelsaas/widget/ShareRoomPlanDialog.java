@@ -28,16 +28,9 @@ public class ShareRoomPlanDialog extends DialogFragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        setStyle(STYLE_NO_TITLE, R.style.MyDialogStyle);
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         binding = DialogRoomPlanShareBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -53,6 +46,7 @@ public class ShareRoomPlanDialog extends DialogFragment {
                 dismissAllowingStateLoss();
             }
         });
+        binding.tvContent.setText(getArguments().getString("msg"));
     }
 
 }

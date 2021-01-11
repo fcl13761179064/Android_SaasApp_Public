@@ -24,4 +24,5 @@ public interface RoomMoreView extends BaseView {
     //失败成功
     void removeFailed(String code, String msg);
 
+    void planCheckResult(boolean s);
 }
