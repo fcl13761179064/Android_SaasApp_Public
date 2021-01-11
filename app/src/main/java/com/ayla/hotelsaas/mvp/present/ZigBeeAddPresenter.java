@@ -63,7 +63,12 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
 
                     @Override
                     public void handle(Throwable throwable) throws Exception {
-                        mView.bindFailed(getLocalErrorMsg(null, throwable));
+                        mView.bindFailed(getLocalErrorMsg(throwable));
+                    }
+
+                    @Override
+                    public String getDefaultErrorMsg() {
+                        return "设备绑定失败\n请再检查设备状态后重试";
                     }
                 });
         addSubscrebe(subscribe);
@@ -169,7 +174,12 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
 
                     @Override
                     public void handle(Throwable throwable) throws Exception {
-                        mView.bindFailed(getLocalErrorMsg(null, throwable));
+                        mView.bindFailed(getLocalErrorMsg(throwable));
+                    }
+
+                    @Override
+                    public String getDefaultErrorMsg() {
+                        return "设备绑定失败\n请再检查设备状态后重试";
                     }
                 });
         addSubscrebe(subscribe);
@@ -336,7 +346,12 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
 
                     @Override
                     public void handle(Throwable throwable) throws Exception {
-                        mView.bindFailed(getLocalErrorMsg(null, throwable));
+                        mView.bindFailed(getLocalErrorMsg(throwable));
+                    }
+
+                    @Override
+                    public String getDefaultErrorMsg() {
+                        return "设备绑定失败\n请再检查设备状态后重试";
                     }
                 });
         addSubscrebe(subscribe);
@@ -449,7 +464,12 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
 
                     @Override
                     public void handle(Throwable throwable) throws Exception {
-                        mView.bindFailed(getLocalErrorMsg(null, throwable));
+                        mView.bindFailed(getLocalErrorMsg(throwable));
+                    }
+
+                    @Override
+                    public String getDefaultErrorMsg() {
+                        return "设备绑定失败\n请再检查设备状态后重试";
                     }
                 });
         addSubscrebe(subscribe);
@@ -537,7 +557,12 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
 
                     @Override
                     public void handle(Throwable throwable) throws Exception {
-                        mView.bindFailed(getLocalErrorMsg(null, throwable));
+                        mView.bindFailed(getLocalErrorMsg(throwable));
+                    }
+
+                    @Override
+                    public String getDefaultErrorMsg() {
+                        return "设备绑定失败\n请再检查设备状态后重试";
                     }
                 });
         addSubscrebe(subscribe);

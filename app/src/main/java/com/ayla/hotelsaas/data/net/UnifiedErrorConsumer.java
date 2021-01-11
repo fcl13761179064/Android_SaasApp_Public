@@ -29,7 +29,7 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
         CustomToast.makeText(getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
     }
 
-    public final String getLocalErrorMsg(String defaultMsg, Throwable throwable) {
+    private String getLocalErrorMsg(String defaultMsg, Throwable throwable) {
         if (Constance.isNetworkDebug()) {
             throwable.printStackTrace();
         }
@@ -41,13 +41,13 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
         } else if (throwable instanceof ServerBadException) {
             String serverMsg = ((ServerBadException) throwable).getMsg();
 
+            if (!serverMsg.contains(" ")) {//不包含空格，可能就是中文字符串了。
+                msg = serverMsg;
+            }
+
             switch (((ServerBadException) throwable).getCode()) {
                 case "122001":
                     msg = "登录过期";
-                    break;
-                case "121004"://登陆账户不存在
-                case "121005"://密码错误
-                    msg = serverMsg;
                     break;
             }
 
@@ -57,8 +57,10 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
                 msg = "设备名称已被占用";
             } else if ("PointName already exists".equals(serverMsg)) {
                 msg = "设备点位已被占用";
-            } else if ("房间名已存在".equals(serverMsg)) {
-                msg = "房间名已存在";
+            } else if ("device unbinding error".equals(serverMsg)) {
+                msg = "设备解绑失败";
+            } else if ("Get device register candidates error,not_found ".equals(serverMsg)) {
+                msg = "未发现可绑定的节点设备";
             }
         } else if (throwable instanceof SelfMsgException) {
             msg = throwable.getLocalizedMessage();
