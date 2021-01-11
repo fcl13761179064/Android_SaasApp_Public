@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.ui.CustomToast;
 
 import java.net.ConnectException;
@@ -29,6 +30,9 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
     }
 
     public final String getLocalErrorMsg(String defaultMsg, Throwable throwable) {
+        if (Constance.isNetworkDebug()) {
+            throwable.printStackTrace();
+        }
         String msg = defaultMsg;
         if (throwable instanceof ConnectException) {
             msg = "网络连接失败，请检查网络";
@@ -38,7 +42,7 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
             String serverMsg = ((ServerBadException) throwable).getMsg();
 
             switch (((ServerBadException) throwable).getCode()) {
-                case "121001":
+                case "122001":
                     msg = "登录过期";
                     break;
                 case "121004"://登陆账户不存在
