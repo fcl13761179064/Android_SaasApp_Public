@@ -27,6 +27,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeviceListFragmentNew extends BaseMvpFragment {
@@ -84,7 +85,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
             }
         });
 
-        mAdapter = new DeviceListAdapter();
+        mAdapter = new DeviceListAdapter(null);
         mAdapter.bindToRecyclerView(binding.deviceRecyclerview);
         mAdapter.setEmptyView(R.layout.layout_loading);
     }
@@ -94,7 +95,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
+                final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position).getDevicesBean();
                 Intent intent;
                 if (devicesBean.isHasH5()) {
                     intent = new Intent(getContext(), DeviceDetailH5Activity.class);
@@ -104,7 +105,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
                     } else {
                         intent = new Intent(getContext(), DeviceAddCategoryActivity.class);
                         intent.putExtra("addForWait", true);
-                        intent.putExtra("waitBindDeviceId",devicesBean.getDeviceId());
+                        intent.putExtra("waitBindDeviceId", devicesBean.getDeviceId());
                         intent.putExtra("deviceName", devicesBean.getDeviceName());
                         intent.putExtra("deviceCategory", devicesBean.getDeviceCategory());
                     }
@@ -118,7 +119,14 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
 
     @Override
     protected void initData() {
-        mAdapter.setNewData(devices);
+        if (devices != null) {
+            List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
+            for (DeviceListBean.DevicesBean devicesBean : devices) {
+                DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
+                deviceItems.add(deviceItem);
+            }
+            mAdapter.setNewData(deviceItems);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
