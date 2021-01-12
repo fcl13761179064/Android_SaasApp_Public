@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp">
 
     <ImageView
         android:id="@+id/left_iv"
         android:layout_width="32dp"
-        tools:src="@drawable/ic_empty_device"
         android:layout_height="32dp"
-        android:layout_margin="9dp"/>
+        android:layout_margin="9dp"
+        tools:src="@drawable/ic_empty_device" />
 
     <TextView
         android:id="@+id/tv_function_name"
@@ -21,10 +21,10 @@
         android:layout_toRightOf="@id/left_iv"
         android:ellipsize="end"
         android:maxLines="1"
-        tools:text="单路开关单路开关单路开关单路开关单路开关单路开关单路开关"
         android:textColor="#ff333333"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="单路开关单路开关单路开关单路开关单路开关单路开关单路开关" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -36,9 +36,9 @@
         android:ellipsize="middle"
         android:orientation="horizontal"
         android:singleLine="true"
-        tools:text="RGB智能灯单路开关单路开关单路开关单路开关单路开关单路开关单路开关"
         android:textColor="#ff91909a"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        tools:text="RGB智能灯单路开关单路开关单路开关单路开关单路开关单路开关单路开关" />
 
     <ImageView
         android:id="@+id/iv_delete"
@@ -60,6 +60,5 @@
         android:layout_marginTop="4dp"
         android:text="*需要删除该设备，场景才能正常使用"
         android:textColor="#fff55a4c"
-        android:textSize="12sp"
-        android:visibility="gone" />
+        android:textSize="12sp" />
 </RelativeLayout>

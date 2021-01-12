@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/left_iv"
+        android:layout_width="32dp"
+        tools:src="@drawable/ic_empty_device"
+        android:layout_height="32dp"
+        android:layout_margin="9dp"/>
+
+    <TextView
+        android:id="@+id/tv_function_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_toLeftOf="@id/iv_delete"
+        android:layout_toRightOf="@id/left_iv"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="单路开关"
+        android:textColor="#ff333333"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_function_name"
+        android:layout_alignBottom="@id/left_iv"
+        android:layout_toLeftOf="@id/iv_delete"
+        android:ellipsize="middle"
+        android:orientation="horizontal"
+        android:singleLine="true"
+        tools:text="RGB智能灯"
+        android:textColor="#ff91909a"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/iv_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:padding="16dp"
+        android:src="@drawable/ic_scene_device_item_delete"
+        android:textColor="#ff91909a" />
+</RelativeLayout>

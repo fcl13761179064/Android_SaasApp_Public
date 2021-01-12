@@ -27,22 +27,18 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
      */
     public SceneSettingActionItemAdapter(List<ActionItem> data) {
         super(data);
-        addItemType(0, R.layout.item_scene_setting_action_device);
-        addItemType(1, R.layout.item_scene_setting_action_delay);
-        addItemType(2, R.layout.item_scene_setting_action_welcome);
+        addItemType(ActionItem.item_device_normal, R.layout.item_scene_setting_action_device_normal);
+        addItemType(ActionItem.item_device_removed, R.layout.item_scene_setting_action_device_removed);
+        addItemType(ActionItem.item_device_wait_add, R.layout.item_scene_setting_action_device_wait_add);
+        addItemType(ActionItem.item_delay, R.layout.item_scene_setting_action_delay);
+        addItemType(ActionItem.item_welcome, R.layout.item_scene_setting_action_welcome);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, ActionItem item) {
         BaseSceneBean.Action action = item.action;
-        if (action instanceof BaseSceneBean.DeviceAction) {
-
-            DeviceListBean.DevicesBean devicesBean = null;
-            for (DeviceListBean.DevicesBean bean : MyApplication.getInstance().getDevicesBean()) {
-                if (TextUtils.equals(bean.getDeviceId(), action.getTargetDeviceId())) {
-                    devicesBean = bean;
-                }
-            }
+        if (item.getItemType() == ActionItem.item_device_normal) {
+            DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(action.getTargetDeviceId());
             if (devicesBean != null) {
                 ImageLoader.loadImg(helper.getView(R.id.left_iv), devicesBean.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
                 helper.setText(R.id.tv_function_name, String.format("%s:%s", action.getFunctionName(), action.getValueName()));
@@ -50,19 +46,21 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
                 helper.setAlpha(R.id.left_iv, 1);
                 helper.setAlpha(R.id.tv_name, 1);
                 helper.setAlpha(R.id.tv_function_name, 1);
-
-                helper.setGone(R.id.tv_should_delete_device, false);
-            } else {
-                helper.setImageResource(R.id.left_iv, R.drawable.ic_scene_removed_device_item);
-                helper.setText(R.id.tv_function_name, "无效设备");
-                helper.setText(R.id.tv_name, "XXX-000-000");
-                helper.setAlpha(R.id.tv_name, 0.7f);
-                helper.setAlpha(R.id.tv_function_name, 0.7f);
-
-                helper.setGone(R.id.tv_should_delete_device, true);
             }
-
-        } else if (action instanceof BaseSceneBean.DelayAction) {
+        } else if (item.getItemType() == ActionItem.item_device_wait_add) {
+            String[] split = action.getTargetDeviceId().split("@");
+            DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBeanByPointName(split[0]);
+            if (devicesBean != null) {
+                ImageLoader.loadImg(helper.getView(R.id.left_iv), devicesBean.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
+                helper.setText(R.id.tv_function_name, devicesBean.getDeviceName());
+            }
+        } else if (item.getItemType() == ActionItem.item_device_removed) {
+            helper.setImageResource(R.id.left_iv, R.drawable.ic_scene_removed_device_item);
+            helper.setText(R.id.tv_function_name, "无效设备");
+            helper.setText(R.id.tv_name, "XXX-000-000");
+            helper.setAlpha(R.id.tv_name, 0.7f);
+            helper.setAlpha(R.id.tv_function_name, 0.7f);
+        } else if (item.getItemType() == ActionItem.item_delay) {
             String rightValue = action.getRightValue();
             int seconds = 0;
             try {
@@ -76,13 +74,17 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
             String _second = second < 10 ? "0" + second : String.valueOf(second);
 
             helper.setText(R.id.tv_name, String.format("%s分%s秒", _minute, _second));
-        } else if (action instanceof BaseSceneBean.WelcomeAction) {
-
         }
         helper.addOnClickListener(R.id.iv_delete);
     }
 
     public static class ActionItem implements MultiItemEntity {
+        public static final int item_device_normal = 0;
+        public static final int item_device_removed = 1;
+        public static final int item_device_wait_add = 2;
+        public static final int item_delay = 3;
+        public static final int item_welcome = 4;
+
         public BaseSceneBean.Action action;
 
         public ActionItem(BaseSceneBean.Action condition) {
@@ -92,13 +94,21 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
         @Override
         public int getItemType() {
             if (action instanceof BaseSceneBean.DeviceAction) {
-                return 0;
+                if (action.getTargetDeviceId().contains("@")) {
+                    return item_device_wait_add;
+                } else {
+                    if (MyApplication.getInstance().getDevicesBean(action.getTargetDeviceId()) != null) {
+                        return item_device_normal;
+                    } else {
+                        return item_device_removed;
+                    }
+                }
             }
             if (action instanceof BaseSceneBean.DelayAction) {
-                return 1;
+                return item_delay;
             }
             if (action instanceof BaseSceneBean.WelcomeAction) {
-                return 2;
+                return item_welcome;
             }
             return -1;
         }

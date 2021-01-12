@@ -252,10 +252,11 @@ public class RequestModel {
      * @param scopeId
      * @return
      */
-    public Observable<DeviceListBean.DevicesBean> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
+    public Observable<DeviceListBean.DevicesBean> bindDeviceWithDSN(String deviceId, String waitBindDeviceId, long cuId, long scopeId,
                                                                     int scopeType, String deviceCategory, String deviceName, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
+        body.addProperty("waitBindDeviceId", waitBindDeviceId);
         body.addProperty("scopeId", scopeId);
         body.addProperty("cuId", cuId);
         body.addProperty("scopeType", scopeType);

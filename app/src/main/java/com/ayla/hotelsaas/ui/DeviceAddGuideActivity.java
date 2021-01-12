@@ -58,8 +58,6 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
     protected void initView() {
     }
 
-    boolean loadError = false;
-
     @Override
     protected void initListener() {
 

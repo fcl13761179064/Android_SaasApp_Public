@@ -41,7 +41,7 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
         } else if (throwable instanceof ServerBadException) {
             String serverMsg = ((ServerBadException) throwable).getMsg();
 
-            if (!serverMsg.contains(" ")) {//不包含空格，可能就是中文字符串了。
+            if (serverMsg != null && !serverMsg.contains(" ")) {//不包含空格，可能就是中文字符串了。
                 msg = serverMsg;
             }
 
@@ -51,7 +51,7 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
                     break;
             }
 
-            if (serverMsg.contains("该设备已经绑定，解绑后方能重新绑定")) {
+            if (serverMsg != null && serverMsg.contains("该设备已经绑定，解绑后方能重新绑定")) {
                 msg = "该设备已在别处绑定，请先解绑后再重试";
             } else if ("Devices with the same device name under the same resource".equals(serverMsg)) {
                 msg = "设备名称已被占用";

@@ -136,6 +136,15 @@ public class MyApplication extends AApplication {
         return null;
     }
 
+    public DeviceListBean.DevicesBean getDevicesBeanByPointName(String pointName) {
+        for (DeviceListBean.DevicesBean devicesBean : mDevicesBean) {
+            if (devicesBean.getPointName().equals(pointName)) {
+                return devicesBean;
+            }
+        }
+        return null;
+    }
+
     public void setDevicesBean(List<DeviceListBean.DevicesBean> devicesBean) {
         mDevicesBean = devicesBean;
     }

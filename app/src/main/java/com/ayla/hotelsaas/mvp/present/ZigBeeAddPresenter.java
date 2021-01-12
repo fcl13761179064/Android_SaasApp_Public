@@ -34,14 +34,14 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
-    public void bindAylaGateway(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
+    public void bindAylaGateway(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName, String waitBindDeviceId) {
         String newNickname;
         if (dsn.length() > 4) {
             newNickname = deviceName + "_" + dsn.substring(dsn.length() - 4);
         } else {
             newNickname = deviceName + "_" + dsn;
         }
-        Disposable subscribe = RequestModel.getInstance().bindDeviceWithDSN(dsn, cuId, scopeId, 2, deviceCategory, deviceName, newNickname)
+        Disposable subscribe = RequestModel.getInstance().bindDeviceWithDSN(dsn, waitBindDeviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickname)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -74,7 +74,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
         addSubscrebe(subscribe);
     }
 
-    public void bindHongYanGateway(AApplication application, long cuId, long scopeId, String deviceCategory, String deviceName, String HYproductkey, String HYdeviceName) {
+    public void bindHongYanGateway(AApplication application, long cuId, long scopeId, String deviceCategory, String deviceName, String HYproductkey, String HYdeviceName, String waitBindDeviceId) {
         Disposable subscribe = RequestModel.getInstance()
                 .getAuthCode(String.valueOf(scopeId))//获取授权码
                 .observeOn(AndroidSchedulers.mainThread())
@@ -142,7 +142,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         String deviceId = deviceInfo[0];
                         String newNickName = deviceName + "_" + deviceInfo[2];
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(deviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName);
+                                .bindDeviceWithDSN(deviceId, waitBindDeviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName);
                     }
                 })//通知中台绑定
                 .observeOn(AndroidSchedulers.mainThread())
@@ -185,7 +185,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
         addSubscrebe(subscribe);
     }
 
-    public void bindAylaNode(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
+    public void bindAylaNode(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName, String waitBindDeviceId) {
         Disposable subscribe = Observable.just(dsn)
                 .doOnNext(new Consumer<String>() {
                     @Override
@@ -257,7 +257,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                                 newNickname = deviceName + "_" + deviceId;
                             }
                             Observable<DeviceListBean.DevicesBean> task = RequestModel.getInstance()
-                                    .bindDeviceWithDSN(deviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickname);
+                                    .bindDeviceWithDSN(deviceId, waitBindDeviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickname);
                             tasks.add(task);
                         }
                         if (tasks.size() == 0) {
@@ -357,7 +357,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
         addSubscrebe(subscribe);
     }
 
-    public void bindHongYanNode(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName) {
+    public void bindHongYanNode(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName, String waitBindDeviceId) {
         final NodeHelper[] nodeHelper = new NodeHelper[1];
         Disposable subscribe = RequestModel.getInstance()
                 .getAuthCode(String.valueOf(scopeId))
@@ -442,7 +442,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                         }
                         String newNickName = deviceName + "_" + subDeviceName;
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(subIotId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName);
+                                .bindDeviceWithDSN(subIotId, waitBindDeviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -475,7 +475,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
         addSubscrebe(subscribe);
     }
 
-    public void bindAylaWiFi(String wifiName, String wifiPassword, long cuId, long scopeId, String deviceCategory, String deviceName) {
+    public void bindAylaWiFi(String wifiName, String wifiPassword, long cuId, long scopeId, String deviceCategory, String deviceName, String waitBindDeviceId) {
         final LarkSmartConfigManager[] configManager = new LarkSmartConfigManager[1];
         Disposable subscribe = Observable.just(LarkSmartConfigManager.initWithSmartConfigType(LarkConfigDefines.LarkSmartConfigType.LarkSmartConfigTypeForAirkissEasy))
                 .doOnNext(new Consumer<LarkSmartConfigManager>() {
@@ -533,7 +533,7 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                             newNickname = deviceName + "_" + deviceId;
                         }
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(deviceId, cuId, scopeId, 2,
+                                .bindDeviceWithDSN(deviceId, waitBindDeviceId, cuId, scopeId, 2,
                                         deviceCategory, deviceName, newNickname);
                     }
                 })//绑定设备

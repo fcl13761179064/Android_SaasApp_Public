@@ -4,6 +4,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,11 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 /**
  * @描述 添加设备入口页面，展示产品分类二级列表
  * 进入时必须带上参数scopeId
+ * 如果是添加待绑定的设备，还要带上：
+ * boolean addForWait
+ * waitBindDeviceId
+ * deviceCategory
+ * deviceName
  * @作者 吴友金
  */
 public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView, DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
@@ -117,6 +123,21 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         mEmptyView.setVisibility(View.GONE);
         mLeftAdapter.setNewData(deviceCategoryBeans);
         adjustData(0);
+
+        boolean addForWait = getIntent().getBooleanExtra("addForWait", false);
+        if (addForWait) {
+            String deviceCategory = getIntent().getStringExtra("deviceCategory");
+            String deviceName = getIntent().getStringExtra("deviceName");
+            for (DeviceCategoryBean deviceCategoryBean : deviceCategoryBeans) {
+                for (DeviceCategoryBean.SubBean subBean : deviceCategoryBean.getSub()) {
+                    if (TextUtils.equals(deviceCategory, subBean.getOemModel()) &&
+                            TextUtils.equals(deviceName, subBean.getDeviceName())) {
+                        handleAddJump(subBean);
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -242,12 +263,26 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_ADD_DEVICE && resultCode == RESULT_OK) {
-            finish();
-        } else if (requestCode == REQUEST_CODE_SELECT_GATEWAY && resultCode == RESULT_OK) {
-            Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
-            mainActivity.putExtras(data);
-            startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+        if (requestCode == REQUEST_CODE_ADD_DEVICE) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            } else {
+                boolean addForWait = getIntent().getBooleanExtra("addForWait", false);
+                if (addForWait) {
+                    finish();
+                }
+            }
+        } else if (requestCode == REQUEST_CODE_SELECT_GATEWAY) {
+            if (resultCode == RESULT_OK) {
+                Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
+                mainActivity.putExtras(data);
+                startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+            } else {
+                boolean addForWait = getIntent().getBooleanExtra("addForWait", false);
+                if (addForWait) {
+                    finish();
+                }
+            }
         }
     }
 

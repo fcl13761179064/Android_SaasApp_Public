@@ -26,7 +26,7 @@ public class SceneSettingConditionItemAdapter extends BaseMultiItemQuickAdapter<
      */
     public SceneSettingConditionItemAdapter(List<ConditionItem> data) {
         super(data);
-        addItemType(0, R.layout.item_scene_setting_action_device);
+        addItemType(0, R.layout.item_scene_setting_action_device_normal);
         addItemType(1, R.layout.item_scene_setting_condition_one_key);
     }
 

@@ -38,8 +38,7 @@
         android:gravity="center"
         android:id="@+id/ll_default"
         android:orientation="horizontal"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:visibility="visible">
 
         <View
             android:id="@+id/v_device_online_status_dot"
@@ -66,7 +65,7 @@
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
 
         <TextView
