@@ -89,6 +89,7 @@ public class DeviceListBean {
         private String pointName;
         private long regionId;
         private String regionName;
+        private int bindType;//设备绑定绑定类型，【0：默认，1：待绑定】
 
         public String getPurposeName() {
             return purposeName;
@@ -184,6 +185,14 @@ public class DeviceListBean {
 
         public void setPointName(String pointName) {
             this.pointName = pointName;
+        }
+
+        public int getBindType() {
+            return bindType;
+        }
+
+        public void setBindType(int bindType) {
+            this.bindType = bindType;
         }
     }
 }

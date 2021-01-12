@@ -11,4 +11,6 @@ import com.ayla.hotelsaas.base.BaseView;
  */
 public interface RoomPlanSettingView extends BaseView {
     void planExportSuccess(String s);
+
+    void resetPlanSuccess();
 }

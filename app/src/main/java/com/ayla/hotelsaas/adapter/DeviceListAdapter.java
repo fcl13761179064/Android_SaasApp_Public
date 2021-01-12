@@ -23,8 +23,16 @@ public class DeviceListAdapter extends BaseQuickAdapter<DeviceListBean.DevicesBe
     protected void convert(BaseViewHolder helper, DeviceListBean.DevicesBean deviceCategory) {
         ImageLoader.loadImg(helper.getView(R.id.device_left_iv), deviceCategory.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
         helper.setText(R.id.tv_device_name, deviceCategory.getNickname());
-        helper.setBackgroundRes(R.id.v_device_online_status_dot, TempUtils.isDeviceOnline(deviceCategory) ? R.drawable.ic_device_online : R.drawable.ic_device_offline);
-        helper.setText(R.id.tv_device_online_status, TempUtils.isDeviceOnline(deviceCategory) ? "在线" : "离线");
 
+        if (deviceCategory.getBindType() == 0) {
+            helper.setVisible(R.id.ll_default, true);
+            helper.setGone(R.id.ll_wait, false);
+            helper.setBackgroundRes(R.id.v_device_online_status_dot, TempUtils.isDeviceOnline(deviceCategory) ? R.drawable.ic_device_online : R.drawable.ic_device_offline);
+            helper.setText(R.id.tv_device_online_status, TempUtils.isDeviceOnline(deviceCategory) ? "在线" : "离线");
+        } else {
+            helper.setVisible(R.id.ll_wait, true);
+            helper.setGone(R.id.ll_default, false);
+            helper.setText(R.id.tv_sub_2, deviceCategory.getDeviceName());
+        }
     }
 }

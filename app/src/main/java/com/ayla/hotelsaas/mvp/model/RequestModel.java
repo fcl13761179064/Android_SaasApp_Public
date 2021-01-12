@@ -934,4 +934,9 @@ public class RequestModel {
         return getApiService().roomPlanImport(body111).compose(new BaseResultTransformer<BaseResult<Void>, Void>() {
         });
     }
+
+    public Observable<Void> resetRoomPlan(long scopeId) {
+        return getApiService().resetRoomPlan(scopeId).compose(new BaseResultTransformer<BaseResult<Void>, Void>() {
+        });
+    }
 }
