@@ -1,6 +1,8 @@
 package com.ayla.hotelsaas.mvp.present;
 
 
+import android.text.TextUtils;
+
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
@@ -36,19 +38,20 @@ public class RoomPlanApplyPresenter extends BasePresenter<RoomPlanApplyView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<Void>() {
+                .subscribe(new Consumer<Object>() {
                     @Override
-                    public void accept(Void aVoid) throws Exception {
+                    public void accept(Object o) throws Exception {
                         mView.importPlanSuccess();
                     }
                 }, new UnifiedErrorConsumer() {
                     @Override
                     public void handle(Throwable throwable) throws Exception {
-                        if (throwable instanceof ServerBadException) {
-                            if (((ServerBadException) throwable).isSuccess()) {
-                                mView.importPlanSuccess();
-                            }
-                        }
+                        mView.importPlanFailed(throwable);
+                    }
+
+                    @Override
+                    public void handleDefault(Throwable throwable) throws Exception {
+
                     }
                 });
         addSubscrebe(subscribe);

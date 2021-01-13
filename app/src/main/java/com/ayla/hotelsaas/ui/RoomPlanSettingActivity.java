@@ -8,10 +8,13 @@ import androidx.annotation.Nullable;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.databinding.ActivityRoomPlanSettingBinding;
+import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.mvp.present.RoomPlanSettingPresenter;
 import com.ayla.hotelsaas.mvp.view.RoomPlanSettingView;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ShareRoomPlanDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * removeEnable ,标记是否支持删除
@@ -45,7 +48,7 @@ public class RoomPlanSettingActivity extends BaseMvpActivity<RoomPlanSettingView
 
     @Override
     protected void initView() {
-        scopeId = getIntent().getLongExtra("scopeId", 0);
+        scopeId = getIntent().getLongExtra("roomId", 0);
         hasPlan = getIntent().getBooleanExtra("hasPlan", false);
         switchPlanState();
     }
@@ -74,7 +77,7 @@ public class RoomPlanSettingActivity extends BaseMvpActivity<RoomPlanSettingView
                             .show(getSupportFragmentManager(), "dialog");
                 } else {
                     Intent intent = new Intent(RoomPlanSettingActivity.this, RoomPlanApplyActivity.class);
-                    intent.putExtra("scopeId", scopeId);
+                    intent.putExtras(getIntent());
                     startActivityForResult(intent, REQUEST_CODE_ROOM_PLAN_SETTING);
                 }
             }
@@ -96,9 +99,9 @@ public class RoomPlanSettingActivity extends BaseMvpActivity<RoomPlanSettingView
     public void resetPlanSuccess() {
         hasPlan = false;
         switchPlanState();
-
+        EventBus.getDefault().post(new DeviceAddEvent());
         Intent intent = new Intent(RoomPlanSettingActivity.this, RoomPlanApplyActivity.class);
-        intent.putExtra("scopeId", scopeId);
+        intent.putExtras(getIntent());
         startActivityForResult(intent, REQUEST_CODE_ROOM_PLAN_SETTING);
     }
 

@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.application;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -118,7 +119,7 @@ public class MyApplication extends AApplication {
 
             @Override
             public void onViewInitFinished(boolean b) {
-                Log.d(TAG, "onViewInitFinished: "+b);
+                Log.d(TAG, "onViewInitFinished: " + b);
             }
         });
     }
@@ -129,6 +130,15 @@ public class MyApplication extends AApplication {
 
     public DeviceListBean.DevicesBean getDevicesBean(String deviceId) {
         for (DeviceListBean.DevicesBean devicesBean : mDevicesBean) {
+            if (deviceId != null && deviceId.contains("@")) {
+                String pointName = deviceId.split("@")[0];
+                if (!TextUtils.isEmpty(pointName)) {
+                    DeviceListBean.DevicesBean bean = getDevicesBeanByPointName(pointName);
+                    if (bean != null) {
+                        return bean;
+                    }
+                }
+            }
             if (devicesBean.getDeviceId().equals(deviceId)) {
                 return devicesBean;
             }
@@ -136,7 +146,7 @@ public class MyApplication extends AApplication {
         return null;
     }
 
-    public DeviceListBean.DevicesBean getDevicesBeanByPointName(String pointName) {
+    private DeviceListBean.DevicesBean getDevicesBeanByPointName(String pointName) {
         for (DeviceListBean.DevicesBean devicesBean : mDevicesBean) {
             if (devicesBean.getPointName().equals(pointName)) {
                 return devicesBean;

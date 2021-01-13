@@ -8,6 +8,7 @@
     <ImageView
         android:id="@+id/left_iv"
         android:layout_width="32dp"
+        android:alpha="0.7"
         android:layout_height="32dp"
         android:layout_margin="9dp"
         tools:src="@drawable/ic_empty_device" />
@@ -22,6 +23,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="#ff333333"
+        android:alpha="0.7"
         android:textSize="14sp"
         android:textStyle="bold"
         tools:text="单路开关单路开关单路开关单路开关单路开关单路开关单路开关" />

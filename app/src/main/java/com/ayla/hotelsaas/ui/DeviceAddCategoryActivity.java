@@ -137,6 +137,10 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     }
                 }
             }
+            getIntent().removeExtra("addForWait");
+            getIntent().removeExtra("waitBindDeviceId");
+            getIntent().removeExtra("deviceCategory");
+            getIntent().removeExtra("deviceName");
         }
     }
 
@@ -194,9 +198,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
                     Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
                     mainActivity.putExtra("networkType", subBean.getNetworkType());
+                    mainActivity.putExtras(getIntent());
                     mainActivity.putExtra("deviceId", gateway.getDeviceId());
                     mainActivity.putExtra("cuId", gateway.getCuId());
-                    mainActivity.putExtras(getIntent());
                     mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                     mainActivity.putExtra("deviceName", subBean.getDeviceName());
                     mainActivity.putExtra("categoryId", subBean.getId());
@@ -229,9 +233,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
                     Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
                     mainActivity.putExtra("networkType", subBean.getNetworkType());
+                    mainActivity.putExtras(getIntent());
                     mainActivity.putExtra("deviceId", gateway.getDeviceId());
                     mainActivity.putExtra("cuId", gateway.getCuId());
-                    mainActivity.putExtras(getIntent());
                     mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                     mainActivity.putExtra("deviceName", subBean.getDeviceName());
                     mainActivity.putExtra("categoryId", subBean.getId());
@@ -241,8 +245,8 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 }
             } else {//多个网关
                 Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
-                mainActivity.putExtras(getIntent());
                 mainActivity.putExtra("networkType", subBean.getNetworkType());
+                mainActivity.putExtras(getIntent());
                 mainActivity.putExtra("cuId", subBean.getCuId());
                 mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                 mainActivity.putExtra("deviceName", subBean.getDeviceName());

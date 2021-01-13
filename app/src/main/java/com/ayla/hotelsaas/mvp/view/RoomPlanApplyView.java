@@ -11,4 +11,6 @@ import com.ayla.hotelsaas.base.BaseView;
  */
 public interface RoomPlanApplyView extends BaseView {
     void importPlanSuccess();
+
+    void importPlanFailed(Throwable throwable);
 }

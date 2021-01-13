@@ -273,7 +273,7 @@ public interface ApiService {
      * @return
      */
     @POST("/api/v1/build/batch/import")
-    Observable<BaseResult<Void>> roomPlanImport(@Body RequestBody body);
+    Observable<BaseResult<Object>> roomPlanImport(@Body RequestBody body);
 
     /**
      * 房间方案重置
@@ -281,5 +281,5 @@ public interface ApiService {
      * @return
      */
     @POST("/api/v1/build/device/remove/{roomId}")
-    Observable<BaseResult<Void>> resetRoomPlan(@Path("roomId") long roomId);
+    Observable<BaseResult<Object>> resetRoomPlan(@Path("roomId") long roomId);
 }

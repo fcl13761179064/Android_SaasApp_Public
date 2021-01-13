@@ -926,18 +926,18 @@ public class RequestModel {
         });
     }
 
-    public Observable<Void> roomPlanImport(long scopeId, String shareCode) {
+    public Observable<Object> roomPlanImport(long scopeId, String shareCode) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("scopeId", scopeId);
         jsonObject.addProperty("shareCode", shareCode);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().roomPlanImport(body111).compose(new BaseResultTransformer<BaseResult<Void>, Void>() {
+        return getApiService().roomPlanImport(body111).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
         });
     }
 
-    public Observable<Void> resetRoomPlan(long scopeId) {
-        return getApiService().resetRoomPlan(scopeId).compose(new BaseResultTransformer<BaseResult<Void>, Void>() {
+    public Observable<Object> resetRoomPlan(long scopeId) {
+        return getApiService().resetRoomPlan(scopeId).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
         });
     }
 }

@@ -74,22 +74,19 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
                 }
 
                 boolean needWarming = false;
-                s1:
                 for (BaseSceneBean.Action actionItem : ruleEngineBean.getActions()) {
                     if (!(actionItem instanceof BaseSceneBean.DeviceAction)) {
                         continue;
                     }
-                    String targetDeviceId = actionItem.getTargetDeviceId();
-                    for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
-                        if (devicesBean.getDeviceId().equals(targetDeviceId)) {
-                            continue s1;
-                        }
-                    }
-                    if (ruleEngineBean.getActions().size() == 1) {
-                        CustomToast.makeText(getContext(), "执行失败，设备已移除", R.drawable.ic_toast_warming);
-                        return;
-                    } else {
+                    DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(actionItem.getTargetDeviceId());
+                    if (devicesBean == null) {
                         needWarming = true;
+                        break;
+                    } else {
+                        if (devicesBean.getBindType() != 0) {
+                            needWarming = true;
+                            break;
+                        }
                     }
                 }
                 mPresenter.runRuleEngine(ruleEngineBean.getRuleId(), needWarming);
@@ -119,7 +116,7 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
 
     @Override
     public void runSceneSuccess(boolean needWarming) {
-        CustomToast.makeText(getContext(), String.format("%s%s", "执行成功", needWarming ? "，有设备已移除请检查" : ""), R.drawable.ic_success);
+        CustomToast.makeText(getContext(), String.format("%s%s", "执行成功", needWarming ? "，有异常的设备请检查" : ""), R.drawable.ic_success);
     }
 
     @Override

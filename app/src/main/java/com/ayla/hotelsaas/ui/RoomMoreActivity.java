@@ -160,7 +160,8 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
     @Override
     public void planCheckResult(boolean s) {
         Intent intent = new Intent(RoomMoreActivity.this, RoomPlanSettingActivity.class);
-        intent.putExtra("scopeId", mRoom_ID).putExtra("hasPlan", s);
+        intent.putExtras(getIntent());
+        intent.putExtra("hasPlan", s);
         startActivityForResult(intent, REQUEST_CODE_ROOM_PLAN_SETTING);
     }
 

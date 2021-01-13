@@ -97,18 +97,21 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position).getDevicesBean();
                 Intent intent;
-                if (devicesBean.isHasH5()) {
-                    intent = new Intent(getContext(), DeviceDetailH5Activity.class);
-                } else {
-                    if (devicesBean.getBindType() == 0) {
-                        intent = new Intent(getContext(), DeviceMoreActivity.class);
+                if (devicesBean.getBindType() == 0) {
+                    if (devicesBean.isHasH5()) {
+                        intent = new Intent(getContext(), DeviceDetailH5Activity.class);
                     } else {
-                        intent = new Intent(getContext(), DeviceAddCategoryActivity.class);
-                        intent.putExtra("addForWait", true);
-                        intent.putExtra("waitBindDeviceId", devicesBean.getDeviceId());
-                        intent.putExtra("deviceName", devicesBean.getDeviceName());
-                        intent.putExtra("deviceCategory", devicesBean.getDeviceCategory());
+                        intent = new Intent(getContext(), DeviceMoreActivity.class);
                     }
+                } else {
+                    if (devicesBean.getDeviceUseType() == 1) {
+                        return;
+                    }
+                    intent = new Intent(getContext(), DeviceAddCategoryActivity.class);
+                    intent.putExtra("addForWait", true);
+                    intent.putExtra("waitBindDeviceId", devicesBean.getDeviceId());
+                    intent.putExtra("deviceName", devicesBean.getDeviceName());
+                    intent.putExtra("deviceCategory", devicesBean.getDeviceCategory());
                 }
                 intent.putExtra("deviceId", devicesBean.getDeviceId());
                 intent.putExtra("scopeId", room_id);

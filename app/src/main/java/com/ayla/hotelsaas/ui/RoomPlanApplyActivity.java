@@ -9,10 +9,12 @@ import android.view.View;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.databinding.ActivityRoomPlanApplyBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.mvp.present.RoomPlanApplyPresenter;
 import com.ayla.hotelsaas.mvp.view.RoomPlanApplyView;
+import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -28,7 +30,7 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        scopeId = getIntent().getLongExtra("scopeId", 0);
+        scopeId = getIntent().getLongExtra("roomId", 0);
     }
 
     @Override
@@ -49,7 +51,10 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
 
     @Override
     protected void initView() {
-
+        int roomTypeId = getIntent().getIntExtra("roomTypeId", 0);
+        if (roomTypeId == 1) {
+            binding.tvRoomName.setText("默认房型");
+        }
     }
 
     @Override
@@ -90,5 +95,28 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
         EventBus.getDefault().post(new DeviceAddEvent());
         setResult(RESULT_OK);
         finish();
+    }
+
+    @Override
+    public void importPlanFailed(Throwable throwable) {
+        if (throwable instanceof ServerBadException) {
+            if (TextUtils.equals(((ServerBadException) throwable).getCode(), "140002")) {
+                CustomAlarmDialog.newInstance().setTitle("点位名称重复")
+                        .setContent(String.format("当前房间设备点位名称与方案点位名称【%s】重复，请修改后重试。", ((ServerBadException) throwable).getMsg()))
+                        .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                        .setDoneCallback(new CustomAlarmDialog.Callback() {
+                            @Override
+                            public void onDone(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                            }
+
+                            @Override
+                            public void onCancel(CustomAlarmDialog dialog) {
+
+                            }
+                        })
+                        .show(getSupportFragmentManager(), "dialog");
+            }
+        }
     }
 }

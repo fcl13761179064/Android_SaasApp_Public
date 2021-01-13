@@ -39,7 +39,7 @@ public class DeviceListAdapter extends BaseMultiItemQuickAdapter<DeviceListAdapt
             helper.setText(R.id.tv_device_name, devicesBean.getNickname());
         } else if (deviceItem.getItemType() == DeviceItem.item_wait_add) {
             helper.setText(R.id.tv_sub_2, devicesBean.getDeviceName());
-            helper.setText(R.id.tv_device_name, devicesBean.getDeviceName());
+            helper.setText(R.id.tv_device_name, devicesBean.getNickname());
         }
         ImageLoader.loadImg(helper.getView(R.id.device_left_iv), devicesBean.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
 

@@ -7,6 +7,7 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.utils.ImageLoader;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
@@ -43,13 +44,9 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
                 ImageLoader.loadImg(helper.getView(R.id.left_iv), devicesBean.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
                 helper.setText(R.id.tv_function_name, String.format("%s:%s", action.getFunctionName(), action.getValueName()));
                 helper.setText(R.id.tv_name, TextUtils.isEmpty(devicesBean.getNickname()) ? devicesBean.getDeviceId() : devicesBean.getNickname());
-                helper.setAlpha(R.id.left_iv, 1);
-                helper.setAlpha(R.id.tv_name, 1);
-                helper.setAlpha(R.id.tv_function_name, 1);
             }
         } else if (item.getItemType() == ActionItem.item_device_wait_add) {
-            String[] split = action.getTargetDeviceId().split("@");
-            DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBeanByPointName(split[0]);
+            DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(action.getTargetDeviceId());
             if (devicesBean != null) {
                 ImageLoader.loadImg(helper.getView(R.id.left_iv), devicesBean.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
                 helper.setText(R.id.tv_function_name, devicesBean.getDeviceName());
@@ -58,8 +55,6 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
             helper.setImageResource(R.id.left_iv, R.drawable.ic_scene_removed_device_item);
             helper.setText(R.id.tv_function_name, "无效设备");
             helper.setText(R.id.tv_name, "XXX-000-000");
-            helper.setAlpha(R.id.tv_name, 0.7f);
-            helper.setAlpha(R.id.tv_function_name, 0.7f);
         } else if (item.getItemType() == ActionItem.item_delay) {
             String rightValue = action.getRightValue();
             int seconds = 0;
@@ -79,11 +74,11 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
     }
 
     public static class ActionItem implements MultiItemEntity {
-        public static final int item_device_normal = 0;
-        public static final int item_device_removed = 1;
-        public static final int item_device_wait_add = 2;
-        public static final int item_delay = 3;
-        public static final int item_welcome = 4;
+        private static final int item_device_normal = 0;
+        private static final int item_device_removed = 1;
+        private static final int item_device_wait_add = 2;
+        private static final int item_delay = 3;
+        private static final int item_welcome = 4;
 
         public BaseSceneBean.Action action;
 
@@ -94,14 +89,15 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
         @Override
         public int getItemType() {
             if (action instanceof BaseSceneBean.DeviceAction) {
-                if (action.getTargetDeviceId().contains("@")) {
-                    return item_device_wait_add;
-                } else {
-                    if (MyApplication.getInstance().getDevicesBean(action.getTargetDeviceId()) != null) {
+                DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(action.getTargetDeviceId());
+                if (devicesBean != null) {
+                    if (devicesBean.getBindType() == 0) {
                         return item_device_normal;
                     } else {
-                        return item_device_removed;
+                        return item_device_wait_add;
                     }
+                } else {
+                    return item_device_removed;
                 }
             }
             if (action instanceof BaseSceneBean.DelayAction) {

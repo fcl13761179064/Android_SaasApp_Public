@@ -66,19 +66,14 @@ public class RoomPlanSettingPresenter extends BasePresenter<RoomPlanSettingView>
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<Void>() {
+                .subscribe(new Consumer<Object>() {
                     @Override
-                    public void accept(Void aVoid) throws Exception {
-
+                    public void accept(Object aVoid) throws Exception {
+                        mView.resetPlanSuccess();
                     }
                 }, new UnifiedErrorConsumer() {
                     @Override
                     public void handle(Throwable throwable) throws Exception {
-                        if (throwable instanceof ServerBadException) {
-                            if (((ServerBadException) throwable).isSuccess()) {
-                                mView.resetPlanSuccess();
-                            }
-                        }
                     }
                 });
         addSubscrebe(subscribe);
