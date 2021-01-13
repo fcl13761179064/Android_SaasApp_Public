@@ -69,13 +69,13 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
     private void handleJump() {
         int networkType = getIntent().getIntExtra("networkType", 0);
         if (networkType == 3) {//艾拉节点设备配网
-            Intent mainActivity = new Intent(this, ZigBeeAddActivity.class);
+            Intent mainActivity = new Intent(this, DeviceAddActivity.class);
             mainActivity.putExtras(getIntent());
             mainActivity.putExtra("networkType", 3);
             startActivityForResult(mainActivity, 0);
         }
         if (networkType == 4) {//鸿雁节点设备配网
-            Intent mainActivity = new Intent(this, ZigBeeAddActivity.class);
+            Intent mainActivity = new Intent(this, DeviceAddActivity.class);
             mainActivity.putExtras(getIntent());
             mainActivity.putExtra("networkType", 4);
             startActivityForResult(mainActivity, 0);

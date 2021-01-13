@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:center_tv="我的项目"
-        app:left_iv="@mipmap/person_center" />
+        app:left_iv="@drawable/person_center" />
 
     <RelativeLayout
         android:layout_width="match_parent"

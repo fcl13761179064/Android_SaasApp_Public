@@ -12,10 +12,9 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.TouchPanelSelectAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.TouchPanelBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
-import com.ayla.hotelsaas.fragment.DeviceListFragment;
+import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
 import com.ayla.hotelsaas.mvp.present.TourchPanelSelectPresenter;
 import com.ayla.hotelsaas.mvp.view.TourchPanelSelectView;
 import com.ayla.hotelsaas.widget.AppBar;
@@ -43,7 +42,6 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
     protected int getLayoutId() {
         return R.layout.touch_panel_select_layout;
     }
-
 
     @Override
     protected void initView() {
@@ -129,7 +127,7 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
                     TouchPanelBean touchPanelBean = dataList.get(btn_position);
                     touchPanelBean.setPictureCodeId(id);
                     touchPanelBean.setPictureCode(propertyValue);
-                    touchPanelBean.setIconRes(DeviceListFragment.drawableIcon[Integer.parseInt(propertyValue) - 1]);
+                    touchPanelBean.setIconRes(DeviceListContainerFragment.drawableIcon[Integer.parseInt(propertyValue) - 1]);
                 } catch (Exception ignored) {
                 }
             }
@@ -150,7 +148,7 @@ public class TouchPanelSelectActivity extends BaseMvpActivity<TourchPanelSelectV
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1001 && resultCode == RESULT_OK) {
             mPresenter.getTouchPanelData(1, deviceId);
-        }else if (requestCode == 1002 && resultCode == RESULT_OK){
+        } else if (requestCode == 1002 && resultCode == RESULT_OK) {
             finish();
         }
     }

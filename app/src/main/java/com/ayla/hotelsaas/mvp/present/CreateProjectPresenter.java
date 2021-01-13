@@ -1,7 +1,8 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.data.net.ServerBadException;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.CreateProjectView;
 
@@ -28,15 +29,24 @@ public class CreateProjectPresenter extends BasePresenter<CreateProjectView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<BaseResult>() {
+                .subscribe(new Consumer<Object>() {
                     @Override
-                    public void accept(BaseResult baseResult) throws Exception {
+                    public void accept(Object o) throws Exception {
                         mView.onSuccess();
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        mView.onFailed(throwable);
+                    public void handle(Throwable throwable) throws Exception {
+                        if (throwable instanceof ServerBadException) {
+                            if (((ServerBadException) throwable).isSuccess()) {
+                                mView.onSuccess();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public String getDefaultErrorMsg() {
+                        return "创建失败";
                     }
                 });
         addSubscrebe(subscribe);

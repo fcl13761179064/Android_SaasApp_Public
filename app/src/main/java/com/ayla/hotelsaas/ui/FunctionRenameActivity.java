@@ -17,7 +17,6 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.FunctionRenamePresenter;
 import com.ayla.hotelsaas.mvp.view.FunctionRenameView;
-
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -137,7 +136,6 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
 
     @Override
     public void renameFailed() {
-        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming);
     }
 
     private void loadData() {

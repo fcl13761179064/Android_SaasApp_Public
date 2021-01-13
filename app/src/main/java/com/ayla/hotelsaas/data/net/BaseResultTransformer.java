@@ -2,6 +2,9 @@ package com.ayla.hotelsaas.data.net;
 
 import com.ayla.hotelsaas.bean.BaseResult;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
@@ -16,9 +19,18 @@ public abstract class BaseResultTransformer<Upstream extends BaseResult<Downstre
             @Override
             public ObservableSource<Downstream> apply(@NonNull Upstream upstream) throws Exception {
                 if (upstream.isSuccess()) {
-                    return Observable.just(upstream.data);
+                    if (upstream.data != null) {
+                        return Observable.just(upstream.data);
+                    } else {
+                        Type DownstreamType = ((ParameterizedType) BaseResultTransformer.this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+                        if (Object.class.equals(DownstreamType)) {
+                            return Observable.just(((Downstream) new Object()));
+                        } else if (Boolean.class.equals(DownstreamType)) {
+                            return Observable.just(((Downstream) new Boolean(true)));
+                        }
+                    }
                 }
-                return Observable.error(new RxjavaFlatmapThrowable(upstream.code, upstream.msg));
+                return Observable.error(new ServerBadException(upstream));
             }
         });
     }

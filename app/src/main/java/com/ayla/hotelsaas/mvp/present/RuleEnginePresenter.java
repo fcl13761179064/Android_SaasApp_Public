@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.RuleEngineView;
@@ -50,9 +51,9 @@ public class RuleEnginePresenter extends BasePresenter<RuleEngineView> {
                     public void accept(List<BaseSceneBean> baseSceneBeans) throws Exception {
                         mView.loadDataSuccess(baseSceneBeans);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void handle(Throwable throwable) throws Exception {
                         mView.loadDataFailed(throwable);
                     }
                 });

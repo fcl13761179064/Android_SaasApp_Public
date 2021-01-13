@@ -10,8 +10,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.bean.TouchPanelDataBean;
-import com.ayla.hotelsaas.data.net.RxjavaObserver;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneSettingView;
@@ -29,7 +28,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -73,7 +71,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
     }
 
     public void deleteScene(long ruleId) {
-        RequestModel.getInstance()
+        Disposable subscribe = RequestModel.getInstance()
                 .deleteRuleEngine(ruleId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -89,22 +87,22 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new RxjavaObserver<Boolean>() {
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        addSubscrebe(d);
-                    }
-
-                    @Override
-                    public void _onNext(Boolean data) {
+                    public void accept(Boolean aBoolean) throws Exception {
                         mView.deleteSuccess();
                     }
+                }, new UnifiedErrorConsumer() {
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
+                    }
 
                     @Override
-                    public void _onError(String code, String msg) {
-                        mView.deleteFailed();
+                    public String getDefaultErrorMsg() {
+                        return "删除失败";
                     }
                 });
+        addSubscrebe(subscribe);
     }
 
     public void loadFunctionDetail(List<BaseSceneBean.DeviceCondition> conditionItems, List<BaseSceneBean.Action> actionItems) {
