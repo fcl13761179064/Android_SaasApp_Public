@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.GatewayAddPresenter;
+import com.ayla.hotelsaas.base.BasePresenter;
 
 import butterknife.OnClick;
 
@@ -21,7 +21,7 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
     private final int REQUEST_CODE_FOR_DSN_SCAN = 0X12;
 
     @Override
-    protected GatewayAddPresenter initPresenter() {
+    protected BasePresenter initPresenter() {
         return null;
     }
 
@@ -50,15 +50,15 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == REQUEST_CODE_FOR_DSN_SCAN || requestCode == REQUEST_CODE_FOR_DSN_INPUT) && resultCode == RESULT_OK) {//获取到了DSN
             if (data != null) {
-                String dsn = data.getStringExtra("result").trim();
-                if (!TextUtils.isEmpty(dsn)) {
-                    if (dsn.startsWith("Lark_DSN:") && dsn.endsWith("##")) {
-                        dsn = dsn.substring(9, dsn.length() - 2).trim();
+                String deviceId = data.getStringExtra("result").trim();
+                if (!TextUtils.isEmpty(deviceId)) {
+                    if (deviceId.startsWith("Lark_DSN:") && deviceId.endsWith("##")) {
+                        deviceId = deviceId.substring(9, deviceId.length() - 2).trim();
                     }
-                    if (!TextUtils.isEmpty(dsn)) {
-                        Intent mainActivity = new Intent(this, GatewayAddActivity.class);
-                        mainActivity.putExtra("networkType",2);
-                        mainActivity.putExtra("dsn", dsn);
+                    if (!TextUtils.isEmpty(deviceId)) {
+                        Intent mainActivity = new Intent(this, DeviceAddActivity.class);
+                        mainActivity.putExtra("networkType", 2);
+                        mainActivity.putExtra("deviceId", deviceId);
                         mainActivity.putExtras(getIntent());
                         startActivityForResult(mainActivity, REQUEST_CODE_FOR_ADD);
                         return;

@@ -133,7 +133,6 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
 
     @Override
     public void renameFailed(String msg) {
-        CustomToast.makeText(this, "修改失败", R.drawable.ic_toast_warming);
     }
 
     @Override
@@ -154,7 +153,6 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
 
     @Override
     public void removeFailed(String code, String msg) {
-        CustomToast.makeText(this, "移除失败", R.drawable.ic_toast_warming);
     }
 
     @Override

@@ -2,9 +2,10 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.ayla.hotelsaas.data.net.ServerBadException;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.PersonCenterView;
 
@@ -42,9 +43,9 @@ public class PersonCenterPresenter extends BasePresenter<PersonCenterView> {
                     public void accept(PersonCenter personCenter) throws Exception {
                         mView.getUserInfoFailSuccess(personCenter);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void handle(Throwable throwable) throws Exception {
                         mView.getUserInfoFail(throwable);
                     }
                 });
@@ -67,16 +68,19 @@ public class PersonCenterPresenter extends BasePresenter<PersonCenterView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<BaseResult<VersionUpgradeBean>>() {
+                .subscribe(new Consumer<VersionUpgradeBean>() {
                     @Override
-                    public void accept(BaseResult<VersionUpgradeBean> versionUpgradeBeanBaseResult) throws Exception {
-                        VersionUpgradeBean upgradeBean = versionUpgradeBeanBaseResult.data;
-                        mView.onVersionResult(upgradeBean);
+                    public void accept(VersionUpgradeBean versionUpgradeBean) throws Exception {
+                        mView.onVersionResult(versionUpgradeBean);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        mView.onVersionResult(null);
+                    public void handle(Throwable throwable) throws Exception {
+                        if (throwable instanceof ServerBadException) {
+                            if (((ServerBadException) throwable).isSuccess()) {
+                                mView.onVersionResult(null);
+                            }
+                        }
                     }
                 });
         addSubscrebe(subscribe);

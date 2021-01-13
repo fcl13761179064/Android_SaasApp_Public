@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.HongyanGetwayAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.GatewayAddPresenter;
+import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -42,7 +42,7 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
     private HongyanGetwayAdapter mAdapter;
 
     @Override
-    protected GatewayAddPresenter initPresenter() {
+    protected BasePresenter initPresenter() {
         return null;
     }
 
@@ -95,8 +95,8 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
 
     public void handleJump(String productKey, String deviceName) {
         discoverHelper.stopDiscoverGateway();
-        Intent intent = new Intent(this, GatewayAddActivity.class);
-        intent.putExtra("networkType",1);
+        Intent intent = new Intent(this, DeviceAddActivity.class);
+        intent.putExtra("networkType", 1);
         intent.putExtra("HYproductKey", productKey);
         intent.putExtra("HYdeviceName", deviceName);
         intent.putExtras(getIntent());

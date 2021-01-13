@@ -3,8 +3,9 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.mvp.view.DeviceListView;
+import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -16,17 +17,7 @@ import io.reactivex.schedulers.Schedulers;
  * @作者 fanchunlei
  * @时间 2020/7/14
  */
-public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
-    //页码
-    private int pageNum = 1;
-
-    /**
-     * 加载第一页
-     */
-    public void refresh(long resourceRoomId) {
-        pageNum = 1;
-        loadData(resourceRoomId);
-    }
+public class DeviceListContainerPresenter extends BasePresenter<DeviceListContainerView> {
 
     /**
      * 加载列表
@@ -35,18 +26,17 @@ public class DeviceListShowPresenter extends BasePresenter<DeviceListView> {
      */
     public void loadData(long resourceRoomId) {
         Disposable subscribe = RequestModel.getInstance()
-                .getDeviceList(resourceRoomId, pageNum, Integer.MAX_VALUE)
+                .getDeviceList(resourceRoomId, 1, Integer.MAX_VALUE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DeviceListBean>() {
                     @Override
                     public void accept(DeviceListBean deviceListBean) throws Exception {
-                        pageNum++;
                         mView.loadDataSuccess(deviceListBean);
                     }
-                }, new Consumer<Throwable>() {
+                }, new UnifiedErrorConsumer() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void handle(Throwable throwable) throws Exception {
                         mView.loadDataFinish(throwable);
                     }
                 });

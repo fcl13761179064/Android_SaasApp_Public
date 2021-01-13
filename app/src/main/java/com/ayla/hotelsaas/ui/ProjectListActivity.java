@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,17 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListAdapter;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
+import com.ayla.hotelsaas.widget.AppBar;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
-
-import java.net.UnknownHostException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -38,13 +40,31 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @BindView(R.id.RecyclerView)
     RecyclerView mRecyclerView;
+    @BindView(R.id.appBar)
+    AppBar appBar;
 
     private ProjectListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().hasExtra("upgrade")) {
+            VersionUpgradeBean versionUpgradeBean = (VersionUpgradeBean) getIntent().getSerializableExtra("upgrade");
+            Constance.saveVersionUpgradeInfo(versionUpgradeBean);
+        }
         mPresenter.refresh();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImageView imageView = appBar.findViewById(R.id.iv_left);
+        VersionUpgradeBean versionUpgradeInfo = Constance.getVersionUpgradeInfo();
+        if (versionUpgradeInfo != null) {
+            imageView.setImageResource(R.drawable.person_center_tip);
+        } else {
+            imageView.setImageResource(R.drawable.person_center);
+        }
     }
 
     @Override
@@ -140,9 +160,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else {
             mSmartRefreshLayout.setEnableRefresh(true);
             mAdapter.setEmptyView(R.layout.empty_project_list);
-            if (throwable instanceof UnknownHostException) {
-                CustomToast.makeText(this, R.string.request_not_connect, R.drawable.ic_toast_warming);
-            }
         }
         if (mSmartRefreshLayout.isRefreshing()) {
             mSmartRefreshLayout.finishRefresh(false);

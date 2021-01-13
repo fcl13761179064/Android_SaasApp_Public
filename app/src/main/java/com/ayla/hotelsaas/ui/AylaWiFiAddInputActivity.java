@@ -1,6 +1,5 @@
 package com.ayla.hotelsaas.ui;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,7 +11,7 @@ import androidx.annotation.Nullable;
 import com.aliyun.iot.aep.sdk.page.LocationUtil;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.GatewayAddPresenter;
+import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.utils.WifiUtil;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.blankj.utilcode.constant.PermissionConstants;
@@ -39,7 +38,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
     public EditText mWiFiPasswordEditText;
 
     @Override
-    protected GatewayAddPresenter initPresenter() {
+    protected BasePresenter initPresenter() {
         return null;
     }
 
@@ -140,10 +139,11 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
         } else {
             saveWifiPwd(name, pwd);
 
-            Intent intent = new Intent(this, AylaWifiAddActivity.class);
+            Intent intent = new Intent(this, DeviceAddActivity.class);
             intent.putExtra("wifiName", name);
             intent.putExtra("wifiPassword", pwd);
             intent.putExtras(getIntent());
+            intent.putExtra("networkType", 5);
             startActivityForResult(intent, REQUEST_CODE_START_ADD);
         }
     }

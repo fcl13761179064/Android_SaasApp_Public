@@ -9,7 +9,6 @@ import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.UpgradeDownloadService;
 import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
@@ -19,8 +18,6 @@ import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
-
-import java.net.UnknownHostException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -37,6 +34,14 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
     RelativeLayout rl_log_out;
     @BindView(R.id.rl_help_center)
     RelativeLayout rl_help_center;
+    @BindView(R.id.v_new_vesion)
+    View v_new_vesion;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handleVersionTip();
+    }
 
     @Override
     protected PersonCenterPresenter initPresenter() {
@@ -53,6 +58,15 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
         appBar.setCenterText("个人中心");
         tv_version_code.setText(String.format("Version:%s %s", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
         mPresenter.getUserInfo();
+    }
+
+    private void handleVersionTip() {
+        VersionUpgradeBean versionUpgradeInfo = Constance.getVersionUpgradeInfo();
+        if (versionUpgradeInfo != null) {
+            v_new_vesion.setVisibility(View.VISIBLE);
+        } else {
+            v_new_vesion.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -94,21 +108,17 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
 
     @Override
     public void getUserInfoFail(Throwable throwable) {
-        String msg = "未知错误";
-        if (throwable instanceof UnknownHostException) {
-            msg = getString(R.string.request_not_connect);
-        }
-        CustomToast.makeText(MyApplication.getContext(), msg, R.drawable.ic_toast_warming);
     }
 
     @Override
     public void getUserInfoFailSuccess(PersonCenter personCenter) {
         tv_default_username.setText(personCenter.getFullName());
-
     }
 
     @Override
     public void onVersionResult(VersionUpgradeBean baseResult) {
+        Constance.saveVersionUpgradeInfo(baseResult);
+        handleVersionTip();
         if (baseResult != null) {
             UpgradeUnifiedCode.handleUpgrade(this, baseResult);
         } else {

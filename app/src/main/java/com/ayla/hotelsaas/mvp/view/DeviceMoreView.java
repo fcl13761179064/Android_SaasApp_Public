@@ -17,7 +17,7 @@ public interface DeviceMoreView extends BaseView {
     void removeSuccess(Boolean is_rename);
 
     //失败成功
-    void removeFailed(String code, String msg);
+    void removeFailed(Throwable throwable);
 
     void cannotRenameFunction();
 

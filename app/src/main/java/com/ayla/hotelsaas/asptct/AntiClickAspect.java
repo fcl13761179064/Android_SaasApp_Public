@@ -16,6 +16,8 @@ import org.aspectj.lang.annotation.Aspect;
 public class AntiClickAspect {
     private static final String TAG = "AntiClickAspect";
 
+    private static long anti_click_timeout_millis = 400;
+
     @Around("execution(void android.view.View.OnClickListener.onClick(android.view.View))")
     public void around_OnClickListener_onClick(ProceedingJoinPoint joinPoint) throws Throwable {
         Log.d(TAG, "around_OnClickListener_onClick: " + joinPoint.getTarget() + "#" + joinPoint.getSignature().getName());
@@ -24,7 +26,7 @@ public class AntiClickAspect {
         long currentTimeMillis = System.currentTimeMillis();
         if (tag instanceof Long) {
             long out_time = currentTimeMillis - (long) tag;
-            if (out_time > 0 && out_time < 200) {
+            if (out_time > 0 && out_time < anti_click_timeout_millis) {
                 Log.e(TAG, "anti_clicked: " + joinPoint.getTarget() + "#" + joinPoint.getSignature().getName());
                 return;
             }

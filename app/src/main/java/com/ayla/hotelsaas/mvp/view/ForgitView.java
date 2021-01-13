@@ -9,21 +9,15 @@ import com.ayla.hotelsaas.base.BaseView;
  */
 public interface ForgitView extends BaseView {
 
-    //获取用户名
-    String getUserName();
-
-    //密码
-    String getYanzhengMa();
-
-    //错误提示
-    void errorShake(int type, int CycleTimes, String msg);
-
-
     //发送验证码成功
     void sendCodeSuccess(Boolean data);
 
+    void sendCodeFailed(String msg);
+
     //修改密码
     void modifyPasswordSuccess(Boolean data);
+
+    void modifyPasswordFailed(String msg);
 
     //重置密码
     void resertPasswordSuccess(Boolean data);

@@ -27,7 +27,6 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
-import com.ayla.hotelsaas.data.net.RxjavaFlatmapThrowable;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -39,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import carlwu.top.lib_device_add.exceptions.AlreadyBoundException;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
@@ -89,39 +87,43 @@ public class RequestModel {
         });
     }
 
-    public Observable<BaseResult<Boolean>> register(String user_name, String account, String password) {
+    public Observable<Boolean> register(String user_name, String account, String password) {
         JsonObject body = new JsonObject();
         body.addProperty("userName", user_name);
         body.addProperty("account", account);
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().register(new_body);
+        return getApiService().register(new_body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
 
-    public Observable<BaseResult<Boolean>> modifyForgitPassword(String user_name, String yanzhengma) {
+    public Observable<Boolean> modifyForgitPassword(String user_name, String yanzhengma) {
         JsonObject body = new JsonObject();
         body.addProperty("phone", user_name);
         body.addProperty("code", yanzhengma);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().modifyForgitPassword(new_body);
+        return getApiService().modifyForgitPassword(new_body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
 
-    public Observable<BaseResult<Boolean>> send_sms(String user_name) {
+    public Observable<Boolean> send_sms(String user_name) {
         JsonObject body = new JsonObject();
         body.addProperty("phone", user_name);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().sendSmsCode(new_body);
+        return getApiService().sendSmsCode(new_body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
 
-    public Observable<BaseResult<Boolean>> resert_passwoed(String phone, String new_password) {
+    public Observable<Boolean> resert_passwoed(String phone, String new_password) {
         JsonObject body = new JsonObject();
         body.addProperty("phone", phone);
         body.addProperty("password", new_password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().modifyOldPassword(new_body);
+        return getApiService().modifyOldPassword(new_body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
     public Observable<User> refreshToken(String refreshToken) {
@@ -174,11 +176,12 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<String>> roomRename(long roomId, String rename) {
+    public Observable<String> roomRename(long roomId, String rename) {
         JsonObject body = new JsonObject();
         body.addProperty("roomName", rename);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().roomRename(roomId, body111);
+        return getApiService().roomRename(roomId, body111).compose(new BaseResultTransformer<BaseResult<String>, String>() {
+        });
     }
 
 
@@ -187,17 +190,18 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<String>> deleteRoomNum(long roomId) {
-        return getApiService().deleteRoomNum(roomId);
+    public Observable<String> deleteRoomNum(long roomId) {
+        return getApiService().deleteRoomNum(roomId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
+        });
     }
 
     /**
      * 获取authcode
      */
-    public Observable<BaseResult<String>> getAuthCode(String roomId) {
-        return getApiService().authCode(roomId);
+    public Observable<String> getAuthCode(String roomId) {
+        return getApiService().authCode(roomId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
+        });
     }
-
 
     /**
      * 获取房间号的条数
@@ -228,8 +232,9 @@ public class RequestModel {
         });
     }
 
-    public Observable<BaseResult<List<DeviceCategoryBean>>> getDeviceCategory() {
-        return getApiService().fetchDeviceCategory();
+    public Observable<List<DeviceCategoryBean>> getDeviceCategory() {
+        return getApiService().fetchDeviceCategory().compose(new BaseResultTransformer<BaseResult<List<DeviceCategoryBean>>, List<DeviceCategoryBean>>() {
+        });
     }
 
     /**
@@ -258,20 +263,13 @@ public class RequestModel {
         body.addProperty("deviceName", deviceName);
         body.addProperty("nickName", nickName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().bindDeviceWithDSN(body111)
-                .onErrorResumeNext(new Function<Throwable, ObservableSource<? extends BaseResult<DeviceListBean.DevicesBean>>>() {
-                    @Override
-                    public ObservableSource<? extends BaseResult<DeviceListBean.DevicesBean>> apply(@NonNull Throwable throwable) throws Exception {
-                        if (throwable instanceof RxjavaFlatmapThrowable) {
-                            if (((RxjavaFlatmapThrowable) throwable).getMsg().contains("该设备已经绑定，解绑后方能重新绑定")) {
-                                return Observable.error(new AlreadyBoundException(throwable.getMessage()));
-                            }
-                        }
-                        return Observable.error(throwable);
-                    }
-                })
-                .compose(new BaseResultTransformer<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
-                });
+        return getApiService().bindDeviceWithDSN(body111).compose(new BaseResultTransformer<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
+        }).doOnNext(new Consumer<DeviceListBean.DevicesBean>() {
+            @Override
+            public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
+                devicesBean.setNickname(nickName);
+            }
+        });
     }
 
 
@@ -295,8 +293,9 @@ public class RequestModel {
      * @param deviceCategory 需要绑定节点设备的oemModel
      * @return
      */
-    public Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(String dsn, String deviceCategory) {
-        return getApiService().fetchCandidateNodes(dsn, deviceCategory);
+    public Observable<List<DeviceListBean.DevicesBean>> fetchCandidateNodes(String dsn, String deviceCategory) {
+        return getApiService().fetchCandidateNodes(dsn, deviceCategory).compose(new BaseResultTransformer<BaseResult<List<DeviceListBean.DevicesBean>>, List<DeviceListBean.DevicesBean>>() {
+        });
     }
 
     /**
@@ -374,12 +373,13 @@ public class RequestModel {
         return getApiService().runRuleEngine(body111);
     }
 
-    public Observable<BaseResult<Boolean>> deleteRuleEngine(long ruleId) {
+    public Observable<Boolean> deleteRuleEngine(long ruleId) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("ruleId", ruleId);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().deleteRuleEngine(body111);
+        return getApiService().deleteRuleEngine(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
     /**
@@ -602,9 +602,12 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<Boolean> deviceRename(String deviceId, String nickName) {
+    public Observable<Boolean> deviceRename(String deviceId, String nickName, String pointName, long regionId, String regionName) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("nickName", nickName);
+        jsonObject.addProperty("pointName", pointName);
+        jsonObject.addProperty("regionId", regionId);
+        jsonObject.addProperty("regionName", regionName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().deviceRename(deviceId, body111)
                 .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
@@ -616,7 +619,7 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> touchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue, String deviceCategory, boolean needHandleAliService) {
+    public Observable<Boolean> touchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue) {
         return Observable
                 .fromCallable(new Callable<RequestBody>() {
                     @Override
@@ -627,7 +630,7 @@ public class RequestModel {
                         if (id != 0) {
                             jsonObject.put("id", id);
                         }
-                        uploadParams.put("needHandleAliService", needHandleAliService);
+                        uploadParams.put("needHandleAliService", true);
                         jsonObject.put("deviceId", deviceId);
                         jsonObject.put("cuId", cuId);
                         jsonObject.put("propertyName", propertyName);
@@ -638,10 +641,11 @@ public class RequestModel {
                         return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
                     }
                 })
-                .flatMap(new Function<RequestBody, ObservableSource<BaseResult<Boolean>>>() {
+                .flatMap(new Function<RequestBody, ObservableSource<Boolean>>() {
                     @Override
-                    public ObservableSource<BaseResult<Boolean>> apply(RequestBody body) throws Exception {
-                        return getApiService().tourchPanelRenameAndIcon(body);
+                    public ObservableSource<Boolean> apply(RequestBody body) throws Exception {
+                        return getApiService().tourchPanelRenameAndIcon(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                        });
                     }
                 });
     }
@@ -677,13 +681,12 @@ public class RequestModel {
                         return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
                     }
                 })
-                .flatMap(new Function<RequestBody, ObservableSource<BaseResult<Boolean>>>() {
+                .flatMap(new Function<RequestBody, ObservableSource<Boolean>>() {
                     @Override
-                    public ObservableSource<BaseResult<Boolean>> apply(RequestBody body) throws Exception {
-                        return getApiService().tourchPanelRenameAndIcon(body);
+                    public ObservableSource<Boolean> apply(RequestBody body) throws Exception {
+                        return getApiService().tourchPanelRenameAndIcon(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                        });
                     }
-                })
-                .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
                 });
     }
 
@@ -692,8 +695,10 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<List<TouchPanelDataBean>>> getALlTouchPanelDeviceInfo(int cuId, String deviceId) {
-        return getApiService().touchpanelALlDevice(cuId, deviceId);
+    public Observable<List<TouchPanelDataBean>> getALlTouchPanelDeviceInfo(int cuId, String deviceId) {
+        return getApiService().touchpanelALlDevice(cuId, deviceId)
+                .compose(new BaseResultTransformer<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
+                });
     }
 
     /**
@@ -701,13 +706,14 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<Boolean>> deviceRemove(String deviceId, long scopeId, String scopeType) {
+    public Observable<Boolean> deviceRemove(String deviceId, long scopeId, String scopeType) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("deviceId", deviceId);
         jsonObject.addProperty("scopeId", scopeId + "");
         jsonObject.addProperty("scopeType", scopeType);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().removeDevice(body111);
+        return getApiService().removeDevice(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
 
@@ -798,14 +804,15 @@ public class RequestModel {
     /**
      * @return
      */
-    public Observable<BaseResult> createBill(String title, int trade, int type) {
+    public Observable<Object> createBill(String title, int trade, int type) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("title", title);
         jsonObject.addProperty("trade", trade);
         jsonObject.addProperty("type", type);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().createWorkOrder(body111);
+        return getApiService().createWorkOrder(body111).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
+        });
     }
 
     /**
@@ -813,8 +820,9 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<VersionUpgradeBean>> getAppVersion(int versionCode) {
-        return getApiService().getAppVersion(0, versionCode);
+    public Observable<VersionUpgradeBean> getAppVersion(int versionCode) {
+        return getApiService().getAppVersion(0, versionCode).compose(new BaseResultTransformer<BaseResult<VersionUpgradeBean>, VersionUpgradeBean>() {
+        });
     }
 
     public Observable<Boolean> checkRadioExists(long scopeId) {
@@ -877,13 +885,7 @@ public class RequestModel {
             @Override
             public ObservableSource<DeviceTemplateBean> apply(@NonNull Observable<DeviceTemplateBean> upstream) {
                 return upstream.zipWith(RequestModel.getInstance()
-                                .getALlTouchPanelDeviceInfo(devicesBean.getCuId(), deviceId)
-                                .map(new Function<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
-                                    @Override
-                                    public List<TouchPanelDataBean> apply(BaseResult<List<TouchPanelDataBean>> listBaseResult) throws Exception {
-                                        return listBaseResult.data;
-                                    }
-                                }),
+                                .getALlTouchPanelDeviceInfo(devicesBean.getCuId(), deviceId),
                         new BiFunction<DeviceTemplateBean, List<TouchPanelDataBean>, DeviceTemplateBean>() {
                             @Override
                             public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {

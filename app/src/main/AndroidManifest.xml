@@ -56,12 +56,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.GatewayAddActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/WhiteBgAppTheme" />
-        <activity
-            android:name=".ui.ZigBeeAddActivity"
+            android:name=".ui.DeviceAddActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -180,9 +175,6 @@
             android:name=".ui.PersonCenterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.AylaWifiAddActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.AylaWiFiAddInputActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -206,6 +198,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SwitchUsageSettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.DeviceAddSuccessActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.PointAndRegionActivity"
             android:screenOrientation="portrait" />
 
         <service

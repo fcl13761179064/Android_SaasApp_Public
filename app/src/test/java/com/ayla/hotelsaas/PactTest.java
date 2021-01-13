@@ -507,7 +507,7 @@ public class PactTest {
                     @Override
                     public ObservableSource<?> apply(Object o) throws Exception {
                         return RequestModel.getInstance()
-                                .deviceRename("232332323223", "开关");
+                                .deviceRename(deviceId, nickName, "232332323223", regionId, "开关");
                     }
                 })//绑定设备
                 .concatMap(new Function<Object, ObservableSource<?>>() {
