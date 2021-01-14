@@ -131,7 +131,7 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
         if (RegexUtils.isMobileSimple(userName)) {
             mPresenter.modifyforgit(userName, yanzhengma);
         } else {
-            CustomToast.makeText(MyApplication.getContext(), R.string.account_forgit_password, R.drawable.ic_toast_warming);
+            CustomToast.makeText(this, R.string.account_forgit_password, R.drawable.ic_toast_warming);
         }
     }
 

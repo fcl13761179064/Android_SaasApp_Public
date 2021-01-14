@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.data.net;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.ui.CustomToast;
+import com.blankj.utilcode.util.Utils;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -26,7 +27,7 @@ public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
                 return;
             }
         }
-        CustomToast.makeText(getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
+        CustomToast.makeText(Utils.getApp(), getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
     }
 
     private String getLocalErrorMsg(String defaultMsg, Throwable throwable) {

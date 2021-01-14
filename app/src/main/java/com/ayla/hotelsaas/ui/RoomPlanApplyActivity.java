@@ -74,7 +74,7 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
     protected void appBarRightTvClicked() {
         String linkage = binding.editText.getText().toString();
         if (TextUtils.isEmpty(linkage)) {
-            CustomToast.makeText("请输入链接", R.drawable.ic_toast_warming);
+            CustomToast.makeText(this, "请输入链接", R.drawable.ic_toast_warming);
         } else {
             mPresenter.applyPlan(scopeId, linkage);
         }
@@ -91,7 +91,7 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
 
     @Override
     public void importPlanSuccess() {
-        CustomToast.makeText("导入成功", R.drawable.ic_success);
+        CustomToast.makeText(this, "导入成功", R.drawable.ic_success);
         EventBus.getDefault().post(new DeviceAddEvent());
         setResult(RESULT_OK);
         finish();

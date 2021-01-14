@@ -90,7 +90,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             return;
         }
         if (!RegexUtils.isEmail(account) && !RegexUtils.isMobileSimple(account)) {
-            CustomToast.makeText(MyApplication.getContext(), R.string.account_error, R.drawable.ic_toast_warming);
+            CustomToast.makeText(this, R.string.account_error, R.drawable.ic_toast_warming);
             return;
         }
         SoftInputUtil.hideSysSoftInput(LoginActivity.this);
