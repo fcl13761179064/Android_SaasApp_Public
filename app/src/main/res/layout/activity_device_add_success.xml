@@ -86,7 +86,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:gravity="right|center_vertical"
@@ -96,11 +95,6 @@
                 android:textSize="14sp"
                 tools:text="客厅" />
 
-            <ImageView
-                android:layout_width="8dp"
-                android:layout_height="14dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_menu_item_arrow_right" />
         </LinearLayout>
 
         <LinearLayout

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:center_tv="我的项目"
-        app:left_iv="@mipmap/person_center" />
+        app:left_iv="@drawable/person_center" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginRight="28dp"
             android:layout_marginBottom="122dp"
-            android:background="@drawable/green_btn_bg"
+            android:background="@drawable/green_btn_bg_small_corner"
             android:src="@mipmap/add_device_btn"
             app:fabSize="mini"
             app:maxImageSize="18dp" />

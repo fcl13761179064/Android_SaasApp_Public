@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <include layout="@layout/item_device_categorylist" />
+    <include layout="@layout/item_device_list" />
 
     <ImageView
         android:id="@+id/iv_right_arrow"

@@ -17,9 +17,9 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.databinding.FragmentDeviceListNewBinding;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
 import com.ayla.hotelsaas.ui.DeviceDetailH5Activity;
 import com.ayla.hotelsaas.ui.DeviceMoreActivity;
-import com.ayla.hotelsaas.ui.TouchPanelActivity;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -27,6 +27,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeviceListFragmentNew extends BaseMvpFragment {
@@ -84,7 +85,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
             }
         });
 
-        mAdapter = new DeviceListAdapter();
+        mAdapter = new DeviceListAdapter(null);
         mAdapter.bindToRecyclerView(binding.deviceRecyclerview);
         mAdapter.setEmptyView(R.layout.layout_loading);
     }
@@ -94,31 +95,41 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position);
-                if (devicesBean.getCuId() == 1 && "a1UR1BjfznK".equals(devicesBean.getDeviceCategory())) {
-                    Intent intent = new Intent(getContext(), TouchPanelActivity.class);
-                    intent.putExtra("deviceId", devicesBean.getDeviceId());
-                    intent.putExtra("scopeId", room_id);
-                    intent.putExtra("pannel_type", "1");
-                    startActivity(intent);
-                } else if (devicesBean.isHasH5()) {
-                    Intent intent = new Intent(getContext(), DeviceDetailH5Activity.class);
-                    intent.putExtra("deviceId", devicesBean.getDeviceId());
-                    intent.putExtra("scopeId", room_id);
-                    startActivity(intent);
+                final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position).getDevicesBean();
+                Intent intent;
+                if (devicesBean.getBindType() == 0) {
+                    if (devicesBean.isHasH5()) {
+                        intent = new Intent(getContext(), DeviceDetailH5Activity.class);
+                    } else {
+                        intent = new Intent(getContext(), DeviceMoreActivity.class);
+                    }
                 } else {
-                    Intent intent = new Intent(getContext(), DeviceMoreActivity.class);
-                    intent.putExtra("deviceId", devicesBean.getDeviceId());
-                    intent.putExtra("scopeId", room_id);
-                    startActivity(intent);
+                    if (devicesBean.getDeviceUseType() == 1) {
+                        return;
+                    }
+                    intent = new Intent(getContext(), DeviceAddCategoryActivity.class);
+                    intent.putExtra("addForWait", true);
+                    intent.putExtra("waitBindDeviceId", devicesBean.getDeviceId());
+                    intent.putExtra("deviceName", devicesBean.getDeviceName());
+                    intent.putExtra("deviceCategory", devicesBean.getDeviceCategory());
                 }
+                intent.putExtra("deviceId", devicesBean.getDeviceId());
+                intent.putExtra("scopeId", room_id);
+                startActivity(intent);
             }
         });
     }
 
     @Override
     protected void initData() {
-        mAdapter.setNewData(devices);
+        if (devices != null) {
+            List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
+            for (DeviceListBean.DevicesBean devicesBean : devices) {
+                DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
+                deviceItems.add(deviceItem);
+            }
+            mAdapter.setNewData(deviceItems);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

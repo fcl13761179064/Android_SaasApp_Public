@@ -46,13 +46,12 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
                     }
 
                     @Override
-                    public String getLocalErrorMsg(Throwable throwable) {
-                        return super.getLocalErrorMsg("修改失败", throwable);
+                    public String getDefaultErrorMsg() {
+                        return "修改失败";
                     }
                 });
         addSubscrebe(subscribe);
     }
-
 
     public void deleteRoomNum(long room_id) {
         Disposable subscribe = RequestModel.getInstance().deleteRoomNum(room_id)
@@ -82,11 +81,41 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
                     }
 
                     @Override
-                    public String getLocalErrorMsg(Throwable throwable) {
-                        return super.getLocalErrorMsg("移除失败", throwable);
+                    public String getDefaultErrorMsg() {
+                        return "移除失败";
                     }
                 });
         addSubscrebe(subscribe);
     }
 
+    public void checkPlan(long scopeId) {
+        Disposable subscribe = RequestModel.getInstance()
+                .roomPlanCheck(scopeId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean s) throws Exception {
+                        mView.planCheckResult(s);
+                    }
+                }, new UnifiedErrorConsumer() {
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
+
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
 }

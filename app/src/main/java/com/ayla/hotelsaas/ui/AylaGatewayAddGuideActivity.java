@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.GatewayAddPresenter;
+import com.ayla.hotelsaas.base.BasePresenter;
 
 import butterknife.OnClick;
 
@@ -21,7 +21,7 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
     private final int REQUEST_CODE_FOR_DSN_SCAN = 0X12;
 
     @Override
-    protected GatewayAddPresenter initPresenter() {
+    protected BasePresenter initPresenter() {
         return null;
     }
 
@@ -57,9 +57,9 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
                     }
                     if (!TextUtils.isEmpty(deviceId)) {
                         Intent mainActivity = new Intent(this, DeviceAddActivity.class);
-                        mainActivity.putExtra("networkType",2);
-                        mainActivity.putExtra("deviceId", deviceId);
                         mainActivity.putExtras(getIntent());
+                        mainActivity.putExtra("networkType", 2);
+                        mainActivity.putExtra("deviceId", deviceId);
                         startActivityForResult(mainActivity, REQUEST_CODE_FOR_ADD);
                         return;
                     }

@@ -109,7 +109,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="30dp"
-                android:background="@drawable/green_btn_bg"
+                android:background="@drawable/green_btn_bg_small_corner"
                 android:text="@string/login_btn"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />

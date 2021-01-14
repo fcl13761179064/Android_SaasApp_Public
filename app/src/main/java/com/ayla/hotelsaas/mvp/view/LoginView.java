@@ -18,7 +18,7 @@ public interface LoginView extends BaseView {
 
     void shouldForceUpgrade(VersionUpgradeBean versionUpgradeBean);
 
-    void notForceUpgrade();
+    void notForceUpgrade(VersionUpgradeBean versionUpgradeBean);
 
     void checkVersionFailed(Throwable throwable);
 }

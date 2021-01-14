@@ -157,6 +157,7 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
             String roomName = treeListBean.getContentName();
             intent.putExtra("roomId", roomId);
             intent.putExtra("roomName", roomName);
+            intent.putExtra("roomTypeId", treeListBean.getRoomTypeId());
             intent.putExtra("removeEnable", bean.getType() != 0);//展箱、展厅 说明是自己创建的。
             startActivity(intent);
         } else {

@@ -13,7 +13,7 @@ public class TempUtils {
         if (devicesBean == null) {
             return false;
         }
-        return devicesBean.getConnectTypeId() == 1;
+        return devicesBean.getBindType() == 0 && devicesBean.getConnectTypeId() == 1;
     }
 
     /**
@@ -31,6 +31,7 @@ public class TempUtils {
 
     /**
      * 判断是否为艾拉的红外遥控器 家电虚拟遥控器
+     *
      * @param deviceBean
      * @return
      */
@@ -43,6 +44,7 @@ public class TempUtils {
 
     /**
      * 判断是否为 开关用途设备
+     *
      * @param deviceBean
      * @return
      */

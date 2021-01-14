@@ -308,8 +308,7 @@ public abstract class BaseSceneBean implements Serializable {
         }
     }
 
-    public static class DeviceAction extends Action implements Serializable{
-
+    public static class DeviceAction extends Action implements Serializable {
     }
 
     public static class DelayAction extends Action {

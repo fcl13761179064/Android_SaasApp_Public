@@ -16,6 +16,7 @@ import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.ZigBeeAddPresenter;
 import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
 
@@ -118,6 +119,7 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         long scopeId = getIntent().getLongExtra("scopeId", 0);
         String deviceCategory = getIntent().getStringExtra("deviceCategory");
         String deviceName = getIntent().getStringExtra("deviceName");
+        String waitBindDeviceId = getIntent().getStringExtra("waitBindDeviceId");
 
         if (networkType == 1) {//鸿雁网关
             mPresenter.bindHongYanGateway((AApplication) getApplication(),
@@ -126,28 +128,32 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                     deviceCategory,
                     deviceName,
                     getIntent().getStringExtra("HYproductKey"),
-                    getIntent().getStringExtra("HYdeviceName"));
+                    getIntent().getStringExtra("HYdeviceName"),
+                    waitBindDeviceId);
         } else if (networkType == 2) {//顺舟网关
             mPresenter.bindAylaGateway(
                     getIntent().getStringExtra("deviceId"),
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName);
+                    deviceName,
+                    waitBindDeviceId);
         } else if (networkType == 3) {//艾拉节点
             mPresenter.bindAylaNode(
                     getIntent().getStringExtra("deviceId"),
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName);
+                    deviceName,
+                    waitBindDeviceId);
         } else if (networkType == 4) {//鸿雁节点
             mPresenter.bindHongYanNode(
                     getIntent().getStringExtra("deviceId"),
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName);
+                    deviceName,
+                    waitBindDeviceId);
         } else if (networkType == 5) {//艾拉WiFi
             mPresenter.bindAylaWiFi(
                     getIntent().getStringExtra("wifiName"),
@@ -155,7 +161,8 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName);
+                    deviceName,
+                    waitBindDeviceId);
         }
     }
 
@@ -215,9 +222,9 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     }
 
     @Override
-    public void bindSuccess(String deviceId, String deviceName) {
+    public void bindSuccess(DeviceListBean.DevicesBean devicesBean) {
         startActivityForResult(new Intent(this, DeviceAddSuccessActivity.class)
-                        .putExtra("deviceId", deviceId).putExtra("deviceName", deviceName),
+                        .putExtra("device",devicesBean),
                 REQUEST_CODE_ADD_SUCCESS);
     }
 

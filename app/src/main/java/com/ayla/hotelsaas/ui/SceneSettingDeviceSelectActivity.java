@@ -61,7 +61,7 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     protected void initView() {
         appBar.setCenterText("选择设备");
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new SceneSettingDeviceSelectAdapter(R.layout.item_device_categorylist);
+        mAdapter = new SceneSettingDeviceSelectAdapter(R.layout.item_device_list);
         mAdapter.bindToRecyclerView(mRecyclerView);
         mAdapter.setEmptyView(R.layout.empty_device_order);
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {

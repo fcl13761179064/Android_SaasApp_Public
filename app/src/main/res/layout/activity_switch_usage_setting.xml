@@ -83,6 +83,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="17dp"
+                android:gravity="right"
+                android:hint="点击输入名称"
                 android:textColor="#ff666666"
                 android:textSize="16sp"
                 tools:text="大灯" />
@@ -138,7 +140,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="52dp"
-        android:background="@drawable/green_btn_bg"
+        android:background="@drawable/green_btn_bg_small_corner"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

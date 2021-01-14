@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import com.aliyun.iot.aep.sdk.page.LocationUtil;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.mvp.present.GatewayAddPresenter;
+import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.utils.WifiUtil;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.blankj.utilcode.constant.PermissionConstants;
@@ -38,7 +38,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
     public EditText mWiFiPasswordEditText;
 
     @Override
-    protected GatewayAddPresenter initPresenter() {
+    protected BasePresenter initPresenter() {
         return null;
     }
 
