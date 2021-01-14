@@ -81,6 +81,9 @@ public class DeviceCategoryBean {
             private String pid;
             private String productModel;
             private String productName;
+            /**
+             * 产品来源：0 艾拉云 1 阿里云
+             */
             private int source;
             private int productType;
             private int isNeedGateway;
@@ -198,10 +201,15 @@ public class DeviceCategoryBean {
 
         @Deprecated
         private String deviceName;
+        @Deprecated
         private int cuId;
+        @Deprecated
         private int deviceConnectType;//1、网关设备 2、节点设备 3、wifi设备
+        @Deprecated
         private int networkType;//1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉zigbee配网 4、鸿雁节点 5、艾拉wifi设备
+        @Deprecated
         private String icon;
+        @Deprecated
         private String oemModel;
 
         public long getId() {
