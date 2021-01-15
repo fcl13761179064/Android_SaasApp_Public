@@ -75,12 +75,6 @@ public class TempUtils {
                 msg = serverMsg;
             }
 
-            switch (((ServerBadException) throwable).getCode()) {
-                case "122001":
-                    msg = "登录过期";
-                    break;
-            }
-
             if (serverMsg != null && serverMsg.contains("该设备已经绑定，解绑后方能重新绑定")) {
                 msg = "该设备已在别处绑定，请先解绑后再重试";
             } else if ("Devices with the same device name under the same resource".equals(serverMsg)) {
@@ -91,6 +85,15 @@ public class TempUtils {
                 msg = "设备解绑失败";
             } else if ("Get device register candidates error,not_found ".equals(serverMsg)) {
                 msg = "未发现可绑定的节点设备";
+            }
+
+            switch (((ServerBadException) throwable).getCode()) {
+                case "122001":
+                    msg = "登录过期";
+                    break;
+                case "210000":
+                    msg = "检测到方案和当前房型不一致，请更换方案";
+                    break;
             }
         } else if (throwable instanceof SelfMsgException) {
             msg = throwable.getLocalizedMessage();
