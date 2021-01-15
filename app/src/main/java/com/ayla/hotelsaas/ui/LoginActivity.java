@@ -27,6 +27,7 @@ import com.ayla.hotelsaas.mvp.view.LoginView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.SoftInputUtil;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
 import com.blankj.utilcode.util.RegexUtils;
 
@@ -157,27 +158,31 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     }
 
     @Override
-    public void loginFailed(String msg) {
-        errorShake(0, 2, msg);
+    public void loginFailed(Throwable throwable) {
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
+        errorShake(0, 2, TempUtils.getLocalErrorMsg(throwable));
     }
 
     @Override
-    public void shouldForceUpgrade(VersionUpgradeBean versionUpgradeBean) {
-        UpgradeUnifiedCode.handleUpgrade(this, versionUpgradeBean);
+    public void checkVersionFailed(Throwable throwable) {
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
     }
 
     @Override
-    public void notForceUpgrade(VersionUpgradeBean versionUpgradeBean) {
+    public void checkVersionSuccess(VersionUpgradeBean versionUpgradeBean) {
+        if (versionUpgradeBean != null) {
+            if (versionUpgradeBean.getIsForce() != 0) {
+                UpgradeUnifiedCode.handleUpgrade(this, versionUpgradeBean);
+                return;
+            }
+        }
+
         upgradeBean = versionUpgradeBean;
 
         String account = edite_count.getText().toString();
         String password = edit_password.getText().toString();
 
         mPresenter.login(account, password);
-    }
-
-    @Override
-    public void checkVersionFailed(Throwable throwable) {
     }
 
     private void errorShake(int type, int CycleTimes, String msg) {

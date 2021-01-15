@@ -5,7 +5,6 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.data.net.ServerBadException;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.LoginView;
 
@@ -44,10 +43,10 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                     public void accept(User user) throws Exception {
                         mView.loginSuccess(user);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        mView.loginFailed(getLocalErrorMsg(throwable));
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.loginFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);
@@ -72,22 +71,16 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                 .subscribe(new Consumer<VersionUpgradeBean>() {
                     @Override
                     public void accept(VersionUpgradeBean versionUpgradeBean) throws Exception {
-                        if (versionUpgradeBean.getIsForce() != 0) {
-                            mView.shouldForceUpgrade(versionUpgradeBean);
-                        } else {
-                            mView.notForceUpgrade(versionUpgradeBean);
-                        }
+                        mView.checkVersionSuccess(versionUpgradeBean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        if (throwable instanceof ServerBadException) {
-                            if (((ServerBadException) throwable).isSuccess()) {
-                                mView.notForceUpgrade(null);
-                                return;
-                            }
+                    public void accept(Throwable throwable) throws Exception {
+                        if (throwable instanceof ServerBadException && ((ServerBadException) throwable).isSuccess()) {
+                            mView.checkVersionSuccess(null);
+                        } else {
+                            mView.checkVersionFailed(throwable);
                         }
-                        mView.checkVersionFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);

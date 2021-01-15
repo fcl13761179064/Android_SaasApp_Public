@@ -5,7 +5,6 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.data.net.ServerBadException;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.PersonCenterView;
 
@@ -43,9 +42,9 @@ public class PersonCenterPresenter extends BasePresenter<PersonCenterView> {
                     public void accept(PersonCenter personCenter) throws Exception {
                         mView.getUserInfoFailSuccess(personCenter);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) throws Exception {
                         mView.getUserInfoFail(throwable);
                     }
                 });
@@ -73,13 +72,13 @@ public class PersonCenterPresenter extends BasePresenter<PersonCenterView> {
                     public void accept(VersionUpgradeBean versionUpgradeBean) throws Exception {
                         mView.onVersionResult(versionUpgradeBean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        if (throwable instanceof ServerBadException) {
-                            if (((ServerBadException) throwable).isSuccess()) {
-                                mView.onVersionResult(null);
-                            }
+                    public void accept(Throwable throwable) throws Exception {
+                        if (throwable instanceof ServerBadException && ((ServerBadException) throwable).isSuccess()) {
+                            mView.onVersionResult(null);
+                        }else{
+                            mView.onVersionCheckFailed(throwable);
                         }
                     }
                 });

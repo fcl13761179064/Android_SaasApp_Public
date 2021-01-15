@@ -3,7 +3,6 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
 
@@ -34,9 +33,9 @@ public class DeviceListContainerPresenter extends BasePresenter<DeviceListContai
                     public void accept(DeviceListBean deviceListBean) throws Exception {
                         mView.loadDataSuccess(deviceListBean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) throws Exception {
                         mView.loadDataFinish(throwable);
                     }
                 });

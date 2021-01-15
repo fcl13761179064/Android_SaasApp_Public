@@ -15,6 +15,7 @@ import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.mvp.present.PersonCenterPresenter;
 import com.ayla.hotelsaas.mvp.view.PersonCenterView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
@@ -124,6 +125,11 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
         } else {
             CustomToast.makeText(this, "当前已是最新版本", R.drawable.ic_toast_warming);
         }
+    }
+
+    @Override
+    public void onVersionCheckFailed(Throwable throwable) {
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
     }
 
     @OnClick(R.id.rl_check_upgrade)

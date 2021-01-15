@@ -12,16 +12,18 @@ public interface ForgitView extends BaseView {
     //发送验证码成功
     void sendCodeSuccess(Boolean data);
 
-    void sendCodeFailed(String msg);
+    void sendCodeFailed(Throwable msg);
 
     //修改密码
     void modifyPasswordSuccess(Boolean data);
 
-    void modifyPasswordFailed(String msg);
+    void modifyPasswordFailed(Throwable msg);
 
     //重置密码
     void resertPasswordSuccess(Boolean data);
 
     //重置密码
     String resetPassword();
+
+    void resertPasswordFailed(Throwable throwable);
 }

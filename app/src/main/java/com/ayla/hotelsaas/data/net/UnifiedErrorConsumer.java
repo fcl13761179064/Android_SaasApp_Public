@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
 
 import io.reactivex.functions.Consumer;
 
+@Deprecated
 public abstract class UnifiedErrorConsumer implements Consumer<Throwable> {
     @Override
     public final void accept(Throwable throwable) throws Exception {

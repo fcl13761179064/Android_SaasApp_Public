@@ -2,10 +2,8 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.data.net.ServerBadException;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SplashView;
 
@@ -31,21 +29,14 @@ public class SplashPresenter extends BasePresenter<SplashView> {
                     public void accept(VersionUpgradeBean versionUpgradeBean) throws Exception {
                         mView.onVersionResult(true, versionUpgradeBean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handleDefault(Throwable throwable) throws Exception {
-
-                    }
-
-                    @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        if (throwable instanceof ServerBadException) {
-                            if (((ServerBadException) throwable).isSuccess()) {
-                                mView.onVersionResult(true, null);
-                                return;
-                            }
+                    public void accept(Throwable throwable) throws Exception {
+                        if (throwable instanceof ServerBadException && ((ServerBadException) throwable).isSuccess()) {
+                            mView.onVersionResult(true, null);
+                        } else {
+                            mView.onVersionResult(false, null);
                         }
-                        mView.onVersionResult(false, null);
                     }
                 });
         addSubscrebe(subscribe);

@@ -14,6 +14,7 @@ import com.ayla.hotelsaas.databinding.ActivityRoomPlanApplyBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.mvp.present.RoomPlanApplyPresenter;
 import com.ayla.hotelsaas.mvp.view.RoomPlanApplyView;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -116,7 +117,9 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
                             }
                         })
                         .show(getSupportFragmentManager(), "dialog");
+                return;
             }
         }
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
     }
 }

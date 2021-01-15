@@ -10,9 +10,9 @@ import androidx.fragment.app.DialogFragment;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.mvp.present.CreateProjectPresenter;
 import com.ayla.hotelsaas.mvp.view.CreateProjectView;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import java.util.List;
@@ -132,7 +132,7 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
 
     @Override
     public void onFailed(Throwable throwable) {
-
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg("创建失败", throwable), R.drawable.ic_toast_warming);
     }
 
     @Override

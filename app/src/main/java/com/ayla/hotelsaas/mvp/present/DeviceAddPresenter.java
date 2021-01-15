@@ -7,9 +7,8 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.data.net.SelfMsgException;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
+import com.ayla.hotelsaas.mvp.view.DeviceAddView;
 import com.sunseaiot.larkairkiss.LarkConfigCallback;
 import com.sunseaiot.larkairkiss.LarkConfigDefines;
 import com.sunseaiot.larkairkiss.LarkSmartConfigManager;
@@ -33,7 +32,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
+public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
     public void bindAylaGateway(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName, String waitBindDeviceId) {
         String newNickname;
         if (dsn.length() > 4) {
@@ -55,20 +54,10 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
                         mView.bindSuccess(devicesBean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handleDefault(Throwable throwable) throws Exception {
-
-                    }
-
-                    @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        mView.bindFailed(getLocalErrorMsg(throwable));
-                    }
-
-                    @Override
-                    public String getDefaultErrorMsg() {
-                        return "设备绑定失败\n请再检查设备状态后重试";
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.bindFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);
@@ -166,20 +155,10 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
                         mView.bindSuccess(devicesBean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handleDefault(Throwable throwable) throws Exception {
-
-                    }
-
-                    @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        mView.bindFailed(getLocalErrorMsg(throwable));
-                    }
-
-                    @Override
-                    public String getDefaultErrorMsg() {
-                        return "设备绑定失败\n请再检查设备状态后重试";
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.bindFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);
@@ -338,20 +317,10 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
                         mView.bindSuccess(devicesBean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handleDefault(Throwable throwable) throws Exception {
-
-                    }
-
-                    @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        mView.bindFailed(getLocalErrorMsg(throwable));
-                    }
-
-                    @Override
-                    public String getDefaultErrorMsg() {
-                        return "设备绑定失败\n请再检查设备状态后重试";
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.bindFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);
@@ -457,19 +426,10 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
                         mView.bindSuccess(devicesBean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handleDefault(Throwable throwable) throws Exception {
-                    }
-
-                    @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        mView.bindFailed(getLocalErrorMsg(throwable));
-                    }
-
-                    @Override
-                    public String getDefaultErrorMsg() {
-                        return "设备绑定失败\n请再检查设备状态后重试";
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.bindFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);
@@ -549,20 +509,10 @@ public class ZigBeeAddPresenter extends BasePresenter<ZigBeeAddView> {
                     public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
                         mView.bindSuccess(devicesBean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handleDefault(Throwable throwable) throws Exception {
-
-                    }
-
-                    @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        mView.bindFailed(getLocalErrorMsg(throwable));
-                    }
-
-                    @Override
-                    public String getDefaultErrorMsg() {
-                        return "设备绑定失败\n请再检查设备状态后重试";
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.bindFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);

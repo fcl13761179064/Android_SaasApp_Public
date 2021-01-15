@@ -14,11 +14,9 @@ public interface LoginView extends BaseView {
     //登录成功
     void loginSuccess(User data);
 
-    void loginFailed(String msg);
-
-    void shouldForceUpgrade(VersionUpgradeBean versionUpgradeBean);
-
-    void notForceUpgrade(VersionUpgradeBean versionUpgradeBean);
+    void loginFailed(Throwable msg);
 
     void checkVersionFailed(Throwable throwable);
+
+    void checkVersionSuccess(VersionUpgradeBean versionUpgradeBean);
 }

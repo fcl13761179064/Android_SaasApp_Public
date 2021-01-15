@@ -516,7 +516,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 return;
             }
         }
-        CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming);
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
     }
 
     @Override

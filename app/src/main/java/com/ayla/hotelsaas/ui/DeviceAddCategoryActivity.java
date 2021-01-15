@@ -145,7 +145,8 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     }
 
     @Override
-    public void categoryLoadFail() {
+    public void categoryLoadFail(Throwable throwable) {
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
         mContentView.setVisibility(View.GONE);
         mEmptyView.setVisibility(View.VISIBLE);
     }

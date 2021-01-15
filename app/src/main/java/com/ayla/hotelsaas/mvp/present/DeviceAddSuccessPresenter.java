@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView;
 
@@ -33,14 +32,10 @@ public class DeviceAddSuccessPresenter extends BasePresenter<DeviceAddSuccessVie
                     public void accept(Boolean aBoolean) throws Exception {
                         mView.renameSuccess(nickName);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
-                    }
-
-                    @Override
-                    public String getDefaultErrorMsg() {
-                        return "修改失败";
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.renameFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);
