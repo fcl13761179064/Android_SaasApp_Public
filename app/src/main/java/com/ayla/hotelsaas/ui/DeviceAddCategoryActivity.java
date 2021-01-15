@@ -139,6 +139,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             }
             getIntent().removeExtra("addForWait");
             getIntent().removeExtra("waitBindDeviceId");
+            getIntent().removeExtra("nickname");
             getIntent().removeExtra("deviceCategory");
             getIntent().removeExtra("deviceName");
         }

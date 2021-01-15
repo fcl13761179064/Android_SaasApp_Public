@@ -120,6 +120,7 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
         long scopeId = getIntent().getLongExtra("scopeId", 0);
         String deviceCategory = getIntent().getStringExtra("deviceCategory");
         String deviceName = getIntent().getStringExtra("deviceName");
+        String nickname = getIntent().getStringExtra("nickname");
         String waitBindDeviceId = getIntent().getStringExtra("waitBindDeviceId");
 
         if (networkType == 1) {//鸿雁网关
@@ -128,6 +129,7 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     scopeId,
                     deviceCategory,
                     deviceName,
+                    nickname,
                     getIntent().getStringExtra("HYproductKey"),
                     getIntent().getStringExtra("HYdeviceName"),
                     waitBindDeviceId);
@@ -138,6 +140,7 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     scopeId,
                     deviceCategory,
                     deviceName,
+                    nickname,
                     waitBindDeviceId);
         } else if (networkType == 3) {//艾拉节点
             mPresenter.bindAylaNode(
@@ -146,6 +149,7 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     scopeId,
                     deviceCategory,
                     deviceName,
+                    nickname,
                     waitBindDeviceId);
         } else if (networkType == 4) {//鸿雁节点
             mPresenter.bindHongYanNode(
@@ -154,6 +158,7 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     scopeId,
                     deviceCategory,
                     deviceName,
+                    nickname,
                     waitBindDeviceId);
         } else if (networkType == 5) {//艾拉WiFi
             mPresenter.bindAylaWiFi(
@@ -163,6 +168,7 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     scopeId,
                     deviceCategory,
                     deviceName,
+                    nickname,
                     waitBindDeviceId);
         }
     }

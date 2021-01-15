@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
@@ -13,7 +14,6 @@ import com.sunseaiot.larkairkiss.LarkConfigCallback;
 import com.sunseaiot.larkairkiss.LarkConfigDefines;
 import com.sunseaiot.larkairkiss.LarkSmartConfigManager;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,14 +33,12 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
-    public void bindAylaGateway(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName, String waitBindDeviceId) {
-        String newNickname;
-        if (dsn.length() > 4) {
-            newNickname = deviceName + "_" + dsn.substring(dsn.length() - 4);
-        } else {
-            newNickname = deviceName + "_" + dsn;
+    public void bindAylaGateway(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName, String nickname, String waitBindDeviceId) {
+        if (TextUtils.isEmpty(nickname)) {
+            nickname = generateNickName(dsn, deviceName);
         }
-        Disposable subscribe = RequestModel.getInstance().bindDeviceWithDSN(dsn, waitBindDeviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickname)
+        Disposable subscribe = RequestModel.getInstance()
+                .bindDeviceWithDSN(dsn, waitBindDeviceId, cuId, scopeId, 2, deviceCategory, deviceName, nickname)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -63,7 +61,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
         addSubscrebe(subscribe);
     }
 
-    public void bindHongYanGateway(AApplication application, long cuId, long scopeId, String deviceCategory, String deviceName, String HYproductkey, String HYdeviceName, String waitBindDeviceId) {
+    public void bindHongYanGateway(AApplication application, long cuId, long scopeId, String deviceCategory, String deviceName, String nickname, String HYproductkey, String HYdeviceName, String waitBindDeviceId) {
         Disposable subscribe = RequestModel.getInstance()
                 .getAuthCode(String.valueOf(scopeId))//获取授权码
                 .observeOn(AndroidSchedulers.mainThread())
@@ -129,7 +127,10 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                     @Override
                     public ObservableSource<DeviceListBean.DevicesBean> apply(String[] deviceInfo) throws Exception {
                         String deviceId = deviceInfo[0];
-                        String newNickName = deviceName + "_" + deviceInfo[2];
+                        String newNickName = nickname;
+                        if (TextUtils.isEmpty(newNickName)) {
+                            newNickName = generateNickName(deviceInfo[2], deviceName);
+                        }
                         return RequestModel.getInstance()
                                 .bindDeviceWithDSN(deviceId, waitBindDeviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName);
                     }
@@ -164,7 +165,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
         addSubscrebe(subscribe);
     }
 
-    public void bindAylaNode(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName, String waitBindDeviceId) {
+    public void bindAylaNode(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName, String nickname, String waitBindDeviceId) {
         Disposable subscribe = Observable.just(dsn)
                 .doOnNext(new Consumer<String>() {
                     @Override
@@ -226,28 +227,16 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                 .flatMap(new Function<List<DeviceListBean.DevicesBean>, ObservableSource<DeviceListBean.DevicesBean>>() {
                     @Override
                     public ObservableSource<DeviceListBean.DevicesBean> apply(List<DeviceListBean.DevicesBean> devices) throws Exception {
-                        List<Observable<DeviceListBean.DevicesBean>> tasks = new ArrayList<>();
-                        for (DeviceListBean.DevicesBean device : devices) {
-                            String deviceId = device.getDeviceId();
-                            String newNickname;
-                            if (deviceId.length() > 4) {
-                                newNickname = deviceName + "_" + deviceId.substring(deviceId.length() - 4);
-                            } else {
-                                newNickname = deviceName + "_" + deviceId;
-                            }
-                            Observable<DeviceListBean.DevicesBean> task = RequestModel.getInstance()
-                                    .bindDeviceWithDSN(deviceId, waitBindDeviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickname);
-                            tasks.add(task);
-                        }
-                        if (tasks.size() == 0) {
+                        if (devices.size() == 0) {
                             return Observable.error(new Throwable("没有候选节点"));
                         } else {
-                            return Observable.zip(tasks, new Function<Object[], DeviceListBean.DevicesBean>() {
-                                @Override
-                                public DeviceListBean.DevicesBean apply(@NonNull Object[] objects) throws Exception {
-                                    return (DeviceListBean.DevicesBean) objects[0];
-                                }
-                            });
+                            DeviceListBean.DevicesBean device = devices.get(0);
+                            String newNickName = nickname;
+                            if (TextUtils.isEmpty(newNickName)) {
+                                newNickName = generateNickName(device.getDeviceId(), deviceName);
+                            }
+                            return RequestModel.getInstance()
+                                    .bindDeviceWithDSN(device.getDeviceId(), waitBindDeviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName);
                         }
                     }
                 })//绑定候选节点，只返回出来第一个绑定的节点
@@ -326,7 +315,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
         addSubscrebe(subscribe);
     }
 
-    public void bindHongYanNode(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName, String waitBindDeviceId) {
+    public void bindHongYanNode(String dsn, long cuId, long scopeId, String deviceCategory, String deviceName, String nickname, String waitBindDeviceId) {
         final NodeHelper[] nodeHelper = new NodeHelper[1];
         Disposable subscribe = RequestModel.getInstance()
                 .getAuthCode(String.valueOf(scopeId))
@@ -409,7 +398,10 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                         if (subDeviceName != null && subDeviceName.length() > 4) {
                             subDeviceName = subDeviceName.substring(subDeviceName.length() - 4);
                         }
-                        String newNickName = deviceName + "_" + subDeviceName;
+                        String newNickName = nickname;
+                        if (TextUtils.isEmpty(newNickName)) {
+                            newNickName = generateNickName(subDeviceName, deviceName);
+                        }
                         return RequestModel.getInstance()
                                 .bindDeviceWithDSN(subIotId, waitBindDeviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName);
                     }
@@ -435,7 +427,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
         addSubscrebe(subscribe);
     }
 
-    public void bindAylaWiFi(String wifiName, String wifiPassword, long cuId, long scopeId, String deviceCategory, String deviceName, String waitBindDeviceId) {
+    public void bindAylaWiFi(String wifiName, String wifiPassword, long cuId, long scopeId, String deviceCategory, String deviceName, String nickname, String waitBindDeviceId) {
         final LarkSmartConfigManager[] configManager = new LarkSmartConfigManager[1];
         Disposable subscribe = Observable.just(LarkSmartConfigManager.initWithSmartConfigType(LarkConfigDefines.LarkSmartConfigType.LarkSmartConfigTypeForAirkissEasy))
                 .doOnNext(new Consumer<LarkSmartConfigManager>() {
@@ -486,15 +478,12 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                     @Override
                     public ObservableSource<DeviceListBean.DevicesBean> apply(String[] strings) throws Exception {
                         String deviceId = strings[0];
-                        String newNickname;
-                        if (deviceId.length() > 4) {
-                            newNickname = deviceName + "_" + deviceId.substring(deviceId.length() - 4);
-                        } else {
-                            newNickname = deviceName + "_" + deviceId;
+                        String newNickName = nickname;
+                        if (TextUtils.isEmpty(newNickName)) {
+                            newNickName = generateNickName(deviceId, deviceName);
                         }
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(deviceId, waitBindDeviceId, cuId, scopeId, 2,
-                                        deviceCategory, deviceName, newNickname);
+                                .bindDeviceWithDSN(deviceId, waitBindDeviceId, cuId, scopeId, 2, deviceCategory, deviceName, newNickName);
                     }
                 })//绑定设备
                 .observeOn(AndroidSchedulers.mainThread())
@@ -516,5 +505,15 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                     }
                 });
         addSubscrebe(subscribe);
+    }
+
+    public String generateNickName(String dsn, String deviceName) {
+        String newNickname;
+        if (dsn.length() > 4) {
+            newNickname = deviceName + "_" + dsn.substring(dsn.length() - 4);
+        } else {
+            newNickname = deviceName + "_" + dsn;
+        }
+        return newNickname;
     }
 }
