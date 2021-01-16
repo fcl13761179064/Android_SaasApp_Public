@@ -187,7 +187,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="10dp"
-            android:background="@drawable/green_btn_bg"
+            android:background="@drawable/green_btn_bg_small_corner"
             android:text="确定"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />

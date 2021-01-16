@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
@@ -14,10 +13,8 @@ import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
 import com.ayla.hotelsaas.utils.TempUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -62,6 +59,19 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
         } else {
             observable = Observable.just(MyApplication.getInstance().getDevicesBean());
         }
+        observable = observable.doOnNext(new Consumer<List<DeviceListBean.DevicesBean>>() {
+            @Override
+            public void accept(List<DeviceListBean.DevicesBean> devicesBeans) throws Exception {
+                List<DeviceListBean.DevicesBean> result = new ArrayList<>(devicesBeans);
+                for (DeviceListBean.DevicesBean devicesBean : devicesBeans) {
+                    if (devicesBean.getBindType() == 1) {
+                        result.remove(devicesBean);
+                    }
+                }
+                devicesBeans.clear();
+                devicesBeans.addAll(result);
+            }
+        });
         Disposable subscribe = RequestModel.getInstance().getDeviceCategoryDetail()
                 .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, List<DeviceCategoryDetailBean>>() {
                     @Override
@@ -121,6 +131,7 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
                         mView.showDevices(null);
                     }
                 });

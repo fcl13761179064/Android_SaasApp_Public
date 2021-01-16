@@ -7,7 +7,6 @@ import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.TouchPanelDataBean;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.FunctionRenameView;
 
@@ -147,13 +146,10 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                     public void accept(Boolean aBoolean) throws Exception {
                         mView.renameSuccess();
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
-                    }
-                    @Override
-                    public String getDefaultErrorMsg() {
-                        return "修改失败";
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.renameFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);

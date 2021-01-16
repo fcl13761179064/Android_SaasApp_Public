@@ -7,8 +7,6 @@ import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
-import com.ayla.hotelsaas.data.net.ServerBadException;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 
@@ -53,14 +51,10 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                     public void accept(Boolean aBoolean) throws Exception {
                         mView.renameSuccess(nickName);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
-
-                    }
-                    @Override
-                    public String getDefaultErrorMsg() {
-                        return "修改失败";
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.renameFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);
@@ -87,9 +81,9 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                     public void accept(Boolean aBoolean) throws Exception {
                         mView.removeSuccess(aBoolean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) throws Exception {
                         mView.removeFailed(throwable);
                     }
                 });

@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:left_iv="@drawable/back_arrow" />
+        app:left_iv="@mipmap/icon_back_black" />
 
     <RelativeLayout
         android:id="@+id/rl_point_name"

@@ -13,11 +13,10 @@ import com.ayla.hotelsaas.databinding.ActivityDeviceAddSuccessBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceAddSuccessPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.io.Serializable;
 
 public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessView, DeviceAddSuccessPresenter> implements DeviceAddSuccessView {
     private ActivityDeviceAddSuccessBinding binding;
@@ -127,12 +126,8 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
     }
 
     @Override
-    public void renameFailed(String code, String msg) {
-        if ("140001".equals(code)) {
-            CustomToast.makeText(this, "该名称不能重复使用", R.drawable.ic_toast_warming);
-        } else {
-            CustomToast.makeText(MyApplication.getContext(), "修改失败", R.drawable.ic_toast_warming);
-        }
+    public void renameFailed(Throwable throwable) {
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg("修改失败", throwable), R.drawable.ic_toast_warming);
     }
 
     @Override

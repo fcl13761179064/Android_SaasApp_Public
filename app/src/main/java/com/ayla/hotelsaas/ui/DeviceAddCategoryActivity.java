@@ -4,6 +4,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,11 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 /**
  * @描述 添加设备入口页面，展示产品分类二级列表
  * 进入时必须带上参数scopeId
+ * 如果是添加待绑定的设备，还要带上：
+ * boolean addForWait
+ * waitBindDeviceId
+ * deviceCategory
+ * deviceName
  * @作者 吴友金
  */
 public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView, DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
@@ -117,10 +123,31 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         mEmptyView.setVisibility(View.GONE);
         mLeftAdapter.setNewData(deviceCategoryBeans);
         adjustData(0);
+
+        boolean addForWait = getIntent().getBooleanExtra("addForWait", false);
+        if (addForWait) {
+            String deviceCategory = getIntent().getStringExtra("deviceCategory");
+            String deviceName = getIntent().getStringExtra("deviceName");
+            for (DeviceCategoryBean deviceCategoryBean : deviceCategoryBeans) {
+                for (DeviceCategoryBean.SubBean subBean : deviceCategoryBean.getSub()) {
+                    if (TextUtils.equals(deviceCategory, subBean.getOemModel()) &&
+                            TextUtils.equals(deviceName, subBean.getDeviceName())) {
+                        handleAddJump(subBean);
+                        return;
+                    }
+                }
+            }
+            getIntent().removeExtra("addForWait");
+            getIntent().removeExtra("waitBindDeviceId");
+            getIntent().removeExtra("nickname");
+            getIntent().removeExtra("deviceCategory");
+            getIntent().removeExtra("deviceName");
+        }
     }
 
     @Override
-    public void categoryLoadFail() {
+    public void categoryLoadFail(Throwable throwable) {
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
         mContentView.setVisibility(View.GONE);
         mEmptyView.setVisibility(View.VISIBLE);
     }
@@ -173,9 +200,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
                     Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
                     mainActivity.putExtra("networkType", subBean.getNetworkType());
+                    mainActivity.putExtras(getIntent());
                     mainActivity.putExtra("deviceId", gateway.getDeviceId());
                     mainActivity.putExtra("cuId", gateway.getCuId());
-                    mainActivity.putExtras(getIntent());
                     mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                     mainActivity.putExtra("deviceName", subBean.getDeviceName());
                     mainActivity.putExtra("categoryId", subBean.getId());
@@ -208,9 +235,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
                     Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
                     mainActivity.putExtra("networkType", subBean.getNetworkType());
+                    mainActivity.putExtras(getIntent());
                     mainActivity.putExtra("deviceId", gateway.getDeviceId());
                     mainActivity.putExtra("cuId", gateway.getCuId());
-                    mainActivity.putExtras(getIntent());
                     mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                     mainActivity.putExtra("deviceName", subBean.getDeviceName());
                     mainActivity.putExtra("categoryId", subBean.getId());
@@ -220,8 +247,8 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 }
             } else {//多个网关
                 Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
-                mainActivity.putExtras(getIntent());
                 mainActivity.putExtra("networkType", subBean.getNetworkType());
+                mainActivity.putExtras(getIntent());
                 mainActivity.putExtra("cuId", subBean.getCuId());
                 mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                 mainActivity.putExtra("deviceName", subBean.getDeviceName());
@@ -242,12 +269,26 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_ADD_DEVICE && resultCode == RESULT_OK) {
-            finish();
-        } else if (requestCode == REQUEST_CODE_SELECT_GATEWAY && resultCode == RESULT_OK) {
-            Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
-            mainActivity.putExtras(data);
-            startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+        if (requestCode == REQUEST_CODE_ADD_DEVICE) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            } else {
+                boolean addForWait = getIntent().getBooleanExtra("addForWait", false);
+                if (addForWait) {
+                    finish();
+                }
+            }
+        } else if (requestCode == REQUEST_CODE_SELECT_GATEWAY) {
+            if (resultCode == RESULT_OK) {
+                Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
+                mainActivity.putExtras(data);
+                startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+            } else {
+                boolean addForWait = getIntent().getBooleanExtra("addForWait", false);
+                if (addForWait) {
+                    finish();
+                }
+            }
         }
     }
 

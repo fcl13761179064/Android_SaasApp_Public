@@ -13,4 +13,6 @@ public interface PersonCenterView extends BaseView {
     void getUserInfoFailSuccess(PersonCenter personCenter);
 
     void onVersionResult(VersionUpgradeBean baseResult);
+
+    void onVersionCheckFailed(Throwable throwable);
 }
