@@ -233,7 +233,7 @@ public class RequestModel {
     }
 
     public Observable<List<DeviceCategoryBean>> getDeviceCategory() {
-        return getApiService().fetchDeviceCategory().compose(new BaseResultTransformer<BaseResult<List<DeviceCategoryBean>>, List<DeviceCategoryBean>>() {
+        return getApiService().fetchDeviceCategoryNew().compose(new BaseResultTransformer<BaseResult<List<DeviceCategoryBean>>, List<DeviceCategoryBean>>() {
         });
     }
 

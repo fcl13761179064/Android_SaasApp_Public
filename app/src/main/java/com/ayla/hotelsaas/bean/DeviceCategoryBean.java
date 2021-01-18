@@ -50,6 +50,22 @@ public class DeviceCategoryBean {
         private String name;
         private List<NodeBean> node;
 
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
         public List<NodeBean> getNode() {
             return node;
         }
@@ -196,84 +212,6 @@ public class DeviceCategoryBean {
             public void setIsPurposeDevice(int isPurposeDevice) {
                 this.isPurposeDevice = isPurposeDevice;
             }
-        }
-
-
-        @Deprecated
-        private String deviceName;
-        @Deprecated
-        private int cuId;
-        @Deprecated
-        private int deviceConnectType;//1、网关设备 2、节点设备 3、wifi设备
-        @Deprecated
-        private int networkType;//1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉zigbee配网 4、鸿雁节点 5、艾拉wifi设备
-        @Deprecated
-        private String icon;
-        @Deprecated
-        private String oemModel;
-
-        public long getId() {
-            return id;
-        }
-
-        public void setId(long id) {
-            this.id = id;
-        }
-
-        public String getOemModel() {
-            return oemModel;
-        }
-
-        public void setOemModel(String oemModel) {
-            this.oemModel = oemModel;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getDeviceName() {
-            return deviceName;
-        }
-
-        public void setDeviceName(String deviceName) {
-            this.deviceName = deviceName;
-        }
-
-        public int getCuId() {
-            return cuId;
-        }
-
-        public void setCuId(int cuId) {
-            this.cuId = cuId;
-        }
-
-        public int getNetworkType() {
-            return networkType;
-        }
-
-        public void setNetworkType(int networkType) {
-            this.networkType = networkType;
-        }
-
-        public String getIcon() {
-            return icon;
-        }
-
-        public void setIcon(String icon) {
-            this.icon = icon;
-        }
-
-        public int getDeviceConnectType() {
-            return deviceConnectType;
-        }
-
-        public void setDeviceConnectType(int deviceConnectType) {
-            this.deviceConnectType = deviceConnectType;
         }
     }
 }
