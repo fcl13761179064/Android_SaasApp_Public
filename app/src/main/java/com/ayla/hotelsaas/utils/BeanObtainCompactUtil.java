@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
-import com.ayla.hotelsaas.localBean.DeviceType;
 import com.ayla.hotelsaas.localBean.LocalSceneBean;
 import com.ayla.hotelsaas.localBean.RemoteSceneBean;
 
@@ -22,7 +21,7 @@ public class BeanObtainCompactUtil {
         if (siteType == 1) {//本地
             sceneBean = new LocalSceneBean();
             ((LocalSceneBean) sceneBean).setTargetGateway(ruleEngineBean.getTargetGateway());
-            ((LocalSceneBean) sceneBean).setTargetGatewayType(ruleEngineBean.getTargetGatewayType() == 0 ? DeviceType.AYLA_DEVICE_ID : DeviceType.ALI_DEVICE_ID);
+            ((LocalSceneBean) sceneBean).setTargetGatewayType(ruleEngineBean.getTargetGatewayType());
         } else {//云端
             sceneBean = new RemoteSceneBean();
         }

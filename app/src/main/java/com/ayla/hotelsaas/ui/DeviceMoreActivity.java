@@ -162,7 +162,8 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     }
 
     @Override
-    public void renameFailed(String code, String msg) {
+    public void renameFailed(Throwable throwable) {
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg("修改失败", throwable), R.drawable.ic_toast_warming);
     }
 
     @Override

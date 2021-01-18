@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceAddCategoryView;
 
@@ -38,10 +37,10 @@ public class DeviceAddCategoryPresenter extends BasePresenter<DeviceAddCategoryV
                     public void accept(List<DeviceCategoryBean> deviceCategoryBeans) throws Exception {
                         mView.showCategory(deviceCategoryBeans);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        mView.categoryLoadFail();
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.categoryLoadFail(throwable);
                     }
                 });
         addSubscrebe(subscribe);

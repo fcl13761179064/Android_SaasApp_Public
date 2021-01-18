@@ -18,6 +18,7 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.ForgitPresenter;
 import com.ayla.hotelsaas.mvp.view.ForgitView;
 import com.ayla.hotelsaas.utils.SoftIntPutUtils;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.blankj.utilcode.util.RegexUtils;
 
@@ -175,9 +176,9 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     }
 
     @Override
-    public void sendCodeFailed(String msg) {
+    public void sendCodeFailed(Throwable throwable) {
         mTimer.onFinish();
-        errorShake(0, 2, msg);
+        errorShake(0, 2, TempUtils.getLocalErrorMsg(throwable));
     }
 
     @Override
@@ -189,8 +190,8 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     }
 
     @Override
-    public void modifyPasswordFailed(String msg) {
-        errorShake(0, 2, msg);
+    public void modifyPasswordFailed(Throwable throwable) {
+        errorShake(0, 2, TempUtils.getLocalErrorMsg(throwable));
     }
 
     @Override
@@ -204,6 +205,11 @@ public class ForgitPassWordActivity extends BaseMvpActivity<ForgitView, ForgitPr
     @Override
     public String resetPassword() {
         return et_new_password.getText().toString();
+    }
+
+    @Override
+    public void resertPasswordFailed(Throwable throwable) {
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg("重置密码失败", throwable), R.drawable.ic_toast_warming);
     }
 
 

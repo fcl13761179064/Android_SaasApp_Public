@@ -62,13 +62,14 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
         observable = observable.doOnNext(new Consumer<List<DeviceListBean.DevicesBean>>() {
             @Override
             public void accept(List<DeviceListBean.DevicesBean> devicesBeans) throws Exception {
-                Iterator<DeviceListBean.DevicesBean> iterator = devicesBeans.iterator();
-                while (iterator.hasNext()) {
-                    DeviceListBean.DevicesBean devicesBean = iterator.next();
+                List<DeviceListBean.DevicesBean> result = new ArrayList<>(devicesBeans);
+                for (DeviceListBean.DevicesBean devicesBean : devicesBeans) {
                     if (devicesBean.getBindType() == 1) {
-                        devicesBeans.remove(devicesBean);
+                        result.remove(devicesBean);
                     }
                 }
+                devicesBeans.clear();
+                devicesBeans.addAll(result);
             }
         });
         Disposable subscribe = RequestModel.getInstance().getDeviceCategoryDetail()
@@ -130,6 +131,7 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
                         mView.showDevices(null);
                     }
                 });

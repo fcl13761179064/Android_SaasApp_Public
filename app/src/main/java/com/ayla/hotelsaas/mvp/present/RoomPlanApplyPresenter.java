@@ -4,8 +4,6 @@ package com.ayla.hotelsaas.mvp.present;
 import android.text.TextUtils;
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.data.net.ServerBadException;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.RoomPlanApplyView;
 
@@ -43,15 +41,10 @@ public class RoomPlanApplyPresenter extends BasePresenter<RoomPlanApplyView> {
                     public void accept(Object o) throws Exception {
                         mView.importPlanSuccess();
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) throws Exception {
                         mView.importPlanFailed(throwable);
-                    }
-
-                    @Override
-                    public void handleDefault(Throwable throwable) throws Exception {
-
                     }
                 });
         addSubscrebe(subscribe);

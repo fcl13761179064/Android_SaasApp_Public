@@ -139,13 +139,15 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             }
             getIntent().removeExtra("addForWait");
             getIntent().removeExtra("waitBindDeviceId");
+            getIntent().removeExtra("nickname");
             getIntent().removeExtra("deviceCategory");
             getIntent().removeExtra("deviceName");
         }
     }
 
     @Override
-    public void categoryLoadFail() {
+    public void categoryLoadFail(Throwable throwable) {
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
         mContentView.setVisibility(View.GONE);
         mEmptyView.setVisibility(View.VISIBLE);
     }
