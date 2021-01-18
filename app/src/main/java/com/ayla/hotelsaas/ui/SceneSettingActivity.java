@@ -394,7 +394,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     }
 
     private void jumpEditConditionDeviceItem(BaseSceneBean.DeviceCondition condition, int position) {
-        if (MyApplication.getInstance().getDevicesBean(condition.getSourceDeviceId()) != null) {
+        DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(condition.getSourceDeviceId());
+        if (devicesBean != null && devicesBean.getBindType() == 0) {
             Intent intent = addDeviceConditionIntent();
 
             intent.setClass(getApplicationContext(), SceneSettingFunctionDatumSetActivity.class);
@@ -408,7 +409,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     }
 
     private void jumpEditActionDeviceItem(BaseSceneBean.DeviceAction action, int position) {
-        if (MyApplication.getInstance().getDevicesBean(action.getTargetDeviceId()) != null) {
+        DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(action.getTargetDeviceId());
+        if (devicesBean != null && devicesBean.getBindType() == 0) {
             Intent intent = addDeviceActionIntent();
 
             intent.setClass(getApplicationContext(), SceneSettingFunctionDatumSetActivity.class);
@@ -462,6 +464,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 if (devicesBean == null) {
                     CustomToast.makeText(getBaseContext(), "如想激活此联动，请先删除已移除的设备", R.drawable.ic_toast_warming);
                     return;
+                } else {
+                    if (devicesBean.getBindType() == 1) {
+                        CustomToast.makeText(getBaseContext(), "请先绑定待添加的设备", R.drawable.ic_toast_warming);
+                        return;
+                    }
                 }
             }
         }
@@ -471,9 +478,15 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 if (devicesBean == null) {
                     CustomToast.makeText(getBaseContext(), "如想激活此联动，请先删除已移除的设备", R.drawable.ic_toast_warming);
                     return;
+                } else {
+                    if (devicesBean.getBindType() == 1) {
+                        CustomToast.makeText(getBaseContext(), "请先绑定待添加的设备", R.drawable.ic_toast_warming);
+                        return;
+                    }
                 }
             }
         }
+
         if (mRuleEngineBean.getRuleType() == 2) {//一键执行
             mRuleEngineBean.setStatus(1);
         } else if (mRuleEngineBean.getRuleType() == 1) {//自动化
@@ -503,7 +516,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 return;
             }
         }
-        CustomToast.makeText(this, "操作失败", R.drawable.ic_toast_warming);
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
     }
 
     @Override
@@ -539,7 +552,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 conditions.add((BaseSceneBean.DeviceCondition) condition);
             }
         }
-        mPresenter.loadFunctionDetail(conditions, mRuleEngineBean.getActions());
+        List<BaseSceneBean.DeviceAction> actions = new ArrayList<>();
+        for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
+            if (action instanceof BaseSceneBean.DeviceAction) {
+                actions.add((BaseSceneBean.DeviceAction) action);
+            }
+        }
+        mPresenter.loadFunctionDetail(conditions, actions);
     }
 
     @OnClick(R.id.ll_icon_area)
@@ -690,7 +709,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         startActivityForResult(intent, REQUEST_CODE_SELECT_ENABLE_TIME);
     }
 
-    private void mergeDeviceConditionItem(BaseSceneBean.DeviceCondition conditionItem, DeviceListBean.DevicesBean deviceBean,
+    private void mergeDeviceConditionItem(BaseSceneBean.DeviceCondition
+                                                  conditionItem, DeviceListBean.DevicesBean deviceBean,
                                           DeviceTemplateBean.AttributesBean attributesBean,
                                           ISceneSettingFunctionDatumSet.CallBackBean datumBean) {
         if (datumBean instanceof ISceneSettingFunctionDatumSet.ValueCallBackBean) {
@@ -748,7 +768,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         }
     }
 
-    private void mergeDeviceActionItem(BaseSceneBean.DeviceAction actionItem, DeviceListBean.DevicesBean deviceBean,
+    private void mergeDeviceActionItem(BaseSceneBean.DeviceAction
+                                               actionItem, DeviceListBean.DevicesBean deviceBean,
                                        DeviceTemplateBean.AttributesBean attributesBean,
                                        ISceneSettingFunctionDatumSet.CallBackBean callBackBean) {
         if (callBackBean instanceof ISceneSettingFunctionDatumSet.ValueCallBackBean) {

@@ -15,40 +15,38 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
 import com.ayla.hotelsaas.R;
-import com.blankj.utilcode.util.Utils;
+import com.blankj.utilcode.util.StringUtils;
+
+import java.lang.ref.WeakReference;
 
 public class CustomToast {
     private static final String TAG = "CustomToast";
 
-    @Deprecated
-    public static void makeText(Context context, @StringRes int resId, @DrawableRes int dResId) {
-        makeText(context, context.getResources().getText(resId), dResId);
-    }
+    private static WeakReference<Toast> mToastWeakReference;
 
-    @Deprecated
     public static void makeText(Context context, CharSequence tex, @DrawableRes int dResId) {
         Log.d(TAG, "makeText: " + tex);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                Toast toast = Toast.makeText(context.getApplicationContext(), tex, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                View view = LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.toast_custom, null);
+                if (mToastWeakReference == null || mToastWeakReference.get() == null) {
+                    Toast toast = Toast.makeText(context.getApplicationContext(), tex, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    View view = LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.toast_custom, null);
+                    toast.setView(view);
+                    mToastWeakReference = new WeakReference<>(toast);
+                }
+                View view = mToastWeakReference.get().getView();
                 ImageView imageView = view.findViewById(R.id.iv);
                 imageView.setImageResource(dResId);
                 TextView textView = view.findViewById(R.id.tv);
                 textView.setText(tex);
-                toast.setView(view);
-                toast.show();
+                mToastWeakReference.get().show();
             }
         });
     }
 
-    public static void makeText(@StringRes int resId, @DrawableRes int dResId) {
-        makeText(Utils.getApp(), resId, dResId);
-    }
-
-    public static void makeText(CharSequence tex, @DrawableRes int dResId) {
-        makeText(Utils.getApp(), tex, dResId);
+    public static void makeText(Context context, @StringRes int resId, @DrawableRes int dResId) {
+        makeText(context, StringUtils.getString(resId), dResId);
     }
 }

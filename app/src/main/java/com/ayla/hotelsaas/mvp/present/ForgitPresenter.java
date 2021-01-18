@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.ForgitView;
 
@@ -40,15 +39,10 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
                     public void accept(Boolean aBoolean) throws Exception {
                         mView.modifyPasswordSuccess(aBoolean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handleDefault(Throwable throwable) throws Exception {
-
-                    }
-
-                    @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        mView.modifyPasswordFailed(getLocalErrorMsg(throwable));
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.modifyPasswordFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);
@@ -75,15 +69,10 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
                     public void accept(Boolean aBoolean) throws Exception {
                         mView.sendCodeSuccess(null);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handleDefault(Throwable throwable) throws Exception {
-
-                    }
-
-                    @Override
-                    public void handle(Throwable throwable) throws Exception {
-                        mView.sendCodeFailed(getLocalErrorMsg(throwable));
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.sendCodeFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);
@@ -110,10 +99,10 @@ public class ForgitPresenter extends BasePresenter<ForgitView> {
                     public void accept(Boolean aBoolean) throws Exception {
                         mView.resertPasswordSuccess(aBoolean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
-
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.resertPasswordFailed(throwable);
                     }
                 });
         addSubscrebe(subscribe);

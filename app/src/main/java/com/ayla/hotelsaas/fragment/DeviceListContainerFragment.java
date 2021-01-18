@@ -1,6 +1,5 @@
 package com.ayla.hotelsaas.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -103,6 +102,18 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
                 });
                 deviceListContainerBinding.viewPager.setAdapter(mAdapter);
                 deviceListContainerBinding.tlTabs.setupWithViewPager(deviceListContainerBinding.viewPager);
+//                deviceListContainerBinding.emptyDeviceViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
+//                    @Override
+//                    public void onInflate(ViewStub stub, View inflated) {
+//                        EmptyDeviceListBinding bind = EmptyDeviceListBinding.bind(inflated);
+//                        bind.tvEmptyText.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//
+//                            }
+//                        });
+//                    }
+//                });
             }
         });
         binding.netErrorViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
@@ -136,7 +147,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
             @Override
             public int getCount() {
-                return deviceListBean == null ? 0 : deviceListBean.getDevices().size();
+                return deviceListBean == null ? 0 : 1;
             }
 
             @Nullable

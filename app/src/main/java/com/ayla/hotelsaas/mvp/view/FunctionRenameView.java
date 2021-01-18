@@ -14,5 +14,5 @@ public interface FunctionRenameView extends BaseView {
 
     void renameSuccess();
 
-    void renameFailed();
+    void renameFailed(Throwable throwable);
 }

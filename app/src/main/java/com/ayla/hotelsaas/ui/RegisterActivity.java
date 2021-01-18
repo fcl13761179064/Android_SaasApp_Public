@@ -151,9 +151,7 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
             errorShake(3, 2, s);
             return;
         }
-        if (RegexUtils.isEmail(account)) {
-            mPresenter.register(userName, account, password);
-        } else if (RegexUtils.isMobileSimple(account)) {
+        if (RegexUtils.isMobileSimple(account)) {
             mPresenter.register(userName, account, password);
         } else {
             String s = getString(R.string.account_error);

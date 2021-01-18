@@ -205,6 +205,12 @@
         <activity
             android:name=".ui.PointAndRegionActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.RoomPlanSettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.RoomPlanApplyActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"

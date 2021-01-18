@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
@@ -35,7 +36,9 @@
         android:layout_alignStart="@id/tv_device_name"
         android:layout_marginTop="5dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:id="@+id/ll_default"
+        android:orientation="horizontal"
+        android:visibility="visible">
 
         <View
             android:id="@+id/v_device_online_status_dot"

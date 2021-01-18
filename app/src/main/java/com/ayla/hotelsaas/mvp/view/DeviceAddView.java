@@ -3,7 +3,7 @@ package com.ayla.hotelsaas.mvp.view;
 import com.ayla.hotelsaas.base.BaseView;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 
-public interface ZigBeeAddView extends BaseView {
+public interface DeviceAddView extends BaseView {
     /**
      * 节点绑定流程结束
      */
@@ -12,9 +12,9 @@ public interface ZigBeeAddView extends BaseView {
     /**
      * 节点绑定流程失败
      *
-     * @param msg
+     * @param throwable
      */
-    void bindFailed(String msg);
+    void bindFailed(Throwable throwable);
 
     /**
      * 5.绑定节点成功

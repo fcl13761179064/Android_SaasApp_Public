@@ -252,10 +252,11 @@ public class RequestModel {
      * @param scopeId
      * @return
      */
-    public Observable<DeviceListBean.DevicesBean> bindDeviceWithDSN(String deviceId, long cuId, long scopeId,
+    public Observable<DeviceListBean.DevicesBean> bindDeviceWithDSN(String deviceId, String waitBindDeviceId, long cuId, long scopeId,
                                                                     int scopeType, String deviceCategory, String deviceName, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
+        body.addProperty("waitBindDeviceId", waitBindDeviceId);
         body.addProperty("scopeId", scopeId);
         body.addProperty("cuId", cuId);
         body.addProperty("scopeType", scopeType);
@@ -913,5 +914,30 @@ public class RequestModel {
                         });
             }
         };
+    }
+
+    public Observable<Boolean> roomPlanCheck(long scopeId) {
+        return getApiService().roomPlanCheck(scopeId).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
+    }
+
+    public Observable<String> roomPlanExport(long scopeId) {
+        return getApiService().roomExport(scopeId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
+        });
+    }
+
+    public Observable<Object> roomPlanImport(long scopeId, String shareCode) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("scopeId", scopeId);
+        jsonObject.addProperty("shareCode", shareCode);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().roomPlanImport(body111).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
+        });
+    }
+
+    public Observable<Object> resetRoomPlan(long scopeId) {
+        return getApiService().resetRoomPlan(scopeId).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
+        });
     }
 }

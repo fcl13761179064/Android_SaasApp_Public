@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.SceneSettingDeviceSelectAdapter;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.SceneSettingDeviceSelectPresenter;
@@ -61,7 +63,7 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     protected void initView() {
         appBar.setCenterText("选择设备");
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new SceneSettingDeviceSelectAdapter(R.layout.item_device_categorylist);
+        mAdapter = new SceneSettingDeviceSelectAdapter(R.layout.item_device_list);
         mAdapter.bindToRecyclerView(mRecyclerView);
         mAdapter.setEmptyView(R.layout.empty_device_order);
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -98,7 +100,12 @@ public class SceneSettingDeviceSelectActivity extends BaseMvpActivity<SceneSetti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int type = getIntent().getIntExtra("type", 0);
-        mPresenter.loadDevice(getIntent().getLongExtra("scopeId", 0), getIntent().getStringExtra("targetGateway"), type == 0);
+        String targetGatewayId = getIntent().getStringExtra("targetGateway");
+        DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(targetGatewayId);
+        if (devicesBean != null) {
+            targetGatewayId = devicesBean.getDeviceId();
+        }
+        mPresenter.loadDevice(getIntent().getLongExtra("scopeId", 0), targetGatewayId, type == 0);
     }
 
     @Override

@@ -63,7 +63,7 @@ public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, 
                                 @Override
                                 public void onDone(DialogFragment dialog, String newName) {
                                     if (TextUtils.isEmpty(newName) || newName.trim().isEmpty()) {
-                                        CustomToast.makeText("设备点位不能为空", R.drawable.ic_toast_warming);
+                                        CustomToast.makeText(PointAndRegionActivity.this, "设备点位不能为空", R.drawable.ic_toast_warming);
                                         return;
                                     } else {
                                         mPresenter.modifyPointName(devicesBean.getDeviceId(), devicesBean.getNickname(), newName, devicesBean.getRegionId(), devicesBean.getRegionName());

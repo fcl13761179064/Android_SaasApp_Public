@@ -53,7 +53,6 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
         addSubscrebe(subscribe);
     }
 
-
     public void deleteRoomNum(long room_id) {
         Disposable subscribe = RequestModel.getInstance().deleteRoomNum(room_id)
                 .subscribeOn(Schedulers.io())
@@ -89,4 +88,34 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
         addSubscrebe(subscribe);
     }
 
+    public void checkPlan(long scopeId) {
+        Disposable subscribe = RequestModel.getInstance()
+                .roomPlanCheck(scopeId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean s) throws Exception {
+                        mView.planCheckResult(s);
+                    }
+                }, new UnifiedErrorConsumer() {
+                    @Override
+                    public void handle(Throwable throwable) throws Exception {
+
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
 }

@@ -17,8 +17,9 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.mvp.present.ZigBeeAddPresenter;
-import com.ayla.hotelsaas.mvp.view.ZigBeeAddView;
+import com.ayla.hotelsaas.mvp.present.DeviceAddPresenter;
+import com.ayla.hotelsaas.mvp.view.DeviceAddView;
+import com.ayla.hotelsaas.utils.TempUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -45,7 +46,7 @@ import butterknife.OnClick;
  * networkType = 5 时，必须传入
  * wifiName、wifiPassword
  */
-public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddPresenter> implements ZigBeeAddView {
+public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddPresenter> implements DeviceAddView {
     private static final String TAG = "DeviceAddActivity";
 
     private final int REQUEST_CODE_ADD_SUCCESS = 0X10;
@@ -77,8 +78,8 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     public TextView mP3TextView;
 
     @Override
-    protected ZigBeeAddPresenter initPresenter() {
-        return new ZigBeeAddPresenter();
+    protected DeviceAddPresenter initPresenter() {
+        return new DeviceAddPresenter();
     }
 
     @Override
@@ -119,6 +120,8 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
         long scopeId = getIntent().getLongExtra("scopeId", 0);
         String deviceCategory = getIntent().getStringExtra("deviceCategory");
         String deviceName = getIntent().getStringExtra("deviceName");
+        String nickname = getIntent().getStringExtra("nickname");
+        String waitBindDeviceId = getIntent().getStringExtra("waitBindDeviceId");
 
         if (networkType == 1) {//鸿雁网关
             mPresenter.bindHongYanGateway((AApplication) getApplication(),
@@ -126,29 +129,37 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                     scopeId,
                     deviceCategory,
                     deviceName,
+                    nickname,
                     getIntent().getStringExtra("HYproductKey"),
-                    getIntent().getStringExtra("HYdeviceName"));
+                    getIntent().getStringExtra("HYdeviceName"),
+                    waitBindDeviceId);
         } else if (networkType == 2) {//顺舟网关
             mPresenter.bindAylaGateway(
                     getIntent().getStringExtra("deviceId"),
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName);
+                    deviceName,
+                    nickname,
+                    waitBindDeviceId);
         } else if (networkType == 3) {//艾拉节点
             mPresenter.bindAylaNode(
                     getIntent().getStringExtra("deviceId"),
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName);
+                    deviceName,
+                    nickname,
+                    waitBindDeviceId);
         } else if (networkType == 4) {//鸿雁节点
             mPresenter.bindHongYanNode(
                     getIntent().getStringExtra("deviceId"),
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName);
+                    deviceName,
+                    nickname,
+                    waitBindDeviceId);
         } else if (networkType == 5) {//艾拉WiFi
             mPresenter.bindAylaWiFi(
                     getIntent().getStringExtra("wifiName"),
@@ -156,7 +167,9 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName);
+                    deviceName,
+                    nickname,
+                    waitBindDeviceId);
         }
     }
 
@@ -218,15 +231,15 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
     @Override
     public void bindSuccess(DeviceListBean.DevicesBean devicesBean) {
         startActivityForResult(new Intent(this, DeviceAddSuccessActivity.class)
-                        .putExtra("device",devicesBean),
+                        .putExtra("device", devicesBean),
                 REQUEST_CODE_ADD_SUCCESS);
     }
 
     private String errorMsg;
 
     @Override
-    public void bindFailed(String msg) {
-        Log.d(TAG, "zigBeeDeviceBindFailed: " + msg);
+    public void bindFailed(Throwable throwable) {
+        Log.d(TAG, "zigBeeDeviceBindFailed: " + throwable);
         switch (bindProgress) {
             case 0:
                 mP1View.setImageResource(R.drawable.ic_progress_dot_error);
@@ -242,7 +255,7 @@ public class DeviceAddActivity extends BaseMvpActivity<ZigBeeAddView, ZigBeeAddP
                 mP3TextView.setTextColor(ContextCompat.getColor(this, R.color.color_bind_logding_tips_failed));
                 break;
         }
-        errorMsg = msg;
+        errorMsg = TempUtils.getLocalErrorMsg("设备绑定失败\n请再检查设备状态后重试", throwable);
         bindProgress = -1;
         refreshBindShow();
     }
