@@ -83,12 +83,8 @@ public interface ApiService {
     @DELETE("api/v1/build/hotelcontent/approom/{id}")
     Observable<BaseResult<String>> deleteRoomNum(@Path("id") long roomId);
 
-    @Deprecated
-    @GET("/api/v1/build/devicetypes")
-    Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
-
     @GET("/api/v1/build/spark/devicetypes")
-    Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategoryNew();
+    Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
     @Deprecated
     @GET("/api/v1/build/devicetypes/list")
@@ -143,6 +139,7 @@ public interface ApiService {
 
     /**
      * 参数换成PID
+     *
      * @param oemModel
      * @return
      */
@@ -218,9 +215,8 @@ public interface ApiService {
      *
      * @return
      */
-    @Deprecated
-    @GET("/api/v1/build/devicetypes/{categoryId}/networkguide")
-    Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(@Path("categoryId") String categoryId);
+    @GET("/api/v1/build/spark/devicetypes/{pid}/networkGuide")
+    Observable<BaseResult<List<NetworkConfigGuideBean>>> getNetworkConfigGuide(@Path("pid") String pid);
 
     @GET("/api/v1/build/version")
     Observable<BaseResult<VersionUpgradeBean>> getAppVersion(@Query("platform") int platform, @Query("versionCode") int versionCode);

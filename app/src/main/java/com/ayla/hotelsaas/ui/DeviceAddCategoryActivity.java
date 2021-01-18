@@ -231,7 +231,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     mainActivity.putExtra("cuId", gateway.getCuId());
                     mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                     mainActivity.putExtra("deviceName", subBean.getProductName());
-                    mainActivity.putExtra("categoryId", subBean.getId());
+                    mainActivity.putExtra("pid", subBean.getPid());
                     startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                 } else {
                     CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming);
@@ -243,7 +243,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 mainActivity.putExtra("cuId", subBean.getSource());
                 mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                 mainActivity.putExtra("deviceName", subBean.getProductName());
-                mainActivity.putExtra("categoryId", subBean.getId());
+                mainActivity.putExtra("pid", subBean.getPid());
                 startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
             }
         } else if (networkType == 5) {//跳转艾拉wifi
@@ -252,7 +252,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             mainActivity.putExtras(getIntent());
             mainActivity.putExtra("deviceCategory", subBean.getOemModel());
             mainActivity.putExtra("deviceName", subBean.getProductName());
-            mainActivity.putExtra("categoryId", subBean.getId());
+            mainActivity.putExtra("pid", subBean.getPid());
             startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
         } else if (networkType == 1) {//跳转鸿雁网关
             Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
@@ -274,7 +274,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     mainActivity.putExtra("cuId", gateway.getCuId());
                     mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                     mainActivity.putExtra("deviceName", subBean.getProductName());
-                    mainActivity.putExtra("categoryId", subBean.getId());
+                    mainActivity.putExtra("pid", subBean.getPid());
                     startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                 } else {
                     CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming);
@@ -286,7 +286,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 mainActivity.putExtra("cuId", subBean.getSource());
                 mainActivity.putExtra("deviceCategory", subBean.getOemModel());
                 mainActivity.putExtra("deviceName", subBean.getProductName());
-                mainActivity.putExtra("categoryId", subBean.getId());
+                mainActivity.putExtra("pid", subBean.getPid());
                 startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
             }
         }

@@ -233,7 +233,7 @@ public class RequestModel {
     }
 
     public Observable<List<DeviceCategoryBean>> getDeviceCategory() {
-        return getApiService().fetchDeviceCategoryNew().compose(new BaseResultTransformer<BaseResult<List<DeviceCategoryBean>>, List<DeviceCategoryBean>>() {
+        return getApiService().fetchDeviceCategory().compose(new BaseResultTransformer<BaseResult<List<DeviceCategoryBean>>, List<DeviceCategoryBean>>() {
         });
     }
 
@@ -798,8 +798,9 @@ public class RequestModel {
     /**
      * @return
      */
-    public Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(String categoryId) {
-        return getApiService().getNetworkConfigGuide(categoryId);
+    public Observable<List<NetworkConfigGuideBean>> getNetworkConfigGuide(String pid) {
+        return getApiService().getNetworkConfigGuide(pid).compose(new BaseResultTransformer<BaseResult<List<NetworkConfigGuideBean>>, List<NetworkConfigGuideBean>>() {
+        });
     }
 
     /**
