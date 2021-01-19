@@ -649,7 +649,7 @@ public class RequestModel {
                 .flatMap(new Function<RequestBody, ObservableSource<Boolean>>() {
                     @Override
                     public ObservableSource<Boolean> apply(RequestBody body) throws Exception {
-                        return getApiService().setPropertyNickname(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                        return getApiService().updatePropertyNickName(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
                         });
                     }
                 });
@@ -661,7 +661,7 @@ public class RequestModel {
      * @return
      */
     public Observable<List<PropertyNicknameBean>> fetchPropertyNickname(int cuId, String deviceId) {
-        return getApiService().getPropertyNickname(cuId, deviceId)
+        return getApiService().fetchPropertyNickname(cuId, deviceId)
                 .compose(new BaseResultTransformer<BaseResult<List<PropertyNicknameBean>>, List<PropertyNicknameBean>>() {
                 });
     }

@@ -157,10 +157,10 @@ public interface ApiService {
     Observable<BaseResult<Boolean>> removeDevice(@Body RequestBody body);
 
     @POST("/api/v1/build/device/deviceProperties")
-    Observable<BaseResult<Boolean>> setPropertyNickname(@Body RequestBody body);
+    Observable<BaseResult<Boolean>> updatePropertyNickName(@Body RequestBody body);
 
     @GET("/api/v1/build/device/deviceProperties/{cuId}/{deviceId}")
-    Observable<BaseResult<List<PropertyNicknameBean>>> getPropertyNickname(@Path("cuId") int oemModel, @Path("deviceId") String ss);
+    Observable<BaseResult<List<PropertyNicknameBean>>> fetchPropertyNickname(@Path("cuId") int oemModel, @Path("deviceId") String ss);
 
     /**
      * 房间分配，获取酒店列表
