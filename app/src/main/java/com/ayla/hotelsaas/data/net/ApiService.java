@@ -10,11 +10,11 @@ import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
+import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
@@ -86,9 +86,11 @@ public interface ApiService {
     @GET("/api/v1/build/spark/devicetypes")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
-    @Deprecated
-    @GET("/api/v1/build/devicetypes/list")
-    Observable<BaseResult<List<DeviceCategoryDetailBean>>> fetchDeviceCategoryDetail();
+    @POST("/api/v1/build/device/getDeviceActionOrCondition")
+    Observable<BaseResult<List<DeviceCategoryDetailBean>>> fetchDeviceCategoryDetail(@Body RequestBody body);
+
+    @POST("/api/v1/build/device/getDeviceActionOrCondition/{pid}")
+    Observable<BaseResult<DeviceCategoryDetailBean>> fetchDeviceCategoryDetail(@Path("pid") String pid);
 
     @GET("api/v1/build/constructbill")
     Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
@@ -238,7 +240,7 @@ public interface ApiService {
     @POST("/api/v1/build/scene/voiceRule")
     Observable<BaseResult<Boolean>> checkVoiceRule(@Body RequestBody body);
 
-    @GET("/api/v1/build/device/purpose/list")
+    @GET("/api/v1/build/device/purpose/spark/list")
     Observable<BaseResult<List<PurposeCategoryBean>>> getPurposeCategory();
 
     /**

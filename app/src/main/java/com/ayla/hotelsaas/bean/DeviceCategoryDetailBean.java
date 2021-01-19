@@ -9,14 +9,21 @@ import java.util.List;
 public class DeviceCategoryDetailBean {
 
     /**
-     * cuId : 0
-     * oemModel : sxxxxxx
-     * conditionProperties : ["1111","2222"]
-     * actionProperties : ["1111","2222"]
+     * "pid": "ZBGW0-A000001",
+     * "deviceId": "AC000W013190349",
+     * "nickName": "AZB-GW0-001(A)_0349",
+     * "iconUrl": "http://aylasmht-test.oss-cn-shanghai.aliyuncs.com/ccpgspark/Simulant%20icon/01_luoma/001_luomazhinengwangguan.png",
+     * "isPurposeDevice": 0,
+     * "cuId": 0,
+     * "conditionProperties": [],
+     * "actionProperties": [],
+     * "deviceName": null,
+     * "oemModel": null
      */
 
     private int cuId;
-    private String oemModel;
+    private String deviceId;
+    private String pid;
     private List<String> conditionProperties;
     private List<String> actionProperties;
 
@@ -28,27 +35,19 @@ public class DeviceCategoryDetailBean {
         this.cuId = cuId;
     }
 
-    public String getOemModel() {
-        return oemModel;
-    }
-
-    public void setOemModel(String oemModel) {
-        this.oemModel = oemModel;
-    }
-
     public List<String> getConditionProperties() {
         return conditionProperties;
-    }
-
-    public void setConditionProperties(List<String> conditionProperties) {
-        this.conditionProperties = conditionProperties;
     }
 
     public List<String> getActionProperties() {
         return actionProperties;
     }
 
-    public void setActionProperties(List<String> actionProperties) {
-        this.actionProperties = actionProperties;
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public String getPid() {
+        return pid;
     }
 }

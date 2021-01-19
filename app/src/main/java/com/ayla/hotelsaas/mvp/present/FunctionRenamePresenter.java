@@ -28,25 +28,14 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
 
-    public void getRenameAbleFunctions(int cuId, String deviceCategory, String deviceId) {
+    public void getRenameAbleFunctions(int cuId, String pid, String deviceId, String oemModel) {
         Disposable subscribe = RequestModel.getInstance()
-                .getDeviceCategoryDetail()
-                .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, DeviceCategoryDetailBean>() {
-                    @Override
-                    public DeviceCategoryDetailBean apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
-                        for (DeviceCategoryDetailBean deviceCategoryDetailBean : listBaseResult.data) {
-                            if (cuId == deviceCategoryDetailBean.getCuId() && TextUtils.equals(deviceCategory, deviceCategoryDetailBean.getOemModel())) {
-                                return deviceCategoryDetailBean;
-                            }
-                        }
-                        return null;
-                    }
-                })//首先查询出改设备的品类支持功能详情。
+                .getDeviceCategoryDetail(pid)//首先查询出改设备的品类支持功能详情。
                 .flatMap(new Function<DeviceCategoryDetailBean, ObservableSource<List<DeviceTemplateBean.AttributesBean>>>() {
                     @Override
                     public ObservableSource<List<DeviceTemplateBean.AttributesBean>> apply(DeviceCategoryDetailBean deviceCategoryDetailBean) throws Exception {
                         return RequestModel.getInstance()
-                                .fetchDeviceTemplate(deviceCategoryDetailBean.getOemModel())
+                                .fetchDeviceTemplate(oemModel)
                                 .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                                     @Override
                                     public DeviceTemplateBean apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
@@ -94,7 +83,7 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                         }
                         return result;
                     }
-                })
+                })//查出设置的别名、别名id，方便后面的更新使用。
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

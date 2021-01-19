@@ -26,26 +26,20 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSettingFunctionSelectView> {
     /**
-     * @param cuId
      * @param deviceId
      * @param oemModel
      */
-    public void loadFunction(boolean condition, int cuId, String deviceId, String oemModel) {
+    public void loadFunction(boolean condition, String deviceId, String pid, String oemModel) {
         Disposable subscribe = RequestModel.getInstance()
-                .getDeviceCategoryDetail()
-                .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, List<String>>() {
+                .getDeviceCategoryDetail(pid)
+                .map(new Function<DeviceCategoryDetailBean, List<String>>() {
                     @Override
-                    public List<String> apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
-                        for (DeviceCategoryDetailBean deviceCategoryDetailBean : listBaseResult.data) {
-                            if (TextUtils.equals(deviceCategoryDetailBean.getOemModel(), oemModel)) {
-                                if (condition) {
-                                    return deviceCategoryDetailBean.getConditionProperties();
-                                } else {
-                                    return deviceCategoryDetailBean.getActionProperties();
-                                }
-                            }
+                    public List<String> apply(@NonNull DeviceCategoryDetailBean deviceCategoryDetailBean) throws Exception {
+                        if (condition) {
+                            return deviceCategoryDetailBean.getConditionProperties();
+                        } else {
+                            return deviceCategoryDetailBean.getActionProperties();
                         }
-                        return new ArrayList<>();
                     }
                 })//查询出设备对条件、动作的支持情况
                 .zipWith(RequestModel.getInstance().fetchDeviceTemplate(oemModel)

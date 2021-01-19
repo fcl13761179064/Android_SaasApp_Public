@@ -14,11 +14,11 @@ import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
+import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
@@ -242,8 +242,22 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<List<DeviceCategoryDetailBean>>> getDeviceCategoryDetail() {
-        return getApiService().fetchDeviceCategoryDetail();
+    public Observable<List<DeviceCategoryDetailBean>> getDeviceCategoryDetail(long roomId) {
+        JsonObject body = new JsonObject();
+        body.addProperty("resourceId", roomId);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().fetchDeviceCategoryDetail(body111).compose(new BaseResultTransformer<BaseResult<List<DeviceCategoryDetailBean>>, List<DeviceCategoryDetailBean>>() {
+        });
+    }
+
+    /**
+     * 获取品类支持的条件、功能 项目 详情
+     *
+     * @return
+     */
+    public Observable<DeviceCategoryDetailBean> getDeviceCategoryDetail(String pid) {
+        return getApiService().fetchDeviceCategoryDetail(pid).compose(new BaseResultTransformer<BaseResult<DeviceCategoryDetailBean>, DeviceCategoryDetailBean>() {
+        });
     }
 
     /**
@@ -253,7 +267,7 @@ public class RequestModel {
      * @return
      */
     public Observable<DeviceListBean.DevicesBean> bindDeviceWithDSN(String deviceId, String waitBindDeviceId, long cuId, long scopeId,
-                                                                    int scopeType, String deviceCategory, String deviceName, String nickName) {
+                                                                    int scopeType, String deviceCategory, String pid, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("waitBindDeviceId", waitBindDeviceId);
@@ -261,7 +275,7 @@ public class RequestModel {
         body.addProperty("cuId", cuId);
         body.addProperty("scopeType", scopeType);
         body.addProperty("deviceCategory", deviceCategory);
-        body.addProperty("deviceName", deviceName);
+        body.addProperty("pid", pid);
         body.addProperty("nickName", nickName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().bindDeviceWithDSN(body111).compose(new BaseResultTransformer<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {

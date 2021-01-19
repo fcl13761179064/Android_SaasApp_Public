@@ -20,7 +20,7 @@ public class TempUtils {
         if (devicesBean == null) {
             return false;
         }
-        return devicesBean.getBindType() == 0 && devicesBean.getConnectTypeId() == 1;
+        return devicesBean.getBindType() == 0 && devicesBean.getProductType() == 1;
     }
 
     /**

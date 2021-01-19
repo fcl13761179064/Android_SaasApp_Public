@@ -26,8 +26,8 @@ import butterknife.OnClick;
 /**
  * wifi设备、节点设备 配网引导页面
  * 进入时必须带入int networkType 。
- * networkType == 3、4 时 ，需要带入：网关deviceId 、cuId 、scopeId 、deviceName、deviceCategory、pid
- * networkType == 5 时 ，需要带入：scopeId 、deviceName、deviceCategory、pid
+ * networkType == 3、4 时 ，需要带入：网关deviceId 、cuId 、scopeId 、deviceCategory、pid
+ * networkType == 5 时 ，需要带入：scopeId 、deviceCategory、pid
  */
 public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, DeviceAddGuidePresenter> implements DeviceAddGuideView {
     @BindView(R.id.iv)
