@@ -400,11 +400,11 @@ public class RequestModel {
     /**
      * 查询设备物模板信息
      *
-     * @param oemModel
+     * @param pid
      * @return
      */
-    public Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(String oemModel) {
-        return getApiService().fetchDeviceTemplate(oemModel)
+    public Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(String pid) {
+        return getApiService().fetchDeviceTemplate(pid)
                 .doOnNext(new Consumer<BaseResult<DeviceTemplateBean>>() {
                     @Override
                     public void accept(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
@@ -423,7 +423,7 @@ public class RequestModel {
                 .doOnNext(new Consumer<BaseResult<DeviceTemplateBean>>() {
                     @Override
                     public void accept(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
-                        if ("a1UR1BjfznK".equals(oemModel)) {//触控面板
+                        if ("a1UR1BjfznK".equals(pid)) {//触控面板
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
@@ -524,7 +524,7 @@ public class RequestModel {
                                 }
                             }
                         }
-                        if ("a1dnviXyhqx".equals(oemModel)) {//六键场景开关
+                        if ("a1dnviXyhqx".equals(pid)) {//六键场景开关
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
@@ -583,7 +583,7 @@ public class RequestModel {
                                 }
                             }
                         }
-                        if ("a1009Fd5ZCJ".equals(oemModel)) {//紧急按钮设备
+                        if ("a1009Fd5ZCJ".equals(pid)) {//紧急按钮设备
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();

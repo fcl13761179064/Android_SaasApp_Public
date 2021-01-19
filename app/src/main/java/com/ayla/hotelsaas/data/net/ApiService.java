@@ -142,12 +142,11 @@ public interface ApiService {
     /**
      * 参数换成PID
      *
-     * @param oemModel
+     * @param pid
      * @return
      */
-    @Deprecated
-    @GET("api/v1/build/device/queryModelTemplate/{oemModel}")
-    Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("oemModel") String oemModel);
+    @GET("api/v1/build/spark/devicetypes/{pid}/modelTemplate")
+    Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("pid") String pid);
 
     @GET("api/v1/build/device/{deviceId}")
     Observable<BaseResult<DeviceFirmwareVersionBean>> fetchDeviceDetail(@Path("deviceId") String deviceId);

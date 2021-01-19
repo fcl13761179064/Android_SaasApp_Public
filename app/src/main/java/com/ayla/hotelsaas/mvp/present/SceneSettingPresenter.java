@@ -133,7 +133,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         for (DeviceListBean.DevicesBean enableDevice : enableDevices) {
                             if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(enableDevice)) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
                                 tasks.add(RequestModel.getInstance()
-                                        .fetchDeviceTemplate(enableDevice.getDeviceCategory())
+                                        .fetchDeviceTemplate(enableDevice.getPid())
                                         .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                                             @Override
                                             public DeviceTemplateBean apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
@@ -147,7 +147,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             for (DeviceCategoryDetailBean deviceCategoryDetailBean : deviceCategoryDetailBeans) {
                                 if (TextUtils.equals(deviceCategoryDetailBean.getDeviceId(), enableDevice.getDeviceId())) {
                                     tasks.add(RequestModel.getInstance()
-                                            .fetchDeviceTemplate(enableDevice.getDeviceCategory())
+                                            .fetchDeviceTemplate(enableDevice.getPid())
                                             .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                                                 @Override
                                                 public DeviceTemplateBean apply(@NonNull BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {

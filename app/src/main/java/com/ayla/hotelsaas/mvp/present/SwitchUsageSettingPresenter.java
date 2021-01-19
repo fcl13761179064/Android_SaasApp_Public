@@ -68,7 +68,7 @@ public class SwitchUsageSettingPresenter extends BasePresenter<SwitchUsageSettin
                     public ObservableSource<String[]> apply(@NonNull DeviceListBean.DevicesBean devicesBean) throws Exception {
                         if (devicesBean.getCuId() == 0) {//艾拉设备
                             return RequestModel.getInstance()
-                                    .fetchDeviceTemplate(devicesBean.getDeviceCategory())
+                                    .fetchDeviceTemplate(devicesBean.getPid())
                                     .compose(new BaseResultTransformer<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                                     })
                                     .flatMap(new Function<DeviceTemplateBean, ObservableSource<String[]>>() {

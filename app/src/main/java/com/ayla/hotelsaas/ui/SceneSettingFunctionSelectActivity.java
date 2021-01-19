@@ -134,7 +134,7 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int type = getIntent().getIntExtra("type", 0);//选择的功能作为条件还是动作。
-        mPresenter.loadFunction(type == 0, deviceBean.getDeviceId(), deviceBean.getPid(), deviceBean.getDeviceCategory());
+        mPresenter.loadFunction(type == 0, deviceBean.getDeviceId(), deviceBean.getPid());
     }
 
     @Override

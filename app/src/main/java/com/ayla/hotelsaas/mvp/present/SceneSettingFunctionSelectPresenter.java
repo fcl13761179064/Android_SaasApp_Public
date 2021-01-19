@@ -27,9 +27,8 @@ import io.reactivex.schedulers.Schedulers;
 public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSettingFunctionSelectView> {
     /**
      * @param deviceId
-     * @param oemModel
      */
-    public void loadFunction(boolean condition, String deviceId, String pid, String oemModel) {
+    public void loadFunction(boolean condition, String deviceId, String pid) {
         Disposable subscribe = RequestModel.getInstance()
                 .getDeviceCategoryDetail(pid)
                 .map(new Function<DeviceCategoryDetailBean, List<String>>() {
@@ -42,7 +41,7 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
                         }
                     }
                 })//查询出设备对条件、动作的支持情况
-                .zipWith(RequestModel.getInstance().fetchDeviceTemplate(oemModel)
+                .zipWith(RequestModel.getInstance().fetchDeviceTemplate(pid)
                         .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                             @Override
                             public DeviceTemplateBean apply(@NonNull BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {

@@ -22,7 +22,7 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
     public void loadFunction(String deviceId, String property) {
         final DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
         Disposable subscribe = RequestModel.getInstance()
-                .fetchDeviceTemplate(devicesBean.getDeviceCategory())
+                .fetchDeviceTemplate(devicesBean.getPid())
                 .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                     @Override
                     public DeviceTemplateBean apply(@NonNull BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
