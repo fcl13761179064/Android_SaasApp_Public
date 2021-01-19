@@ -6,7 +6,7 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
-import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.FunctionRenameView;
 
@@ -73,9 +73,9 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                                 });
                     }
                 })//然后结合物模板查询出功能默认名称
-                .zipWith(RequestModel.getInstance().getALlTouchPanelDeviceInfo(cuId, deviceId), new BiFunction<List<DeviceTemplateBean.AttributesBean>, List<TouchPanelDataBean>, List<Map<String, String>>>() {
+                .zipWith(RequestModel.getInstance().fetchPropertyNickname(cuId, deviceId), new BiFunction<List<DeviceTemplateBean.AttributesBean>, List<PropertyNicknameBean>, List<Map<String, String>>>() {
                     @Override
-                    public List<Map<String, String>> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
+                    public List<Map<String, String>> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<PropertyNicknameBean> touchPanelDataBeans) throws Exception {
                         List<Map<String, String>> result = new ArrayList<>();
                         for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans) {
                             Map<String, String> bean = new HashMap<>();
@@ -83,7 +83,7 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                             String code = attributesBean.getCode();
                             bean.put("propertyCode", attributesBean.getCode());
                             bean.put("propertyName", attributesBean.getDisplayName());
-                            for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
+                            for (PropertyNicknameBean touchPanelDataBean : touchPanelDataBeans) {
                                 if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
                                         TextUtils.equals(code, touchPanelDataBean.getPropertyName())) {
                                     bean.put("propertyNickname", touchPanelDataBean.getPropertyValue());
@@ -126,7 +126,7 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
 
     public void renameFunction(int cuId, String deviceId, String nickNameId, String property, String propertyNickName) {
         Disposable subscribe = RequestModel.getInstance()
-                .setPropertyNickName(nickNameId, deviceId, cuId, property, propertyNickName)
+                .updatePropertyNickName(nickNameId, deviceId, cuId, property, propertyNickName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

@@ -18,7 +18,7 @@ import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
@@ -616,42 +616,6 @@ public class RequestModel {
     }
 
     /**
-     * 开关重命名/触控面板名称重命名/触控面板图片更换
-     *
-     * @return
-     */
-    public Observable<Boolean> touchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue) {
-        return Observable
-                .fromCallable(new Callable<RequestBody>() {
-                    @Override
-                    public RequestBody call() throws Exception {
-                        JSONObject uploadParams = new JSONObject();
-                        JSONArray list = new JSONArray();
-                        JSONObject jsonObject = new JSONObject();
-                        if (id != 0) {
-                            jsonObject.put("id", id);
-                        }
-                        uploadParams.put("needHandleAliService", true);
-                        jsonObject.put("deviceId", deviceId);
-                        jsonObject.put("cuId", cuId);
-                        jsonObject.put("propertyName", propertyName);
-                        jsonObject.put("propertyType", propertyType);
-                        jsonObject.put("propertyValue", propertyValue);
-                        list.put(jsonObject);
-                        uploadParams.put("propertyList", list);
-                        return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
-                    }
-                })
-                .flatMap(new Function<RequestBody, ObservableSource<Boolean>>() {
-                    @Override
-                    public ObservableSource<Boolean> apply(RequestBody body) throws Exception {
-                        return getApiService().tourchPanelRenameAndIcon(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
-                        });
-                    }
-                });
-    }
-
-    /**
      * 设置设备属性的别名
      *
      * @param nickNameId
@@ -660,7 +624,7 @@ public class RequestModel {
      * @param propertyName
      * @return
      */
-    public Observable<Boolean> setPropertyNickName(String nickNameId, String deviceId, int cuId, String propertyName, String propertyNickName) {
+    public Observable<Boolean> updatePropertyNickName(String nickNameId, String deviceId, int cuId, String propertyName, String propertyNickName) {
         return Observable
                 .fromCallable(new Callable<RequestBody>() {
                     @Override
@@ -674,8 +638,8 @@ public class RequestModel {
                         uploadParams.put("needHandleAliService", false);
                         jsonObject.put("deviceId", deviceId);
                         jsonObject.put("cuId", cuId);
-                        jsonObject.put("propertyName", propertyName);
                         jsonObject.put("propertyType", "nickName");
+                        jsonObject.put("propertyName", propertyName);
                         jsonObject.put("propertyValue", propertyNickName);
                         list.put(jsonObject);
                         uploadParams.put("propertyList", list);
@@ -685,20 +649,20 @@ public class RequestModel {
                 .flatMap(new Function<RequestBody, ObservableSource<Boolean>>() {
                     @Override
                     public ObservableSource<Boolean> apply(RequestBody body) throws Exception {
-                        return getApiService().tourchPanelRenameAndIcon(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                        return getApiService().setPropertyNickname(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
                         });
                     }
                 });
     }
 
     /**
-     * 获取所有的场景按键信息
+     * 获取设备属性的别名
      *
      * @return
      */
-    public Observable<List<TouchPanelDataBean>> getALlTouchPanelDeviceInfo(int cuId, String deviceId) {
-        return getApiService().touchpanelALlDevice(cuId, deviceId)
-                .compose(new BaseResultTransformer<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
+    public Observable<List<PropertyNicknameBean>> fetchPropertyNickname(int cuId, String deviceId) {
+        return getApiService().getPropertyNickname(cuId, deviceId)
+                .compose(new BaseResultTransformer<BaseResult<List<PropertyNicknameBean>>, List<PropertyNicknameBean>>() {
                 });
     }
 
@@ -887,22 +851,22 @@ public class RequestModel {
             @Override
             public ObservableSource<DeviceTemplateBean> apply(@NonNull Observable<DeviceTemplateBean> upstream) {
                 return upstream.zipWith(RequestModel.getInstance()
-                                .getALlTouchPanelDeviceInfo(devicesBean.getCuId(), deviceId),
-                        new BiFunction<DeviceTemplateBean, List<TouchPanelDataBean>, DeviceTemplateBean>() {
+                                .fetchPropertyNickname(devicesBean.getCuId(), deviceId),
+                        new BiFunction<DeviceTemplateBean, List<PropertyNicknameBean>, DeviceTemplateBean>() {
                             @Override
-                            public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
+                            public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<PropertyNicknameBean> propertyNicknameBeans) throws Exception {
                                 for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans.getAttributes()) {
-                                    for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
-                                        if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
-                                                TextUtils.equals(attributesBean.getCode(), touchPanelDataBean.getPropertyName())) {
-                                            attributesBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                    for (PropertyNicknameBean propertyNicknameBean : propertyNicknameBeans) {
+                                        if ("nickName".equals(propertyNicknameBean.getPropertyType()) &&
+                                                TextUtils.equals(attributesBean.getCode(), propertyNicknameBean.getPropertyName())) {
+                                            attributesBean.setDisplayName(propertyNicknameBean.getPropertyValue());
                                         }
-                                        if ("Words".equals(touchPanelDataBean.getPropertyType())) {
+                                        if ("Words".equals(propertyNicknameBean.getPropertyType())) {
                                             if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
                                                 if (attributesBean.getValue() != null) {
                                                     for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
-                                                        if (TextUtils.equals(valueBean.getValue(), touchPanelDataBean.getPropertyName())) {
-                                                            valueBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                                        if (TextUtils.equals(valueBean.getValue(), propertyNicknameBean.getPropertyName())) {
+                                                            valueBean.setDisplayName(propertyNicknameBean.getPropertyValue());
                                                         }
                                                     }
                                                 }

@@ -2,7 +2,7 @@ package com.ayla.hotelsaas.bean;
 
 import java.io.Serializable;
 
-public class TouchPanelDataBean implements Serializable {
+public class PropertyNicknameBean implements Serializable {
 
 
     /**

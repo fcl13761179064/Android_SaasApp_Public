@@ -8,7 +8,6 @@ import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
-import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionSelectView;
 import com.ayla.hotelsaas.utils.TempUtils;

@@ -14,7 +14,7 @@ import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
@@ -157,10 +157,10 @@ public interface ApiService {
     Observable<BaseResult<Boolean>> removeDevice(@Body RequestBody body);
 
     @POST("/api/v1/build/device/deviceProperties")
-    Observable<BaseResult<Boolean>> tourchPanelRenameAndIcon(@Body RequestBody body);
+    Observable<BaseResult<Boolean>> setPropertyNickname(@Body RequestBody body);
 
     @GET("/api/v1/build/device/deviceProperties/{cuId}/{deviceId}")
-    Observable<BaseResult<List<TouchPanelDataBean>>> touchpanelALlDevice(@Path("cuId") int oemModel, @Path("deviceId") String ss);
+    Observable<BaseResult<List<PropertyNicknameBean>>> getPropertyNickname(@Path("cuId") int oemModel, @Path("deviceId") String ss);
 
     /**
      * 房间分配，获取酒店列表
