@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,11 +37,11 @@ public class DeviceCategoryDetailBean {
     }
 
     public List<String> getConditionProperties() {
-        return conditionProperties;
+        return conditionProperties == null? new ArrayList<>():conditionProperties;
     }
 
     public List<String> getActionProperties() {
-        return actionProperties;
+        return actionProperties == null ? new ArrayList<>():actionProperties;
     }
 
     public String getDeviceId() {
