@@ -221,7 +221,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
         } else if (networkType == 3) {//跳转艾拉节点
             if (aylaGateways.size() == 0) {//没有艾拉网关
-                CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming);
+                CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming);
             } else if (aylaGateways.size() == 1) {//一个艾拉网关
                 DeviceListBean.DevicesBean gateway = aylaGateways.get(0);
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
@@ -265,7 +265,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
         } else if (networkType == 4) {//跳转鸿雁节点
             if (hyGateways.size() == 0) {//没有鸿雁网关
-                CustomToast.makeText(this, "该设备无法绑定", R.drawable.ic_toast_warming);
+                CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming);
             } else if (hyGateways.size() == 1) {//一个网关
                 DeviceListBean.DevicesBean gateway = hyGateways.get(0);
                 if (TempUtils.isDeviceOnline(gateway)) {//网关在线
