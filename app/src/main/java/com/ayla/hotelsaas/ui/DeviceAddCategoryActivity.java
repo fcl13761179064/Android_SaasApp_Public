@@ -34,7 +34,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 /**
  * @描述 添加设备入口页面，展示产品分类二级列表
  * 进入时必须带上参数scopeId
- *
+ * <p>
  * 如果是添加待绑定的设备，还要带上：
  * boolean addForWait
  * waitBindDeviceId
@@ -129,10 +129,14 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         boolean addForWait = getIntent().getBooleanExtra("addForWait", false);
         if (addForWait) {
             String pid = getIntent().getStringExtra("pid");
-            for (DeviceCategoryBean.SubBean.NodeBean nodeBean : mRightAdapter.getData()) {
-                if (TextUtils.equals(pid, nodeBean.getPid())) {
-                    handleAddJump(nodeBean);
-                    return;
+            for (DeviceCategoryBean deviceCategoryBean : deviceCategoryBeans) {
+                for (DeviceCategoryBean.SubBean subBean : deviceCategoryBean.getSub()) {
+                    for (DeviceCategoryBean.SubBean.NodeBean nodeBean : subBean.getNode()) {
+                        if (TextUtils.equals(pid, nodeBean.getPid())) {
+                            handleAddJump(nodeBean);
+                            return;
+                        }
+                    }
                 }
             }
             getIntent().removeExtra("addForWait");
