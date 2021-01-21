@@ -80,7 +80,7 @@ public class DeviceListBean {
         private String nickname;
         private String deviceCategory;
         private String deviceStatus;
-        private int connectTypeId;//1-网关设备、2-节点设备
+        private int connectTypeId;
         private String iconUrl;
         private boolean hasH5;
         private int deviceUseType;//0:常规设备      1:用途设备      2:红外源设备   3:用途源设备。      用途设备在联动里面，直接可以作为联动动作，支持的动作以物模型为准。
@@ -91,7 +91,8 @@ public class DeviceListBean {
         private String regionName;
         private int bindType;//设备绑定绑定类型，【0：默认，1：待绑定】
         private String pid;
-        private int productType;
+        private int productType;//产品类型 1、网关设备 2、设备
+        private int isNeedGateway;
 
         public int getProductType() {
             return productType;
@@ -111,14 +112,6 @@ public class DeviceListBean {
 
         public void setDeviceCategory(String deviceCategory) {
             this.deviceCategory = deviceCategory;
-        }
-
-        public int getConnectTypeId() {
-            return connectTypeId;
-        }
-
-        public void setConnectTypeId(int connectTypeId) {
-            this.connectTypeId = connectTypeId;
         }
 
         public int getCuId() {
@@ -203,6 +196,10 @@ public class DeviceListBean {
 
         public String getPid() {
             return pid;
+        }
+
+        public int getIsNeedGateway() {
+            return isNeedGateway;
         }
     }
 }

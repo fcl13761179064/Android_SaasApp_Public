@@ -25,6 +25,21 @@ public class TempUtils {
         return devicesBean.getBindType() == 0 && devicesBean.getProductType() == 1;
     }
 
+
+    /**
+     * 判断设备是否为节点
+     *
+     * @param devicesBean
+     * @return
+     */
+    public static boolean isDeviceNode(DeviceListBean.DevicesBean devicesBean) {
+        if (devicesBean == null) {
+            return false;
+        }
+        return devicesBean.getBindType() == 0 && devicesBean.getProductType() == 2 &&
+                devicesBean.getIsNeedGateway() == 1;
+    }
+
     /**
      * 判断是被是否在线
      *
