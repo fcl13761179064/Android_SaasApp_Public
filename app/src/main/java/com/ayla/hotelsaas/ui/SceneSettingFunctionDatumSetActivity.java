@@ -109,10 +109,23 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneS
             fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(attributesBean), "content");
         } else if (attributesBean.getSetup() != null) {
             int type = getIntent().getIntExtra("type", 0);//0:条件
-            if (type == 0) {
-                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeWithOptionFragment.newInstance(attributesBean), "content");
+
+            Double max = attributesBean.getSetup().getMax();
+            Double min = attributesBean.getSetup().getMin();
+            Double step = attributesBean.getSetup().getStep();
+
+            int count = 0;
+            for (double i = min; i <= max; i += step) {
+                count++;
+            }
+            if (count > 20 && step == 1) {//大于20个选项范围，使用手动填写
+                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetBigValueSelectFragment.newInstance(type == 0, attributesBean), "content");
             } else {
-                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeFragment.newInstance(attributesBean), "content");
+                if (type == 0) {
+                    fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeWithOptionFragment.newInstance(attributesBean), "content");
+                } else {
+                    fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeFragment.newInstance(attributesBean), "content");
+                }
             }
         } else if (attributesBean.getBitValue() != null) {
             fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(attributesBean), "content");
