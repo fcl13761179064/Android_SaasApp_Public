@@ -83,7 +83,7 @@ public class RequestModel {
         body.addProperty("account", account);
         body.addProperty("password", password);
         RequestBody new_body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().login(1, new_body).compose(new BaseResultTransformer<BaseResult<User>, User>() {
+        return getApiService().login(new_body).compose(new BaseResultTransformer<BaseResult<User>, User>() {
         });
     }
 

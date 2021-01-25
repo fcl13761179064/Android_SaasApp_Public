@@ -9,6 +9,8 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
+import retrofit2.HttpException;
+
 public class TempUtils {
     /**
      * 判断设备是否为网关
@@ -68,6 +70,12 @@ public class TempUtils {
             msg = "网络连接失败，请检查网络";
         } else if (throwable instanceof UnknownHostException) {
             msg = "网络连接失败，请检查网络";
+        } else if (throwable instanceof HttpException) {
+            switch (((HttpException) throwable).code()) {
+                case 403:
+                    msg = "没有访问权限";
+                    break;
+            }
         } else if (throwable instanceof ServerBadException) {
             String serverMsg = ((ServerBadException) throwable).getMsg();
 

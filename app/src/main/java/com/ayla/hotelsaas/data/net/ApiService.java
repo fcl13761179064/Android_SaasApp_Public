@@ -41,8 +41,8 @@ import retrofit2.http.Query;
  */
 public interface ApiService {
 
-    @POST("api/v2/sso/login")
-    Observable<BaseResult<User>> login(@Header("loginSource") int loginSource, @Body RequestBody body);
+    @POST("api/v1/build/user/login")
+    Observable<BaseResult<User>> login(@Body RequestBody body);
 
     @GET("api/v2/sso/{resourceId}")
     Observable<BaseResult<String>> authCode(@Path("resourceId") String scopeId);
