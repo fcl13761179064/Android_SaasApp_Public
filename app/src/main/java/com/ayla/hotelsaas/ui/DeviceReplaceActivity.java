@@ -32,15 +32,22 @@ public class DeviceReplaceActivity extends BaseMvpActivity {
 
     DeviceListBean.DevicesBean devicesBean;
 
+    String deviceId;
+
     @Override
     protected void initView() {
-        String deviceId = getIntent().getStringExtra("deviceId");
+        deviceId = getIntent().getStringExtra("deviceId");
 
     }
 
     @Override
     protected void initListener() {
+        mBinding.button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
     }
 
 }
