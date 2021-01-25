@@ -165,6 +165,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     public void checkVersionFailed(Throwable throwable) {
+        hideProgress();
         CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
     }
 
@@ -172,6 +173,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     public void checkVersionSuccess(VersionUpgradeBean versionUpgradeBean) {
         if (versionUpgradeBean != null) {
             if (versionUpgradeBean.getIsForce() != 0) {
+                hideProgress();
                 UpgradeUnifiedCode.handleUpgrade(this, versionUpgradeBean);
                 return;
             }
