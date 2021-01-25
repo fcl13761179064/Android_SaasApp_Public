@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddGuideView;
@@ -25,7 +26,7 @@ import butterknife.OnClick;
 
 /**
  * wifi设备、节点设备 配网引导页面
- * 进入时必须带入int networkType 。
+ * 进入时必须带入nodeBean {@link com.ayla.hotelsaas.bean.DeviceCategoryBean.SubBean.NodeBean} 。
  * networkType == 3、4 时 ，需要带入：网关deviceId 、cuId 、scopeId 、deviceCategory、pid
  * networkType == 5 时 ，需要带入：scopeId 、deviceCategory、pid
  */
@@ -67,21 +68,40 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
 
 
     private void handleJump() {
-        int networkType = getIntent().getIntExtra("networkType", 0);
-        if (networkType == 3) {//艾拉节点设备配网
-            Intent mainActivity = new Intent(this, DeviceAddActivity.class);
-            mainActivity.putExtras(getIntent());
-            mainActivity.putExtra("networkType", 3);
-            startActivityForResult(mainActivity, 0);
+        DeviceCategoryBean.SubBean.NodeBean subBean = (DeviceCategoryBean.SubBean.NodeBean) getIntent().getSerializableExtra("nodeBean");
+
+        int networkType = -1;//2：艾拉网关  3：艾拉节点 5：艾拉WiFi   1：鸿雁网关 4：鸿雁节点
+        if (subBean.getSource() == 0) {//艾拉云
+            if (subBean.getProductType() == 1) {//网关设备
+                networkType = 2;//艾拉网关
+            } else {//其他设备
+                if (subBean.getIsNeedGateway() == 1) {//节点设备
+                    networkType = 3;//艾拉节点
+                } else {
+                    networkType = 5;//艾拉WiFi
+                }
+            }
+        } else if (subBean.getSource() == 1) {//阿里云
+            if (subBean.getProductType() == 1) {//网关设备
+                networkType = 1;//鸿雁网关
+            } else {//其他设备
+                if (subBean.getIsNeedGateway() == 1) {//节点设备
+                    networkType = 4;//鸿雁节点
+                }
+            }
         }
-        if (networkType == 4) {//鸿雁节点设备配网
-            Intent mainActivity = new Intent(this, DeviceAddActivity.class);
-            mainActivity.putExtras(getIntent());
-            mainActivity.putExtra("networkType", 4);
-            startActivityForResult(mainActivity, 0);
+        Intent mainActivity = null;
+        if (networkType == 3) {//艾拉节点设备配网
+            mainActivity = new Intent(this, DeviceAddActivity.class);
+        } else if (networkType == 4) {//鸿雁节点设备配网
+            mainActivity = new Intent(this, DeviceAddActivity.class);
         } else if (networkType == 5) {//艾拉WiFi设备配网
-            Intent mainActivity = new Intent(this, AylaWiFiAddInputActivity.class);
+            mainActivity = new Intent(this, AylaWiFiAddInputActivity.class);
+
+        }
+        if (mainActivity != null) {
             mainActivity.putExtras(getIntent());
+            mainActivity.putExtra("networkType", networkType);
             startActivityForResult(mainActivity, 0);
         }
     }

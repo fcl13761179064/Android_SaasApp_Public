@@ -143,7 +143,6 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
             intent.putExtra("wifiName", name);
             intent.putExtra("wifiPassword", pwd);
             intent.putExtras(getIntent());
-            intent.putExtra("networkType", 5);
             startActivityForResult(intent, REQUEST_CODE_START_ADD);
         }
     }
