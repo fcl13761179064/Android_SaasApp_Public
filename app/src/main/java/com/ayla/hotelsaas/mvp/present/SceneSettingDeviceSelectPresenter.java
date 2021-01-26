@@ -13,7 +13,6 @@ import com.ayla.hotelsaas.mvp.view.SceneSettingDeviceSelectView;
 import com.ayla.hotelsaas.utils.TempUtils;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -71,14 +70,9 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                 devicesBeans.clear();
                 devicesBeans.addAll(result);
             }
-        });
-        Disposable subscribe = RequestModel.getInstance().getDeviceCategoryDetail()
-                .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, List<DeviceCategoryDetailBean>>() {
-                    @Override
-                    public List<DeviceCategoryDetailBean> apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
-                        return listBaseResult.data;
-                    }
-                })//查询出设备对条件、动作的支持情况
+        });//排除掉待添加的设备
+        Disposable subscribe = RequestModel.getInstance()
+                .getDeviceCategoryDetail(scopeId)//查询出设备对条件、动作的支持情况
                 .zipWith(observable, new BiFunction<List<DeviceCategoryDetailBean>, List<DeviceListBean.DevicesBean>, List<DeviceListBean.DevicesBean>>() {
                     @Override
                     public List<DeviceListBean.DevicesBean> apply(List<DeviceCategoryDetailBean> deviceCategoryDetailBeans, List<DeviceListBean.DevicesBean> devicesBeans) throws Exception {
@@ -89,8 +83,7 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                                 continue;
                             }
                             for (DeviceCategoryDetailBean categoryDetailBean : deviceCategoryDetailBeans) {
-                                if (categoryDetailBean.getCuId() == devicesBean.getCuId()
-                                        && TextUtils.equals(categoryDetailBean.getOemModel(), devicesBean.getDeviceCategory())) {//找到已绑定的设备的条件、动作描述信息
+                                if (TextUtils.equals(categoryDetailBean.getDeviceId(), devicesBean.getDeviceId())) {//找到已绑定的设备的条件、动作描述信息
                                     if (condition) {
                                         List<String> conditionProperties = categoryDetailBean.getConditionProperties();
                                         if (conditionProperties != null && conditionProperties.size() != 0) {

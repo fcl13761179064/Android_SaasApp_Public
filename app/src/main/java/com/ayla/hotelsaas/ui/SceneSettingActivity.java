@@ -558,7 +558,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 actions.add((BaseSceneBean.DeviceAction) action);
             }
         }
-        mPresenter.loadFunctionDetail(conditions, actions);
+        mPresenter.loadFunctionDetail(mRuleEngineBean.getScopeId(), conditions, actions);
     }
 
     @OnClick(R.id.ll_icon_area)

@@ -20,7 +20,7 @@ public class TempUtils {
         if (devicesBean == null) {
             return false;
         }
-        return devicesBean.getBindType() == 0 && devicesBean.getConnectTypeId() == 1;
+        return devicesBean.getBindType() == 0 && devicesBean.getProductType() == 1;
     }
 
     /**
@@ -56,7 +56,7 @@ public class TempUtils {
      * @return
      */
     public static boolean isSWITCH_PURPOSE_SUB_DEVICE(DeviceListBean.DevicesBean deviceBean) {
-        return deviceBean.getDeviceUseType() == 1 && deviceBean.getDeviceCategory().startsWith("PD-NODE-ABP9-");
+        return deviceBean.getDeviceUseType() == 1 && deviceBean.getPid() != null && deviceBean.getPid().startsWith("PD-NODE-ABP9-");
     }
 
     public static String getLocalErrorMsg(String defaultMsg, Throwable throwable) {

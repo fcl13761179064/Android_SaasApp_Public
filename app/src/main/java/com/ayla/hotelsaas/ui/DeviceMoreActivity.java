@@ -85,7 +85,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
             }
             tv_device_name.setText(mDevicesBean.getNickname());
             if (!TempUtils.isDeviceGateway(mDevicesBean)) {
-                mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getDeviceCategory(), mDevicesBean.getDeviceId());
+                mPresenter.getRenameAbleFunctions(mDevicesBean.getPid());
             }
         }
     }
@@ -184,6 +184,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
 
     @Override
     public void removeFailed(Throwable throwable) {
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
     }
 
     @Override

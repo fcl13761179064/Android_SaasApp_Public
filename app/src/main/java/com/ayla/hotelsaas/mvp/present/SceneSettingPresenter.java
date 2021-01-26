@@ -105,7 +105,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
         addSubscrebe(subscribe);
     }
 
-    public void loadFunctionDetail(List<BaseSceneBean.DeviceCondition> conditionItems, List<BaseSceneBean.DeviceAction> actionItems) {
+    public void loadFunctionDetail(long roomId, List<BaseSceneBean.DeviceCondition> conditionItems, List<BaseSceneBean.DeviceAction> actionItems) {
         Set<DeviceListBean.DevicesBean> enableDevices = new HashSet<>();//条件动作里面用到了的设备集合
         for (BaseSceneBean.DeviceAction actionItem : actionItems) {
             DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(actionItem.getTargetDeviceId());
@@ -123,14 +123,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
         if (enableDevices.size() == 0) {
             observable = Observable.just(new ArrayList<DeviceCategoryDetailBean>());
         } else {
-            observable = RequestModel.getInstance()
-                    .getDeviceCategoryDetail()
-                    .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, List<DeviceCategoryDetailBean>>() {
-                        @Override
-                        public List<DeviceCategoryDetailBean> apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
-                            return listBaseResult.data;
-                        }
-                    });//获取品类中心描述
+            observable = RequestModel.getInstance().getDeviceCategoryDetail(roomId);//获取品类中心描述
         }
         Disposable subscribe = observable
                 .flatMap(new Function<List<DeviceCategoryDetailBean>, ObservableSource<DeviceTemplateBean[]>>() {
@@ -140,7 +133,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                         for (DeviceListBean.DevicesBean enableDevice : enableDevices) {
                             if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(enableDevice)) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
                                 tasks.add(RequestModel.getInstance()
-                                        .fetchDeviceTemplate(enableDevice.getDeviceCategory())
+                                        .fetchDeviceTemplate(enableDevice.getPid())
                                         .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                                             @Override
                                             public DeviceTemplateBean apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
@@ -152,9 +145,9 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                 continue;
                             }
                             for (DeviceCategoryDetailBean deviceCategoryDetailBean : deviceCategoryDetailBeans) {
-                                if (TextUtils.equals(deviceCategoryDetailBean.getOemModel(), enableDevice.getDeviceCategory())) {
+                                if (TextUtils.equals(deviceCategoryDetailBean.getDeviceId(), enableDevice.getDeviceId())) {
                                     tasks.add(RequestModel.getInstance()
-                                            .fetchDeviceTemplate(deviceCategoryDetailBean.getOemModel())
+                                            .fetchDeviceTemplate(enableDevice.getPid())
                                             .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                                                 @Override
                                                 public DeviceTemplateBean apply(@NonNull BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {

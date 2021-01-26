@@ -46,13 +46,17 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
             return;
         }
         {
-            if (devicesBean.getDeviceName().startsWith("单")) {
+            if (devicesBean.getDeviceName().contains("单")) {
                 type = 1;
-            } else if (devicesBean.getDeviceName().startsWith("双")) {
+            } else if (devicesBean.getDeviceName().contains("一")) {
+                type = 1;
+            } else if (devicesBean.getDeviceName().contains("双")) {
                 type = 2;
-            } else if (devicesBean.getDeviceName().startsWith("三")) {
+            } else if (devicesBean.getDeviceName().contains("二")) {
+                type = 2;
+            } else if (devicesBean.getDeviceName().contains("三")) {
                 type = 3;
-            } else if (devicesBean.getDeviceName().startsWith("四")) {
+            } else if (devicesBean.getDeviceName().contains("四")) {
                 type = 4;
             }
         }

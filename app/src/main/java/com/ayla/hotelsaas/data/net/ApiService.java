@@ -10,11 +10,11 @@ import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
+import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
@@ -83,11 +83,14 @@ public interface ApiService {
     @DELETE("api/v1/build/hotelcontent/approom/{id}")
     Observable<BaseResult<String>> deleteRoomNum(@Path("id") long roomId);
 
-    @GET("/api/v1/build/devicetypes")
+    @GET("/api/v1/build/spark/devicetypes")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
-    @GET("/api/v1/build/devicetypes/list")
-    Observable<BaseResult<List<DeviceCategoryDetailBean>>> fetchDeviceCategoryDetail();
+    @POST("/api/v1/build/device/getDeviceActionOrCondition")
+    Observable<BaseResult<List<DeviceCategoryDetailBean>>> fetchDeviceCategoryDetail(@Body RequestBody body);
+
+    @POST("/api/v1/build/device/getDeviceActionOrCondition/{pid}")
+    Observable<BaseResult<DeviceCategoryDetailBean>> fetchDeviceCategoryDetail(@Path("pid") String pid);
 
     @GET("api/v1/build/constructbill")
     Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
@@ -136,8 +139,14 @@ public interface ApiService {
     @PUT("api/v1/build/device/{deviceId}/property")
     Observable<BaseResult<Boolean>> updateProperty(@Path("deviceId") String deviceId, @Body RequestBody body);
 
-    @GET("api/v1/build/device/queryModelTemplate/{oemModel}")
-    Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("oemModel") String oemModel);
+    /**
+     * 参数换成PID
+     *
+     * @param pid
+     * @return
+     */
+    @GET("api/v1/build/spark/devicetypes/{pid}/modelTemplate")
+    Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(@Path("pid") String pid);
 
     @GET("api/v1/build/device/{deviceId}")
     Observable<BaseResult<DeviceFirmwareVersionBean>> fetchDeviceDetail(@Path("deviceId") String deviceId);
@@ -149,10 +158,10 @@ public interface ApiService {
     Observable<BaseResult<Boolean>> removeDevice(@Body RequestBody body);
 
     @POST("/api/v1/build/device/deviceProperties")
-    Observable<BaseResult<Boolean>> tourchPanelRenameAndIcon(@Body RequestBody body);
+    Observable<BaseResult<Boolean>> updatePropertyNickName(@Body RequestBody body);
 
     @GET("/api/v1/build/device/deviceProperties/{cuId}/{deviceId}")
-    Observable<BaseResult<List<TouchPanelDataBean>>> touchpanelALlDevice(@Path("cuId") int oemModel, @Path("deviceId") String ss);
+    Observable<BaseResult<List<PropertyNicknameBean>>> fetchPropertyNickname(@Path("cuId") int oemModel, @Path("deviceId") String ss);
 
     /**
      * 房间分配，获取酒店列表
@@ -207,8 +216,8 @@ public interface ApiService {
      *
      * @return
      */
-    @GET("/api/v1/build/devicetypes/{categoryId}/networkguide")
-    Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(@Path("categoryId") String categoryId);
+    @GET("/api/v1/build/spark/devicetypes/{pid}/networkGuide")
+    Observable<BaseResult<List<NetworkConfigGuideBean>>> getNetworkConfigGuide(@Path("pid") String pid);
 
     @GET("/api/v1/build/version")
     Observable<BaseResult<VersionUpgradeBean>> getAppVersion(@Query("platform") int platform, @Query("versionCode") int versionCode);
@@ -230,7 +239,7 @@ public interface ApiService {
     @POST("/api/v1/build/scene/voiceRule")
     Observable<BaseResult<Boolean>> checkVoiceRule(@Body RequestBody body);
 
-    @GET("/api/v1/build/device/purpose/list")
+    @GET("/api/v1/build/device/purpose/spark/list")
     Observable<BaseResult<List<PurposeCategoryBean>>> getPurposeCategory();
 
     /**

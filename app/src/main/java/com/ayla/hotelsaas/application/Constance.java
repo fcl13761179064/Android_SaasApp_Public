@@ -1,7 +1,5 @@
 package com.ayla.hotelsaas.application;
 
-import android.text.TextUtils;
-
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.blankj.utilcode.util.GsonUtils;

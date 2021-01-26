@@ -14,9 +14,11 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddGuideView;
 import com.ayla.hotelsaas.utils.ImageLoader;
+import com.ayla.hotelsaas.utils.TempUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -24,8 +26,8 @@ import butterknife.OnClick;
 /**
  * wifi设备、节点设备 配网引导页面
  * 进入时必须带入int networkType 。
- * networkType == 3、4 时 ，需要带入：网关deviceId 、cuId 、scopeId 、deviceName、deviceCategory、categoryId
- * networkType == 5 时 ，需要带入：scopeId 、deviceName、deviceCategory、categoryId
+ * networkType == 3、4 时 ，需要带入：网关deviceId 、cuId 、scopeId 、deviceCategory、pid
+ * networkType == 5 时 ，需要带入：scopeId 、deviceCategory、pid
  */
 public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, DeviceAddGuidePresenter> implements DeviceAddGuideView {
     @BindView(R.id.iv)
@@ -40,8 +42,8 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        long categoryId = getIntent().getLongExtra("categoryId", 0);
-        mPresenter.getNetworkConfigGuide(String.valueOf(categoryId));
+        String pid = getIntent().getStringExtra("pid");
+        mPresenter.getNetworkConfigGuide(pid);
     }
 
     @Override
@@ -94,9 +96,19 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
     }
 
     @Override
-    public void showGuideInfo(String networkGuidePic, String networkGuideDesc) {
-        ImageLoader.loadImg(imageView, networkGuidePic, 0, 0);
-        textView.setText(networkGuideDesc);
+    public void getGuideInfoSuccess(NetworkConfigGuideBean o) {
+        if (o != null) {
+            String guidePic = o.getNetworkGuidePic();
+            String guideDesc = o.getNetworkGuideDesc();
+
+            ImageLoader.loadImg(imageView, guidePic, 0, 0);
+            textView.setText(guideDesc);
+        }
+    }
+
+    @Override
+    public void getGuideInfoFailed(Throwable throwable) {
+        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
     }
 
     @OnClick(R.id.bt)

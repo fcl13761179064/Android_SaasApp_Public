@@ -1,26 +1,17 @@
 package com.ayla.hotelsaas.mvp.present;
 
-import android.text.TextUtils;
-
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
-import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceMoreView;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -90,51 +81,9 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
         addSubscrebe(subscribe);
     }
 
-    public void getRenameAbleFunctions(int cuId, String deviceCategory, String deviceId) {
+    public void getRenameAbleFunctions(String pid) {
         Disposable subscribe = RequestModel.getInstance()
-                .getDeviceCategoryDetail()
-                .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, DeviceCategoryDetailBean>() {
-                    @Override
-                    public DeviceCategoryDetailBean apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
-                        for (DeviceCategoryDetailBean deviceCategoryDetailBean : listBaseResult.data) {
-                            if (cuId == deviceCategoryDetailBean.getCuId() && TextUtils.equals(deviceCategory, deviceCategoryDetailBean.getOemModel())) {
-                                return deviceCategoryDetailBean;
-                            }
-                        }
-                        return null;
-                    }
-                })//首先查询出改设备的品类支持功能详情。
-                .flatMap(new Function<DeviceCategoryDetailBean, ObservableSource<List<DeviceTemplateBean.AttributesBean>>>() {
-                    @Override
-                    public ObservableSource<List<DeviceTemplateBean.AttributesBean>> apply(DeviceCategoryDetailBean deviceCategoryDetailBean) throws Exception {
-                        return RequestModel.getInstance()
-                                .fetchDeviceTemplate(deviceCategoryDetailBean.getOemModel())
-                                .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
-                                    @Override
-                                    public DeviceTemplateBean apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
-                                        return deviceTemplateBeanBaseResult.data;
-                                    }
-                                })
-                                .map(new Function<DeviceTemplateBean, List<DeviceTemplateBean.AttributesBean>>() {
-                                    @Override
-                                    public List<DeviceTemplateBean.AttributesBean> apply(DeviceTemplateBean deviceTemplateBean) throws Exception {
-                                        List<DeviceTemplateBean.AttributesBean> attributesBeans = new ArrayList<>();
-                                        Set<String> functions = new LinkedHashSet<>();
-                                        functions.addAll(deviceCategoryDetailBean.getConditionProperties());
-                                        functions.addAll(deviceCategoryDetailBean.getActionProperties());
-                                        for (String function : functions) {
-                                            for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                                if (TextUtils.equals(function, attribute.getCode())) {
-                                                    attributesBeans.add(attribute);
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        return attributesBeans;
-                                    }
-                                });
-                    }
-                })//然后结合物模板查询出功能默认名称
+                .getDeviceCategoryDetail(pid)//找到了指定的设备，存在可以配置为联动条件、动作的属性。
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -149,13 +98,14 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<List<DeviceTemplateBean.AttributesBean>>() {
+                .subscribe(new Consumer<DeviceCategoryDetailBean>() {
                     @Override
-                    public void accept(List<DeviceTemplateBean.AttributesBean> attributesBeans) throws Exception {
-                        if (attributesBeans.size() == 0) {
-                            mView.cannotRenameFunction();
-                        } else {
+                    public void accept(DeviceCategoryDetailBean deviceCategoryDetailBean) throws Exception {
+                        int count = deviceCategoryDetailBean.getConditionProperties().size() + deviceCategoryDetailBean.getActionProperties().size();
+                        if (count > 0) {
                             mView.canRenameFunction();
+                        } else {
+                            mView.cannotRenameFunction();
                         }
                     }
                 }, new Consumer<Throwable>() {
