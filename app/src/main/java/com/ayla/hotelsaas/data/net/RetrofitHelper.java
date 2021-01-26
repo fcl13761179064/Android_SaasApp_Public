@@ -97,9 +97,9 @@ public class RetrofitHelper {
             Request.Builder requestBuilder = chain.request().newBuilder();
             requestBuilder.header("serviceId", "3");
             if (MyApplication.getInstance() != null) {
-                final String sava_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
-                if (sava_token != null) {
-                    requestBuilder.header("Authorization", sava_token).build();
+                final String save_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
+                if (save_token != null) {
+                    requestBuilder.header("Authorization", save_token).build();
                 }
             }
             return chain.proceed(requestBuilder.build());

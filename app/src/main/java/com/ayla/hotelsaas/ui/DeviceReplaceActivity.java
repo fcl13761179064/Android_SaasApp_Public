@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.view.View;
 
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -33,11 +34,12 @@ public class DeviceReplaceActivity extends BaseMvpActivity {
     DeviceListBean.DevicesBean devicesBean;
 
     String deviceId;
+    long scopeId;
 
     @Override
     protected void initView() {
         deviceId = getIntent().getStringExtra("deviceId");
-
+        scopeId = getIntent().getLongExtra("scopeId", 0);
     }
 
     @Override
@@ -45,7 +47,9 @@ public class DeviceReplaceActivity extends BaseMvpActivity {
         mBinding.button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(DeviceReplaceActivity.this, DeviceAddCategoryActivity.class);
+                intent.putExtra("scopeId", scopeId);
+                startActivity(intent);
             }
         });
     }

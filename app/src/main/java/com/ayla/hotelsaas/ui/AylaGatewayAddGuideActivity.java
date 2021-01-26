@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
@@ -13,7 +14,7 @@ import butterknife.OnClick;
 
 /**
  * Ayla网关添加引导页面
- * 进入时必须带上cuId 、scopeId 、deviceName、deviceCategory。
+ * 进入必须带上{@link Bundle addInfo}
  */
 public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
     private final int REQUEST_CODE_FOR_ADD = 0X10;
@@ -58,8 +59,8 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
                     if (!TextUtils.isEmpty(deviceId)) {
                         Intent mainActivity = new Intent(this, DeviceAddActivity.class);
                         mainActivity.putExtras(getIntent());
-                        mainActivity.putExtra("networkType", 2);
-                        mainActivity.putExtra("deviceId", deviceId);
+                        Bundle addInfo = mainActivity.getBundleExtra("addInfo");
+                        addInfo.putString("deviceId", deviceId);
                         startActivityForResult(mainActivity, REQUEST_CODE_FOR_ADD);
                         return;
                     }

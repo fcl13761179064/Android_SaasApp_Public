@@ -108,11 +108,11 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
                         return;
                     }
                     intent = new Intent(getContext(), DeviceAddCategoryActivity.class);
-                    intent.putExtra("addForWait", true);
-                    intent.putExtra("waitBindDeviceId", devicesBean.getDeviceId());
-                    intent.putExtra("nickname", devicesBean.getNickname());
-                    intent.putExtra("pid", devicesBean.getPid());
-                    intent.putExtra("deviceCategory", devicesBean.getDeviceCategory());
+                    Bundle bundle = new Bundle();
+                    bundle.putString("waitBindDeviceId", devicesBean.getDeviceId());
+                    bundle.putString("nickname", devicesBean.getNickname());
+                    bundle.putString("pid", devicesBean.getPid());
+                    intent.putExtra("addForWait", bundle);
                 }
                 intent.putExtra("deviceId", devicesBean.getDeviceId());
                 intent.putExtra("scopeId", room_id);

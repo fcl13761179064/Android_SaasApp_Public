@@ -26,11 +26,7 @@ import carlwu.top.lib_device_add.GatewayHelper;
 
 /**
  * 鸿雁网关绑定，选择要绑定的网关页面
- * 进入时必须带上:
- * int cuId
- * long scopeId
- * String deviceName
- * String deviceCategory。
+ * 进入必须带上{@link Bundle addInfo}
  */
 public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
 
@@ -68,7 +64,7 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
 
     @Override
     protected void initListener() {
-        String deviceCategory = getIntent().getStringExtra("deviceCategory");
+        String deviceCategory = getIntent().getBundleExtra("addInfo").getString("deviceCategory");
         discoverHelper = new GatewayHelper.DiscoverHelper(getApplication(), new GatewayHelper.DiscoverCallback() {
             @Override
             public void onDeviceFound(int type, List<Map<String, String>> data) {
@@ -96,10 +92,10 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
     public void handleJump(String productKey, String deviceName) {
         discoverHelper.stopDiscoverGateway();
         Intent intent = new Intent(this, DeviceAddActivity.class);
-        intent.putExtra("networkType", 1);
-        intent.putExtra("HYproductKey", productKey);
-        intent.putExtra("HYdeviceName", deviceName);
         intent.putExtras(getIntent());
+        Bundle addInfo = intent.getBundleExtra("addInfo");
+        addInfo.putString("HYproductKey", productKey);
+        addInfo.putString("HYdeviceName", deviceName);
         startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
     }
 

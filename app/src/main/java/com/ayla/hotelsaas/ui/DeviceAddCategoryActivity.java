@@ -36,12 +36,8 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  * @描述 添加设备入口页面，展示产品分类二级列表
  * 进入时必须带上参数scopeId
  * <p>
- * 如果是添加待绑定的设备，还要带上：
- * boolean addForWait
- * waitBindDeviceId
- * deviceCategory
- * nickname
- * pid
+ * 补全待绑定设备时，必须传入
+ * {@link Bundle addForWait} include:waitBindDeviceId、nickname、pid
  * @作者 吴友金
  */
 public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView, DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
@@ -128,9 +124,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         mLeftAdapter.setNewData(deviceCategoryBeans);
         adjustData(0);
 
-        boolean addForWait = getIntent().getBooleanExtra("addForWait", false);
-        if (addForWait) {
-            String pid = getIntent().getStringExtra("pid");
+        Bundle addForWaitBundle = getIntent().getBundleExtra("addForWait");
+        if (addForWaitBundle != null) {
+            String pid = addForWaitBundle.getString("pid");
             for (DeviceCategoryBean deviceCategoryBean : deviceCategoryBeans) {
                 for (DeviceCategoryBean.SubBean subBean : deviceCategoryBean.getSub()) {
                     for (DeviceCategoryBean.SubBean.NodeBean nodeBean : subBean.getNode()) {
@@ -141,11 +137,8 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     }
                 }
             }
+            //如果跳转了品类的添加，但是又取消了添加设备，就需要判断是否存在addForWait ，如果是，就要结束这个页面。
             getIntent().removeExtra("addForWait");
-            getIntent().removeExtra("waitBindDeviceId");
-            getIntent().removeExtra("nickname");
-            getIntent().removeExtra("deviceCategory");
-            getIntent().removeExtra("pid");
         }
     }
 
@@ -213,34 +206,19 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
         if (subBeans.length == 1) {
             DeviceCategoryBean.SubBean.NodeBean subBean = subBeans[0];
-            int networkType = -1;//2：艾拉网关  3：艾拉节点 5：艾拉WiFi   1：鸿雁网关 4：鸿雁节点
-            if (subBean.getSource() == 0) {//艾拉云
-                if (subBean.getProductType() == 1) {//网关设备
-                    networkType = 2;//艾拉网关
-                } else {//其他设备
-                    if (subBean.getIsNeedGateway() == 1) {//节点设备
-                        networkType = 3;//艾拉节点
-                    } else {
-                        networkType = 5;//艾拉WiFi
-                    }
-                }
-            } else if (subBean.getSource() == 1) {//阿里云
-                if (subBean.getProductType() == 1) {//网关设备
-                    networkType = 1;//鸿雁网关
-                } else {//其他设备
-                    if (subBean.getIsNeedGateway() == 1) {//节点设备
-                        networkType = 4;//鸿雁节点
-                    }
-                }
-            }
+            int networkType = calculateNetworkType(subBean);
+
+            Bundle addInfo = new Bundle();
+            addInfo.putInt("networkType", networkType);
+            addInfo.putInt("cuId", subBean.getSource());
+            addInfo.putLong("scopeId", getIntent().getLongExtra("scopeId", 0));
+            addInfo.putString("pid", subBean.getPid());
+            addInfo.putString("deviceCategory", subBean.getOemModel());
+            addInfo.putString("productName", subBean.getProductName());
 
             if (networkType == 2) {//艾拉网关
                 Intent mainActivity = new Intent(this, AylaGatewayAddGuideActivity.class);
-                mainActivity.putExtra("cuId", subBean.getSource());
-                mainActivity.putExtras(getIntent());
-                mainActivity.putExtra("deviceCategory", subBean.getOemModel());
-                mainActivity.putExtra("pid", subBean.getPid());
-                mainActivity.putExtra("productName", subBean.getProductName());
+                mainActivity.putExtra("addInfo", addInfo);
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             } else if (networkType == 3) {//跳转艾拉节点
                 if (aylaGateways.size() == 0) {//没有艾拉网关
@@ -249,41 +227,25 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     DeviceListBean.DevicesBean gateway = aylaGateways.get(0);
                     if (TempUtils.isDeviceOnline(gateway)) {//网关在线
                         Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
-                        mainActivity.putExtra("nodeBean", subBean);
-                        mainActivity.putExtras(getIntent());
-                        mainActivity.putExtra("deviceId", gateway.getDeviceId());
-                        mainActivity.putExtra("cuId", gateway.getCuId());
-                        mainActivity.putExtra("deviceCategory", subBean.getOemModel());
-                        mainActivity.putExtra("pid", subBean.getPid());
-                        mainActivity.putExtra("productName", subBean.getProductName());
+                        addInfo.putString("deviceId", gateway.getDeviceId());
+                        mainActivity.putExtra("addInfo", addInfo);
                         startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                     } else {
                         CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming);
                     }
                 } else {//多个网关
                     Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
-                    mainActivity.putExtras(getIntent());
-                    ArrayList<DeviceCategoryBean.SubBean.NodeBean> nodeBeans = new ArrayList<>();
-                    nodeBeans.add(subBean);
-                    mainActivity.putExtra("nodes", nodeBeans);
+                    mainActivity.putExtra("addInfo", addInfo);
                     mainActivity.putExtra("sourceId", subBean.getSource());
                     startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
                 }
             } else if (networkType == 5) {//跳转艾拉wifi
                 Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
-                mainActivity.putExtra("nodeBean", subBean);
-                mainActivity.putExtras(getIntent());
-                mainActivity.putExtra("deviceCategory", subBean.getOemModel());
-                mainActivity.putExtra("pid", subBean.getPid());
-                mainActivity.putExtra("productName", subBean.getProductName());
+                mainActivity.putExtra("addInfo", addInfo);
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             } else if (networkType == 1) {//跳转鸿雁网关
                 Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
-                mainActivity.putExtra("cuId", subBean.getSource());
-                mainActivity.putExtras(getIntent());
-                mainActivity.putExtra("deviceCategory", subBean.getOemModel());
-                mainActivity.putExtra("pid", subBean.getPid());
-                mainActivity.putExtra("productName", subBean.getProductName());
+                mainActivity.putExtra("addInfo", addInfo);
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             } else if (networkType == 4) {//跳转鸿雁节点
                 if (hyGateways.size() == 0) {//没有鸿雁网关
@@ -292,23 +254,15 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     DeviceListBean.DevicesBean gateway = hyGateways.get(0);
                     if (TempUtils.isDeviceOnline(gateway)) {//网关在线
                         Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
-                        mainActivity.putExtra("nodeBean", subBean);
-                        mainActivity.putExtras(getIntent());
-                        mainActivity.putExtra("deviceId", gateway.getDeviceId());
-                        mainActivity.putExtra("cuId", gateway.getCuId());
-                        mainActivity.putExtra("deviceCategory", subBean.getOemModel());
-                        mainActivity.putExtra("pid", subBean.getPid());
-                        mainActivity.putExtra("productName", subBean.getProductName());
+                        addInfo.putString("deviceId", gateway.getDeviceId());
+                        mainActivity.putExtra("addInfo", addInfo);
                         startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                     } else {
                         CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming);
                     }
                 } else {//多个网关
                     Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
-                    mainActivity.putExtras(getIntent());
-                    ArrayList<DeviceCategoryBean.SubBean.NodeBean> nodeBeans = new ArrayList<>();
-                    nodeBeans.add(subBean);
-                    mainActivity.putExtra("nodes", nodeBeans);
+                    mainActivity.putExtra("addInfo", addInfo);
                     mainActivity.putExtra("sourceId", subBean.getSource());
                     startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
                 }
@@ -335,11 +289,10 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                         return;
                     } else if (aylaGateways.size() + hyGateways.size() > 1) {//当前存在多个网关 ,跳转到网关选择页面
                         Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
-                        mainActivity.putExtras(getIntent());
                         ArrayList<DeviceCategoryBean.SubBean.NodeBean> nodeBeans = new ArrayList<>();
                         nodeBeans.add(aylaNodeBean);
                         nodeBeans.add(hyNodeBean);
-                        mainActivity.putExtra("nodes", nodeBeans);
+                        mainActivity.putExtra("waitCategoryNodes", nodeBeans);
                         if (aylaGateways.size() == 0) {
                             mainActivity.putExtra("sourceId", hyGateways.get(0).getCuId());
                         } else if (hyGateways.size() == 0) {
@@ -360,6 +313,30 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         }
     }
 
+    private int calculateNetworkType(DeviceCategoryBean.SubBean.NodeBean subBean) {
+        int networkType = -1;//2：艾拉网关  3：艾拉节点 5：艾拉WiFi   1：鸿雁网关 4：鸿雁节点
+        if (subBean.getSource() == 0) {//艾拉云
+            if (subBean.getProductType() == 1) {//网关设备
+                networkType = 2;//艾拉网关
+            } else {//其他设备
+                if (subBean.getIsNeedGateway() == 1) {//节点设备
+                    networkType = 3;//艾拉节点
+                } else {
+                    networkType = 5;//艾拉WiFi
+                }
+            }
+        } else if (subBean.getSource() == 1) {//阿里云
+            if (subBean.getProductType() == 1) {//网关设备
+                networkType = 1;//鸿雁网关
+            } else {//其他设备
+                if (subBean.getIsNeedGateway() == 1) {//节点设备
+                    networkType = 4;//鸿雁节点
+                }
+            }
+        }
+        return networkType;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -367,34 +344,42 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             if (resultCode == RESULT_OK) {
                 finish();
             } else {
-                boolean addForWait = getIntent().getBooleanExtra("addForWait", false);
-                if (addForWait) {
+                if (getIntent().hasExtra("addForWait")) {
                     finish();
                 }
             }
         } else if (requestCode == REQUEST_CODE_SELECT_GATEWAY) {
             if (resultCode == RESULT_OK) {
-                Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
-                mainActivity.putExtras(data);
-                mainActivity.removeExtra("nodes");
-                List<DeviceCategoryBean.SubBean.NodeBean> nodes = (List<DeviceCategoryBean.SubBean.NodeBean>) data.getSerializableExtra("nodes");
                 String deviceId = data.getStringExtra("deviceId");
-                DeviceListBean.DevicesBean gatewayDevice = MyApplication.getInstance().getDevicesBean(deviceId);
-                for (DeviceCategoryBean.SubBean.NodeBean subBean : nodes) {
-                    if (subBean.getSource() == gatewayDevice.getCuId()) {
-                        mainActivity.putExtra("nodeBean", subBean);
-                        mainActivity.putExtra("cuId", subBean.getSource());
-                        mainActivity.putExtra("deviceCategory", subBean.getOemModel());
-                        mainActivity.putExtra("pid", subBean.getPid());
-                        mainActivity.putExtra("productName", subBean.getProductName());
-                        startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
-                        return;
+
+                Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
+
+                if (data.hasExtra("addInfo")) {
+                    mainActivity.putExtra("addInfo", data.getBundleExtra("addInfo"));
+                } else if (data.hasExtra("waitCategoryNodes")) {
+                    List<DeviceCategoryBean.SubBean.NodeBean> nodes = (List<DeviceCategoryBean.SubBean.NodeBean>) data.getSerializableExtra("waitCategoryNodes");
+
+                    DeviceListBean.DevicesBean gatewayDevice = MyApplication.getInstance().getDevicesBean(deviceId);
+                    for (DeviceCategoryBean.SubBean.NodeBean subBean : nodes) {
+                        if (subBean.getSource() == gatewayDevice.getCuId()) {
+                            Bundle addInfo = new Bundle();
+                            addInfo.putInt("networkType", calculateNetworkType(subBean));
+                            addInfo.putInt("cuId", subBean.getSource());
+                            addInfo.putLong("scopeId", getIntent().getLongExtra("scopeId", 0));
+                            addInfo.putString("pid", subBean.getPid());
+                            addInfo.putString("deviceCategory", subBean.getOemModel());
+                            addInfo.putString("productName", subBean.getProductName());
+                            mainActivity.putExtra("addInfo", addInfo);
+                            break;
+                        }
                     }
                 }
+                Bundle addInfo = mainActivity.getBundleExtra("addInfo");
+                addInfo.putString("deviceId", deviceId);
 
+                startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
             } else {
-                boolean addForWait = getIntent().getBooleanExtra("addForWait", false);
-                if (addForWait) {
+                if (getIntent().hasExtra("addForWait")) {
                     finish();
                 }
             }
