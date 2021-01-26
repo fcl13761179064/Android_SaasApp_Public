@@ -15,7 +15,9 @@ import com.ayla.hotelsaas.databinding.FragmentSceneFunctionDatumSetBigValueSelec
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.widget.ScrollerPickerDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
+import com.blankj.utilcode.util.NumberUtils;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 /**
@@ -57,6 +59,8 @@ public class SceneSettingFunctionDatumSetBigValueSelectFragment extends BaseMvpF
 
     private DeviceTemplateBean.AttributesBean attributesBean;
 
+    private int fractionDigits;
+
     @Override
     protected void initView(View view) {
         attributesBean = (DeviceTemplateBean.AttributesBean) getArguments().getSerializable("attributeBean");
@@ -68,11 +72,11 @@ public class SceneSettingFunctionDatumSetBigValueSelectFragment extends BaseMvpF
 
         binding.tvUnit.setText(unit);
         String format;
-        if (step == 1) {
-            format = String.format("%s值范围 %s ~ %s", unit, min.intValue(), max.intValue());
-        } else {
-            format = String.format("%s值范围 %s ~ %s", unit, min, max);
-        }
+
+        fractionDigits = (int) Math.log10(1 / step);
+
+        format = String.format("%s值范围 %s ~ %s", unit, NumberUtils.format(min, fractionDigits, false), NumberUtils.format(max, fractionDigits, false));
+
         Log.d(TAG, "initView: " + format);
         binding.tvDesc.setText(format);
 
@@ -100,7 +104,7 @@ public class SceneSettingFunctionDatumSetBigValueSelectFragment extends BaseMvpF
         }
 
         binding.tvDeviceName.setText(operator);
-        binding.tvValue.setText(step == 1 ? String.valueOf((int) target_value) : String.valueOf(target_value));
+        binding.tvValue.setText(NumberUtils.format(target_value, fractionDigits, false));
     }
 
     @Override
@@ -130,19 +134,22 @@ public class SceneSettingFunctionDatumSetBigValueSelectFragment extends BaseMvpF
                                     CustomToast.makeText(getContext(), "输入不能为空", R.drawable.ic_toast_warming);
                                     return;
                                 }
-                                int value = Integer.parseInt(txt);
+                                double value = Double.parseDouble(txt);
                                 Double max = attributesBean.getSetup().getMax();
                                 Double min = attributesBean.getSetup().getMin();
+                                Double step = attributesBean.getSetup().getStep();
                                 if (value < min || value > max) {
+                                    CustomToast.makeText(getContext(), "输入不在范围之内", R.drawable.ic_toast_warming);
+                                } else if (BigDecimal.valueOf(value).remainder(BigDecimal.valueOf(step)).compareTo(BigDecimal.ZERO) != 0) {
                                     CustomToast.makeText(getContext(), "输入不在范围之内", R.drawable.ic_toast_warming);
                                 } else {
                                     dialog.dismissAllowingStateLoss();
-                                    binding.tvValue.setText(String.valueOf(value));
+                                    binding.tvValue.setText(NumberUtils.format(value, fractionDigits, false));
                                 }
                             }
                         }).setTitle("输入目标值").setEditHint("输入目标值")
                         .setEditValue(binding.tvValue.getText().toString())
-                        .setInputType(ValueChangeDialog.InputType.numberSigned)
+                        .setInputType(fractionDigits == 0 ? ValueChangeDialog.InputType.numberSigned : ValueChangeDialog.InputType.numberSignedDecimal)
                         .show(getChildFragmentManager(), "dialog");
             }
         });

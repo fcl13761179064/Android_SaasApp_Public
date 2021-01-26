@@ -102,7 +102,7 @@ public class ValueChangeDialog extends DialogFragment {
     }
 
     public enum InputType {
-        numberSigned(0x00001002), text(0x00000001);
+        numberSigned(0x00001002), text(0x00000001), numberSignedDecimal(0x00003002);
 
         private final int value;
 

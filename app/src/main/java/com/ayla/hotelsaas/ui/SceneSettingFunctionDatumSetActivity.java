@@ -118,7 +118,7 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneS
             for (double i = min; i <= max; i += step) {
                 count++;
             }
-            if (count > 20 && step == 1) {//大于20个选项范围，使用手动填写
+            if (count > 20) {//大于20个选项范围，使用手动填写
                 fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetBigValueSelectFragment.newInstance(type == 0, attributesBean), "content");
             } else {
                 if (type == 0) {
