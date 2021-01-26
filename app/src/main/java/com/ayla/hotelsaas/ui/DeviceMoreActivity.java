@@ -283,6 +283,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     public void handleReplace() {
         Intent intent = new Intent(this, DeviceReplaceActivity.class);
         intent.putExtra("deviceId", deviceId);
+        intent.putExtra("scopeId", mScopeId);
         startActivity(intent);
     }
 
