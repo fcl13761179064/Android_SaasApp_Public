@@ -58,9 +58,9 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
                     }
                     if (!TextUtils.isEmpty(deviceId)) {
                         Intent mainActivity = new Intent(this, DeviceAddActivity.class);
-                        mainActivity.putExtras(getIntent());
-                        Bundle addInfo = mainActivity.getBundleExtra("addInfo");
+                        Bundle addInfo = getIntent().getBundleExtra("addInfo");
                         addInfo.putString("deviceId", deviceId);
+                        mainActivity.putExtra("addInfo", addInfo);
                         startActivityForResult(mainActivity, REQUEST_CODE_FOR_ADD);
                         return;
                     }

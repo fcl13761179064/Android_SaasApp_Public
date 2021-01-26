@@ -140,11 +140,10 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
             saveWifiPwd(name, pwd);
 
             Intent intent = new Intent(this, DeviceAddActivity.class);
-            intent.putExtras(getIntent());
-            Bundle addInfo = intent.getBundleExtra("addInfo");
+            Bundle addInfo = getIntent().getBundleExtra("addInfo");
             addInfo.putString("wifiName", name);
             addInfo.putString("wifiPassword", pwd);
-
+            intent.putExtra("addInfo", addInfo);
             startActivityForResult(intent, REQUEST_CODE_START_ADD);
         }
     }

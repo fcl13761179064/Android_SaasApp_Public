@@ -38,6 +38,8 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  * <p>
  * 补全待绑定设备时，必须传入
  * {@link Bundle addForWait} include:waitBindDeviceId、nickname、pid
+ * 替换设备时，必须传入
+ * {@link Bundle replaceInfo} include:replaceDeviceId、targetGatewayDeviceId
  * @作者 吴友金
  */
 public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView, DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
@@ -56,6 +58,8 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     private DeviceCategoryListLeftAdapter mLeftAdapter;
     private DeviceCategoryListRightAdapter mRightAdapter;
 
+    private long scopeId;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_device_add_category_list;
@@ -63,6 +67,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
     @Override
     protected void initView() {
+        scopeId = getIntent().getLongExtra("scopeId", 0);
         leftRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mLeftAdapter = new DeviceCategoryListLeftAdapter(R.layout.item_device_add_category);
         mLeftAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -125,7 +130,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         adjustData(0);
 
         Bundle addForWaitBundle = getIntent().getBundleExtra("addForWait");
-        if (addForWaitBundle != null) {
+        if (addForWaitBundle != null) {//绑定待添加设备逻辑
             String pid = addForWaitBundle.getString("pid");
             for (DeviceCategoryBean deviceCategoryBean : deviceCategoryBeans) {
                 for (DeviceCategoryBean.SubBean subBean : deviceCategoryBean.getSub()) {
@@ -139,6 +144,22 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             }
             //如果跳转了品类的添加，但是又取消了添加设备，就需要判断是否存在addForWait ，如果是，就要结束这个页面。
             getIntent().removeExtra("addForWait");
+        }
+        Bundle replaceInfoBundle = getIntent().getBundleExtra("replaceInfo");
+        if (replaceInfoBundle != null) {//替换设备逻辑
+            String replaceDeviceId = replaceInfoBundle.getString("replaceDeviceId");
+            DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(replaceDeviceId);
+            for (DeviceCategoryBean deviceCategoryBean : deviceCategoryBeans) {
+                for (DeviceCategoryBean.SubBean subBean : deviceCategoryBean.getSub()) {
+                    for (DeviceCategoryBean.SubBean.NodeBean nodeBean : subBean.getNode()) {
+                        if (TextUtils.equals(nodeBean.getPid(), devicesBean.getPid())) {
+                            handleAddJump(new DeviceCategoryBean.SubBean.NodeBean[]{nodeBean});
+                            return;
+                        }
+                    }
+                }
+            }
+            getIntent().removeExtra("replaceInfo");
         }
     }
 
@@ -189,17 +210,21 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
      * 处理点击二级菜单item后的配网页面跳转逻辑
      */
     private void handleAddJump(DeviceCategoryBean.SubBean.NodeBean[] subBeans) {
+        Bundle _replaceInfo = getIntent().getBundleExtra("replaceInfo");
+        String replaceNodeGatewayId = null;//需要替换设备时，节点所在的网关id
+        if (_replaceInfo != null) {
+            replaceNodeGatewayId = _replaceInfo.getString("targetGatewayDeviceId");
+        }
+
         List<DeviceListBean.DevicesBean> aylaGateways = new ArrayList<>();
         List<DeviceListBean.DevicesBean> hyGateways = new ArrayList<>();
         List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
-        if (devicesBean != null) {
-            for (DeviceListBean.DevicesBean device : devicesBean) {
-                if (TempUtils.isDeviceGateway(device)) {
-                    if (device.getCuId() == 0) {
-                        aylaGateways.add(device);
-                    } else if (device.getCuId() == 1) {
-                        hyGateways.add(device);
-                    }
+        for (DeviceListBean.DevicesBean device : devicesBean) {
+            if (TempUtils.isDeviceGateway(device) && (TextUtils.isEmpty(replaceNodeGatewayId) || TextUtils.equals(device.getDeviceId(), replaceNodeGatewayId))) {
+                if (device.getCuId() == 0) {
+                    aylaGateways.add(device);
+                } else if (device.getCuId() == 1) {
+                    hyGateways.add(device);
                 }
             }
         }
@@ -211,10 +236,19 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             Bundle addInfo = new Bundle();
             addInfo.putInt("networkType", networkType);
             addInfo.putInt("cuId", subBean.getSource());
-            addInfo.putLong("scopeId", getIntent().getLongExtra("scopeId", 0));
+            addInfo.putLong("scopeId", scopeId);
             addInfo.putString("pid", subBean.getPid());
             addInfo.putString("deviceCategory", subBean.getOemModel());
             addInfo.putString("productName", subBean.getProductName());
+            Bundle addForWait = getIntent().getBundleExtra("addForWait");
+            if (addForWait != null) {
+                addInfo.putString("waitBindDeviceId", addForWait.getString("waitBindDeviceId"));
+                addInfo.putString("nickname", addForWait.getString("nickname"));
+            }
+            Bundle replaceInfo = getIntent().getBundleExtra("replaceInfo");
+            if (replaceInfo != null) {
+                addInfo.putString("replaceDeviceId", replaceInfo.getString("replaceDeviceId"));
+            }
 
             if (networkType == 2) {//艾拉网关
                 Intent mainActivity = new Intent(this, AylaGatewayAddGuideActivity.class);
@@ -346,6 +380,11 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             } else {
                 if (getIntent().hasExtra("addForWait")) {
                     finish();
+                    return;
+                }
+                if (getIntent().hasExtra("replaceInfo")) {
+                    finish();
+                    return;
                 }
             }
         } else if (requestCode == REQUEST_CODE_SELECT_GATEWAY) {
@@ -365,10 +404,20 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                             Bundle addInfo = new Bundle();
                             addInfo.putInt("networkType", calculateNetworkType(subBean));
                             addInfo.putInt("cuId", subBean.getSource());
-                            addInfo.putLong("scopeId", getIntent().getLongExtra("scopeId", 0));
+                            addInfo.putLong("scopeId", scopeId);
                             addInfo.putString("pid", subBean.getPid());
                             addInfo.putString("deviceCategory", subBean.getOemModel());
                             addInfo.putString("productName", subBean.getProductName());
+                            Bundle addForWait = getIntent().getBundleExtra("addForWait");
+                            if (addForWait != null) {
+                                addInfo.putString("waitBindDeviceId", addForWait.getString("waitBindDeviceId"));
+                                addInfo.putString("nickname", addForWait.getString("nickname"));
+                            }
+                            Bundle replaceInfo = getIntent().getBundleExtra("replaceInfo");
+                            if (replaceInfo != null) {
+                                addInfo.putString("replaceDeviceId", replaceInfo.getString("replaceDeviceId"));
+                            }
+
                             mainActivity.putExtra("addInfo", addInfo);
                             break;
                         }
@@ -381,6 +430,11 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             } else {
                 if (getIntent().hasExtra("addForWait")) {
                     finish();
+                    return;
+                }
+                if (getIntent().hasExtra("replaceInfo")) {
+                    finish();
+                    return;
                 }
             }
         }

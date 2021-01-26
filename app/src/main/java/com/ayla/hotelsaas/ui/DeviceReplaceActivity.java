@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -49,6 +50,10 @@ public class DeviceReplaceActivity extends BaseMvpActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(DeviceReplaceActivity.this, DeviceAddCategoryActivity.class);
                 intent.putExtra("scopeId", scopeId);
+                Bundle bundle = new Bundle();
+                bundle.putString("replaceDeviceId", deviceId);
+                bundle.putString("targetGatewayDeviceId", "");// TODO: 1/26/21
+                intent.putExtra("replaceInfo", bundle);
                 startActivity(intent);
             }
         });

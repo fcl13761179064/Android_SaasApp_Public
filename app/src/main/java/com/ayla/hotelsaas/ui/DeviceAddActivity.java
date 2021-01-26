@@ -28,12 +28,15 @@ import butterknife.OnClick;
  * 设备添加处理页面
  * 进入时必须带入:
  * {@link Bundle addInfo} include:
- * {@link int networkType} 1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉节点 4、鸿雁节点 5、艾拉wifi设备
- * {@link int cuId}
- * {@link long scopeId}
- * {@link String pid}
- * {@link String deviceCategory}
- * {@link String productName}
+ * must {@link int networkType} 1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉节点 4、鸿雁节点 5、艾拉wifi设备
+ * must {@link int cuId}
+ * must {@link long scopeId}
+ * must {@link String pid}
+ * must {@link String deviceCategory}
+ * must {@link String productName}
+ * {@link String waitBindDeviceId} 待补全设备的deviceId
+ * {@link String nickname} 待补全设备的nickname
+ * {@link String replaceDeviceId} 需要替换设备的ID
  * <p>
  * addInfo的额外参数：
  * networkType = 1 时，必须传入
@@ -51,12 +54,6 @@ import butterknife.OnClick;
  * networkType = 5 时，必须传入
  * wifiName、wifiPassword
  * <p>
- * <p>
- * 补全待绑定设备时，必须传入
- * {@link Bundle addForWait} include:waitBindDeviceId、nickname
- * <p>
- * 替换设备时，必须传入
- * replaceDeviceId
  */
 public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddPresenter> implements DeviceAddView {
     private static final String TAG = "DeviceAddActivity";
@@ -134,13 +131,8 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
         String deviceCategory = addInfo.getString("deviceCategory");
         String pid = addInfo.getString("pid");
         String productName = addInfo.getString("productName");
-        String nickname = null;
-        String waitBindDeviceId = null;
-        Bundle addForWait = getIntent().getBundleExtra("addForWait");
-        if (addForWait != null) {
-            nickname = addForWait.getString("nickname");
-            waitBindDeviceId = addForWait.getString("waitBindDeviceId");
-        }
+        String nickname = addInfo.getString("nickname");
+        String waitBindDeviceId = addInfo.getString("waitBindDeviceId");
         String replaceDeviceId = getIntent().getStringExtra("replaceDeviceId");
 
         if (networkType == 1) {//鸿雁网关

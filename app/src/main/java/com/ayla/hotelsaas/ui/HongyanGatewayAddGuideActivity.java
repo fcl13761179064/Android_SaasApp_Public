@@ -92,10 +92,10 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
     public void handleJump(String productKey, String deviceName) {
         discoverHelper.stopDiscoverGateway();
         Intent intent = new Intent(this, DeviceAddActivity.class);
-        intent.putExtras(getIntent());
-        Bundle addInfo = intent.getBundleExtra("addInfo");
+        Bundle addInfo = getIntent().getBundleExtra("addInfo");
         addInfo.putString("HYproductKey", productKey);
         addInfo.putString("HYdeviceName", deviceName);
+        intent.putExtra("addInfo", addInfo);
         startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
     }
 
