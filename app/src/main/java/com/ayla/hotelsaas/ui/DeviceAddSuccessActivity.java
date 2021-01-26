@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -134,5 +135,6 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().post(new DeviceAddEvent());
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

@@ -276,14 +276,14 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     public void handlePointChange() {
         Intent intent = new Intent(this, PointAndRegionActivity.class);
         intent.putExtra("deviceId", deviceId);
-        startActivityForResult(intent, REQUEST_CODE_SWITCH_USAGE_SET);
+        startActivity(intent);
     }
 
     @OnClick(R.id.rl_replace)
     public void handleReplace() {
         Intent intent = new Intent(this, DeviceReplaceActivity.class);
         intent.putExtra("deviceId", deviceId);
-        startActivityForResult(intent, REQUEST_CODE_SWITCH_USAGE_SET);
+        startActivity(intent);
     }
 
     @Override
