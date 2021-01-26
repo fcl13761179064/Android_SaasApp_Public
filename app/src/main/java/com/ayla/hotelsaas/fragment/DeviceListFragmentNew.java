@@ -111,7 +111,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
                     intent.putExtra("addForWait", true);
                     intent.putExtra("waitBindDeviceId", devicesBean.getDeviceId());
                     intent.putExtra("nickname", devicesBean.getNickname());
-                    intent.putExtra("deviceName", devicesBean.getDeviceName());
+                    intent.putExtra("pid", devicesBean.getPid());
                     intent.putExtra("deviceCategory", devicesBean.getDeviceCategory());
                 }
                 intent.putExtra("deviceId", devicesBean.getDeviceId());

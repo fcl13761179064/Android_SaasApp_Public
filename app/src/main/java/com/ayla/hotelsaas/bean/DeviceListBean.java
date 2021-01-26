@@ -90,6 +90,12 @@ public class DeviceListBean {
         private long regionId;
         private String regionName;
         private int bindType;//设备绑定绑定类型，【0：默认，1：待绑定】
+        private String pid;
+        private int productType;
+
+        public int getProductType() {
+            return productType;
+        }
 
         public String getPurposeName() {
             return purposeName;
@@ -193,6 +199,10 @@ public class DeviceListBean {
 
         public void setBindType(int bindType) {
             this.bindType = bindType;
+        }
+
+        public String getPid() {
+            return pid;
         }
     }
 }

@@ -6,7 +6,7 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
-import com.ayla.hotelsaas.bean.TouchPanelDataBean;
+import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.FunctionRenameView;
 
@@ -28,25 +28,14 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
 
-    public void getRenameAbleFunctions(int cuId, String deviceCategory, String deviceId) {
+    public void getRenameAbleFunctions(int cuId, String pid, String deviceId) {
         Disposable subscribe = RequestModel.getInstance()
-                .getDeviceCategoryDetail()
-                .map(new Function<BaseResult<List<DeviceCategoryDetailBean>>, DeviceCategoryDetailBean>() {
-                    @Override
-                    public DeviceCategoryDetailBean apply(BaseResult<List<DeviceCategoryDetailBean>> listBaseResult) throws Exception {
-                        for (DeviceCategoryDetailBean deviceCategoryDetailBean : listBaseResult.data) {
-                            if (cuId == deviceCategoryDetailBean.getCuId() && TextUtils.equals(deviceCategory, deviceCategoryDetailBean.getOemModel())) {
-                                return deviceCategoryDetailBean;
-                            }
-                        }
-                        return null;
-                    }
-                })//首先查询出改设备的品类支持功能详情。
+                .getDeviceCategoryDetail(pid)//首先查询出改设备的品类支持功能详情。
                 .flatMap(new Function<DeviceCategoryDetailBean, ObservableSource<List<DeviceTemplateBean.AttributesBean>>>() {
                     @Override
                     public ObservableSource<List<DeviceTemplateBean.AttributesBean>> apply(DeviceCategoryDetailBean deviceCategoryDetailBean) throws Exception {
                         return RequestModel.getInstance()
-                                .fetchDeviceTemplate(deviceCategoryDetailBean.getOemModel())
+                                .fetchDeviceTemplate(pid)
                                 .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                                     @Override
                                     public DeviceTemplateBean apply(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
@@ -73,9 +62,9 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                                 });
                     }
                 })//然后结合物模板查询出功能默认名称
-                .zipWith(RequestModel.getInstance().getALlTouchPanelDeviceInfo(cuId, deviceId), new BiFunction<List<DeviceTemplateBean.AttributesBean>, List<TouchPanelDataBean>, List<Map<String, String>>>() {
+                .zipWith(RequestModel.getInstance().fetchPropertyNickname(cuId, deviceId), new BiFunction<List<DeviceTemplateBean.AttributesBean>, List<PropertyNicknameBean>, List<Map<String, String>>>() {
                     @Override
-                    public List<Map<String, String>> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
+                    public List<Map<String, String>> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<PropertyNicknameBean> touchPanelDataBeans) throws Exception {
                         List<Map<String, String>> result = new ArrayList<>();
                         for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans) {
                             Map<String, String> bean = new HashMap<>();
@@ -83,7 +72,7 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                             String code = attributesBean.getCode();
                             bean.put("propertyCode", attributesBean.getCode());
                             bean.put("propertyName", attributesBean.getDisplayName());
-                            for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
+                            for (PropertyNicknameBean touchPanelDataBean : touchPanelDataBeans) {
                                 if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
                                         TextUtils.equals(code, touchPanelDataBean.getPropertyName())) {
                                     bean.put("propertyNickname", touchPanelDataBean.getPropertyValue());
@@ -94,7 +83,7 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                         }
                         return result;
                     }
-                })
+                })//查出设置的别名、别名id，方便后面的更新使用。
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -126,7 +115,7 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
 
     public void renameFunction(int cuId, String deviceId, String nickNameId, String property, String propertyNickName) {
         Disposable subscribe = RequestModel.getInstance()
-                .setPropertyNickName(nickNameId, deviceId, cuId, property, propertyNickName)
+                .updatePropertyNickName(nickNameId, deviceId, cuId, property, propertyNickName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

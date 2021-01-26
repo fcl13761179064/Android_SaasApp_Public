@@ -29,7 +29,7 @@ import butterknife.OnClick;
  * 进入时必须带入:
  * 参数 int networkType 1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉节点 4、鸿雁节点 5、艾拉wifi设备
  * <p>
- * cuId 、scopeId、deviceName、deviceCategory
+ * cuId 、scopeId、pid、deviceCategory、productName
  * <p>
  * networkType = 1 时，必须传入
  * HYproductKey、HYdeviceName
@@ -119,7 +119,8 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
         int cuId = getIntent().getIntExtra("cuId", 0);
         long scopeId = getIntent().getLongExtra("scopeId", 0);
         String deviceCategory = getIntent().getStringExtra("deviceCategory");
-        String deviceName = getIntent().getStringExtra("deviceName");
+        String pid = getIntent().getStringExtra("pid");
+        String productName = getIntent().getStringExtra("productName");
         String nickname = getIntent().getStringExtra("nickname");
         String waitBindDeviceId = getIntent().getStringExtra("waitBindDeviceId");
 
@@ -128,7 +129,8 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName,
+                    pid,
+                    productName,
                     nickname,
                     getIntent().getStringExtra("HYproductKey"),
                     getIntent().getStringExtra("HYdeviceName"),
@@ -139,7 +141,8 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName,
+                    pid,
+                    productName,
                     nickname,
                     waitBindDeviceId);
         } else if (networkType == 3) {//艾拉节点
@@ -148,7 +151,8 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName,
+                    pid,
+                    productName,
                     nickname,
                     waitBindDeviceId);
         } else if (networkType == 4) {//鸿雁节点
@@ -157,7 +161,8 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName,
+                    pid,
+                    productName,
                     nickname,
                     waitBindDeviceId);
         } else if (networkType == 5) {//艾拉WiFi
@@ -167,7 +172,8 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     cuId,
                     scopeId,
                     deviceCategory,
-                    deviceName,
+                    pid,
+                    productName,
                     nickname,
                     waitBindDeviceId);
         }

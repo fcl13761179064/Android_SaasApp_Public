@@ -14,11 +14,11 @@ import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
+import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
-import com.ayla.hotelsaas.bean.TouchPanelDataBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
@@ -242,8 +242,22 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<BaseResult<List<DeviceCategoryDetailBean>>> getDeviceCategoryDetail() {
-        return getApiService().fetchDeviceCategoryDetail();
+    public Observable<List<DeviceCategoryDetailBean>> getDeviceCategoryDetail(long roomId) {
+        JsonObject body = new JsonObject();
+        body.addProperty("resourceId", roomId);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().fetchDeviceCategoryDetail(body111).compose(new BaseResultTransformer<BaseResult<List<DeviceCategoryDetailBean>>, List<DeviceCategoryDetailBean>>() {
+        });
+    }
+
+    /**
+     * 获取品类支持的条件、功能 项目 详情
+     *
+     * @return
+     */
+    public Observable<DeviceCategoryDetailBean> getDeviceCategoryDetail(String pid) {
+        return getApiService().fetchDeviceCategoryDetail(pid).compose(new BaseResultTransformer<BaseResult<DeviceCategoryDetailBean>, DeviceCategoryDetailBean>() {
+        });
     }
 
     /**
@@ -253,7 +267,7 @@ public class RequestModel {
      * @return
      */
     public Observable<DeviceListBean.DevicesBean> bindDeviceWithDSN(String deviceId, String waitBindDeviceId, long cuId, long scopeId,
-                                                                    int scopeType, String deviceCategory, String deviceName, String nickName) {
+                                                                    int scopeType, String deviceCategory, String pid, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("waitBindDeviceId", waitBindDeviceId);
@@ -261,7 +275,7 @@ public class RequestModel {
         body.addProperty("cuId", cuId);
         body.addProperty("scopeType", scopeType);
         body.addProperty("deviceCategory", deviceCategory);
-        body.addProperty("deviceName", deviceName);
+        body.addProperty("pid", pid);
         body.addProperty("nickName", nickName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().bindDeviceWithDSN(body111).compose(new BaseResultTransformer<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
@@ -386,11 +400,11 @@ public class RequestModel {
     /**
      * 查询设备物模板信息
      *
-     * @param oemModel
+     * @param pid
      * @return
      */
-    public Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(String oemModel) {
-        return getApiService().fetchDeviceTemplate(oemModel)
+    public Observable<BaseResult<DeviceTemplateBean>> fetchDeviceTemplate(String pid) {
+        return getApiService().fetchDeviceTemplate(pid)
                 .doOnNext(new Consumer<BaseResult<DeviceTemplateBean>>() {
                     @Override
                     public void accept(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
@@ -409,7 +423,7 @@ public class RequestModel {
                 .doOnNext(new Consumer<BaseResult<DeviceTemplateBean>>() {
                     @Override
                     public void accept(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
-                        if ("a1UR1BjfznK".equals(oemModel)) {//触控面板
+                        if ("a1UR1BjfznK".equals(pid)) {//触控面板
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
@@ -510,7 +524,7 @@ public class RequestModel {
                                 }
                             }
                         }
-                        if ("a1dnviXyhqx".equals(oemModel)) {//六键场景开关
+                        if ("a1dnviXyhqx".equals(pid)) {//六键场景开关
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
@@ -569,7 +583,7 @@ public class RequestModel {
                                 }
                             }
                         }
-                        if ("a1009Fd5ZCJ".equals(oemModel)) {//紧急按钮设备
+                        if ("a1009Fd5ZCJ".equals(pid)) {//紧急按钮设备
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
@@ -616,42 +630,6 @@ public class RequestModel {
     }
 
     /**
-     * 开关重命名/触控面板名称重命名/触控面板图片更换
-     *
-     * @return
-     */
-    public Observable<Boolean> touchPanelRenameMethod(int id, String deviceId, int cuId, String propertyName, String propertyType, String propertyValue) {
-        return Observable
-                .fromCallable(new Callable<RequestBody>() {
-                    @Override
-                    public RequestBody call() throws Exception {
-                        JSONObject uploadParams = new JSONObject();
-                        JSONArray list = new JSONArray();
-                        JSONObject jsonObject = new JSONObject();
-                        if (id != 0) {
-                            jsonObject.put("id", id);
-                        }
-                        uploadParams.put("needHandleAliService", true);
-                        jsonObject.put("deviceId", deviceId);
-                        jsonObject.put("cuId", cuId);
-                        jsonObject.put("propertyName", propertyName);
-                        jsonObject.put("propertyType", propertyType);
-                        jsonObject.put("propertyValue", propertyValue);
-                        list.put(jsonObject);
-                        uploadParams.put("propertyList", list);
-                        return RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), uploadParams.toString());
-                    }
-                })
-                .flatMap(new Function<RequestBody, ObservableSource<Boolean>>() {
-                    @Override
-                    public ObservableSource<Boolean> apply(RequestBody body) throws Exception {
-                        return getApiService().tourchPanelRenameAndIcon(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
-                        });
-                    }
-                });
-    }
-
-    /**
      * 设置设备属性的别名
      *
      * @param nickNameId
@@ -660,7 +638,7 @@ public class RequestModel {
      * @param propertyName
      * @return
      */
-    public Observable<Boolean> setPropertyNickName(String nickNameId, String deviceId, int cuId, String propertyName, String propertyNickName) {
+    public Observable<Boolean> updatePropertyNickName(String nickNameId, String deviceId, int cuId, String propertyName, String propertyNickName) {
         return Observable
                 .fromCallable(new Callable<RequestBody>() {
                     @Override
@@ -674,8 +652,8 @@ public class RequestModel {
                         uploadParams.put("needHandleAliService", false);
                         jsonObject.put("deviceId", deviceId);
                         jsonObject.put("cuId", cuId);
-                        jsonObject.put("propertyName", propertyName);
                         jsonObject.put("propertyType", "nickName");
+                        jsonObject.put("propertyName", propertyName);
                         jsonObject.put("propertyValue", propertyNickName);
                         list.put(jsonObject);
                         uploadParams.put("propertyList", list);
@@ -685,20 +663,20 @@ public class RequestModel {
                 .flatMap(new Function<RequestBody, ObservableSource<Boolean>>() {
                     @Override
                     public ObservableSource<Boolean> apply(RequestBody body) throws Exception {
-                        return getApiService().tourchPanelRenameAndIcon(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                        return getApiService().updatePropertyNickName(body).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
                         });
                     }
                 });
     }
 
     /**
-     * 获取所有的场景按键信息
+     * 获取设备属性的别名
      *
      * @return
      */
-    public Observable<List<TouchPanelDataBean>> getALlTouchPanelDeviceInfo(int cuId, String deviceId) {
-        return getApiService().touchpanelALlDevice(cuId, deviceId)
-                .compose(new BaseResultTransformer<BaseResult<List<TouchPanelDataBean>>, List<TouchPanelDataBean>>() {
+    public Observable<List<PropertyNicknameBean>> fetchPropertyNickname(int cuId, String deviceId) {
+        return getApiService().fetchPropertyNickname(cuId, deviceId)
+                .compose(new BaseResultTransformer<BaseResult<List<PropertyNicknameBean>>, List<PropertyNicknameBean>>() {
                 });
     }
 
@@ -798,8 +776,9 @@ public class RequestModel {
     /**
      * @return
      */
-    public Observable<BaseResult<NetworkConfigGuideBean>> getNetworkConfigGuide(String categoryId) {
-        return getApiService().getNetworkConfigGuide(categoryId);
+    public Observable<List<NetworkConfigGuideBean>> getNetworkConfigGuide(String pid) {
+        return getApiService().getNetworkConfigGuide(pid).compose(new BaseResultTransformer<BaseResult<List<NetworkConfigGuideBean>>, List<NetworkConfigGuideBean>>() {
+        });
     }
 
     /**
@@ -886,22 +865,22 @@ public class RequestModel {
             @Override
             public ObservableSource<DeviceTemplateBean> apply(@NonNull Observable<DeviceTemplateBean> upstream) {
                 return upstream.zipWith(RequestModel.getInstance()
-                                .getALlTouchPanelDeviceInfo(devicesBean.getCuId(), deviceId),
-                        new BiFunction<DeviceTemplateBean, List<TouchPanelDataBean>, DeviceTemplateBean>() {
+                                .fetchPropertyNickname(devicesBean.getCuId(), deviceId),
+                        new BiFunction<DeviceTemplateBean, List<PropertyNicknameBean>, DeviceTemplateBean>() {
                             @Override
-                            public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<TouchPanelDataBean> touchPanelDataBeans) throws Exception {
+                            public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<PropertyNicknameBean> propertyNicknameBeans) throws Exception {
                                 for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans.getAttributes()) {
-                                    for (TouchPanelDataBean touchPanelDataBean : touchPanelDataBeans) {
-                                        if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
-                                                TextUtils.equals(attributesBean.getCode(), touchPanelDataBean.getPropertyName())) {
-                                            attributesBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                    for (PropertyNicknameBean propertyNicknameBean : propertyNicknameBeans) {
+                                        if ("nickName".equals(propertyNicknameBean.getPropertyType()) &&
+                                                TextUtils.equals(attributesBean.getCode(), propertyNicknameBean.getPropertyName())) {
+                                            attributesBean.setDisplayName(propertyNicknameBean.getPropertyValue());
                                         }
-                                        if ("Words".equals(touchPanelDataBean.getPropertyType())) {
+                                        if ("Words".equals(propertyNicknameBean.getPropertyType())) {
                                             if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
                                                 if (attributesBean.getValue() != null) {
                                                     for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
-                                                        if (TextUtils.equals(valueBean.getValue(), touchPanelDataBean.getPropertyName())) {
-                                                            valueBean.setDisplayName(touchPanelDataBean.getPropertyValue());
+                                                        if (TextUtils.equals(valueBean.getValue(), propertyNicknameBean.getPropertyName())) {
+                                                            valueBean.setDisplayName(propertyNicknameBean.getPropertyValue());
                                                         }
                                                     }
                                                 }

@@ -176,7 +176,7 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
             deviceJsonObject.put("deviceName", devicesBean.getDeviceName());
             deviceJsonObject.put("deviceStatus", devicesBean.getDeviceStatus());
             deviceJsonObject.put("cuId", devicesBean.getCuId());
-            deviceJsonObject.put("deviceCategory", devicesBean.getDeviceCategory());
+            deviceJsonObject.put("pid", devicesBean.getPid());
             deviceJsonObject.put("deviceId", devicesBean.getDeviceId());
             jsonObject.put("device", deviceJsonObject);
             JSONObject state = new JSONObject().put("state", jsonObject);
