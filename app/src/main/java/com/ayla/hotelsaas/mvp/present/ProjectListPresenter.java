@@ -24,9 +24,9 @@ public class ProjectListPresenter extends BasePresenter<ProjectListView> {
                         currentPage++;
                         mView.showData(constructionBillListBean);
                     }
-                }, new UnifiedErrorConsumer() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void handle(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) throws Exception {
                         mView.onRequestFailed(throwable);
                     }
                 });
