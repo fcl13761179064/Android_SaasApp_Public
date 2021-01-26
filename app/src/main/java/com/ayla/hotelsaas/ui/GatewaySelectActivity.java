@@ -27,7 +27,7 @@ import butterknife.BindView;
 /**
  * 添加节点，选择所属网关的页面
  * 可选参数：
- * cuId
+ * sourceId <0时 ，不区分网关所属云。
  * 返回 网关的deviceId
  */
 public class GatewaySelectActivity extends BaseMvpActivity<ZigBeeAddSelectGatewayView, ZigBeeAddSelectGatewayPresenter> implements ZigBeeAddSelectGatewayView {
@@ -89,8 +89,8 @@ public class GatewaySelectActivity extends BaseMvpActivity<ZigBeeAddSelectGatewa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int cuId = getIntent().getIntExtra("cuId", -1);
-        mPresenter.loadGateway(cuId);
+        int sourceId = getIntent().getIntExtra("sourceId", -1);
+        mPresenter.loadGateway(sourceId);
     }
 
     @Override

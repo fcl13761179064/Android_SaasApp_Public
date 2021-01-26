@@ -266,6 +266,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     ArrayList<DeviceCategoryBean.SubBean.NodeBean> nodeBeans = new ArrayList<>();
                     nodeBeans.add(subBean);
                     mainActivity.putExtra("nodes", nodeBeans);
+                    mainActivity.putExtra("sourceId", subBean.getSource());
                     startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
                 }
             } else if (networkType == 5) {//跳转艾拉wifi
@@ -308,6 +309,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     ArrayList<DeviceCategoryBean.SubBean.NodeBean> nodeBeans = new ArrayList<>();
                     nodeBeans.add(subBean);
                     mainActivity.putExtra("nodes", nodeBeans);
+                    mainActivity.putExtra("sourceId", subBean.getSource());
                     startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
                 }
             }
@@ -338,6 +340,11 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                         nodeBeans.add(aylaNodeBean);
                         nodeBeans.add(hyNodeBean);
                         mainActivity.putExtra("nodes", nodeBeans);
+                        if (aylaGateways.size() == 0) {
+                            mainActivity.putExtra("sourceId", hyGateways.get(0).getCuId());
+                        } else if (hyGateways.size() == 0) {
+                            mainActivity.putExtra("sourceId", aylaGateways.get(0).getCuId());
+                        }
                         startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
                     } else {//只有一个网关
                         DeviceCategoryBean.SubBean.NodeBean forAddNode;
