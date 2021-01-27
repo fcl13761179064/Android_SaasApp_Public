@@ -261,13 +261,16 @@ public class RequestModel {
     }
 
     /**
+     * 绑定 或者 替换 一个设备。
+     *
      * @param deviceId
      * @param cuId
      * @param scopeId
      * @return
      */
-    public Observable<DeviceListBean.DevicesBean> bindDeviceWithDSN(String deviceId, String waitBindDeviceId, String replaceDeviceId, long cuId, long scopeId,
-                                                                    int scopeType, String deviceCategory, String pid, String nickName) {
+    public Observable<DeviceListBean.DevicesBean> bindOrReplaceDeviceWithDSN(String deviceId, String waitBindDeviceId,
+                                                                             String replaceDeviceId, long cuId, long scopeId,
+                                                                             int scopeType, String deviceCategory, String pid, String nickName) {
         JsonObject body = new JsonObject();
         body.addProperty("deviceId", deviceId);
         body.addProperty("waitBindDeviceId", waitBindDeviceId);
@@ -279,7 +282,14 @@ public class RequestModel {
         body.addProperty("pid", pid);
         body.addProperty("nickName", nickName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
-        return getApiService().bindDeviceWithDSN(body111).compose(new BaseResultTransformer<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
+
+        Observable<BaseResult<DeviceListBean.DevicesBean>> observable;
+        if (TextUtils.isEmpty(replaceDeviceId)) {
+            observable = getApiService().bindDeviceWithDSN(body111);
+        } else {
+            observable = getApiService().bindReplaceDeviceWithDSN(body111);
+        }
+        return observable.compose(new BaseResultTransformer<BaseResult<DeviceListBean.DevicesBean>, DeviceListBean.DevicesBean>() {
         }).doOnNext(new Consumer<DeviceListBean.DevicesBean>() {
             @Override
             public void accept(DeviceListBean.DevicesBean devicesBean) throws Exception {
@@ -918,6 +928,11 @@ public class RequestModel {
 
     public Observable<Object> resetRoomPlan(long scopeId) {
         return getApiService().resetRoomPlan(scopeId).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
+        });
+    }
+
+    public Observable<String> getNodeGateway(String deviceId) {
+        return getApiService().getNodeGateway(deviceId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
         });
     }
 }

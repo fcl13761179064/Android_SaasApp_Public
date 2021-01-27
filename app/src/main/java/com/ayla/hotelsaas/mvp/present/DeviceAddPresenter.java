@@ -38,7 +38,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
             nickname = generateNickName(dsn, productName);
         }
         Disposable subscribe = RequestModel.getInstance()
-                .bindDeviceWithDSN(dsn, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, nickname)
+                .bindOrReplaceDeviceWithDSN(dsn, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, nickname)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -132,7 +132,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                             newNickName = generateNickName(deviceInfo[2], productName);
                         }
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(deviceId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
+                                .bindOrReplaceDeviceWithDSN(deviceId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
                     }
                 })//通知中台绑定
                 .observeOn(AndroidSchedulers.mainThread())
@@ -236,7 +236,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                                 newNickName = generateNickName(device.getDeviceId(), productName);
                             }
                             return RequestModel.getInstance()
-                                    .bindDeviceWithDSN(device.getDeviceId(), waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
+                                    .bindOrReplaceDeviceWithDSN(device.getDeviceId(), waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
                         }
                     }
                 })//绑定候选节点，只返回出来第一个绑定的节点
@@ -403,7 +403,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                             newNickName = generateNickName(subDeviceName, productName);
                         }
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(subIotId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
+                                .bindOrReplaceDeviceWithDSN(subIotId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -483,7 +483,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                             newNickName = generateNickName(deviceId, productName);
                         }
                         return RequestModel.getInstance()
-                                .bindDeviceWithDSN(deviceId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
+                                .bindOrReplaceDeviceWithDSN(deviceId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
                     }
                 })//绑定设备
                 .observeOn(AndroidSchedulers.mainThread())

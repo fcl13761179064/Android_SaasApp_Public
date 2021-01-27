@@ -28,7 +28,6 @@ import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -111,6 +110,9 @@ public interface ApiService {
 
     @POST("api/v1/build/device/bind")
     Observable<BaseResult<DeviceListBean.DevicesBean>> bindDeviceWithDSN(@Body RequestBody body);
+
+    @POST("api/v1/build/device/bind/replace")
+    Observable<BaseResult<DeviceListBean.DevicesBean>> bindReplaceDeviceWithDSN(@Body RequestBody body);
 
     @GET("api/v1/build/device/{deviceId}/candidates/{deviceCategory}")
     Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(@Path("deviceId") String deviceId, @Path("deviceCategory") String deviceCategory);
@@ -285,4 +287,12 @@ public interface ApiService {
      */
     @POST("/api/v1/build/device/remove/{roomId}")
     Observable<BaseResult<Object>> resetRoomPlan(@Path("roomId") long roomId);
+
+    /**
+     * 获取节点设备所属网关的dsn
+     *
+     * @return
+     */
+    @GET("/api/v1/build/device/{deviceId}/gateway")
+    Observable<BaseResult<String>> getNodeGateway(@Path("deviceId") String deviceId);
 }
