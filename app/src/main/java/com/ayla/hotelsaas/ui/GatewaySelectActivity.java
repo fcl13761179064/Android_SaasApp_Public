@@ -69,9 +69,7 @@ public class GatewaySelectActivity extends BaseMvpActivity<ZigBeeAddSelectGatewa
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 DeviceListBean.DevicesBean device = (DeviceListBean.DevicesBean) adapter.getItem(position);
                 if (TempUtils.isDeviceOnline(device)) {
-                    Intent intent = new Intent()
-                            .putExtra("deviceId", device.getDeviceId())
-                            .putExtras(getIntent());
+                    Intent intent = new Intent(getIntent()).putExtra("deviceId", device.getDeviceId());
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {

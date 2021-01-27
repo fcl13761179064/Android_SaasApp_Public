@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +29,6 @@ import carlwu.top.lib_device_add.GatewayHelper;
  */
 public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
 
-    private static final int REQUEST_CODE_ADD_DEVICE = 1001;
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
     @BindView(R.id.appBar)
@@ -96,7 +94,7 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
         addInfo.putString("HYproductKey", productKey);
         addInfo.putString("HYdeviceName", deviceName);
         intent.putExtra("addInfo", addInfo);
-        startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
+        startActivity(intent);
     }
 
     private GatewayHelper.DiscoverHelper discoverHelper;
@@ -111,15 +109,5 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
     protected void onDestroy() {
         super.onDestroy();
         discoverHelper.stopDiscoverGateway();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_ADD_DEVICE && resultCode == RESULT_OK) {
-            setResult(RESULT_OK);
-            finish();
-        }
-
     }
 }

@@ -142,8 +142,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     }
                 }
             }
-            //如果跳转了品类的添加，但是又取消了添加设备，就需要判断是否存在addForWait ，如果是，就要结束这个页面。
-            getIntent().removeExtra("addForWait");
+            handleShouldExit();
         }
         Bundle replaceInfoBundle = getIntent().getBundleExtra("replaceInfo");
         if (replaceInfoBundle != null) {//替换设备逻辑
@@ -159,7 +158,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     }
                 }
             }
-            getIntent().removeExtra("replaceInfo");
+            handleShouldExit();
         }
     }
 
@@ -231,24 +230,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
 
         if (subBeans.length == 1) {
             DeviceCategoryBean.SubBean.NodeBean subBean = subBeans[0];
-            int networkType = calculateNetworkType(subBean);
 
-            Bundle addInfo = new Bundle();
-            addInfo.putInt("networkType", networkType);
-            addInfo.putInt("cuId", subBean.getSource());
-            addInfo.putLong("scopeId", scopeId);
-            addInfo.putString("pid", subBean.getPid());
-            addInfo.putString("deviceCategory", subBean.getOemModel());
-            addInfo.putString("productName", subBean.getProductName());
-            Bundle addForWait = getIntent().getBundleExtra("addForWait");
-            if (addForWait != null) {
-                addInfo.putString("waitBindDeviceId", addForWait.getString("waitBindDeviceId"));
-                addInfo.putString("nickname", addForWait.getString("nickname"));
-            }
-            Bundle replaceInfo = getIntent().getBundleExtra("replaceInfo");
-            if (replaceInfo != null) {
-                addInfo.putString("replaceDeviceId", replaceInfo.getString("replaceDeviceId"));
-            }
+            int networkType = calculateNetworkType(subBean);
+            Bundle addInfo = generateAddInfoBundle(subBean);
 
             if (networkType == 2) {//艾拉网关
                 Intent mainActivity = new Intent(this, AylaGatewayAddGuideActivity.class);
@@ -257,6 +241,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             } else if (networkType == 3) {//跳转艾拉节点
                 if (aylaGateways.size() == 0) {//没有艾拉网关
                     CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming);
+                    handleShouldExit();
                 } else if (aylaGateways.size() == 1) {//一个艾拉网关
                     DeviceListBean.DevicesBean gateway = aylaGateways.get(0);
                     if (TempUtils.isDeviceOnline(gateway)) {//网关在线
@@ -266,6 +251,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                         startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                     } else {
                         CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming);
+                        handleShouldExit();
                     }
                 } else {//多个网关
                     Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
@@ -284,6 +270,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             } else if (networkType == 4) {//跳转鸿雁节点
                 if (hyGateways.size() == 0) {//没有鸿雁网关
                     CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming);
+                    handleShouldExit();
                 } else if (hyGateways.size() == 1) {//一个网关
                     DeviceListBean.DevicesBean gateway = hyGateways.get(0);
                     if (TempUtils.isDeviceOnline(gateway)) {//网关在线
@@ -293,6 +280,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                         startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                     } else {
                         CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming);
+                        handleShouldExit();
                     }
                 } else {//多个网关
                     Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
@@ -320,7 +308,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 if (aylaNodeBean != null && hyNodeBean != null) {//一个icon 表示 两种 节点设备，一个鸿雁、一个艾拉。
                     if (aylaGateways.size() == 0 && hyGateways.size() == 0) {//没有绑定过任何网关
                         CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming);
-                        return;
+                        handleShouldExit();
                     } else if (aylaGateways.size() + hyGateways.size() > 1) {//当前存在多个网关 ,跳转到网关选择页面
                         Intent mainActivity = new Intent(this, GatewaySelectActivity.class);
                         ArrayList<DeviceCategoryBean.SubBean.NodeBean> nodeBeans = new ArrayList<>();
@@ -345,6 +333,26 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 }
             }
         }
+    }
+
+    private Bundle generateAddInfoBundle(DeviceCategoryBean.SubBean.NodeBean subBean) {
+        Bundle addInfo = new Bundle();
+        addInfo.putInt("networkType", calculateNetworkType(subBean));
+        addInfo.putInt("cuId", subBean.getSource());
+        addInfo.putLong("scopeId", scopeId);
+        addInfo.putString("pid", subBean.getPid());
+        addInfo.putString("deviceCategory", subBean.getOemModel());
+        addInfo.putString("productName", subBean.getProductName());
+        Bundle addForWait = getIntent().getBundleExtra("addForWait");
+        if (addForWait != null) {
+            addInfo.putString("waitBindDeviceId", addForWait.getString("waitBindDeviceId"));
+            addInfo.putString("nickname", addForWait.getString("nickname"));
+        }
+        Bundle replaceInfo = getIntent().getBundleExtra("replaceInfo");
+        if (replaceInfo != null) {
+            addInfo.putString("replaceDeviceId", replaceInfo.getString("replaceDeviceId"));
+        }
+        return addInfo;
     }
 
     private int calculateNetworkType(DeviceCategoryBean.SubBean.NodeBean subBean) {
@@ -378,64 +386,34 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             if (resultCode == RESULT_OK) {
                 finish();
             } else {
-                if (getIntent().hasExtra("addForWait")) {
-                    finish();
-                    return;
-                }
-                if (getIntent().hasExtra("replaceInfo")) {
-                    finish();
-                    return;
-                }
+                handleShouldExit();
             }
         } else if (requestCode == REQUEST_CODE_SELECT_GATEWAY) {
             if (resultCode == RESULT_OK) {
                 String deviceId = data.getStringExtra("deviceId");
-
+                Bundle addInfo = null;
                 Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
 
                 if (data.hasExtra("addInfo")) {
-                    mainActivity.putExtra("addInfo", data.getBundleExtra("addInfo"));
+                    addInfo = data.getBundleExtra("addInfo");
                 } else if (data.hasExtra("waitCategoryNodes")) {
                     List<DeviceCategoryBean.SubBean.NodeBean> nodes = (List<DeviceCategoryBean.SubBean.NodeBean>) data.getSerializableExtra("waitCategoryNodes");
 
                     DeviceListBean.DevicesBean gatewayDevice = MyApplication.getInstance().getDevicesBean(deviceId);
                     for (DeviceCategoryBean.SubBean.NodeBean subBean : nodes) {
                         if (subBean.getSource() == gatewayDevice.getCuId()) {
-                            Bundle addInfo = new Bundle();
-                            addInfo.putInt("networkType", calculateNetworkType(subBean));
-                            addInfo.putInt("cuId", subBean.getSource());
-                            addInfo.putLong("scopeId", scopeId);
-                            addInfo.putString("pid", subBean.getPid());
-                            addInfo.putString("deviceCategory", subBean.getOemModel());
-                            addInfo.putString("productName", subBean.getProductName());
-                            Bundle addForWait = getIntent().getBundleExtra("addForWait");
-                            if (addForWait != null) {
-                                addInfo.putString("waitBindDeviceId", addForWait.getString("waitBindDeviceId"));
-                                addInfo.putString("nickname", addForWait.getString("nickname"));
-                            }
-                            Bundle replaceInfo = getIntent().getBundleExtra("replaceInfo");
-                            if (replaceInfo != null) {
-                                addInfo.putString("replaceDeviceId", replaceInfo.getString("replaceDeviceId"));
-                            }
-
-                            mainActivity.putExtra("addInfo", addInfo);
+                            addInfo = generateAddInfoBundle(subBean);
                             break;
                         }
                     }
                 }
-                Bundle addInfo = mainActivity.getBundleExtra("addInfo");
-                addInfo.putString("deviceId", deviceId);
-
-                startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+                if (addInfo != null) {
+                    addInfo.putString("deviceId", deviceId);
+                    mainActivity.putExtra("addInfo", addInfo);
+                    startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+                }
             } else {
-                if (getIntent().hasExtra("addForWait")) {
-                    finish();
-                    return;
-                }
-                if (getIntent().hasExtra("replaceInfo")) {
-                    finish();
-                    return;
-                }
+                handleShouldExit();
             }
         }
     }
@@ -445,5 +423,13 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         mContentView.setVisibility(View.VISIBLE);
         mEmptyView.setVisibility(View.GONE);
         mPresenter.loadCategory();
+    }
+
+    private void handleShouldExit() {
+        if (getIntent().hasExtra("addForWait")) {
+            finish();
+        } else if (getIntent().hasExtra("replaceInfo")) {
+            finish();
+        }
     }
 }

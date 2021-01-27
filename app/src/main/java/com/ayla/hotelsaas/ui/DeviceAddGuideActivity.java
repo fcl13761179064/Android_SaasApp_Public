@@ -28,6 +28,8 @@ import butterknife.OnClick;
  * 进入必须带上{@link Bundle addInfo}
  */
 public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, DeviceAddGuidePresenter> implements DeviceAddGuideView {
+    private final int REQUEST_CODE_GET_WIFI_SSID_PWD = 0X10;
+
     @BindView(R.id.iv)
     ImageView imageView;
     @BindView(R.id.tv_content)
@@ -37,10 +39,14 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
     @BindView(R.id.bt)
     Button button;
 
+
+    private Bundle addInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String pid = getIntent().getBundleExtra("addInfo").getString("pid");
+        addInfo = getIntent().getBundleExtra("addInfo");
+        String pid = addInfo.getString("pid");
         mPresenter.getNetworkConfigGuide(pid);
     }
 
@@ -65,28 +71,31 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
 
 
     private void handleJump() {
-        int networkType = getIntent().getBundleExtra("addInfo").getInt("networkType");
+        int networkType = addInfo.getInt("networkType");
 
-        Intent mainActivity = null;
         if (networkType == 3) {//艾拉节点设备配网
-            mainActivity = new Intent(this, DeviceAddActivity.class);
+            Intent mainActivity = new Intent(this, DeviceAddActivity.class);
+            mainActivity.putExtra("addInfo", addInfo);
+            startActivity(mainActivity);
         } else if (networkType == 4) {//鸿雁节点设备配网
-            mainActivity = new Intent(this, DeviceAddActivity.class);
+            Intent mainActivity = new Intent(this, DeviceAddActivity.class);
+            mainActivity.putExtra("addInfo", addInfo);
+            startActivity(mainActivity);
         } else if (networkType == 5) {//艾拉WiFi设备配网
-            mainActivity = new Intent(this, AylaWiFiAddInputActivity.class);
-        }
-        if (mainActivity != null) {
-            mainActivity.putExtras(getIntent());
-            startActivityForResult(mainActivity, 0);
+            Intent mainActivity = new Intent(this, AylaWiFiAddInputActivity.class);
+            startActivityForResult(mainActivity, REQUEST_CODE_GET_WIFI_SSID_PWD);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0 && resultCode == RESULT_OK) {//网关绑定页面关闭，告知绑定成功，本引导页面自动关闭。
-            setResult(RESULT_OK);
-            finish();
+        if (requestCode == REQUEST_CODE_GET_WIFI_SSID_PWD && resultCode == RESULT_OK) {//获取到了输入的wifi ssid 、pwd
+            Intent mainActivity = new Intent(this, DeviceAddActivity.class);
+            addInfo.putString("wifiName", data.getStringExtra("wifiName"));
+            addInfo.putString("wifiPassword", data.getStringExtra("wifiPassword"));
+            mainActivity.putExtra("addInfo", addInfo);
+            startActivity(mainActivity);
         }
     }
 

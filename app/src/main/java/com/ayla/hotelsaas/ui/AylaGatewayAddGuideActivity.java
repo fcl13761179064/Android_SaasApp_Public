@@ -17,7 +17,6 @@ import butterknife.OnClick;
  * 进入必须带上{@link Bundle addInfo}
  */
 public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
-    private final int REQUEST_CODE_FOR_ADD = 0X10;
     private final int REQUEST_CODE_FOR_DSN_INPUT = 0X11;
     private final int REQUEST_CODE_FOR_DSN_SCAN = 0X12;
 
@@ -61,7 +60,7 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
                         Bundle addInfo = getIntent().getBundleExtra("addInfo");
                         addInfo.putString("deviceId", deviceId);
                         mainActivity.putExtra("addInfo", addInfo);
-                        startActivityForResult(mainActivity, REQUEST_CODE_FOR_ADD);
+                        startActivity(mainActivity);
                         return;
                     }
                 }
@@ -70,9 +69,6 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
         } else if (requestCode == REQUEST_CODE_FOR_DSN_SCAN && resultCode == ScanActivity.RESULT_FOR_INPUT) {//扫码页面回退到手动输入页面
             Intent mainActivity = new Intent(this, GatewayAddDsnInputActivity.class);
             startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_INPUT);
-        } else if (requestCode == REQUEST_CODE_FOR_ADD && resultCode == RESULT_OK) {//网关添加成功
-            setResult(RESULT_OK);
-            finish();
         }
     }
 }
