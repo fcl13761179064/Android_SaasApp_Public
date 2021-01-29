@@ -509,7 +509,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         if (throwable instanceof ServerBadException) {
             String code = ((ServerBadException) throwable).getCode();
             if ("159999".equals(code)) {
-                CustomToast.makeText(this, "该设备有异常,请移除后再创建场景", R.drawable.ic_toast_warming);
+                CustomToast.makeText(this, "不支持使用异常设备，请修改后重试", R.drawable.ic_toast_warming);
                 return;
             } else if ("155000".equals(code)) {
                 CustomToast.makeText(this, "场景名称已被使用", R.drawable.ic_toast_warming);
