@@ -133,7 +133,7 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
         String productName = addInfo.getString("productName");
         String nickname = addInfo.getString("nickname");
         String waitBindDeviceId = addInfo.getString("waitBindDeviceId");
-        String replaceDeviceId = getIntent().getStringExtra("replaceDeviceId");
+        String replaceDeviceId = addInfo.getString("replaceDeviceId");
 
         if (networkType == 1) {//鸿雁网关
             mPresenter.bindHongYanGateway((AApplication) getApplication(),

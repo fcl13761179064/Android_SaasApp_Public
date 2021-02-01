@@ -7,5 +7,5 @@ public interface AutoRunView extends BaseView {
 
     void changeSuccess();
 
-    void changeFailed(BaseSceneBean ruleEngineBean);
+    void changeFailed(BaseSceneBean ruleEngineBean,Throwable throwable);
 }

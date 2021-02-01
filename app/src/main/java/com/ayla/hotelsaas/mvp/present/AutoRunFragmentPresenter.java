@@ -41,7 +41,7 @@ public class AutoRunFragmentPresenter extends BasePresenter<AutoRunView> {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         ruleEngineBean.setStatus(isChecked ? 0 : 1);
-                        mView.changeFailed(ruleEngineBean);
+                        mView.changeFailed(ruleEngineBean, throwable);
                     }
                 });
         addSubscrebe(subscribe);

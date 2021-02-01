@@ -19,6 +19,7 @@ import com.ayla.hotelsaas.mvp.present.AutoRunFragmentPresenter;
 import com.ayla.hotelsaas.mvp.view.AutoRunView;
 import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.SceneSettingActivity;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -106,8 +107,8 @@ public class AutoRunFragment extends BaseMvpFragment<AutoRunView, AutoRunFragmen
     }
 
     @Override
-    public void changeFailed(BaseSceneBean ruleEngineBean) {
-        CustomToast.makeText(getContext(), "修改失败", R.drawable.ic_toast_warming);
+    public void changeFailed(BaseSceneBean ruleEngineBean, Throwable throwable) {
+        CustomToast.makeText(getContext(), TempUtils.getLocalErrorMsg("修改失败", throwable), R.drawable.ic_toast_warming);
         for (int i = 0; i < mAdapter.getData().size(); i++) {
             BaseSceneBean bean = mAdapter.getData().get(i);
             if (bean.getRuleId() == ruleEngineBean.getRuleId()) {
