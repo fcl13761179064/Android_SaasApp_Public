@@ -48,8 +48,10 @@
                 tools:text="小于" />
 
             <ImageView
+                android:id="@+id/iv_option_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:visibility="visible"
                 android:layout_toRightOf="@+id/tv_device_name"
                 android:src="@mipmap/left_ico" />
 

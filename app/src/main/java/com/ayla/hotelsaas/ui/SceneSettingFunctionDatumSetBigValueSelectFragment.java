@@ -109,20 +109,27 @@ public class SceneSettingFunctionDatumSetBigValueSelectFragment extends BaseMvpF
 
     @Override
     protected void initListener() {
-        binding.rlOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ScrollerPickerDialog.newInstance()
-                        .setData(Arrays.asList(optionsName))
-                        .setCallback(new ScrollerPickerDialog.Callback() {
-                            @Override
-                            public void onCallback(int index) {
-                                binding.tvDeviceName.setText(optionsName[index]);
-                            }
-                        })
-                        .show(getChildFragmentManager(), "dialog");
-            }
-        });
+        boolean isCondition = getArguments().getBoolean("isCondition");
+        if (isCondition) {
+            binding.ivOptionArrow.setVisibility(View.VISIBLE);
+            binding.rlOption.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ScrollerPickerDialog.newInstance()
+                            .setData(Arrays.asList(optionsName))
+                            .setCallback(new ScrollerPickerDialog.Callback() {
+                                @Override
+                                public void onCallback(int index) {
+                                    binding.tvDeviceName.setText(optionsName[index]);
+                                }
+                            })
+                            .show(getChildFragmentManager(), "dialog");
+                }
+            });
+        } else {//如果是动作 ，就默认是 =  ，不能更改
+            binding.ivOptionArrow.setVisibility(View.GONE);
+        }
+
         binding.rlDeviceRename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
