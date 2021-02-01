@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.databinding.ActivityDeviceReplaceBinding;
@@ -36,8 +37,6 @@ public class DeviceReplaceActivity extends BaseMvpActivity<DeviceReplaceView, De
         return mBinding.getRoot();
     }
 
-    DeviceListBean.DevicesBean devicesBean;
-
     String deviceId;
     long scopeId;
 
@@ -59,11 +58,13 @@ public class DeviceReplaceActivity extends BaseMvpActivity<DeviceReplaceView, De
 
     @Override
     public void canReplace(String gatewayId) {
+        DeviceListBean.DevicesBean replaceDeviceBean = MyApplication.getInstance().getDevicesBean(deviceId);
         Intent intent = new Intent(DeviceReplaceActivity.this, DeviceAddCategoryActivity.class);
         intent.putExtra("scopeId", scopeId);
         Bundle bundle = new Bundle();
         bundle.putString("replaceDeviceId", deviceId);
         bundle.putString("targetGatewayDeviceId", gatewayId);
+        bundle.putString("replaceDeviceNickname", replaceDeviceBean.getNickname());
         intent.putExtra("replaceInfo", bundle);
         startActivity(intent);
     }

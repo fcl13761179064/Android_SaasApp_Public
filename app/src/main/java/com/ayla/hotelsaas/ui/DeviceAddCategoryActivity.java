@@ -39,7 +39,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  * 补全待绑定设备时，必须传入
  * {@link Bundle addForWait} include:waitBindDeviceId、nickname、pid
  * 替换设备时，必须传入
- * {@link Bundle replaceInfo} include:replaceDeviceId、targetGatewayDeviceId
+ * {@link Bundle replaceInfo} include:replaceDeviceId、targetGatewayDeviceId、replaceDeviceNickname
  * @作者 吴友金
  */
 public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView, DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
@@ -351,6 +351,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         Bundle replaceInfo = getIntent().getBundleExtra("replaceInfo");
         if (replaceInfo != null) {
             addInfo.putString("replaceDeviceId", replaceInfo.getString("replaceDeviceId"));
+            addInfo.putString("nickname",replaceInfo.getString("replaceDeviceNickname"));
         }
         return addInfo;
     }
