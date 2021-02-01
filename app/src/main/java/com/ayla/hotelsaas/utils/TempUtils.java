@@ -120,6 +120,12 @@ public class TempUtils {
                 case "210000":
                     msg = "检测到方案和当前房型不一致，请更换方案";
                     break;
+                case "159999":
+                    msg = "不支持使用异常设备，请修改后重试";
+                    break;
+                case "155000":
+                    msg = "场景名称已被使用";
+                    break;
             }
         } else if (throwable instanceof SelfMsgException) {
             msg = throwable.getLocalizedMessage();
