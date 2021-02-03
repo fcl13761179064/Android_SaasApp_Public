@@ -59,13 +59,13 @@ public class DeviceReplaceActivity extends BaseMvpActivity<DeviceReplaceView, De
     @Override
     public void canReplace(String gatewayId) {
         DeviceListBean.DevicesBean replaceDeviceBean = MyApplication.getInstance().getDevicesBean(deviceId);
-        Intent intent = new Intent(DeviceReplaceActivity.this, DeviceAddCategoryActivity.class);
+        Intent intent = new Intent(DeviceReplaceActivity.this, DeviceAddCategoryActivity.class);//通知替换设备
         intent.putExtra("scopeId", scopeId);
-        Bundle bundle = new Bundle();
-        bundle.putString("replaceDeviceId", deviceId);
-        bundle.putString("targetGatewayDeviceId", gatewayId);
-        bundle.putString("replaceDeviceNickname", replaceDeviceBean.getNickname());
-        intent.putExtra("replaceInfo", bundle);
+        Bundle replaceInfoBundle = new Bundle();
+        replaceInfoBundle.putString("replaceDeviceId", deviceId);
+        replaceInfoBundle.putString("targetGatewayDeviceId", gatewayId);
+        replaceInfoBundle.putString("replaceDeviceNickname", replaceDeviceBean.getNickname());
+        intent.putExtra("replaceInfo", replaceInfoBundle);
         startActivity(intent);
     }
 

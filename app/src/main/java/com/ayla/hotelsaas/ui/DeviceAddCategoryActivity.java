@@ -106,7 +106,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 List<DeviceCategoryBean.SubBean.NodeBean> items = (List<DeviceCategoryBean.SubBean.NodeBean>) adapter.getItem(position);
                 DeviceCategoryBean.SubBean.NodeBean[] nodeBeans = items.toArray(new DeviceCategoryBean.SubBean.NodeBean[]{});
-                handleAddJump(nodeBeans);
+                handleAddJump(nodeBeans, false);
             }
         });
     }
@@ -136,7 +136,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 for (DeviceCategoryBean.SubBean subBean : deviceCategoryBean.getSub()) {
                     for (DeviceCategoryBean.SubBean.NodeBean nodeBean : subBean.getNode()) {
                         if (TextUtils.equals(pid, nodeBean.getPid())) {
-                            handleAddJump(new DeviceCategoryBean.SubBean.NodeBean[]{nodeBean});
+                            handleAddJump(new DeviceCategoryBean.SubBean.NodeBean[]{nodeBean}, true);
                             return;
                         }
                     }
@@ -152,7 +152,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 for (DeviceCategoryBean.SubBean subBean : deviceCategoryBean.getSub()) {
                     for (DeviceCategoryBean.SubBean.NodeBean nodeBean : subBean.getNode()) {
                         if (TextUtils.equals(nodeBean.getPid(), devicesBean.getPid())) {
-                            handleAddJump(new DeviceCategoryBean.SubBean.NodeBean[]{nodeBean});
+                            handleAddJump(new DeviceCategoryBean.SubBean.NodeBean[]{nodeBean}, true);
                             return;
                         }
                     }
@@ -208,7 +208,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
     /**
      * 处理点击二级菜单item后的配网页面跳转逻辑
      */
-    private void handleAddJump(DeviceCategoryBean.SubBean.NodeBean[] subBeans) {
+    private void handleAddJump(DeviceCategoryBean.SubBean.NodeBean[] subBeans, boolean isAutoJump) {
         Bundle _replaceInfo = getIntent().getBundleExtra("replaceInfo");
         String replaceNodeGatewayId = null;//需要替换设备时，节点所在的网关id
         if (_replaceInfo != null) {
@@ -238,6 +238,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 Intent mainActivity = new Intent(this, AylaGatewayAddGuideActivity.class);
                 mainActivity.putExtra("addInfo", addInfo);
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+                if(isAutoJump){
+                    overridePendingTransition(R.anim.alpha_0_1_anim,R.anim.alpha_1_0_anim);
+                }
             } else if (networkType == 3) {//跳转艾拉节点
                 if (aylaGateways.size() == 0) {//没有艾拉网关
                     CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming);
@@ -249,6 +252,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                         addInfo.putString("deviceId", gateway.getDeviceId());
                         mainActivity.putExtra("addInfo", addInfo);
                         startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+                        if(isAutoJump){
+                            overridePendingTransition(R.anim.alpha_0_1_anim,R.anim.alpha_1_0_anim);
+                        }
                     } else {
                         CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming);
                         handleShouldExit();
@@ -258,15 +264,24 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     mainActivity.putExtra("addInfo", addInfo);
                     mainActivity.putExtra("sourceId", subBean.getSource());
                     startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
+                    if(isAutoJump){
+                        overridePendingTransition(R.anim.alpha_0_1_anim,R.anim.alpha_1_0_anim);
+                    }
                 }
             } else if (networkType == 5) {//跳转艾拉wifi
                 Intent mainActivity = new Intent(this, DeviceAddGuideActivity.class);
                 mainActivity.putExtra("addInfo", addInfo);
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+                if(isAutoJump){
+                    overridePendingTransition(R.anim.alpha_0_1_anim,R.anim.alpha_1_0_anim);
+                }
             } else if (networkType == 1) {//跳转鸿雁网关
                 Intent mainActivity = new Intent(this, HongyanGatewayAddGuideActivity.class);
                 mainActivity.putExtra("addInfo", addInfo);
                 startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+                if(isAutoJump){
+                    overridePendingTransition(R.anim.alpha_0_1_anim,R.anim.alpha_1_0_anim);
+                }
             } else if (networkType == 4) {//跳转鸿雁节点
                 if (hyGateways.size() == 0) {//没有鸿雁网关
                     CustomToast.makeText(this, "请先绑定网关", R.drawable.ic_toast_warming);
@@ -278,6 +293,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                         addInfo.putString("deviceId", gateway.getDeviceId());
                         mainActivity.putExtra("addInfo", addInfo);
                         startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
+                        if(isAutoJump){
+                            overridePendingTransition(R.anim.alpha_0_1_anim,R.anim.alpha_1_0_anim);
+                        }
                     } else {
                         CustomToast.makeText(this, "当前网关离线", R.drawable.ic_toast_warming);
                         handleShouldExit();
@@ -287,6 +305,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                     mainActivity.putExtra("addInfo", addInfo);
                     mainActivity.putExtra("sourceId", subBean.getSource());
                     startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
+                    if(isAutoJump){
+                        overridePendingTransition(R.anim.alpha_0_1_anim,R.anim.alpha_1_0_anim);
+                    }
                 }
             }
         } else if (subBeans.length == 2) {
@@ -321,6 +342,9 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                             mainActivity.putExtra("sourceId", aylaGateways.get(0).getCuId());
                         }
                         startActivityForResult(mainActivity, REQUEST_CODE_SELECT_GATEWAY);
+                        if(isAutoJump){
+                            overridePendingTransition(R.anim.alpha_0_1_anim,R.anim.alpha_1_0_anim);
+                        }
                     } else {//只有一个网关
                         DeviceCategoryBean.SubBean.NodeBean forAddNode;
                         if (aylaGateways.size() == 0) {
@@ -328,7 +352,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                         } else {
                             forAddNode = aylaNodeBean;
                         }
-                        handleAddJump(new DeviceCategoryBean.SubBean.NodeBean[]{forAddNode});
+                        handleAddJump(new DeviceCategoryBean.SubBean.NodeBean[]{forAddNode}, isAutoJump);
                     }
                 }
             }
@@ -351,7 +375,7 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
         Bundle replaceInfo = getIntent().getBundleExtra("replaceInfo");
         if (replaceInfo != null) {
             addInfo.putString("replaceDeviceId", replaceInfo.getString("replaceDeviceId"));
-            addInfo.putString("nickname",replaceInfo.getString("replaceDeviceNickname"));
+            addInfo.putString("nickname", replaceInfo.getString("replaceDeviceNickname"));
         }
         return addInfo;
     }

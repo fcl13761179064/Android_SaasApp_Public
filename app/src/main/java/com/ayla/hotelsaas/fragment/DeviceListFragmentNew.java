@@ -103,16 +103,16 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
                     } else {
                         intent = new Intent(getContext(), DeviceMoreActivity.class);
                     }
-                } else {
-                    if (devicesBean.getDeviceUseType() == 1) {
+                } else {//待绑定的设备
+                    if (devicesBean.getDeviceUseType() == 1) {//如果是用途设备，跳过
                         return;
                     }
-                    intent = new Intent(getContext(), DeviceAddCategoryActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("waitBindDeviceId", devicesBean.getDeviceId());
-                    bundle.putString("nickname", devicesBean.getNickname());
-                    bundle.putString("pid", devicesBean.getPid());
-                    intent.putExtra("addForWait", bundle);
+                    intent = new Intent(getContext(), DeviceAddCategoryActivity.class);//通知添加待绑定设备
+                    Bundle addForWaitBundle = new Bundle();
+                    addForWaitBundle.putString("waitBindDeviceId", devicesBean.getDeviceId());
+                    addForWaitBundle.putString("nickname", devicesBean.getNickname());
+                    addForWaitBundle.putString("pid", devicesBean.getPid());
+                    intent.putExtra("addForWait", addForWaitBundle);
                 }
                 intent.putExtra("deviceId", devicesBean.getDeviceId());
                 intent.putExtra("scopeId", room_id);
