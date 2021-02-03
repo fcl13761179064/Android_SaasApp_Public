@@ -49,7 +49,7 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
             DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(action.getTargetDeviceId());
             if (devicesBean != null) {
                 ImageLoader.loadImg(helper.getView(R.id.left_iv), devicesBean.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
-                helper.setText(R.id.tv_function_name, devicesBean.getDeviceName());
+                helper.setText(R.id.tv_function_name, devicesBean.getNickname());
             }
         } else if (item.getItemType() == ActionItem.item_device_removed) {
             helper.setImageResource(R.id.left_iv, R.drawable.ic_scene_removed_device_item);
