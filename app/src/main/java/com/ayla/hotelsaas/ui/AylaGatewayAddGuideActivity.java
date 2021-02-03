@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
@@ -13,10 +14,9 @@ import butterknife.OnClick;
 
 /**
  * Ayla网关添加引导页面
- * 进入时必须带上cuId 、scopeId 、deviceName、deviceCategory。
+ * 进入必须带上{@link Bundle addInfo}
  */
 public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
-    private final int REQUEST_CODE_FOR_ADD = 0X10;
     private final int REQUEST_CODE_FOR_DSN_INPUT = 0X11;
     private final int REQUEST_CODE_FOR_DSN_SCAN = 0X12;
 
@@ -57,10 +57,10 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
                     }
                     if (!TextUtils.isEmpty(deviceId)) {
                         Intent mainActivity = new Intent(this, DeviceAddActivity.class);
-                        mainActivity.putExtras(getIntent());
-                        mainActivity.putExtra("networkType", 2);
-                        mainActivity.putExtra("deviceId", deviceId);
-                        startActivityForResult(mainActivity, REQUEST_CODE_FOR_ADD);
+                        Bundle addInfo = getIntent().getBundleExtra("addInfo");
+                        addInfo.putString("deviceId", deviceId);
+                        mainActivity.putExtra("addInfo", addInfo);
+                        startActivity(mainActivity);
                         return;
                     }
                 }
@@ -69,9 +69,6 @@ public class AylaGatewayAddGuideActivity extends BaseMvpActivity {
         } else if (requestCode == REQUEST_CODE_FOR_DSN_SCAN && resultCode == ScanActivity.RESULT_FOR_INPUT) {//扫码页面回退到手动输入页面
             Intent mainActivity = new Intent(this, GatewayAddDsnInputActivity.class);
             startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_INPUT);
-        } else if (requestCode == REQUEST_CODE_FOR_ADD && resultCode == RESULT_OK) {//网关添加成功
-            setResult(RESULT_OK);
-            finish();
         }
     }
 }

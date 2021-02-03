@@ -1,11 +1,8 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
-import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.mvp.view.AutoRunView;
-import com.ayla.hotelsaas.utils.BeanObtainCompactUtil;
+import com.ayla.hotelsaas.mvp.view.DeviceReplaceView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -13,17 +10,16 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class AutoRunFragmentPresenter extends BasePresenter<AutoRunView> {
+public class DeviceReplacePresenter extends BasePresenter<DeviceReplaceView> {
 
-    public void changeSceneStatus(BaseSceneBean ruleEngineBean, boolean isChecked) {
-        ruleEngineBean.setStatus(isChecked ? 1 : 0);
-        Disposable subscribe = RequestModel.getInstance().updateRuleEngine(BeanObtainCompactUtil.obtainRuleEngineBean(ruleEngineBean))
+    public void getGatewayId(String deviceId) {
+        Disposable subscribe = RequestModel.getInstance().getNodeGateway(deviceId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
-                        mView.showProgress("加载中...");
+                        mView.showProgress();
                     }
                 })
                 .doFinally(new Action() {
@@ -32,16 +28,15 @@ public class AutoRunFragmentPresenter extends BasePresenter<AutoRunView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<Boolean>() {
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void accept(Boolean booleanBaseResult) throws Exception {
-                        mView.changeSuccess();
+                    public void accept(String o) throws Exception {
+                        mView.canReplace(o);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        ruleEngineBean.setStatus(isChecked ? 0 : 1);
-                        mView.changeFailed(ruleEngineBean, throwable);
+                        mView.cannotReplace(throwable);
                     }
                 });
         addSubscrebe(subscribe);

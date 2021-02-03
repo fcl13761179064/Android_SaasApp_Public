@@ -28,7 +28,7 @@ import butterknife.OnClick;
 
 /**
  * 网关添加DSN输入页面
- * 进入时必须带上cuId 、scopeId 、deviceName。
+ * 返回 wifiName，wifiPassword
  */
 public class AylaWiFiAddInputActivity extends BaseMvpActivity {
     private final int REQUEST_CODE_START_ADD = 0x10;
@@ -139,12 +139,8 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
         } else {
             saveWifiPwd(name, pwd);
 
-            Intent intent = new Intent(this, DeviceAddActivity.class);
-            intent.putExtra("wifiName", name);
-            intent.putExtra("wifiPassword", pwd);
-            intent.putExtras(getIntent());
-            intent.putExtra("networkType", 5);
-            startActivityForResult(intent, REQUEST_CODE_START_ADD);
+            setResult(RESULT_OK, new Intent().putExtra("wifiName", name).putExtra("wifiPassword", pwd));
+            finish();
         }
     }
 

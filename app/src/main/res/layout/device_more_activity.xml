@@ -11,15 +11,23 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:center_tv="更多"
+        app:center_tv="设备更多"
         app:left_iv="@mipmap/icon_back_black" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="所属设备信息"
+        android:textColor="#993c3c43"
+        android:textSize="13sp" />
 
     <RelativeLayout
         android:id="@+id/rl_device_rename"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:layout_marginTop="16dp"
         android:background="@drawable/room_num_shape">
 
         <TextView
@@ -89,10 +97,9 @@
         android:id="@+id/rl_device_function_rename"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:layout_marginTop="16dp"
         android:background="@drawable/room_num_shape"
-        tools:visibility="visible"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <TextView
             android:layout_width="wrap_content"
@@ -113,47 +120,19 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl_switch_usage"
+        android:id="@+id/rl_replace"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:layout_marginTop="16dp"
         android:background="@drawable/room_num_shape"
-        tools:visibility="visible"
-        android:visibility="invisible">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
             android:paddingLeft="16dp"
-            android:text="控制设备设置"
-            android:textColor="#333333"
-            android:textSize="17sp" />
-
-        <ImageView
-            android:layout_width="8dp"
-            android:layout_height="14dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/ic_menu_item_arrow_right" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl_purpose_change"
-        android:layout_width="match_parent"
-        android:layout_height="57dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/room_num_shape"
-        tools:visibility="visible"
-        android:visibility="invisible">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingLeft="16dp"
-            android:text="控制设备切换"
+            android:text="替换设备"
             android:textColor="#333333"
             android:textSize="17sp" />
 
@@ -170,7 +149,6 @@
         android:id="@+id/rl_location"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:layout_marginTop="16dp"
         android:background="@drawable/room_num_shape">
 
         <TextView
@@ -190,6 +168,77 @@
             android:layout_marginRight="16dp"
             android:src="@drawable/ic_menu_item_arrow_right" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_function_group_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:text="按键信息"
+            android:textColor="#993c3c43"
+            android:textSize="13sp" />
+
+        <RelativeLayout
+            android:id="@+id/rl_switch_usage"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:background="@drawable/room_num_shape"
+            android:visibility="invisible"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="16dp"
+                android:text="控制设备设置"
+                android:textColor="#333333"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="14dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_menu_item_arrow_right" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_purpose_change"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:background="@drawable/room_num_shape"
+            android:visibility="invisible"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="16dp"
+                android:text="控制设备切换"
+                android:textColor="#333333"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="14dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_menu_item_arrow_right" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/my_account_button"

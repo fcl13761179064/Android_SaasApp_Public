@@ -62,12 +62,6 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                         mView.showProgress();
                     }
                 })
-                .doFinally(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        mView.hideProgress();
-                    }
-                })
                 .subscribe(new Consumer<VersionUpgradeBean>() {
                     @Override
                     public void accept(VersionUpgradeBean versionUpgradeBean) throws Exception {

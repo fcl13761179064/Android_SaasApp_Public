@@ -46,12 +46,8 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
             return;
         }
         {
-            if (devicesBean.getDeviceName().contains("单")) {
+            if (devicesBean.getDeviceName().contains("一")) {
                 type = 1;
-            } else if (devicesBean.getDeviceName().contains("一")) {
-                type = 1;
-            } else if (devicesBean.getDeviceName().contains("双")) {
-                type = 2;
             } else if (devicesBean.getDeviceName().contains("二")) {
                 type = 2;
             } else if (devicesBean.getDeviceName().contains("三")) {

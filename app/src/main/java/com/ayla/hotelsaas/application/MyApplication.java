@@ -124,8 +124,13 @@ public class MyApplication extends AApplication {
         });
     }
 
+    /**
+     * 避免列表被破坏，需要重新组装一个list返回出去。
+     *
+     * @return
+     */
     public List<DeviceListBean.DevicesBean> getDevicesBean() {
-        return mDevicesBean;
+        return new ArrayList<>(mDevicesBean);
     }
 
     public DeviceListBean.DevicesBean getDevicesBean(String deviceId) {

@@ -9,6 +9,8 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
+import retrofit2.HttpException;
+
 public class TempUtils {
     /**
      * 判断设备是否为网关
@@ -21,6 +23,21 @@ public class TempUtils {
             return false;
         }
         return devicesBean.getBindType() == 0 && devicesBean.getProductType() == 1;
+    }
+
+
+    /**
+     * 判断设备是否为节点
+     *
+     * @param devicesBean
+     * @return
+     */
+    public static boolean isDeviceNode(DeviceListBean.DevicesBean devicesBean) {
+        if (devicesBean == null) {
+            return false;
+        }
+        return devicesBean.getBindType() == 0 && devicesBean.getProductType() == 2 &&
+                devicesBean.getIsNeedGateway() == 1;
     }
 
     /**
@@ -68,6 +85,12 @@ public class TempUtils {
             msg = "网络连接失败，请检查网络";
         } else if (throwable instanceof UnknownHostException) {
             msg = "网络连接失败，请检查网络";
+        } else if (throwable instanceof HttpException) {
+            switch (((HttpException) throwable).code()) {
+                case 403:
+                    msg = "没有访问权限";
+                    break;
+            }
         } else if (throwable instanceof ServerBadException) {
             String serverMsg = ((ServerBadException) throwable).getMsg();
 
@@ -91,8 +114,17 @@ public class TempUtils {
                 case "122001":
                     msg = "登录过期";
                     break;
+                case "121002":
+                    msg = "登录过期";
+                    break;
                 case "210000":
                     msg = "检测到方案和当前房型不一致，请更换方案";
+                    break;
+                case "159999":
+                    msg = "不支持使用异常设备，请修改后重试";
+                    break;
+                case "155000":
+                    msg = "场景名称已被使用";
                     break;
             }
         } else if (throwable instanceof SelfMsgException) {

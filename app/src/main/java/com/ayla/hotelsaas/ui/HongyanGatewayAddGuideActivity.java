@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,15 +25,10 @@ import carlwu.top.lib_device_add.GatewayHelper;
 
 /**
  * 鸿雁网关绑定，选择要绑定的网关页面
- * 进入时必须带上:
- * int cuId
- * long scopeId
- * String deviceName
- * String deviceCategory。
+ * 进入必须带上{@link Bundle addInfo}
  */
 public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
 
-    private static final int REQUEST_CODE_ADD_DEVICE = 1001;
     @BindView(R.id.recyclerview)
     RecyclerView recyclerview;
     @BindView(R.id.appBar)
@@ -68,7 +62,7 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
 
     @Override
     protected void initListener() {
-        String deviceCategory = getIntent().getStringExtra("deviceCategory");
+        String deviceCategory = getIntent().getBundleExtra("addInfo").getString("deviceCategory");
         discoverHelper = new GatewayHelper.DiscoverHelper(getApplication(), new GatewayHelper.DiscoverCallback() {
             @Override
             public void onDeviceFound(int type, List<Map<String, String>> data) {
@@ -96,11 +90,11 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
     public void handleJump(String productKey, String deviceName) {
         discoverHelper.stopDiscoverGateway();
         Intent intent = new Intent(this, DeviceAddActivity.class);
-        intent.putExtra("networkType", 1);
-        intent.putExtra("HYproductKey", productKey);
-        intent.putExtra("HYdeviceName", deviceName);
-        intent.putExtras(getIntent());
-        startActivityForResult(intent, REQUEST_CODE_ADD_DEVICE);
+        Bundle addInfo = getIntent().getBundleExtra("addInfo");
+        addInfo.putString("HYproductKey", productKey);
+        addInfo.putString("HYdeviceName", deviceName);
+        intent.putExtra("addInfo", addInfo);
+        startActivity(intent);
     }
 
     private GatewayHelper.DiscoverHelper discoverHelper;
@@ -115,15 +109,5 @@ public class HongyanGatewayAddGuideActivity extends BaseMvpActivity {
     protected void onDestroy() {
         super.onDestroy();
         discoverHelper.stopDiscoverGateway();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_ADD_DEVICE && resultCode == RESULT_OK) {
-            setResult(RESULT_OK);
-            finish();
-        }
-
     }
 }

@@ -27,10 +27,18 @@ import butterknife.OnClick;
 /**
  * 设备添加处理页面
  * 进入时必须带入:
- * 参数 int networkType 1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉节点 4、鸿雁节点 5、艾拉wifi设备
+ * {@link Bundle addInfo} include:
+ * must {@link int networkType} 1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉节点 4、鸿雁节点 5、艾拉wifi设备
+ * must {@link int cuId}
+ * must {@link long scopeId}
+ * must {@link String pid}
+ * must {@link String deviceCategory}
+ * must {@link String productName}
+ * {@link String waitBindDeviceId} 待补全设备的deviceId
+ * {@link String nickname} 待补全设备的nickname
+ * {@link String replaceDeviceId} 需要替换设备的ID
  * <p>
- * cuId 、scopeId、pid、deviceCategory、productName
- * <p>
+ * addInfo的额外参数：
  * networkType = 1 时，必须传入
  * HYproductKey、HYdeviceName
  * <p>
@@ -45,6 +53,7 @@ import butterknife.OnClick;
  * <p>
  * networkType = 5 时，必须传入
  * wifiName、wifiPassword
+ * <p>
  */
 public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddPresenter> implements DeviceAddView {
     private static final String TAG = "DeviceAddActivity";
@@ -115,14 +124,16 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
     private int bindProgress;//记录进度
 
     private void startBind() {
-        int networkType = getIntent().getIntExtra("networkType", 0);
-        int cuId = getIntent().getIntExtra("cuId", 0);
-        long scopeId = getIntent().getLongExtra("scopeId", 0);
-        String deviceCategory = getIntent().getStringExtra("deviceCategory");
-        String pid = getIntent().getStringExtra("pid");
-        String productName = getIntent().getStringExtra("productName");
-        String nickname = getIntent().getStringExtra("nickname");
-        String waitBindDeviceId = getIntent().getStringExtra("waitBindDeviceId");
+        Bundle addInfo = getIntent().getBundleExtra("addInfo");
+        int networkType = addInfo.getInt("networkType");
+        int cuId = addInfo.getInt("cuId");
+        long scopeId = addInfo.getLong("scopeId");
+        String deviceCategory = addInfo.getString("deviceCategory");
+        String pid = addInfo.getString("pid");
+        String productName = addInfo.getString("productName");
+        String nickname = addInfo.getString("nickname");
+        String waitBindDeviceId = addInfo.getString("waitBindDeviceId");
+        String replaceDeviceId = addInfo.getString("replaceDeviceId");
 
         if (networkType == 1) {//鸿雁网关
             mPresenter.bindHongYanGateway((AApplication) getApplication(),
@@ -132,50 +143,55 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     pid,
                     productName,
                     nickname,
-                    getIntent().getStringExtra("HYproductKey"),
-                    getIntent().getStringExtra("HYdeviceName"),
-                    waitBindDeviceId);
+                    addInfo.getString("HYproductKey"),
+                    addInfo.getString("HYdeviceName"),
+                    waitBindDeviceId,
+                    replaceDeviceId);
         } else if (networkType == 2) {//顺舟网关
             mPresenter.bindAylaGateway(
-                    getIntent().getStringExtra("deviceId"),
+                    addInfo.getString("deviceId"),
                     cuId,
                     scopeId,
                     deviceCategory,
                     pid,
                     productName,
                     nickname,
-                    waitBindDeviceId);
+                    waitBindDeviceId,
+                    replaceDeviceId);
         } else if (networkType == 3) {//艾拉节点
             mPresenter.bindAylaNode(
-                    getIntent().getStringExtra("deviceId"),
+                    addInfo.getString("deviceId"),
                     cuId,
                     scopeId,
                     deviceCategory,
                     pid,
                     productName,
                     nickname,
-                    waitBindDeviceId);
+                    waitBindDeviceId,
+                    replaceDeviceId);
         } else if (networkType == 4) {//鸿雁节点
             mPresenter.bindHongYanNode(
-                    getIntent().getStringExtra("deviceId"),
+                    addInfo.getString("deviceId"),
                     cuId,
                     scopeId,
                     deviceCategory,
                     pid,
                     productName,
                     nickname,
-                    waitBindDeviceId);
+                    waitBindDeviceId,
+                    replaceDeviceId);
         } else if (networkType == 5) {//艾拉WiFi
             mPresenter.bindAylaWiFi(
-                    getIntent().getStringExtra("wifiName"),
-                    getIntent().getStringExtra("wifiPassword"),
+                    addInfo.getString("wifiName"),
+                    addInfo.getString("wifiPassword"),
                     cuId,
                     scopeId,
                     deviceCategory,
                     pid,
                     productName,
                     nickname,
-                    waitBindDeviceId);
+                    waitBindDeviceId,
+                    replaceDeviceId);
         }
     }
 

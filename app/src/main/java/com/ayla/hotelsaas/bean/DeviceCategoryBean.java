@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -74,7 +75,7 @@ public class DeviceCategoryBean {
             this.node = node;
         }
 
-        public static class NodeBean {
+        public static class NodeBean implements Serializable {
 
             /**
              * "id": 1,

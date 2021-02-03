@@ -12,17 +12,17 @@ import java.util.List;
 public class ZigBeeAddSelectGatewayPresenter extends BasePresenter<ZigBeeAddSelectGatewayView> {
     /**
      * 过滤出指定的网关
-     * @param cuId  <0时 ，不区分网关所属云。
+     * @param sourceId  <0时 ，不区分网关所属云。
      */
-    public void loadGateway(int cuId) {
+    public void loadGateway(int sourceId) {
         List<DeviceListBean.DevicesBean> gateways = new ArrayList<>();
         List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
         if (devicesBean != null) {
             for (DeviceListBean.DevicesBean device : devicesBean) {
                 if (TempUtils.isDeviceGateway(device)) {
-                    if (cuId < 0) {
+                    if (sourceId < 0) {
                         gateways.add(device);
-                    } else if (device.getCuId() == cuId) {
+                    } else if (device.getCuId() == sourceId) {
                         gateways.add(device);
                     }
                 }

@@ -21,7 +21,6 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
-import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.events.SceneItemEvent;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.localBean.DeviceType;
@@ -506,16 +505,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @Override
     public void saveFailed(Throwable throwable) {
-        if (throwable instanceof ServerBadException) {
-            String code = ((ServerBadException) throwable).getCode();
-            if ("159999".equals(code)) {
-                CustomToast.makeText(this, "该设备有异常,请移除后再创建场景", R.drawable.ic_toast_warming);
-                return;
-            } else if ("155000".equals(code)) {
-                CustomToast.makeText(this, "场景名称已被使用", R.drawable.ic_toast_warming);
-                return;
-            }
-        }
         CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
     }
 

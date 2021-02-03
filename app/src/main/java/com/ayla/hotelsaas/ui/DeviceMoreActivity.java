@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -53,6 +54,10 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     View rl_purpose_change;
     @BindView(R.id.rl_device_detail)
     RelativeLayout rl_device_detail;
+    @BindView(R.id.rl_replace)
+    RelativeLayout rl_replace;
+    @BindView(R.id.ll_function_group_2)
+    LinearLayout ll_function_group_2;
 
     private long mScopeId;
     private String deviceId;
@@ -74,11 +79,13 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         mScopeId = getIntent().getLongExtra("scopeId", 0);
         if (mDevicesBean != null) {
             if (mDevicesBean.getIsPurposeDevice() == 1 && mDevicesBean.getDeviceUseType() == 0) {//支持创建用途设备、并且现在不是用途设备的源设备，就可以进行用途设备配置
+                ll_function_group_2.setVisibility(View.VISIBLE);
                 rl_switch_usage.setVisibility(View.VISIBLE);
             } else {
                 rl_switch_usage.setVisibility(View.GONE);
             }
             if (mDevicesBean.getDeviceUseType() == 1 && !TextUtils.isEmpty(mDevicesBean.getPurposeName())) {
+                ll_function_group_2.setVisibility(View.VISIBLE);
                 rl_purpose_change.setVisibility(View.VISIBLE);
             } else {
                 rl_purpose_change.setVisibility(View.GONE);
@@ -86,6 +93,11 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
             tv_device_name.setText(mDevicesBean.getNickname());
             if (!TempUtils.isDeviceGateway(mDevicesBean)) {
                 mPresenter.getRenameAbleFunctions(mDevicesBean.getPid());
+            }
+            if (TempUtils.isDeviceNode(mDevicesBean)) {
+                rl_replace.setVisibility(View.VISIBLE);
+            } else {
+                rl_replace.setVisibility(View.GONE);
             }
         }
     }
@@ -264,9 +276,16 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     public void handlePointChange() {
         Intent intent = new Intent(this, PointAndRegionActivity.class);
         intent.putExtra("deviceId", deviceId);
-        startActivityForResult(intent, REQUEST_CODE_SWITCH_USAGE_SET);
+        startActivity(intent);
     }
 
+    @OnClick(R.id.rl_replace)
+    public void handleReplace() {
+        Intent intent = new Intent(this, DeviceReplaceActivity.class);
+        intent.putExtra("deviceId", deviceId);
+        intent.putExtra("scopeId", mScopeId);
+        startActivity(intent);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -74,26 +74,8 @@ public class RetrofitHelper {
     private static OkHttpClient getOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-        //添加请求头
-        builder.addInterceptor(CommonParameterInterceptor);
-        //拦截403无访问权限的异常
-        builder.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                //原始接口请求
-                Request originalRequest = chain.request();
-                //原始接口结果
-                Response originalResponse = chain.proceed(originalRequest);
-
-                if (originalResponse.code() == 403) {
-                    CustomToast.makeText(MyApplication.getContext(), "无访问权限", R.drawable.ic_toast_warming);
-                    jump2Main();
-                }
-                return originalResponse;
-            }
-        });
-        //登录失败 重新登录
-        builder.addInterceptor(ReloginInterceptor);
+        builder.addInterceptor(CommonParameterInterceptor);//添加请求头
+        builder.addInterceptor(ReloginInterceptor);//登录失败 重新登录
         LogUtils.getConfig().setLog2FileSwitch(false).setBorderSwitch(false).setLogHeadSwitch(false);
         builder.addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
@@ -115,9 +97,9 @@ public class RetrofitHelper {
             Request.Builder requestBuilder = chain.request().newBuilder();
             requestBuilder.header("serviceId", "3");
             if (MyApplication.getInstance() != null) {
-                final String sava_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
-                if (sava_token != null) {
-                    requestBuilder.header("Authorization", sava_token).build();
+                final String save_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
+                if (save_token != null) {
+                    requestBuilder.header("Authorization", save_token).build();
                 }
             }
             return chain.proceed(requestBuilder.build());

@@ -35,6 +35,13 @@ public class ValueChangeDialog extends DialogFragment {
         return this;
     }
 
+    private InputType inputType = InputType.text;
+
+    public ValueChangeDialog setInputType(InputType inputType) {
+        this.inputType = inputType;
+        return this;
+    }
+
     private String title;
 
     public ValueChangeDialog setTitle(String title) {
@@ -72,6 +79,7 @@ public class ValueChangeDialog extends DialogFragment {
         EditText editText = view.findViewById(R.id.et_dsn);
         editText.setText(editValue);
         editText.setHint(editHint);
+        editText.setInputType(inputType.value);
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
         TextView titleTextView = view.findViewById(R.id.tv_title);
         titleTextView.setText(title);
@@ -91,6 +99,16 @@ public class ValueChangeDialog extends DialogFragment {
                 dismissAllowingStateLoss();
             }
         });
+    }
+
+    public enum InputType {
+        numberSigned(0x00001002), text(0x00000001), numberSignedDecimal(0x00003002);
+
+        private final int value;
+
+        InputType(int i) {
+            value = i;
+        }
     }
 
     public interface DoneCallback {
