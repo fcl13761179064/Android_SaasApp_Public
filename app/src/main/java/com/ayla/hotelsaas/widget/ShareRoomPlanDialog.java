@@ -4,6 +4,7 @@ package com.ayla.hotelsaas.widget;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,8 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.databinding.DialogRoomPlanShareBinding;
+import com.ayla.hotelsaas.ui.ProjectMainActivity;
 
 public class ShareRoomPlanDialog extends DialogFragment {
     DialogRoomPlanShareBinding binding;
@@ -34,7 +35,7 @@ public class ShareRoomPlanDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ClipboardManager cm  = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clipData = ClipData.newPlainText("share", getArguments().getString("msg"));
         cm.setPrimaryClip(clipData);
     }
@@ -57,7 +58,13 @@ public class ShareRoomPlanDialog extends DialogFragment {
                 dismissAllowingStateLoss();
             }
         });
+        binding.vDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissAllowingStateLoss();
+                startActivity(new Intent(getContext(), ProjectMainActivity.class));
+            }
+        });
         binding.tvContent.setText(getArguments().getString("msg"));
     }
-
 }
