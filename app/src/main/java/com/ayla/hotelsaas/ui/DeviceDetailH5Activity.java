@@ -11,9 +11,12 @@ import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
+import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.SizeUtils;
@@ -21,11 +24,22 @@ import com.blankj.utilcode.util.SizeUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import wendu.dsbridge.CompletionHandler;
 import wendu.dsbridge.DWebView;
 
 /**
@@ -37,6 +51,9 @@ import wendu.dsbridge.DWebView;
 public class DeviceDetailH5Activity extends BaseWebViewActivity {
 
     private static final String TAG = DeviceDetailH5Activity.class.getSimpleName();
+
+    private CompositeDisposable mCompositeDisposable;
+
     @BindView(R.id.web_view)
     DWebView mWebView;
 
@@ -46,9 +63,9 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCompositeDisposable = new CompositeDisposable();
         EventBus.getDefault().register(this);
         mWebView.loadUrl(Constance.getDeviceControlBaseUrl());
-
     }
 
     @Override
@@ -138,6 +155,37 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
                 EventBus.getDefault().post(new DeviceAddEvent());
             }
         }, "miya.h5.event");
+        mWebView.addJavascriptObject(new Object() {
+            @JavascriptInterface
+            public void getSceneList(Object msg, CompletionHandler<JSONObject> handler) {
+                miya_h5_scene_getSceneList(handler);
+            }
+
+            @JavascriptInterface
+            public void getDsnCodeValueToSceneList(Object msg, CompletionHandler<JSONObject> handler) {
+                Log.d(TAG, "getDsnCodeValueToSceneList: " + msg);
+            }
+
+            @JavascriptInterface
+            public void createDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) {
+                Log.d(TAG, "createDsnCodeValueToScene: " + msg);
+            }
+
+            @JavascriptInterface
+            public void deleteDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) {
+                Log.d(TAG, "deleteDsnCodeValueToScene: " + msg);
+            }
+
+            @JavascriptInterface
+            public void updateDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) {
+                Log.d(TAG, "updateDsnCodeValueToScene: " + msg);
+            }
+
+            @JavascriptInterface
+            public void excuteScene(Object msg, CompletionHandler<JSONObject> handler) {
+                Log.d(TAG, "excuteScene: " + msg);
+            }
+        }, "miya.h5.scene");
     }
 
     @Override
@@ -153,6 +201,7 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
 
     @Override
     protected void onDestroy() {
+        mCompositeDisposable.clear();
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
@@ -187,6 +236,43 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         }
     }
 
+    private void miya_h5_scene_getSceneList(CompletionHandler<JSONObject> handler) {
+        Disposable subscribe = RequestModel.getInstance().fetchRuleEngines(scopeId)
+                .map(new Function<List<RuleEngineBean>, JSONObject>() {
+                    @Override
+                    public JSONObject apply(@NonNull List<RuleEngineBean> ruleEngineBeans) throws Exception {
+                        JSONObject result = new JSONObject();
+                        JSONArray dataArray = new JSONArray();
+                        for (RuleEngineBean ruleEngineBean : ruleEngineBeans) {
+                            if (ruleEngineBean.getRuleType() == BaseSceneBean.RULE_TYPE.ONE_KEY) {
+                                JSONObject jsonBeanObject = new JSONObject();
+                                jsonBeanObject.put("displayName", ruleEngineBean.getRuleName());
+                                jsonBeanObject.put("sceneId", ruleEngineBean.getRuleId());
+                                jsonBeanObject.put("imgUrl", ruleEngineBean.getIconPath());
+                                dataArray.put(jsonBeanObject);
+                            }
+                        }
+                        result.put("data", dataArray);
+                        result.put("code", 0);
+                        result.put("msg", "success");
+                        return result;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject s) throws Exception {
+                        handler.complete(s);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        handler.complete();
+                    }
+                });
+        mCompositeDisposable.add(subscribe);
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceRemoved(DeviceRemovedEvent event) {
