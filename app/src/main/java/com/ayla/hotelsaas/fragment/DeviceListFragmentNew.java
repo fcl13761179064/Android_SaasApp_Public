@@ -10,16 +10,20 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ayla.hotelsaas.DeviceCategoryHandler;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.DeviceListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
-import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.databinding.FragmentDeviceListNewBinding;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
-import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
+import com.ayla.hotelsaas.mvp.present.DeviceListPresenter;
+import com.ayla.hotelsaas.mvp.view.DeviceListView;
+import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.DeviceDetailH5Activity;
 import com.ayla.hotelsaas.ui.DeviceMoreActivity;
+import com.ayla.hotelsaas.utils.TempUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -30,11 +34,13 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeviceListFragmentNew extends BaseMvpFragment {
+public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, DeviceListPresenter> implements DeviceListView {
     FragmentDeviceListNewBinding binding;
     List<DeviceListBean.DevicesBean> devices;
 
     private DeviceListAdapter mAdapter;
+
+    DeviceCategoryHandler deviceCategoryHandler;
 
     private long room_id;
 
@@ -56,8 +62,8 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
     }
 
     @Override
-    protected BasePresenter initPresenter() {
-        return null;
+    protected DeviceListPresenter initPresenter() {
+        return new DeviceListPresenter();
     }
 
     @Override
@@ -73,6 +79,8 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
 
     @Override
     protected void initView(View view) {
+        deviceCategoryHandler = new DeviceCategoryHandler(this, room_id);
+
         binding.deviceRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.deviceRecyclerview.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -96,27 +104,22 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position).getDevicesBean();
-                Intent intent;
                 if (devicesBean.getBindType() == 0) {
+                    Intent intent;
                     if (devicesBean.isHasH5()) {
                         intent = new Intent(getContext(), DeviceDetailH5Activity.class);
                     } else {
                         intent = new Intent(getContext(), DeviceMoreActivity.class);
                     }
+                    intent.putExtra("deviceId", devicesBean.getDeviceId());
+                    intent.putExtra("scopeId", room_id);
+                    startActivity(intent);
                 } else {//待绑定的设备
                     if (devicesBean.getDeviceUseType() == 1) {//如果是用途设备，跳过
                         return;
                     }
-                    intent = new Intent(getContext(), DeviceAddCategoryActivity.class);//通知添加待绑定设备
-                    Bundle addForWaitBundle = new Bundle();
-                    addForWaitBundle.putString("waitBindDeviceId", devicesBean.getDeviceId());
-                    addForWaitBundle.putString("nickname", devicesBean.getNickname());
-                    addForWaitBundle.putString("pid", devicesBean.getPid());
-                    intent.putExtra("addForWait", addForWaitBundle);
+                    mPresenter.loadCategory(devicesBean);
                 }
-                intent.putExtra("deviceId", devicesBean.getDeviceId());
-                intent.putExtra("scopeId", room_id);
-                startActivity(intent);
             }
         });
     }
@@ -136,5 +139,28 @@ public class DeviceListFragmentNew extends BaseMvpFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceChangedEvent(DeviceChangedEvent event) {
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void loadDataSuccess(DeviceListBean.DevicesBean devicesBean, List<DeviceCategoryBean> data) {
+        Intent intent = new Intent();
+        Bundle addForWaitBundle = new Bundle();
+        addForWaitBundle.putString("waitBindDeviceId", devicesBean.getDeviceId());
+        addForWaitBundle.putString("nickname", devicesBean.getNickname());
+        addForWaitBundle.putString("pid", devicesBean.getPid());
+        intent.putExtra("addForWait", addForWaitBundle);
+
+        deviceCategoryHandler.bindOrReplace(data, intent);//添加待绑定的设备
+    }
+
+    @Override
+    public void loadDataFailed(Throwable throwable) {
+        CustomToast.makeText(getContext(), TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        deviceCategoryHandler.onActivityResult(requestCode, resultCode, data);
     }
 }
