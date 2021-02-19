@@ -99,8 +99,7 @@ public class RetrofitHelper {
             if (MyApplication.getInstance() != null) {
                 final String save_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
                 if (save_token != null) {
-                    requestBuilder.header("Authorization", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjk4NTAwMDU0NDAyODA1NzgxIiwidXNlck5hbWUiOiIxMzIiLCJsb2dpblR5cGUiOiIxIiwibG9naW5Tb3VyY2UiOiIxIiwiYXlsYUFwcGxpY2F0aW9uSWQiOiIzIiwidHlwZSI6ImF1dGhfdG9rZW4iLCJpYXQiOjE2MTIzNDY0MzV9.iDfAgNAFAKSVGsXYK6w--lJENKs3BitzjsIF8KuKwdg").build();
-//                    requestBuilder.header("Authorization", save_token).build();
+                    requestBuilder.header("Authorization", save_token).build();
                 }
             }
             return chain.proceed(requestBuilder.build());
