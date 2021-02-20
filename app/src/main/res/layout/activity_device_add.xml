@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_01"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="68dp"
+            android:layout_marginTop="46dp"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="visible">
@@ -129,17 +129,21 @@
             </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/bt_bind"
-            android:layout_width="238dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="60dp"
-            android:background="@drawable/bg_bt_gateway_add_start_next"
-            android:text="完成"
-            android:textColor="#ff648c1a"
-            android:textSize="14sp"
-            android:visibility="visible" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ll_progress">
+
+            <Button
+                android:id="@+id/bt_bind"
+                android:layout_width="238dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_bt_gateway_add_start_next"
+                android:text="完成"
+                android:textColor="#ff648c1a"
+                android:textSize="14sp"
+                android:visibility="visible" />
+        </FrameLayout>
     </RelativeLayout>
 </LinearLayout>
