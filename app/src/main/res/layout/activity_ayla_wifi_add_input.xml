@@ -44,7 +44,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
@@ -64,24 +64,27 @@
                 <EditText
                     android:id="@+id/et_wifi"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:background="@android:color/transparent"
                     android:gravity="right|center_vertical"
                     android:hint="输入设备WiFi名称"
                     android:inputType="text"
                     android:maxLines="1"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp"
                     android:textColor="#ff333333"
                     android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/bg_device_item"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
@@ -97,13 +100,15 @@
                 <EditText
                     android:id="@+id/et_pwd"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical|right"
                     android:hint="输入设备WiFi密码"
                     android:inputType="textVisiblePassword"
                     android:maxLines="1"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp"
                     android:textColor="#ff333333"
                     android:textSize="14sp" />
 
