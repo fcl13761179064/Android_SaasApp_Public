@@ -14,6 +14,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
@@ -48,6 +49,8 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     TextView my_account_button;
     @BindView(R.id.rl_device_function_rename)
     View rl_function_rename;
+    @BindView(R.id.rl_switch_default)
+    View rl_switch_default;
     @BindView(R.id.rl_switch_usage)
     View rl_switch_usage;
     @BindView(R.id.rl_purpose_change)
@@ -92,7 +95,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
             }
             tv_device_name.setText(mDevicesBean.getNickname());
             if (!TempUtils.isDeviceGateway(mDevicesBean)) {
-                mPresenter.getRenameAbleFunctions(mDevicesBean.getPid());
+                mPresenter.functionLoad(mDevicesBean.getDeviceId(), mDevicesBean.getPid());
             }
             if (TempUtils.isDeviceNode(mDevicesBean)) {
                 rl_replace.setVisibility(View.VISIBLE);
@@ -247,6 +250,16 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     @Override
     public void updatePurposeFailed(Throwable throwable) {
         CustomToast.makeText(this, "更新失败", R.drawable.ic_toast_warming);
+    }
+
+    @Override
+    public void canSetSwitchDefault(List<DeviceTemplateBean.AttributesBean> attributesBeans) {
+        rl_switch_default.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void cannotSetSwitchDefault() {
+        rl_switch_default.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.rl_device_function_rename)
