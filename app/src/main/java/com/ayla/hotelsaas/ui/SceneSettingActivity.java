@@ -609,13 +609,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @OnClick(R.id.v_add_action)
     public void jumpAddActions() {
-        if (mRuleEngineBean instanceof LocalSceneBean && ((LocalSceneBean) mRuleEngineBean).getTargetGatewayType() == 0) {//如果是罗马网关的本地联动，只能添加设备类型的动作，所以不去类型选择页面。
-            doJumpAddDeviceActions();
-        } else {
+        if (mRuleEngineBean instanceof LocalSceneBean && ((LocalSceneBean) mRuleEngineBean).getTargetGatewayType() == 0) {//如果是米兰网关的本地联动，只能添加设备类型的动作，所以不去类型选择页面。
             Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
             mainActivity.putExtra("data", mRuleEngineBean);
             mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
+        } else {
+            doJumpAddDeviceActions();
         }
     }
 
