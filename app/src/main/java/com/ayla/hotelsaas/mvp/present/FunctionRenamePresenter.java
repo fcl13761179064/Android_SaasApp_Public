@@ -106,7 +106,7 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.showFunctions(null);
+                        mView.showError(throwable);
                     }
                 });
         addSubscrebe(subscribe);
