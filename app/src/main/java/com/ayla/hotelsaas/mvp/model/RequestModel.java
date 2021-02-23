@@ -941,4 +941,14 @@ public class RequestModel {
         return getApiService().getPropertyDataPoint(deviceId, propertyName).compose(new BaseResultTransformer<BaseResult<PropertyDataPointBean>, PropertyDataPointBean>() {
         });
     }
+
+    public Observable<Object> getRuleListByUniqListFunction(long scopeId, String uniqList) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("scopeId", scopeId);
+        jsonObject.addProperty("uniqList", uniqList);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().getRuleListByUniqListFunction(body111).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
+        });
+    }
 }
