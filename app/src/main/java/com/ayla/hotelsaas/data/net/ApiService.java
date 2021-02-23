@@ -10,6 +10,7 @@ import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
+import com.ayla.hotelsaas.bean.PropertyDataPointBean;
 import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
@@ -295,4 +296,12 @@ public interface ApiService {
      */
     @GET("/api/v1/build/device/{deviceId}/gateway")
     Observable<BaseResult<String>> getNodeGateway(@Path("deviceId") String deviceId);
+
+    /**
+     * 获取属性当前的dataPoint
+     *
+     * @return
+     */
+    @GET("/api/v1/build/device/{deviceId}/property/{propertyName}")
+    Observable<BaseResult<PropertyDataPointBean>> getPropertyDataPoint(@Path("deviceId") String deviceId, @Path("propertyName") String propertyName);
 }

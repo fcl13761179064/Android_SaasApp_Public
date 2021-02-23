@@ -199,6 +199,12 @@
         <activity
             android:name=".ui.DeviceReplaceActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.SwitchDefaultListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.SwitchDefaultSettingActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
