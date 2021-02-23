@@ -14,6 +14,7 @@ import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
+import com.ayla.hotelsaas.bean.PropertyDataPointBean;
 import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
@@ -933,6 +934,11 @@ public class RequestModel {
 
     public Observable<String> getNodeGateway(String deviceId) {
         return getApiService().getNodeGateway(deviceId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
+        });
+    }
+
+    public Observable<PropertyDataPointBean> getPropertyDataPoint(String deviceId, String propertyName) {
+        return getApiService().getPropertyDataPoint(deviceId, propertyName).compose(new BaseResultTransformer<BaseResult<PropertyDataPointBean>, PropertyDataPointBean>() {
         });
     }
 }

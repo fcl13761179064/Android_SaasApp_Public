@@ -87,7 +87,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:paddingLeft="16dp"
-                    android:text="开关默认设置"
+                    android:text="通电开启设置"
                     android:textColor="#333333"
                     android:textSize="17sp" />
 

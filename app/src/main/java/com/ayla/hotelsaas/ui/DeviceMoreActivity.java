@@ -14,7 +14,6 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
@@ -253,7 +252,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     }
 
     @Override
-    public void canSetSwitchDefault(List<DeviceTemplateBean.AttributesBean> attributesBeans) {
+    public void canSetSwitchDefault() {
         rl_switch_default.setVisibility(View.VISIBLE);
     }
 
@@ -299,6 +298,15 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         intent.putExtra("scopeId", mScopeId);
         startActivity(intent);
     }
+
+
+    @OnClick(R.id.rl_switch_default)
+    public void handleSwitchDefault() {
+        Intent intent = new Intent(this, SwitchDefaultListActivity.class);
+        intent.putExtra("deviceId", deviceId);
+        startActivity(intent);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

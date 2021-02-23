@@ -88,50 +88,13 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
         addSubscrebe(subscribe);
     }
 
-    public void getRenameAbleFunctions(String pid) {
-        Disposable subscribe = RequestModel.getInstance()
-                .getDeviceCategoryDetail(pid)//找到了指定的设备，存在可以配置为联动条件、动作的属性。
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        mView.showProgress("加载中...");
-                    }
-                })
-                .doFinally(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        mView.hideProgress();
-                    }
-                })
-                .subscribe(new Consumer<DeviceCategoryDetailBean>() {
-                    @Override
-                    public void accept(DeviceCategoryDetailBean deviceCategoryDetailBean) throws Exception {
-                        int count = deviceCategoryDetailBean.getConditionProperties().size() + deviceCategoryDetailBean.getActionProperties().size();
-                        if (count > 0) {
-                            mView.canRenameFunction();
-                        } else {
-                            mView.cannotRenameFunction();
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        mView.cannotRenameFunction();
-                    }
-                });
-        addSubscrebe(subscribe);
-
-    }
-
     /**
      * 查询是否支持开关重命名
      *
      * @param pid
      * @return
      */
-    private Observable<Boolean> getRenameAbleFunctions2(String pid) {
+    private Observable<Boolean> getRenameAbleFunctions(String pid) {
         return RequestModel.getInstance()
                 .getDeviceCategoryDetail(pid)//找到了指定的设备，存在可以配置为联动条件、动作的属性。
                 .map(new Function<DeviceCategoryDetailBean, Boolean>() {
@@ -150,7 +113,7 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
      * @param pid
      * @return
      */
-    private Observable<List<DeviceTemplateBean.AttributesBean>> getSwitchDefaultSetting(String deviceId, String pid) {
+    private Observable<Boolean> getSwitchDefaultSetting2(String deviceId, String pid) {
         return RequestModel.getInstance().fetchDeviceTemplate(pid)
                 .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
                     @Override
@@ -158,24 +121,37 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                         return deviceTemplateBeanBaseResult.data;
                     }
                 })
-                .compose(RequestModel.getInstance().modifyTemplateDisplayName(deviceId))
                 .map(new Function<DeviceTemplateBean, List<DeviceTemplateBean.AttributesBean>>() {
                     @Override
                     public List<DeviceTemplateBean.AttributesBean> apply(@NonNull DeviceTemplateBean deviceTemplateBean) throws Exception {
-                        List<DeviceTemplateBean.AttributesBean> attributesBeans = new ArrayList<>();
+                        List<DeviceTemplateBean.AttributesBean> defaultAttributesBeans = new ArrayList<>();
                         for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
                             if (attribute.getCode().endsWith(":OnoffDefault")) {//是默认开关的设置属性格式
-                                attributesBeans.add(attribute);
+                                defaultAttributesBeans.add(attribute);
+                            }
+                        }
+                        List<DeviceTemplateBean.AttributesBean> attributesBeans = new ArrayList<>();
+                        for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                            for (DeviceTemplateBean.AttributesBean defaultAttributesBean : defaultAttributesBeans) {
+                                if (attribute.getCode().equals(defaultAttributesBean.getCode().substring(0,defaultAttributesBean.getCode().length()-7))) {
+                                    attributesBeans.add(attribute);
+                                }
                             }
                         }
                         return attributesBeans;
+                    }
+                })
+                .map(new Function<List<DeviceTemplateBean.AttributesBean>, Boolean>() {
+                    @Override
+                    public Boolean apply(@NonNull List<DeviceTemplateBean.AttributesBean> attributesBeans) throws Exception {
+                        return !attributesBeans.isEmpty();
                     }
                 });
     }
 
     public void functionLoad(String deviceId, String pid) {
         Disposable subscribe = Observable
-                .zip(getRenameAbleFunctions2(pid).observeOn(AndroidSchedulers.mainThread())
+                .zip(getRenameAbleFunctions(pid).observeOn(AndroidSchedulers.mainThread())
                                 .doOnNext(new Consumer<Boolean>() {
                                     @Override
                                     public void accept(Boolean aBoolean) throws Exception {
@@ -192,14 +168,14 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                                         mView.cannotRenameFunction();
                                     }
                                 }),
-                        getSwitchDefaultSetting(deviceId, pid).observeOn(AndroidSchedulers.mainThread())
-                                .doOnNext(new Consumer<List<DeviceTemplateBean.AttributesBean>>() {
+                        getSwitchDefaultSetting2(deviceId, pid).observeOn(AndroidSchedulers.mainThread())
+                                .doOnNext(new Consumer<Boolean>() {
                                     @Override
-                                    public void accept(List<DeviceTemplateBean.AttributesBean> attributesBeans) throws Exception {
-                                        if (attributesBeans.size() == 0) {
-                                            mView.cannotSetSwitchDefault();
+                                    public void accept(Boolean aBoolean) throws Exception {
+                                        if (aBoolean) {
+                                            mView.canSetSwitchDefault();
                                         } else {
-                                            mView.canSetSwitchDefault(attributesBeans);
+                                            mView.cannotSetSwitchDefault();
                                         }
                                     }
                                 })
@@ -209,10 +185,10 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                                         mView.cannotSetSwitchDefault();
                                     }
                                 }),
-                        new BiFunction<Boolean, List<DeviceTemplateBean.AttributesBean>, Object>() {
+                        new BiFunction<Boolean, Boolean, Object>() {
                             @NonNull
                             @Override
-                            public Object apply(@NonNull Boolean aBoolean, @NonNull List<DeviceTemplateBean.AttributesBean> attributesBeans) throws Exception {
+                            public Object apply(@NonNull Boolean aBoolean, @NonNull Boolean aBoolean2) throws Exception {
                                 return 1;
                             }
                         }, true)

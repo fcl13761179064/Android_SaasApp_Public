@@ -30,7 +30,7 @@ public interface DeviceMoreView extends BaseView {
 
     void updatePurposeFailed(Throwable throwable);
 
-    void canSetSwitchDefault(List<DeviceTemplateBean.AttributesBean> attributesBeans);
+    void canSetSwitchDefault();
 
     void cannotSetSwitchDefault();
 }
