@@ -162,8 +162,24 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
             }
 
             @JavascriptInterface
-            public void getDsnCodeValueToSceneList(Object msg, CompletionHandler<JSONObject> handler) {
+            public void getDsnCodeValueToSceneList(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
                 Log.d(TAG, "getDsnCodeValueToSceneList: " + msg);
+                JSONArray state = new JSONObject(msg.toString()).getJSONArray("state");
+                Disposable subscribe = RequestModel.getInstance().getRuleListByUniqListFunction(scopeId, state.toString())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<Object>() {
+                            @Override
+                            public void accept(Object o) throws Exception {
+                                Log.d(TAG, "accept: " + o);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                Log.e(TAG, "accept: ", throwable);
+                            }
+                        });
+
             }
 
             @JavascriptInterface
