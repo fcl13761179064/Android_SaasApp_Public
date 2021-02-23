@@ -75,19 +75,17 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_switch_default"
+                android:id="@+id/rl_device_detail"
                 android:layout_width="match_parent"
                 android:layout_height="57dp"
-                android:background="@drawable/room_num_shape"
-                android:visibility="gone"
-                tools:visibility="visible">
+                android:background="@drawable/room_num_shape">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:paddingLeft="16dp"
-                    android:text="通电开启设置"
+                    android:text="设备详情"
                     android:textColor="#333333"
                     android:textSize="17sp" />
 
@@ -101,17 +99,19 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_device_detail"
+                android:id="@+id/rl_switch_default"
                 android:layout_width="match_parent"
                 android:layout_height="57dp"
-                android:background="@drawable/room_num_shape">
+                android:background="@drawable/room_num_shape"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:paddingLeft="16dp"
-                    android:text="设备详情"
+                    android:text="通电开启设置"
                     android:textColor="#333333"
                     android:textSize="17sp" />
 
