@@ -16,7 +16,10 @@ import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
+import com.ayla.hotelsaas.localBean.DeviceType;
+import com.ayla.hotelsaas.localBean.RemoteSceneBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
+import com.ayla.hotelsaas.utils.BeanObtainCompactUtil;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.SizeUtils;
@@ -28,10 +31,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -158,51 +163,42 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         mWebView.addJavascriptObject(new Object() {
             @JavascriptInterface
             public void getSceneList(Object msg, CompletionHandler<JSONObject> handler) {
+                Log.d(TAG, "getSceneList: " + msg);
                 miya_h5_scene_getSceneList(handler);
             }
 
             @JavascriptInterface
             public void getDsnCodeValueToSceneList(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
                 Log.d(TAG, "getDsnCodeValueToSceneList: " + msg);
-                JSONArray state = new JSONObject(msg.toString()).getJSONArray("state");
-                Disposable subscribe = RequestModel.getInstance().getRuleListByUniqListFunction(scopeId, state.toString())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<Object>() {
-                            @Override
-                            public void accept(Object o) throws Exception {
-                                Log.d(TAG, "accept: " + o);
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                Log.e(TAG, "accept: ", throwable);
-                            }
-                        });
-
+                miya_h5_scene_getDsnCodeValueToSceneList(msg, handler);
             }
 
             @JavascriptInterface
-            public void createDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) {
+            public void createDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
                 Log.d(TAG, "createDsnCodeValueToScene: " + msg);
+                miya_h5_scene_createDsnCodeValueToScene(msg, handler);
             }
 
             @JavascriptInterface
-            public void deleteDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) {
+            public void deleteDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
                 Log.d(TAG, "deleteDsnCodeValueToScene: " + msg);
+                miya_h5_scene_deleteDsnCodeValueToScene(msg, handler);
             }
 
             @JavascriptInterface
-            public void updateDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) {
+            public void updateDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
                 Log.d(TAG, "updateDsnCodeValueToScene: " + msg);
+                miya_h5_scene_updateDsnCodeValueToScene(msg, handler);
             }
 
             @JavascriptInterface
-            public void excuteScene(Object msg, CompletionHandler<JSONObject> handler) {
+            public void excuteScene(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
                 Log.d(TAG, "excuteScene: " + msg);
+                miya_h5_scene_excuteScene(msg, handler);
             }
         }, "miya.h5.scene");
     }
+
 
     @Override
     protected BasePresenter initPresenter() {
@@ -250,6 +246,147 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void miya_h5_scene_excuteScene(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
+        String sceneId = new JSONObject(msg.toString()).getString("state");
+        Disposable subscribe = RequestModel.getInstance().runRuleEngine(Long.parseLong(sceneId))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        handler.complete();
+                    }
+                });
+        mCompositeDisposable.add(subscribe);
+    }
+
+    private void miya_h5_scene_deleteDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
+        JSONObject state = new JSONObject(msg.toString()).getJSONObject("state");
+        String ruleId = state.getString("ruleId");
+        Disposable subscribe = RequestModel.getInstance().deleteRuleEngine(Long.parseLong(ruleId))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        handler.complete();
+                    }
+                });
+        mCompositeDisposable.add(subscribe);
+    }
+
+    private void miya_h5_scene_createDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
+        createOrUpdateRule(msg, handler);
+    }
+
+    private void miya_h5_scene_updateDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
+        createOrUpdateRule(msg, handler);
+    }
+
+    private void createOrUpdateRule(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
+        JSONObject state = new JSONObject(msg.toString()).getJSONObject("state");
+        String[] dsnCodeValue = state.getString("dsnCodeValue").split("\\.");
+        String dsn = dsnCodeValue[0];
+        String propertyCode = dsnCodeValue[1];
+        String propertyValue = dsnCodeValue[2];
+        String displayName = state.getString("displayName");
+        String imgUrl = state.getString("imgUrl");
+        long sceneId = state.getLong("sceneId");
+        long ruleId = state.optLong("ruleId");
+
+        RemoteSceneBean sceneBean = new RemoteSceneBean();
+        sceneBean.setRuleId(ruleId);
+        sceneBean.setRuleName(displayName);
+        sceneBean.setRuleDescription("场景联动");
+        sceneBean.setScopeId(scopeId);
+        sceneBean.setRuleType(4);
+        sceneBean.setSiteType(BaseSceneBean.SITE_TYPE.REMOTE);
+        sceneBean.setStatus(1);
+        sceneBean.setIconPath(imgUrl);
+        sceneBean.setRuleSetMode(BaseSceneBean.RULE_SET_MODE.ANY);
+
+        BaseSceneBean.DeviceCondition deviceCondition = new BaseSceneBean.DeviceCondition();
+        deviceCondition.setSourceDeviceType(MyApplication.getInstance().getDevicesBean(dsn).getCuId());
+        deviceCondition.setSourceDeviceId(dsn);
+        deviceCondition.setLeftValue(propertyCode);
+        deviceCondition.setOperator("==");
+        deviceCondition.setRightValue(propertyValue);
+        sceneBean.setConditions(Arrays.asList(deviceCondition));
+
+        BaseSceneBean.DeviceAction action = new BaseSceneBean.DeviceAction();
+        action.setTargetDeviceType(DeviceType.CALL_SCENE);
+        action.setTargetDeviceId(String.valueOf(sceneId));
+        action.setLeftValue(String.valueOf(sceneId));
+        action.setOperator("==");
+        action.setRightValue(String.valueOf(sceneId));
+        action.setRightValueType(0);
+        sceneBean.setActions(Arrays.asList(action));
+
+        RuleEngineBean ruleEngineBean = BeanObtainCompactUtil.obtainRuleEngineBean(sceneBean);
+
+        Observable<Boolean> observable;
+        if (ruleId == 0) {
+            observable = RequestModel.getInstance().saveRuleEngine(ruleEngineBean);
+        } else {
+            observable = RequestModel.getInstance().updateRuleEngine(ruleEngineBean);
+        }
+        Disposable subscribe = observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        handler.complete();
+                    }
+                });
+        mCompositeDisposable.add(subscribe);
+    }
+
+    private void miya_h5_scene_getDsnCodeValueToSceneList(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
+        JSONArray state = new JSONObject(msg.toString()).getJSONArray("state");
+        Disposable subscribe = RequestModel.getInstance().getRuleListByUniqListFunction(scopeId, state)
+                .map(new Function<Object, JSONObject>() {
+                    @Override
+                    public JSONObject apply(@NonNull Object o) throws Exception {
+                        JSONObject result = new JSONObject();
+                        JSONArray dataArray = new JSONArray();
+                        result.put("data", dataArray);
+                        result.put("code", 0);
+                        result.put("msg", "success");
+                        return result;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject s) throws Exception {
+                        handler.complete(s);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        handler.complete();
+                    }
+                });
+        mCompositeDisposable.add(subscribe);
     }
 
     private void miya_h5_scene_getSceneList(CompletionHandler<JSONObject> handler) {

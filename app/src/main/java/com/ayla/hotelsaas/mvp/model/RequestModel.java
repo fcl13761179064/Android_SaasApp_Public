@@ -33,6 +33,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -392,12 +393,13 @@ public class RequestModel {
      * @param ruleId
      * @return
      */
-    public Observable<BaseResult<Boolean>> runRuleEngine(long ruleId) {
+    public Observable<Boolean> runRuleEngine(long ruleId) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("ruleId", ruleId);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().runRuleEngine(body111);
+        return getApiService().runRuleEngine(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
     public Observable<Boolean> deleteRuleEngine(long ruleId) {
@@ -942,10 +944,10 @@ public class RequestModel {
         });
     }
 
-    public Observable<Object> getRuleListByUniqListFunction(long scopeId, String uniqList) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("scopeId", scopeId);
-        jsonObject.addProperty("uniqList", uniqList);
+    public Observable<Object> getRuleListByUniqListFunction(long scopeId, JSONArray uniqList) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("scopeId", scopeId);
+        jsonObject.put("uniqList", uniqList);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
         return getApiService().getRuleListByUniqListFunction(body111).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
