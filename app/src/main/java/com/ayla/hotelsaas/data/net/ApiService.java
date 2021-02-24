@@ -306,5 +306,5 @@ public interface ApiService {
     Observable<BaseResult<PropertyDataPointBean>> getPropertyDataPoint(@Path("deviceId") String deviceId, @Path("propertyName") String propertyName);
 
     @POST("/api/v1/build/scene/getRuleListByUniqListFunction")
-    Observable<BaseResult<Object>> getRuleListByUniqListFunction(@Body RequestBody body);
+    Observable<BaseResult<List<RuleEngineBean>>> getRuleListByUniqListFunction(@Body RequestBody body);
 }
