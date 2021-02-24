@@ -944,13 +944,13 @@ public class RequestModel {
         });
     }
 
-    public Observable<Object> getRuleListByUniqListFunction(long scopeId, JSONArray uniqList) throws JSONException {
+    public Observable<List<RuleEngineBean>> getRuleListByUniqListFunction(long scopeId, JSONArray uniqList) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("scopeId", scopeId);
         jsonObject.put("uniqList", uniqList);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().getRuleListByUniqListFunction(body111).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
+        return getApiService().getRuleListByUniqListFunction(body111).compose(new BaseResultTransformer<BaseResult<List<RuleEngineBean>>, List<RuleEngineBean>>() {
         });
     }
 }
