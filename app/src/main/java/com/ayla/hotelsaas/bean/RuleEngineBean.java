@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 联动实体Bean
@@ -36,6 +37,8 @@ public class RuleEngineBean implements Serializable {
     private String targetGateway;//云端联动时，网关的dsn
 
     private int targetGatewayType;//云端联动时，网关的云平台类型 //0:艾拉 1：阿里
+
+    private Map<String, Object> ruleExtendData;
 
     private Condition condition;
 
@@ -143,6 +146,14 @@ public class RuleEngineBean implements Serializable {
 
     public void setTargetGatewayType(int targetGatewayType) {
         this.targetGatewayType = targetGatewayType;
+    }
+
+    public Map<String, Object> getRuleExtendData() {
+        return ruleExtendData;
+    }
+
+    public void setRuleExtendData(Map<String, Object> ruleExtendData) {
+        this.ruleExtendData = ruleExtendData;
     }
 
     public static class Condition implements Serializable {
