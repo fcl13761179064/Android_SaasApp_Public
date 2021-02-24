@@ -18,7 +18,7 @@ public class BeanObtainCompactUtil {
     public static BaseSceneBean obtainSceneBean(RuleEngineBean ruleEngineBean) {
         BaseSceneBean sceneBean = null;
         int siteType = ruleEngineBean.getSiteType();
-        if (siteType == 1) {//本地
+        if (siteType == BaseSceneBean.SITE_TYPE.LOCAL) {//本地
             sceneBean = new LocalSceneBean();
             ((LocalSceneBean) sceneBean).setTargetGateway(ruleEngineBean.getTargetGateway());
             ((LocalSceneBean) sceneBean).setTargetGatewayType(ruleEngineBean.getTargetGatewayType());
@@ -29,10 +29,11 @@ public class BeanObtainCompactUtil {
         sceneBean.setScopeId(ruleEngineBean.getScopeId());
         sceneBean.setIconPath(ruleEngineBean.getIconPath());
         sceneBean.setStatus(ruleEngineBean.getStatus());
-        sceneBean.setRuleSetMode(ruleEngineBean.getRuleSetMode() == 2 ? BaseSceneBean.RULE_SET_MODE.ALL : BaseSceneBean.RULE_SET_MODE.ANY);
-        sceneBean.setRuleType(ruleEngineBean.getRuleType() == 1 ? BaseSceneBean.RULE_TYPE.AUTO : BaseSceneBean.RULE_TYPE.ONE_KEY);
+        sceneBean.setRuleSetMode(ruleEngineBean.getRuleSetMode());
+        sceneBean.setRuleType(ruleEngineBean.getRuleType());
         sceneBean.setRuleDescription(ruleEngineBean.getRuleDescription());
         sceneBean.setRuleName(ruleEngineBean.getRuleName());
+        sceneBean.setRuleExtendData(ruleEngineBean.getRuleExtendData());
 
         BaseSceneBean.EnableTime enableTime = new BaseSceneBean.EnableTime();
         if (sceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//当是自动化时，就要解析生效时间段
@@ -140,11 +141,13 @@ public class BeanObtainCompactUtil {
         ruleEngineBean.setRuleDescription(baseSceneBean.getRuleDescription());
         ruleEngineBean.setRuleName(baseSceneBean.getRuleName());
         ruleEngineBean.setScopeId(baseSceneBean.getScopeId());
+        ruleEngineBean.setRuleExtendData(baseSceneBean.getRuleExtendData());
         if (baseSceneBean instanceof LocalSceneBean) {
             ruleEngineBean.setTargetGateway(((LocalSceneBean) baseSceneBean).getTargetGateway());
             ruleEngineBean.setTargetGatewayType(((LocalSceneBean) baseSceneBean).getTargetGatewayType());
         }
-        if (baseSceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//构建条件集合，只有当自动化联动才传入conditions。
+
+        {//构建条件集合
             RuleEngineBean.Condition _condition = new RuleEngineBean.Condition();
             ruleEngineBean.setCondition(_condition);
             _condition.setItems(new ArrayList<>());

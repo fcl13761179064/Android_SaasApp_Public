@@ -32,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -297,10 +298,11 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
 
     private void createOrUpdateRule(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
         JSONObject state = new JSONObject(msg.toString()).getJSONObject("state");
-        String[] dsnCodeValue = state.getString("dsnCodeValue").split("\\.");
-        String dsn = dsnCodeValue[0];
-        String propertyCode = dsnCodeValue[1];
-        String propertyValue = dsnCodeValue[2];
+        String dsnCodeValue = state.getString("dsnCodeValue");
+        String[] _dsnCodeValue = dsnCodeValue.split("\\.");
+        String dsn = _dsnCodeValue[0];
+        String propertyCode = _dsnCodeValue[1];
+        String propertyValue = _dsnCodeValue[2];
         String displayName = state.getString("displayName");
         String imgUrl = state.getString("imgUrl");
         long sceneId = state.getLong("sceneId");
@@ -311,11 +313,14 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         sceneBean.setRuleName(displayName);
         sceneBean.setRuleDescription("场景联动");
         sceneBean.setScopeId(scopeId);
-        sceneBean.setRuleType(4);
+        sceneBean.setRuleType(BaseSceneBean.RULE_TYPE.SCENE_KEY);
         sceneBean.setSiteType(BaseSceneBean.SITE_TYPE.REMOTE);
         sceneBean.setStatus(1);
         sceneBean.setIconPath(imgUrl);
         sceneBean.setRuleSetMode(BaseSceneBean.RULE_SET_MODE.ANY);
+        HashMap<String, Object> ruleExtendData = new HashMap<>();
+        ruleExtendData.put("RULE_UNIQ", dsnCodeValue);
+        sceneBean.setRuleExtendData(ruleExtendData);
 
         BaseSceneBean.DeviceCondition deviceCondition = new BaseSceneBean.DeviceCondition();
         deviceCondition.setSourceDeviceType(MyApplication.getInstance().getDevicesBean(dsn).getCuId());

@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.localBean;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BaseSceneBean implements Serializable {
     protected long ruleId;
@@ -28,6 +29,8 @@ public abstract class BaseSceneBean implements Serializable {
     protected List<Action> actions;
 
     protected EnableTime enableTime;//生效时间段
+
+    protected Map<String, Object> ruleExtendData;
 
     public BaseSceneBean(int siteType) {
         this.siteType = siteType;
@@ -129,6 +132,14 @@ public abstract class BaseSceneBean implements Serializable {
 
     public void setEnableTime(EnableTime enableTime) {
         this.enableTime = enableTime;
+    }
+
+    public Map<String, Object> getRuleExtendData() {
+        return ruleExtendData;
+    }
+
+    public void setRuleExtendData(Map<String, Object> ruleExtendData) {
+        this.ruleExtendData = ruleExtendData;
     }
 
     public abstract static class Condition implements Serializable {
@@ -399,7 +410,7 @@ public abstract class BaseSceneBean implements Serializable {
     }
 
     public interface RULE_TYPE {
-        int AUTO = 1, ONE_KEY = 2;
+        int AUTO = 1, ONE_KEY = 2, SCENE_KEY = 4;
 
     }
 
