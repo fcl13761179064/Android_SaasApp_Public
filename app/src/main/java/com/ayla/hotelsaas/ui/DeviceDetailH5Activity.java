@@ -311,38 +311,7 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
     }
 
     private void miya_h5_scene_createDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
-        createOrUpdateRule(msg, new CompletionHandler<JSONObject>() {
-            @Override
-            public void complete(JSONObject retValue) {
-                handler.complete(retValue);
-                miya_h5_scene_getSceneList(new CompletionHandler<JSONObject>() {
-                    @Override
-                    public void complete(JSONObject retValue) {
-                        mWebView.callHandler("miya.native.dataShare.init", new Object[]{retValue});
-                    }
-
-                    @Override
-                    public void complete() {
-
-                    }
-
-                    @Override
-                    public void setProgressData(JSONObject value) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void complete() {
-                handler.complete();
-            }
-
-            @Override
-            public void setProgressData(JSONObject value) {
-                handler.setProgressData(value);
-            }
-        });
+        createOrUpdateRule(msg, handler);
     }
 
     private void miya_h5_scene_updateDsnCodeValueToScene(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
