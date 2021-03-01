@@ -127,6 +127,13 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
                         startActivity(intent);
                     }
                     break;
+                    case "createScene": {
+                        final Intent intent = new Intent(DeviceDetailH5Activity.this, SceneSettingActivity.class);
+                        intent.putExtra("scopeId", scopeId);
+                        intent.putExtra("siteType", BaseSceneBean.SITE_TYPE.REMOTE);
+                        startActivity(intent);
+                    }
+                    break;
                 }
             }
 
