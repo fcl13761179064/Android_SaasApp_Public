@@ -21,6 +21,7 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
+import com.ayla.hotelsaas.data.net.SelfMsgException;
 import com.ayla.hotelsaas.events.SceneItemEvent;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.localBean.DeviceType;
@@ -51,6 +52,7 @@ import butterknife.OnClick;
 /**
  * 场景编辑页面
  * 进入时必须带入(创建：scopeId、siteType ,如果是创建本地联动，还要带上网关的deviceId：targetGateway) 或者 更新：sceneBean
+ * 如果是要求创建一键联动，可以带上参数 {@link Boolean forceOneKey = true}
  */
 public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, SceneSettingPresenter> implements SceneSettingView {
     private final int REQUEST_CODE_SELECT_ICON = 0X12;
@@ -88,6 +90,8 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private BaseSceneBean mRuleEngineBean;
     private SceneSettingConditionItemAdapter mConditionAdapter;
     private SceneSettingActionItemAdapter mActionAdapter;
+
+    private boolean forceOneKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,8 +141,18 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         }
         tv_ill_state.setVisibility((mRuleEngineBean.getStatus() == 0 || mRuleEngineBean.getStatus() == 1) ? View.GONE : View.VISIBLE);
         mEnableTimeTextView.setText(decodeCronExpression2(mRuleEngineBean.getEnableTime()));
+
+        forceOneKey = getIntent().getBooleanExtra("forceOneKey", false);
+
+        if (forceOneKey) {
+            mRuleEngineBean.setRuleType(BaseSceneBean.RULE_TYPE.ONE_KEY);
+            mRuleEngineBean.getConditions().add(new BaseSceneBean.OneKeyCondition());
+            showData();
+        }
+
         syncRuleTYpeShow();
         EventBus.getDefault().register(this);
+
     }
 
     @Override
@@ -314,6 +328,10 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 BaseSceneBean.Condition condition = mRuleEngineBean.getConditions().remove(position);
+                if (condition instanceof BaseSceneBean.OneKeyCondition && forceOneKey) {
+                    showError(new SelfMsgException("不可删除", null));
+                    return;
+                }
                 if (condition instanceof BaseSceneBean.OneKeyCondition) {
                     mRuleEngineBean.setRuleType(BaseSceneBean.RULE_TYPE.AUTO);
                     syncRuleTYpeShow();

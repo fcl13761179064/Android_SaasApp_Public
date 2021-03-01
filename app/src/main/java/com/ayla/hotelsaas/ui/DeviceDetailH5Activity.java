@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 
+import androidx.annotation.Nullable;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -59,6 +61,7 @@ import wendu.dsbridge.DWebView;
 public class DeviceDetailH5Activity extends BaseWebViewActivity {
 
     private static final String TAG = DeviceDetailH5Activity.class.getSimpleName();
+    public static final int REQUEST_CODE_SETTING = 0X10;
 
     private CompositeDisposable mCompositeDisposable;
 
@@ -89,6 +92,14 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
     @Override
     protected int getLayoutId() {
         return R.layout.activity_device_detail;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SETTING && resultCode == RESULT_OK) {
+            miya_native_scene_pushSceneList();
+        }
     }
 
     private long scopeId;
@@ -131,7 +142,8 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
                         final Intent intent = new Intent(DeviceDetailH5Activity.this, SceneSettingActivity.class);
                         intent.putExtra("scopeId", scopeId);
                         intent.putExtra("siteType", BaseSceneBean.SITE_TYPE.REMOTE);
-                        startActivity(intent);
+                        intent.putExtra("forceOneKey", true);
+                        startActivityForResult(intent, REQUEST_CODE_SETTING);
                     }
                     break;
                 }
@@ -256,6 +268,26 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void miya_native_scene_pushSceneList() {
+        miya_h5_scene_getSceneList(new CompletionHandler<JSONObject>() {
+            @Override
+            public void complete(JSONObject retValue) {
+                mWebView.callHandler("miya.native.scene.pushSceneList", new Object[]{retValue});
+                Log.d(TAG, "miya_native_scene_pushSceneList: " + retValue);
+            }
+
+            @Override
+            public void complete() {
+                Log.e(TAG, "miya_native_scene_pushSceneList: error");
+            }
+
+            @Override
+            public void setProgressData(JSONObject value) {
+
+            }
+        });
     }
 
     private void miya_h5_scene_excuteScene(Object msg, CompletionHandler<JSONObject> handler) throws JSONException {
