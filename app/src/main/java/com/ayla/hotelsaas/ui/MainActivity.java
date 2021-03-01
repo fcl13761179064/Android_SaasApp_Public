@@ -49,7 +49,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     RadioButton main_test;
 
     private long mRoom_ID;
-    private String mRoom_name;
     private BaseMvpFragment currentFragment;
     public final static int GO_HOME_TYPE = 0;
     public final static int GO_THREE_TYPE = 2;
@@ -63,7 +62,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     @Override
     protected void initView() {
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
-        mRoom_name = getIntent().getStringExtra("roomName");
+        String mRoom_name = getIntent().getStringExtra("roomName");
         appBar.setCenterText(mRoom_name);
         appBar.setRightText("更多");
 
@@ -201,7 +200,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_TO_MORE) {
             if (resultCode == RoomMoreActivity.RESULT_CODE_RENAMED) {
-                mRoom_name = data.getStringExtra("newName");
+                String mRoom_name = data.getStringExtra("newName");
+                getIntent().putExtra("roomName", mRoom_name);
                 appBar.setCenterText(mRoom_name);
                 setResult(RESULT_CODE_RENAMED, new Intent().putExtra("roomId", mRoom_ID).putExtra("roomName", mRoom_name));
             }
