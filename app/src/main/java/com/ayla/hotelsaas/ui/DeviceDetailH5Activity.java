@@ -367,8 +367,14 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         String dsnCodeValue = state.getString("dsnCodeValue");
         String[] _dsnCodeValue = dsnCodeValue.split("\\.");
         String dsn = _dsnCodeValue[0];
-        String propertyCode = _dsnCodeValue[1];
-        String propertyValue = _dsnCodeValue[2];
+        String propertyCode, propertyValue;
+        if (_dsnCodeValue.length == 4) {
+            propertyCode = _dsnCodeValue[1] + "." + _dsnCodeValue[2];
+            propertyValue = _dsnCodeValue[3];
+        } else {
+            propertyCode = _dsnCodeValue[1];
+            propertyValue = _dsnCodeValue[2];
+        }
         String displayName = state.getString("displayName");
         String imgUrl = state.getString("imgUrl");
         long sceneId = state.getLong("sceneId");
@@ -449,7 +455,8 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
                         List<RuleEngineBean> result = new ArrayList<>();
                         for (RuleEngineBean ruleEngineBean : ruleEngineBeans) {
                             for (RuleEngineBean engineBean : ruleEngineBeans2) {
-                                if (ruleEngineBean.getRuleId().equals(engineBean.getRuleId())) {
+                                if (engineBean.getRuleId().toString().equals(ruleEngineBean.getAction().getItems().get(0).getLeftValue())) {
+                                    engineBean.setRuleExtendData(ruleEngineBean.getRuleExtendData());
                                     result.add(engineBean);
                                 }
                             }
@@ -470,11 +477,7 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
                             jsonObject.put("ruleId", engineBean.getRuleId());
                             jsonObject.put("sceneStatus", engineBean.getStatus());
                             jsonObject.put("imgUrl", engineBean.getIconPath());
-                            RuleEngineBean.Condition.ConditionItem conditionItem = engineBean.getCondition().getItems().get(0);
-                            String sourceDeviceId = conditionItem.getSourceDeviceId();
-                            String leftValue = conditionItem.getLeftValue();
-                            String rightValue = conditionItem.getRightValue();
-                            jsonObject.put("dsnCodeValue", String.format("%s.%s.%s", sourceDeviceId, leftValue, rightValue));
+                            jsonObject.put("dsnCodeValue", engineBean.getRuleExtendData().get("RULE_UNIQ"));
                             dataArray.put(jsonObject);
                         }
                         result.put("data", dataArray);
