@@ -28,6 +28,7 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
+import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -950,7 +951,17 @@ public class RequestModel {
         jsonObject.put("uniqList", uniqList);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().getRuleListByUniqListFunction(body111).compose(new BaseResultTransformer<BaseResult<List<RuleEngineBean>>, List<RuleEngineBean>>() {
-        });
+        return getApiService().getRuleListByUniqListFunction(body111)
+                .compose(new BaseResultTransformer<BaseResult<List<RuleEngineBean>>, List<RuleEngineBean>>() {
+                })
+                .onErrorReturn(new Function<Throwable, List<RuleEngineBean>>() {
+                    @Override
+                    public List<RuleEngineBean> apply(@NonNull Throwable throwable) throws Exception {
+                        if (throwable instanceof ServerBadException && ((ServerBadException) throwable).isSuccess()) {
+                            return new ArrayList<>();
+                        }
+                        throw new Exception(throwable);
+                    }
+                });
     }
 }

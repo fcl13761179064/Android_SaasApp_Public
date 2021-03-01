@@ -274,8 +274,13 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         miya_h5_scene_getSceneList(new CompletionHandler<JSONObject>() {
             @Override
             public void complete(JSONObject retValue) {
-                mWebView.callHandler("miya.native.scene.pushSceneList", new Object[]{retValue});
-                Log.d(TAG, "miya_native_scene_pushSceneList: " + retValue);
+                try {
+                    JSONObject state = new JSONObject().put("state", retValue);
+                    mWebView.callHandler("miya.native.scene.pushSceneList", new Object[]{retValue});
+                    Log.d(TAG, "miya_native_scene_pushSceneList: " + state);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -483,11 +488,13 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
                 .subscribe(new Consumer<JSONObject>() {
                     @Override
                     public void accept(JSONObject s) throws Exception {
+                        Log.d(TAG, "miya_h5_scene_getDsnCodeValueToSceneList: " + s);
                         handler.complete(s);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        Log.e(TAG, "miya_h5_scene_getDsnCodeValueToSceneList: ", throwable);
                         handler.complete();
                     }
                 });
@@ -521,11 +528,13 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
                 .subscribe(new Consumer<JSONObject>() {
                     @Override
                     public void accept(JSONObject s) throws Exception {
+                        Log.d(TAG, "miya_h5_scene_getSceneList: " + s);
                         handler.complete(s);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        Log.e(TAG, "miya_h5_scene_getSceneList: ", throwable);
                         handler.complete();
                     }
                 });

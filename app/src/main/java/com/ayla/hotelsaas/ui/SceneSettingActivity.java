@@ -22,6 +22,7 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.data.net.SelfMsgException;
+import com.ayla.hotelsaas.events.SceneChangedEvent;
 import com.ayla.hotelsaas.events.SceneItemEvent;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.localBean.DeviceType;
@@ -327,11 +328,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         mConditionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                BaseSceneBean.Condition condition = mRuleEngineBean.getConditions().remove(position);
+                BaseSceneBean.Condition condition = mRuleEngineBean.getConditions().get(position);
                 if (condition instanceof BaseSceneBean.OneKeyCondition && forceOneKey) {
                     showError(new SelfMsgException("不可删除", null));
                     return;
                 }
+                condition = mRuleEngineBean.getConditions().remove(position);
+
                 if (condition instanceof BaseSceneBean.OneKeyCondition) {
                     mRuleEngineBean.setRuleType(BaseSceneBean.RULE_TYPE.AUTO);
                     syncRuleTYpeShow();
@@ -507,6 +510,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     public void saveSuccess() {
         CustomToast.makeText(this, "创建成功", R.drawable.ic_success);
         setResult(RESULT_OK);
+        EventBus.getDefault().post(new SceneChangedEvent());
         finish();
     }
 
@@ -519,6 +523,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     public void deleteSuccess() {
         CustomToast.makeText(this, "删除成功", R.drawable.ic_success);
         setResult(RESULT_OK);
+        EventBus.getDefault().post(new SceneChangedEvent());
         finish();
     }
 
