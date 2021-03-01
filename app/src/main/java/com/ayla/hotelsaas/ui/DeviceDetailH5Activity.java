@@ -276,7 +276,7 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
             public void complete(JSONObject retValue) {
                 try {
                     JSONObject state = new JSONObject().put("state", retValue);
-                    mWebView.callHandler("miya.native.scene.pushSceneList", new Object[]{retValue});
+                    mWebView.callHandler("miya.native.scene.pushSceneList", new Object[]{state});
                     Log.d(TAG, "miya_native_scene_pushSceneList: " + state);
                 } catch (JSONException e) {
                     e.printStackTrace();
