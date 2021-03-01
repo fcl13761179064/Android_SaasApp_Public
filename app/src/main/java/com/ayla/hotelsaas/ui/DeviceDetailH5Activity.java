@@ -221,7 +221,6 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         }, "miya.h5.scene");
     }
 
-
     @Override
     protected BasePresenter initPresenter() {
         return null;
@@ -455,9 +454,12 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
                         List<RuleEngineBean> result = new ArrayList<>();
                         for (RuleEngineBean ruleEngineBean : ruleEngineBeans) {
                             for (RuleEngineBean engineBean : ruleEngineBeans2) {
-                                if (engineBean.getRuleId().toString().equals(ruleEngineBean.getAction().getItems().get(0).getLeftValue())) {
-                                    engineBean.setRuleExtendData(ruleEngineBean.getRuleExtendData());
-                                    result.add(engineBean);
+                                if (ruleEngineBean.getAction().getItems().get(0).getLeftValue().equals(engineBean.getRuleId().toString())) {
+                                    ruleEngineBean.setRuleName(engineBean.getRuleName());
+                                    ruleEngineBean.setIconPath(engineBean.getIconPath());
+                                    ruleEngineBean.setStatus(engineBean.getStatus());
+                                    result.add(ruleEngineBean);
+                                    break;
                                 }
                             }
                         }
