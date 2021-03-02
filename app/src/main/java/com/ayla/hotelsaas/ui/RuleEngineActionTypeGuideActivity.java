@@ -1,7 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
-import android.os.Bundle;
+import android.view.View;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -16,12 +16,16 @@ import butterknife.OnClick;
  * 场景设备，选择动作类型
  * 进入必须带上 {@link long scopeId} 房间ID
  * {@link BaseSceneBean data}
- * {@link Boolean hasWelcomeAction} 是否本身就包含酒店欢迎语动作
  * <p>
  * 返回：
  * type 0：设备动作 1：延时动作 2：欢迎语动作
  */
 public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngineActionTypeGuideView, RuleEngineActionTypeGuidePresenter> implements RuleEngineActionTypeGuideView {
+
+    private BaseSceneBean mRuleEngineBean;
+    private long scopeId;
+    private boolean hasWelcomeAction;
+
     @Override
     protected RuleEngineActionTypeGuidePresenter initPresenter() {
         return new RuleEngineActionTypeGuidePresenter();
@@ -34,23 +38,26 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
 
     @Override
     protected void initView() {
+        mRuleEngineBean = (BaseSceneBean) getIntent().getSerializableExtra("data");
+        scopeId = getIntent().getLongExtra("scopeId", 0);
+        for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
+            if (action instanceof BaseSceneBean.WelcomeAction) {
+                hasWelcomeAction = true;
+                break;
+            }
+        }
+
+        View welcomeView = findViewById(R.id.rl_type_welcome);
+        if (mRuleEngineBean.getSiteType() == BaseSceneBean.SITE_TYPE.REMOTE) {//只有云端场景才可以设置酒店欢迎语动作
+            welcomeView.setVisibility(View.VISIBLE);
+        } else {
+            welcomeView.setVisibility(View.GONE);
+        }
     }
 
     @Override
     protected void initListener() {
 
-    }
-
-    private BaseSceneBean mRuleEngineBean;
-    private long scopeId;
-    private boolean hasWelcomeAction;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mRuleEngineBean = (BaseSceneBean) getIntent().getSerializableExtra("data");
-        scopeId = getIntent().getLongExtra("scopeId", 0);
-        hasWelcomeAction = getIntent().getBooleanExtra("hasWelcomeAction", false);
     }
 
     @OnClick(R.id.rl_device_changed)
@@ -89,7 +96,6 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
     public void handleWelcomeSelect() {
         mPresenter.check(scopeId);
     }
-
 
     @Override
     public void checkResult(int result) {
@@ -147,5 +153,6 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
 
     @Override
     public void checkFailed(Throwable throwable) {
+        showError(throwable);
     }
 }

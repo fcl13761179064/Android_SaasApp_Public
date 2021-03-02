@@ -40,33 +40,28 @@
             android:textColor="#333333"
             android:textSize="17sp" />
 
-
-        <RelativeLayout
+        <TextView
+            android:id="@+id/tv_device_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/tv_device_show_name"
-            android:gravity="right"
-            android:paddingRight="16dp">
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="40dp"
+            android:layout_toRightOf="@id/tv_device_show_name"
+            android:ellipsize="end"
+            android:gravity="right|center_vertical"
+            android:singleLine="true"
+            android:textColor="#999999"
+            android:textSize="17sp"
+            tools:text="调光开关" />
 
-            <TextView
-                android:id="@+id/tv_device_name"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:ellipsize="middle"
-                android:gravity="center"
-                android:paddingRight="9dp"
-                android:singleLine="true"
-                android:text="调光开关"
-                android:textColor="#999999"
-                android:textSize="17sp" />
+        <ImageView
+            android:layout_width="8dp"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_menu_item_arrow_right" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@+id/tv_device_name"
-                android:src="@mipmap/left_ico" />
-
-        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout

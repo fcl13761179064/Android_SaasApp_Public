@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F6F9"
@@ -10,7 +11,7 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:center_tv="条件选择"
+        app:center_tv="动作选择"
         app:left_iv="@mipmap/icon_back_black" />
 
     <TextView
@@ -104,7 +105,9 @@
         android:layout_marginTop="1dp"
         android:background="#FFFFFF"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingRight="16dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="16dp"

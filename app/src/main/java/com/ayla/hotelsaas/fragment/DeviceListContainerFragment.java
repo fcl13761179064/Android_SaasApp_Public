@@ -84,7 +84,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         binding.floatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);
+                Intent intent = new Intent(getActivity(), DeviceAddCategoryActivity.class);//正常的添加设备
                 intent.putExtra("scopeId", room_id);
                 startActivity(intent);
             }

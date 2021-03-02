@@ -12,14 +12,16 @@
         android:layout_gravity="center"
         android:background="@drawable/bg_white_corner_10"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp">
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="6dp"
             android:layout_marginBottom="24dp"
             android:text="方案口令已复制"
             android:textColor="#ff000000"
@@ -43,16 +45,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="只能应用于相同房型"
-            android:layout_marginBottom="16dp"
             android:textColor="#fff94747"
             android:textSize="14sp" />
 
         <Button
             android:id="@+id/v_done"
             android:layout_width="200dp"
-            android:visibility="gone"
             android:layout_height="44dp"
-            android:layout_marginBottom="18dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/green_btn_bg_big_corner"
             android:gravity="center"
             android:text="前往房间列表"
@@ -61,8 +61,8 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="42dp"
         android:id="@+id/cancel"
+        android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_gravity="center"
         android:layout_marginTop="48dp"

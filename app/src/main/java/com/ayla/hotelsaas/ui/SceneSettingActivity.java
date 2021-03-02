@@ -89,20 +89,12 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private SceneSettingConditionItemAdapter mConditionAdapter;
     private SceneSettingActionItemAdapter mActionAdapter;
 
-    private boolean actualHasWelcomeAction;//如果是已存在的场景，判断是否包含有酒店欢迎语的动作。
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Serializable sceneBean = getIntent().getSerializableExtra("sceneBean");
         if (sceneBean instanceof BaseSceneBean) {
             mRuleEngineBean = (BaseSceneBean) sceneBean;
-            for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
-                if (action instanceof BaseSceneBean.WelcomeAction) {
-                    actualHasWelcomeAction = true;
-                    break;
-                }
-            }
             mSceneNameTextView.setText(mRuleEngineBean.getRuleName());
             mDeleteView.setVisibility(View.VISIBLE);
             syncSourceAndAdapter2();
@@ -112,13 +104,10 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             if (siteType == BaseSceneBean.SITE_TYPE.LOCAL) {
                 mRuleEngineBean = new LocalSceneBean();
                 String targetGateway = getIntent().getStringExtra("targetGateway");
+                DeviceListBean.DevicesBean gatewayDevice = MyApplication.getInstance().getDevicesBean(targetGateway);
+                int cuId = gatewayDevice.getCuId();
                 ((LocalSceneBean) mRuleEngineBean).setTargetGateway(targetGateway);
-                for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
-                    if (devicesBean.getDeviceId().equals(targetGateway)) {
-                        ((LocalSceneBean) mRuleEngineBean).setTargetGatewayType(devicesBean.getCuId());
-                        break;
-                    }
-                }
+                ((LocalSceneBean) mRuleEngineBean).setTargetGatewayType(cuId);
             } else {
                 mRuleEngineBean = new RemoteSceneBean();
             }
@@ -620,14 +609,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @OnClick(R.id.v_add_action)
     public void jumpAddActions() {
-        if (mRuleEngineBean.getSiteType() == BaseSceneBean.SITE_TYPE.REMOTE) {//只有云端场景才可以设置延时动作、酒店欢迎语动作，进入动作类型选择页面。
+        if (mRuleEngineBean instanceof LocalSceneBean && TempUtils.getDeviceSourceFromDeviceType(((LocalSceneBean) mRuleEngineBean).getTargetGatewayType()) == 1) {//如果是米兰网关的本地联动，只能添加设备类型的动作，所以不去类型选择页面。
+            doJumpAddDeviceActions();
+        } else {
             Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
             mainActivity.putExtra("data", mRuleEngineBean);
             mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
-            mainActivity.putExtra("hasWelcomeAction", actualHasWelcomeAction);
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
-        } else {
-            doJumpAddDeviceActions();
         }
     }
 

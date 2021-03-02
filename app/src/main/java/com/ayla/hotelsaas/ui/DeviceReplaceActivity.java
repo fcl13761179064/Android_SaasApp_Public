@@ -4,15 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
+import com.ayla.hotelsaas.DeviceCategoryHandler;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.databinding.ActivityDeviceReplaceBinding;
 import com.ayla.hotelsaas.mvp.present.DeviceReplacePresenter;
-import com.ayla.hotelsaas.mvp.present.PointAndRegionPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceReplaceView;
 import com.ayla.hotelsaas.utils.TempUtils;
+
+import java.util.List;
 
 /**
  * 设备替换页面
@@ -39,11 +44,13 @@ public class DeviceReplaceActivity extends BaseMvpActivity<DeviceReplaceView, De
 
     String deviceId;
     long scopeId;
+    DeviceCategoryHandler deviceCategoryHandler;
 
     @Override
     protected void initView() {
         deviceId = getIntent().getStringExtra("deviceId");
         scopeId = getIntent().getLongExtra("scopeId", 0);
+        deviceCategoryHandler = new DeviceCategoryHandler(this, scopeId);
     }
 
     @Override
@@ -57,20 +64,26 @@ public class DeviceReplaceActivity extends BaseMvpActivity<DeviceReplaceView, De
     }
 
     @Override
-    public void canReplace(String gatewayId) {
+    public void canReplace(String gatewayId, List<DeviceCategoryBean> deviceCategoryBeans) {
         DeviceListBean.DevicesBean replaceDeviceBean = MyApplication.getInstance().getDevicesBean(deviceId);
-        Intent intent = new Intent(DeviceReplaceActivity.this, DeviceAddCategoryActivity.class);
-        intent.putExtra("scopeId", scopeId);
-        Bundle bundle = new Bundle();
-        bundle.putString("replaceDeviceId", deviceId);
-        bundle.putString("targetGatewayDeviceId", gatewayId);
-        bundle.putString("replaceDeviceNickname", replaceDeviceBean.getNickname());
-        intent.putExtra("replaceInfo", bundle);
-        startActivity(intent);
+        Intent intent = new Intent();
+        Bundle replaceInfoBundle = new Bundle();
+        replaceInfoBundle.putString("replaceDeviceId", deviceId);
+        replaceInfoBundle.putString("targetGatewayDeviceId", gatewayId);
+        replaceInfoBundle.putString("replaceDeviceNickname", replaceDeviceBean.getNickname());
+        intent.putExtra("replaceInfo", replaceInfoBundle);
+
+        deviceCategoryHandler.bindOrReplace(deviceCategoryBeans, intent);//替换设备
     }
 
     @Override
     public void cannotReplace(Throwable throwable) {
         CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        deviceCategoryHandler.onActivityResult(requestCode, resultCode, data);
     }
 }

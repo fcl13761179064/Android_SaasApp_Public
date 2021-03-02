@@ -4,6 +4,7 @@ import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.data.net.SelfMsgException;
 import com.ayla.hotelsaas.data.net.ServerBadException;
+import com.ayla.hotelsaas.localBean.DeviceType;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -117,9 +118,6 @@ public class TempUtils {
                 case "121002":
                     msg = "登录过期";
                     break;
-                case "210000":
-                    msg = "检测到方案和当前房型不一致，请更换方案";
-                    break;
                 case "159999":
                     msg = "不支持使用异常设备，请修改后重试";
                     break;
@@ -137,5 +135,23 @@ public class TempUtils {
 
     public static String getLocalErrorMsg(Throwable throwable) {
         return getLocalErrorMsg("操作失败", throwable);
+    }
+
+    /**
+     * 根据deviceType获取设备来源 0：艾拉 1：阿里
+     *
+     * @param deviceType
+     * @return
+     */
+    public static int getDeviceSourceFromDeviceType(int deviceType) {
+        switch (deviceType) {
+            case DeviceType.AYLA_DEVICE_ID:
+            case DeviceType.AYLA_DEVICE_CATEGORY:
+                return 0;
+            case DeviceType.ALI_DEVICE_ID:
+            case DeviceType.ALI_DEVICE_CATEGORY:
+                return 1;
+        }
+        return -1;
     }
 }
