@@ -66,7 +66,7 @@ public class SwitchDefaultSettingActivity extends BaseMvpActivity<SwitchDefaultS
 
     @Override
     public void showData(String propertyValue) {
-        if ("1".equals(propertyValue)) {
+        if ("3".equals(propertyValue)) {//3：默认开启    4：默认关闭
             syncShow(true);
         } else {
             syncShow(false);
@@ -91,12 +91,12 @@ public class SwitchDefaultSettingActivity extends BaseMvpActivity<SwitchDefaultS
     @Override
     protected void appBarRightTvClicked() {
         if (mBinding.cbFunctionChecked1.isChecked()) {
-            mPresenter.updateProperty(deviceId, propertyCode, "1");
+            mPresenter.updateProperty(deviceId, propertyCode, "3");
             return;
         }
 
         if (mBinding.cbFunctionChecked2.isChecked()) {
-            mPresenter.updateProperty(deviceId, propertyCode, "0");
+            mPresenter.updateProperty(deviceId, propertyCode, "4");
             return;
         }
         showError(new SelfMsgException("必须选中一个", null));
