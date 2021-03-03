@@ -458,10 +458,10 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
                                     ruleEngineBean.setRuleName(engineBean.getRuleName());
                                     ruleEngineBean.setIconPath(engineBean.getIconPath());
                                     ruleEngineBean.setStatus(engineBean.getStatus());
-                                    result.add(ruleEngineBean);
                                     break;
                                 }
                             }
+                            result.add(ruleEngineBean);
                         }
                         return result;
                     }
