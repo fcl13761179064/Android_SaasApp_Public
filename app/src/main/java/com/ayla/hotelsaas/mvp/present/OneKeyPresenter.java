@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.OneKeyView;
 
@@ -35,9 +34,9 @@ public class OneKeyPresenter extends BasePresenter<OneKeyView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<BaseResult<Boolean>>() {
+                .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void accept(BaseResult<Boolean> booleanBaseResult) throws Exception {
+                    public void accept(Boolean aBoolean) throws Exception {
                         mView.runSceneSuccess(needWarming);
                     }
                 }, new Consumer<Throwable>() {

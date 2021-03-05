@@ -18,7 +18,7 @@ public class BeanObtainCompactUtil {
     public static BaseSceneBean obtainSceneBean(RuleEngineBean ruleEngineBean) {
         BaseSceneBean sceneBean = null;
         int siteType = ruleEngineBean.getSiteType();
-        if (siteType == 1) {//本地
+        if (siteType == BaseSceneBean.SITE_TYPE.LOCAL) {//本地
             sceneBean = new LocalSceneBean();
             ((LocalSceneBean) sceneBean).setTargetGateway(ruleEngineBean.getTargetGateway());
             ((LocalSceneBean) sceneBean).setTargetGatewayType(ruleEngineBean.getTargetGatewayType());
@@ -29,10 +29,11 @@ public class BeanObtainCompactUtil {
         sceneBean.setScopeId(ruleEngineBean.getScopeId());
         sceneBean.setIconPath(ruleEngineBean.getIconPath());
         sceneBean.setStatus(ruleEngineBean.getStatus());
-        sceneBean.setRuleSetMode(ruleEngineBean.getRuleSetMode() == 2 ? BaseSceneBean.RULE_SET_MODE.ALL : BaseSceneBean.RULE_SET_MODE.ANY);
-        sceneBean.setRuleType(ruleEngineBean.getRuleType() == 1 ? BaseSceneBean.RULE_TYPE.AUTO : BaseSceneBean.RULE_TYPE.ONE_KEY);
+        sceneBean.setRuleSetMode(ruleEngineBean.getRuleSetMode());
+        sceneBean.setRuleType(ruleEngineBean.getRuleType());
         sceneBean.setRuleDescription(ruleEngineBean.getRuleDescription());
         sceneBean.setRuleName(ruleEngineBean.getRuleName());
+        sceneBean.setRuleExtendData(ruleEngineBean.getRuleExtendData());
 
         BaseSceneBean.EnableTime enableTime = new BaseSceneBean.EnableTime();
         if (sceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//当是自动化时，就要解析生效时间段
@@ -140,13 +141,14 @@ public class BeanObtainCompactUtil {
         ruleEngineBean.setRuleDescription(baseSceneBean.getRuleDescription());
         ruleEngineBean.setRuleName(baseSceneBean.getRuleName());
         ruleEngineBean.setScopeId(baseSceneBean.getScopeId());
+        ruleEngineBean.setRuleExtendData(baseSceneBean.getRuleExtendData());
         if (baseSceneBean instanceof LocalSceneBean) {
             ruleEngineBean.setTargetGateway(((LocalSceneBean) baseSceneBean).getTargetGateway());
             ruleEngineBean.setTargetGatewayType(((LocalSceneBean) baseSceneBean).getTargetGatewayType());
         }
-        if (baseSceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//构建条件集合，只有当自动化联动才传入conditions。
+
+        {//构建条件集合
             RuleEngineBean.Condition _condition = new RuleEngineBean.Condition();
-            ruleEngineBean.setCondition(_condition);
             _condition.setItems(new ArrayList<>());
             for (int i = 0; i < baseSceneBean.getConditions().size(); i++) {
                 BaseSceneBean.Condition condition = baseSceneBean.getConditions().get(i);
@@ -176,18 +178,18 @@ public class BeanObtainCompactUtil {
             }
 
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < ruleEngineBean.getCondition().getItems().size(); i++) {
+            for (int i = 0; i < _condition.getItems().size(); i++) {
                 if (i == 0) {
                     sb.append("(");
                 }
-                RuleEngineBean.Condition.ConditionItem conditionItem = ruleEngineBean.getCondition().getItems().get(i);
+                RuleEngineBean.Condition.ConditionItem conditionItem = _condition.getItems().get(i);
                 sb.append(conditionItem.getJoinType() == 1 ? " && " : conditionItem.getJoinType() == 2 ? " || " : "");
                 if (conditionItem.getBit() == 0 && conditionItem.getCompareValue() == 0) {
                     sb.append(String.format("func.get('%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
                 } else {
                     sb.append(String.format("func.bit('%s','%s','%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getBit(), conditionItem.getCompareValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
                 }
-                if (i == ruleEngineBean.getCondition().getItems().size() - 1) {
+                if (i == _condition.getItems().size() - 1) {
                     sb.append(")");
                 }
             }
@@ -208,11 +210,13 @@ public class BeanObtainCompactUtil {
                 sb.append(String.format("func.parseCronExpression('%s')", conditionItem.getCronExpression()));
             }
             _condition.setExpression(sb.toString());
+            if (_condition.getItems().size() != 0) {
+                ruleEngineBean.setCondition(_condition);
+            }
         }
 
         {//构建动作集合
             RuleEngineBean.Action _action = new RuleEngineBean.Action();
-            ruleEngineBean.setAction(_action);
             _action.setItems(new ArrayList<>());
             for (int i = 0; i < baseSceneBean.getActions().size(); i++) {
                 BaseSceneBean.Action action = baseSceneBean.getActions().get(i);
@@ -227,14 +231,17 @@ public class BeanObtainCompactUtil {
             }
 
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < ruleEngineBean.getAction().getItems().size(); i++) {
-                RuleEngineBean.Action.ActionItem actionItem = ruleEngineBean.getAction().getItems().get(i);
+            for (int i = 0; i < _action.getItems().size(); i++) {
+                RuleEngineBean.Action.ActionItem actionItem = _action.getItems().get(i);
                 sb.append(String.format("func.%s('%s','%s','%s')", actionItem.getTargetDeviceType() == 10 ? "delay" : "execute", actionItem.getTargetDeviceType(), actionItem.getTargetDeviceId(), actionItem.getLeftValue()));
-                if (i < ruleEngineBean.getAction().getItems().size() - 1) {
+                if (i < _action.getItems().size() - 1) {
                     sb.append(" && ");
                 }
             }
             _action.setExpression(sb.toString());
+            if (_action.getItems().size() != 0) {
+                ruleEngineBean.setAction(_action);
+            }
         }
         return ruleEngineBean;
     }

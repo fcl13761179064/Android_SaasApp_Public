@@ -22,6 +22,7 @@ import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.events.SceneChangedEvent;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.RuleEnginePresenter;
 import com.ayla.hotelsaas.mvp.view.RuleEngineView;
@@ -224,7 +225,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SETTING && resultCode == Activity.RESULT_OK) {
-            mSmartRefreshLayout.autoRefresh();
+//            mSmartRefreshLayout.autoRefresh();
         }
         if (requestCode == REQUEST_CODE_SELECT_GATEWAY && resultCode == Activity.RESULT_OK) {
             Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
@@ -252,6 +253,11 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceRemoved(DeviceAddEvent event) {
+        notifyRefresh();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleSceneChanged(SceneChangedEvent event) {
         notifyRefresh();
     }
 }

@@ -14,6 +14,7 @@ import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
+import com.ayla.hotelsaas.bean.PropertyDataPointBean;
 import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
@@ -27,11 +28,13 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
+import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -391,12 +394,13 @@ public class RequestModel {
      * @param ruleId
      * @return
      */
-    public Observable<BaseResult<Boolean>> runRuleEngine(long ruleId) {
+    public Observable<Boolean> runRuleEngine(long ruleId) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("ruleId", ruleId);
 
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().runRuleEngine(body111);
+        return getApiService().runRuleEngine(body111).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
     }
 
     public Observable<Boolean> deleteRuleEngine(long ruleId) {
@@ -934,5 +938,30 @@ public class RequestModel {
     public Observable<String> getNodeGateway(String deviceId) {
         return getApiService().getNodeGateway(deviceId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
         });
+    }
+
+    public Observable<PropertyDataPointBean> getPropertyDataPoint(String deviceId, String propertyName) {
+        return getApiService().getPropertyDataPoint(deviceId, propertyName).compose(new BaseResultTransformer<BaseResult<PropertyDataPointBean>, PropertyDataPointBean>() {
+        });
+    }
+
+    public Observable<List<RuleEngineBean>> getRuleListByUniqListFunction(long scopeId, JSONArray uniqList) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("scopeId", scopeId);
+        jsonObject.put("uniqList", uniqList);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().getRuleListByUniqListFunction(body111)
+                .compose(new BaseResultTransformer<BaseResult<List<RuleEngineBean>>, List<RuleEngineBean>>() {
+                })
+                .onErrorReturn(new Function<Throwable, List<RuleEngineBean>>() {
+                    @Override
+                    public List<RuleEngineBean> apply(@NonNull Throwable throwable) throws Exception {
+                        if (throwable instanceof ServerBadException && ((ServerBadException) throwable).isSuccess()) {
+                            return new ArrayList<>();
+                        }
+                        throw new Exception(throwable);
+                    }
+                });
     }
 }

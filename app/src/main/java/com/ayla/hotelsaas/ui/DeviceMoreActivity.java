@@ -48,6 +48,8 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
     TextView my_account_button;
     @BindView(R.id.rl_device_function_rename)
     View rl_function_rename;
+    @BindView(R.id.rl_switch_default)
+    View rl_switch_default;
     @BindView(R.id.rl_switch_usage)
     View rl_switch_usage;
     @BindView(R.id.rl_purpose_change)
@@ -92,7 +94,7 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
             }
             tv_device_name.setText(mDevicesBean.getNickname());
             if (!TempUtils.isDeviceGateway(mDevicesBean)) {
-                mPresenter.getRenameAbleFunctions(mDevicesBean.getPid());
+                mPresenter.functionLoad(mDevicesBean.getDeviceId(), mDevicesBean.getPid());
             }
             if (TempUtils.isDeviceNode(mDevicesBean)) {
                 rl_replace.setVisibility(View.VISIBLE);
@@ -249,6 +251,16 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         CustomToast.makeText(this, "更新失败", R.drawable.ic_toast_warming);
     }
 
+    @Override
+    public void canSetSwitchDefault() {
+        rl_switch_default.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void cannotSetSwitchDefault() {
+        rl_switch_default.setVisibility(View.GONE);
+    }
+
     @OnClick(R.id.rl_device_function_rename)
     public void handleFunctionRenameJump() {
         Intent intent = new Intent(this, FunctionRenameActivity.class);
@@ -286,6 +298,15 @@ public class DeviceMoreActivity extends BaseMvpActivity<DeviceMoreView, DeviceMo
         intent.putExtra("scopeId", mScopeId);
         startActivity(intent);
     }
+
+
+    @OnClick(R.id.rl_switch_default)
+    public void handleSwitchDefault() {
+        Intent intent = new Intent(this, SwitchDefaultListActivity.class);
+        intent.putExtra("deviceId", deviceId);
+        startActivity(intent);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

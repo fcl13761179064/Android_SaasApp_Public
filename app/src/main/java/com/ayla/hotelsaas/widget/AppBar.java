@@ -83,6 +83,13 @@ public class AppBar extends FrameLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int measureWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int measureWidthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int measureHeight = MeasureSpec.getSize(heightMeasureSpec);
+        int measureHeightMode = MeasureSpec.getMode(heightMeasureSpec);
+
+        int width, height;
+
         measureChildren(widthMeasureSpec, heightMeasureSpec);
         sss();
         if (getChildCount() == 2) {
@@ -94,7 +101,9 @@ public class AppBar extends FrameLayout {
             centerContainer.addView(contentView);
         }
         measureChildren(widthMeasureSpec, heightMeasureSpec);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        width = getChildAt(0).getMeasuredWidth();
+        height = getChildAt(0).getMeasuredHeight();
+        setMeasuredDimension(measureWidthMode == MeasureSpec.EXACTLY ? measureWidth : width, measureHeightMode == MeasureSpec.EXACTLY ? measureHeight : height);
     }
 
     @Override

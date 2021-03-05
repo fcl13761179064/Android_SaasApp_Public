@@ -16,14 +16,14 @@
         app:right_tv="保存" />
 
     <TextView
+        android:id="@+id/tv_ill_state"
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:background="#FBC14D"
-        android:id="@+id/tv_ill_state"
         android:gravity="center"
-        android:visibility="gone"
         android:text="当前场景存在异常，无法正常使用"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:visibility="gone" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
