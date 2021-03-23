@@ -34,9 +34,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
     public void bindAylaGateway(String dsn, long cuId, long scopeId, String deviceCategory, String pid, String productName, String nickname, String waitBindDeviceId, String replaceDeviceId) {
-        /*if (TextUtils.isEmpty(nickname)) {
+        if (TextUtils.isEmpty(nickname)) {
             nickname = generateNickName(dsn, productName);
-        }*/
+        }
         Disposable subscribe = RequestModel.getInstance()
                 .bindOrReplaceDeviceWithDSN(dsn, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, nickname)
                 .subscribeOn(Schedulers.io())
@@ -129,8 +129,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                         String deviceId = deviceInfo[0];
                         String newNickName = nickname;
                         if (TextUtils.isEmpty(newNickName)) {
-                            //newNickName = generateNickName(deviceInfo[2], productName);
-                            newNickName = generateNickName("", productName);
+                            newNickName = generateNickName(deviceInfo[2], productName);
                         }
                         return RequestModel.getInstance()
                                 .bindOrReplaceDeviceWithDSN(deviceId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
@@ -234,8 +233,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                             DeviceListBean.DevicesBean device = devices.get(0);
                             String newNickName = nickname;
                             if (TextUtils.isEmpty(newNickName)) {
-                                //newNickName = generateNickName(device.getDeviceId(), productName);
-                                newNickName = generateNickName("", productName);
+                                newNickName = generateNickName(device.getDeviceId(), productName);
                             }
                             return RequestModel.getInstance()
                                     .bindOrReplaceDeviceWithDSN(device.getDeviceId(), waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
@@ -402,8 +400,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                         }
                         String newNickName = nickname;
                         if (TextUtils.isEmpty(newNickName)) {
-                            //newNickName = generateNickName(subDeviceName, productName);
-                            newNickName = generateNickName("", productName);
+                            newNickName = generateNickName(subDeviceName, productName);
                         }
                         return RequestModel.getInstance()
                                 .bindOrReplaceDeviceWithDSN(subIotId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
@@ -483,8 +480,7 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                         String deviceId = strings[0];
                         String newNickName = nickname;
                         if (TextUtils.isEmpty(newNickName)) {
-                            // newNickName = generateNickName(deviceId, productName);
-                            newNickName = generateNickName("", productName);
+                            newNickName = generateNickName(deviceId, productName);
                         }
                         return RequestModel.getInstance()
                                 .bindOrReplaceDeviceWithDSN(deviceId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
@@ -512,12 +508,12 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
     }
 
     public String generateNickName(String dsn, String deviceName) {
-        String newNickname;
-        if (dsn.length() > 4) {
+       /* if (dsn.length() > 4) { //产品优化，不需要dsn，默认名称为产品名称，后续依次+数字排序（+2/3/4……）
             newNickname = deviceName + "_" + dsn.substring(dsn.length() - 4);
         } else {
             newNickname = deviceName + "_" + dsn;
-        }
+        }*/
+        String  newNickname = deviceName;
         return newNickname;
     }
 }
