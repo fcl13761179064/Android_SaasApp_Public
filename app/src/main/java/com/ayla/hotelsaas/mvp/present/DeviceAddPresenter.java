@@ -34,9 +34,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
     public void bindAylaGateway(String dsn, long cuId, long scopeId, String deviceCategory, String pid, String productName, String nickname, String waitBindDeviceId, String replaceDeviceId) {
-        if (TextUtils.isEmpty(nickname)) {
+        /*if (TextUtils.isEmpty(nickname)) {
             nickname = generateNickName(dsn, productName);
-        }
+        }*/
         Disposable subscribe = RequestModel.getInstance()
                 .bindOrReplaceDeviceWithDSN(dsn, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, nickname)
                 .subscribeOn(Schedulers.io())
@@ -129,7 +129,8 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                         String deviceId = deviceInfo[0];
                         String newNickName = nickname;
                         if (TextUtils.isEmpty(newNickName)) {
-                            newNickName = generateNickName(deviceInfo[2], productName);
+                            //newNickName = generateNickName(deviceInfo[2], productName);
+                            newNickName = generateNickName("", productName);
                         }
                         return RequestModel.getInstance()
                                 .bindOrReplaceDeviceWithDSN(deviceId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
@@ -233,7 +234,8 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                             DeviceListBean.DevicesBean device = devices.get(0);
                             String newNickName = nickname;
                             if (TextUtils.isEmpty(newNickName)) {
-                                newNickName = generateNickName(device.getDeviceId(), productName);
+                                //newNickName = generateNickName(device.getDeviceId(), productName);
+                                newNickName = generateNickName("", productName);
                             }
                             return RequestModel.getInstance()
                                     .bindOrReplaceDeviceWithDSN(device.getDeviceId(), waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
@@ -400,7 +402,8 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                         }
                         String newNickName = nickname;
                         if (TextUtils.isEmpty(newNickName)) {
-                            newNickName = generateNickName(subDeviceName, productName);
+                            //newNickName = generateNickName(subDeviceName, productName);
+                            newNickName = generateNickName("", productName);
                         }
                         return RequestModel.getInstance()
                                 .bindOrReplaceDeviceWithDSN(subIotId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
@@ -480,7 +483,8 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                         String deviceId = strings[0];
                         String newNickName = nickname;
                         if (TextUtils.isEmpty(newNickName)) {
-                            newNickName = generateNickName(deviceId, productName);
+                            // newNickName = generateNickName(deviceId, productName);
+                            newNickName = generateNickName("", productName);
                         }
                         return RequestModel.getInstance()
                                 .bindOrReplaceDeviceWithDSN(deviceId, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, newNickName);
