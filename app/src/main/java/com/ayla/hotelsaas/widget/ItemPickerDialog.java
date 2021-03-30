@@ -39,6 +39,7 @@ public class ItemPickerDialog extends DialogFragment {
     int iconRes;
 
     private String title, subTitle;
+    private int LocationType;
 
     public static ItemPickerDialog newInstance() {
 
@@ -95,7 +96,16 @@ public class ItemPickerDialog extends DialogFragment {
                 outRect.set(0, (position == 0) ? size : 0, 0, size);
             }
         });
-        binding.imageView2.setImageResource(iconRes);
+        if (LocationType == 1000) {
+            binding.imageView.setImageResource(iconRes);
+            binding.imageView2.setVisibility(View.INVISIBLE);
+            binding.imageView.setVisibility(View.VISIBLE);
+        } else {
+            binding.imageView2.setImageResource(iconRes);
+            binding.imageView2.setVisibility(View.VISIBLE);
+            binding.imageView.setVisibility(View.GONE);
+        }
+
         binding.textView2.setText(title);
         binding.textView3.setText(subTitle);
         binding.imageView3.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +133,12 @@ public class ItemPickerDialog extends DialogFragment {
     }
 
     public ItemPickerDialog setIconRes(int iconRes) {
+        this.iconRes = iconRes;
+        return this;
+    }
+
+    public ItemPickerDialog setLocationIconRes(int iconRes, int LocationType) {
+        this.LocationType = LocationType;
         this.iconRes = iconRes;
         return this;
     }

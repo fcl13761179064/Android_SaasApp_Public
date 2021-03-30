@@ -10,14 +10,19 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.databinding.ActivityDeviceAddSuccessBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceAddSuccessPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView;
 import com.ayla.hotelsaas.utils.TempUtils;
+import com.ayla.hotelsaas.widget.ItemPickerDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessView, DeviceAddSuccessPresenter> implements DeviceAddSuccessView {
     private ActivityDeviceAddSuccessBinding binding;
@@ -50,10 +55,29 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
 
     @Override
     protected void initListener() {
+        List<String> purposeCategoryBeans =new ArrayList<>();
+        purposeCategoryBeans.add("客厅");
+        purposeCategoryBeans.add("卧室");
+        purposeCategoryBeans.add("顶楼");
+        purposeCategoryBeans.add("床上");
+        purposeCategoryBeans.add("大地");
+        purposeCategoryBeans.add("手机");
         binding.tvLocationPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ItemPickerDialog.newInstance()
+                        .setSubTitle("请选择设备所属位置")
+                        .setTitle("设备位置")
+                        .setLocationIconRes(R.mipmap.choose_location_icon,1000)
+                        .setData(purposeCategoryBeans)
+                        .setDefaultIndex(0)
+                        .setCallback(new ItemPickerDialog.Callback<String>() {
+                            @Override
+                            public void onCallback(String object) {
+                                //mPresenter.updatePurpose(deviceId, object.getId());
+                            }
+                        })
+                        .show(getSupportFragmentManager(), "dialog");
             }
         });
         binding.etInput.setOnClickListener(new View.OnClickListener() {
