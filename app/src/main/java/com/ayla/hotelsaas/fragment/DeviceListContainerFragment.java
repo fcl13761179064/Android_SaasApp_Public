@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.adapter.ScaleTabAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -26,9 +27,15 @@ import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
+import net.lucode.hackware.magicindicator.ViewPagerHelper;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListContainerView, DeviceListContainerPresenter> implements DeviceListContainerView {
 
@@ -37,9 +44,8 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     private final Long room_id;
     FragmentDeviceContainerBinding binding;
     ViewStubDeviceListContainerBinding deviceListContainerBinding;
-
-
     FragmentStatePagerAdapter mAdapter;
+    private List<String> roomBeans;
 
     public DeviceListContainerFragment(Long room_id) {
         this.room_id = room_id;
@@ -79,6 +85,25 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         loadData();
     }
 
+
+    protected void initMagicIndicator() {
+        CommonNavigator commonNavigator = new CommonNavigator(getActivity());
+        commonNavigator.setAdjustMode(false);
+        roomBeans = new ArrayList<>();
+        for (int x = 0; x < 10; x++) {
+            if (x / 3 == 0) {
+                roomBeans.add("全部");
+            } else {
+                roomBeans.add("卧室");
+            }
+        }
+        ScaleTabAdapter adapter = new ScaleTabAdapter(roomBeans, deviceListContainerBinding.viewPager, deviceListContainerBinding.homeTabLayout);
+        commonNavigator.setAdapter(adapter);
+        deviceListContainerBinding.homeTabLayout.setNavigator(commonNavigator);
+        ViewPagerHelper.bind(deviceListContainerBinding.homeTabLayout, deviceListContainerBinding.viewPager);
+        deviceListContainerBinding.viewPager.setCurrentItem(0, false);
+    }
+
     @Override
     protected void initListener() {
         binding.floatBtn.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +119,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
             public void onInflate(ViewStub stub, View inflated) {
                 deviceListContainerBinding = ViewStubDeviceListContainerBinding.bind(inflated);
                 deviceListContainerBinding.deviceRefreshLayout.setEnableRefresh(false);
+                initMagicIndicator();
                 deviceListContainerBinding.deviceRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
                     @Override
                     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
@@ -147,13 +173,13 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
             @Override
             public int getCount() {
-                return deviceListBean == null ? 0 : 1;
+                return deviceListBean == null ? 0 : roomBeans.size();
             }
 
             @Nullable
             @Override
             public CharSequence getPageTitle(int position) {
-                return "全部";
+                return roomBeans.get(position);
             }
         };
     }
@@ -174,9 +200,11 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         MyApplication.getInstance().setDevicesBean(data.getDevices());
 
         if (data.getDevices().size() == 0) {
+            deviceListContainerBinding.homeTabLayout.setVisibility(View.GONE);
             deviceListContainerBinding.emptyDeviceViewStub.setVisibility(View.VISIBLE);
             deviceListContainerBinding.viewPager.setVisibility(View.GONE);
         } else {
+            deviceListContainerBinding.homeTabLayout.setVisibility(View.VISIBLE);
             deviceListContainerBinding.emptyDeviceViewStub.setVisibility(View.GONE);
             deviceListContainerBinding.viewPager.setVisibility(View.VISIBLE);
         }

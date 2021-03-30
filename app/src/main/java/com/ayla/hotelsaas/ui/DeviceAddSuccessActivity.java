@@ -50,6 +50,12 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
 
     @Override
     protected void initListener() {
+        binding.tvLocationPoint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         binding.etInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
