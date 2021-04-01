@@ -50,10 +50,10 @@ public class ProjectListAdapter extends BaseQuickAdapter<WorkOrderBean.ResultLis
                 trade = "酒店";
                 break;
             case 2:
-                trade = "家装";
+                trade = "地产";
                 break;
             case 3:
-                trade = "地产";
+                trade = "家装";
                 break;
             case 4:
                 trade = "公寓";

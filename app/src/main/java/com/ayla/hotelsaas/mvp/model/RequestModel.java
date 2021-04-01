@@ -964,4 +964,20 @@ public class RequestModel {
                     }
                 });
     }
+
+
+    /**
+     * 设置设备位置
+     *
+     * @return
+     */
+    public Observable<Boolean> deviceLocationRename(String deviceId, String nickName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("nickName", nickName);
+        jsonObject.addProperty("regionId", deviceId);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().deviceLocationRename(deviceId, body111)
+                .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                });
+    }
 }

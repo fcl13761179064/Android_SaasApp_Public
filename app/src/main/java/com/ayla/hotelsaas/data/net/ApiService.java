@@ -307,4 +307,7 @@ public interface ApiService {
 
     @POST("/api/v1/build/scene/getRuleListByUniqListFunction")
     Observable<BaseResult<List<RuleEngineBean>>> getRuleListByUniqListFunction(@Body RequestBody body);
+
+    @PUT("api/v1/build/device/{deviceId}/info")
+    Observable<BaseResult<Boolean>> deviceLocationRename(@Path("deviceId") String deviceId, @Body RequestBody body);
 }

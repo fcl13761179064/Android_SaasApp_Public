@@ -73,8 +73,13 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                         .setDefaultIndex(0)
                         .setCallback(new ItemPickerDialog.Callback<String>() {
                             @Override
-                            public void onCallback(String object) {
-                                //mPresenter.updatePurpose(deviceId, object.getId());
+                            public void onCallback(String txt) {
+                                if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
+                                    CustomToast.makeText(getBaseContext(), "设备名称不能为空", R.drawable.ic_toast_warming);
+                                    return;
+                                }
+                                binding.tvLocationPoint.setText(txt);
+                                mPresenter.setDeviceLocation(txt);
                             }
                         })
                         .show(getSupportFragmentManager(), "dialog");
