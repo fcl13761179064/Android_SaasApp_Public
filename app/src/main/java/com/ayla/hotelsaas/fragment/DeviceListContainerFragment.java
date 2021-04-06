@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.adapter.ScaleTabAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.databinding.FragmentDeviceContainerBinding;
 import com.ayla.hotelsaas.databinding.ViewStubDeviceListContainerBinding;
 import com.ayla.hotelsaas.databinding.WidgetEmptyViewBinding;
@@ -87,21 +88,8 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
 
     protected void initMagicIndicator() {
-        CommonNavigator commonNavigator = new CommonNavigator(getActivity());
-        commonNavigator.setAdjustMode(false);
-        roomBeans = new ArrayList<>();
-        for (int x = 0; x < 10; x++) {
-            if (x / 3 == 0) {
-                roomBeans.add("全部");
-            } else {
-                roomBeans.add("卧室");
-            }
-        }
-        ScaleTabAdapter adapter = new ScaleTabAdapter(roomBeans, deviceListContainerBinding.viewPager, deviceListContainerBinding.homeTabLayout);
-        commonNavigator.setAdapter(adapter);
-        deviceListContainerBinding.homeTabLayout.setNavigator(commonNavigator);
-        ViewPagerHelper.bind(deviceListContainerBinding.homeTabLayout, deviceListContainerBinding.viewPager);
-        deviceListContainerBinding.viewPager.setCurrentItem(0, false);
+        mPresenter.getAllDeviceLocation(room_id);
+
     }
 
     @Override
@@ -173,7 +161,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
             @Override
             public int getCount() {
-                return deviceListBean == null ? 0 : roomBeans.size();
+                return deviceListBean == null ? 0 : 1;
             }
 
             @Nullable
@@ -210,6 +198,25 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         }
         deviceListContainerBinding.tlTabs.setVisibility(View.GONE);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void loadDeviceLocationSuccess(List<DeviceLocationBean> data) {
+        CommonNavigator commonNavigator = new CommonNavigator(getActivity());
+        commonNavigator.setAdjustMode(false);
+        roomBeans = new ArrayList<>();
+        for (int x = 0; x < 10; x++) {
+            if (x / 3 == 0) {
+                roomBeans.add("全部");
+            } else {
+                roomBeans.add("卧室");
+            }
+        }
+        ScaleTabAdapter adapter = new ScaleTabAdapter(roomBeans, deviceListContainerBinding.viewPager, deviceListContainerBinding.homeTabLayout);
+        commonNavigator.setAdapter(adapter);
+        deviceListContainerBinding.homeTabLayout.setNavigator(commonNavigator);
+        ViewPagerHelper.bind(deviceListContainerBinding.homeTabLayout, deviceListContainerBinding.viewPager);
+        deviceListContainerBinding.viewPager.setCurrentItem(0, false);
     }
 
     @Override

@@ -55,8 +55,8 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
 
     @Override
     protected void initListener() {
-        List<String> purposeCategoryBeans =new ArrayList<>();
-        purposeCategoryBeans.add("客厅");
+        List<String> purposeCategoryBeans = new ArrayList<>();
+        purposeCategoryBeans.add("全屋");
         purposeCategoryBeans.add("卧室");
         purposeCategoryBeans.add("顶楼");
         purposeCategoryBeans.add("床上");
@@ -68,18 +68,17 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                 ItemPickerDialog.newInstance()
                         .setSubTitle("请选择设备所属位置")
                         .setTitle("设备位置")
-                        .setLocationIconRes(R.mipmap.choose_location_icon,1000)
+                        .setLocationIconRes(R.mipmap.choose_location_icon, 1000)
                         .setData(purposeCategoryBeans)
                         .setDefaultIndex(0)
                         .setCallback(new ItemPickerDialog.Callback<String>() {
                             @Override
-                            public void onCallback(String txt) {
-                                if (TextUtils.isEmpty(txt) || txt.trim().isEmpty()) {
+                            public void onCallback(String newLocationName) {
+                                if (TextUtils.isEmpty(newLocationName) || newLocationName.trim().isEmpty()) {
                                     CustomToast.makeText(getBaseContext(), "设备名称不能为空", R.drawable.ic_toast_warming);
                                     return;
                                 }
-                                binding.tvLocationPoint.setText(txt);
-                                mPresenter.setDeviceLocation(txt);
+                                binding.tvLocationPoint.setText(newLocationName);
                             }
                         })
                         .show(getSupportFragmentManager(), "dialog");
@@ -142,15 +141,16 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                     return;
                 }
                 String pointName = device.getPointName();
+                String tv_location_name = binding.tvLocationPoint.getText().toString();
                 String newLocationName = binding.tvLocationName.getText().toString();
                 if (TextUtils.isEmpty(newLocationName) || newLocationName.trim().isEmpty()) {
                     CustomToast.makeText(MyApplication.getContext(), "设备点位不能为空", R.drawable.ic_toast_warming);
                     return;
                 }
-                if (TextUtils.equals(newNickname, nickname) && TextUtils.equals(newLocationName, pointName)) {
+                if (TextUtils.equals(newNickname, nickname) && TextUtils.equals(newLocationName, pointName) && TextUtils.equals(tv_location_name, device.getRegionName())) {
                     finish();
                 } else {
-                    mPresenter.deviceRenameMethod(device.getDeviceId(), newNickname, newLocationName, device.getRegionId(), device.getRegionName());
+                    mPresenter.deviceRenameMethod(device.getDeviceId(), newNickname, newLocationName, device.getRegionId(), tv_location_name);
                 }
             }
         });
