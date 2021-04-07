@@ -46,7 +46,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     FragmentDeviceContainerBinding binding;
     ViewStubDeviceListContainerBinding deviceListContainerBinding;
     FragmentStatePagerAdapter mAdapter;
-    private List<String> roomBeans;
+    private List<DeviceLocationBean> LocationBeans;
 
     public DeviceListContainerFragment(Long room_id) {
         this.room_id = room_id;
@@ -114,20 +114,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
                         mPresenter.loadData(room_id);
                     }
                 });
-                deviceListContainerBinding.viewPager.setAdapter(mAdapter);
                 deviceListContainerBinding.tlTabs.setupWithViewPager(deviceListContainerBinding.viewPager);
-//                deviceListContainerBinding.emptyDeviceViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
-//                    @Override
-//                    public void onInflate(ViewStub stub, View inflated) {
-//                        EmptyDeviceListBinding bind = EmptyDeviceListBinding.bind(inflated);
-//                        bind.tvEmptyText.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//
-//                            }
-//                        });
-//                    }
-//                });
             }
         });
         binding.netErrorViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
@@ -156,18 +143,18 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
             @NonNull
             @Override
             public Fragment getItem(int position) {
-                return new DeviceListFragmentNew(room_id, deviceListBean.getDevices());
+                return new DeviceListFragmentNew(room_id, deviceListBean.getDevices(),LocationBeans.get(position).getRegionId(),position);
             }
 
             @Override
             public int getCount() {
-                return deviceListBean == null ? 0 : 1;
+                return deviceListBean == null ? 0 :LocationBeans.size();
             }
 
             @Nullable
             @Override
             public CharSequence getPageTitle(int position) {
-                return roomBeans.get(position);
+                return LocationBeans.get(position).getRegionName();
             }
         };
     }
@@ -197,22 +184,18 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
             deviceListContainerBinding.viewPager.setVisibility(View.VISIBLE);
         }
         deviceListContainerBinding.tlTabs.setVisibility(View.GONE);
+
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void loadDeviceLocationSuccess(List<DeviceLocationBean> data) {
+       LocationBeans = data;
+        deviceListContainerBinding.viewPager.setAdapter(mAdapter);
+        binding.loadingViewStub.setVisibility(View.GONE);
         CommonNavigator commonNavigator = new CommonNavigator(getActivity());
         commonNavigator.setAdjustMode(false);
-        roomBeans = new ArrayList<>();
-        for (int x = 0; x < 10; x++) {
-            if (x / 3 == 0) {
-                roomBeans.add("全部");
-            } else {
-                roomBeans.add("卧室");
-            }
-        }
-        ScaleTabAdapter adapter = new ScaleTabAdapter(roomBeans, deviceListContainerBinding.viewPager, deviceListContainerBinding.homeTabLayout);
+        ScaleTabAdapter adapter = new ScaleTabAdapter(data, deviceListContainerBinding.viewPager, deviceListContainerBinding.homeTabLayout);
         commonNavigator.setAdapter(adapter);
         deviceListContainerBinding.homeTabLayout.setNavigator(commonNavigator);
         ViewPagerHelper.bind(deviceListContainerBinding.homeTabLayout, deviceListContainerBinding.viewPager);

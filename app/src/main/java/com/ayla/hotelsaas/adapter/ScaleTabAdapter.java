@@ -5,6 +5,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.utils.DensityUtils;
 import com.blankj.utilcode.util.ColorUtils;
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -16,14 +17,14 @@ import java.util.List;
 
 public class ScaleTabAdapter extends CommonNavigatorAdapter {
 
-    private List<String> titles;
+    private List<DeviceLocationBean> titles;
     private ViewPager viewPager;
     private MagicIndicator magicIndicator;
     @Nullable
     private Context context;
     private int index;
 
-    public ScaleTabAdapter(List<String> titles) {
+    public ScaleTabAdapter(List<DeviceLocationBean> titles) {
         this.titles = titles;
     }
 
@@ -31,7 +32,7 @@ public class ScaleTabAdapter extends CommonNavigatorAdapter {
         this.titles = titles;
     }
 
-    public  ScaleTabAdapter(List<String> titles, ViewPager viewPager, MagicIndicator magicIndicator) {
+    public  ScaleTabAdapter(List<DeviceLocationBean> titles, ViewPager viewPager, MagicIndicator magicIndicator) {
         this.titles = titles;
         this.viewPager = viewPager;
         this.magicIndicator = magicIndicator;
@@ -45,7 +46,7 @@ public class ScaleTabAdapter extends CommonNavigatorAdapter {
     @Override
     public IPagerTitleView getTitleView(Context context, int index) {
         ScaleTabTitleView scaleTabTitleView = new ScaleTabTitleView(context);
-        scaleTabTitleView.setText(titles.get(index));
+        scaleTabTitleView.setText(titles.get(index).getRegionName());
         scaleTabTitleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -3,14 +3,14 @@ package com.ayla.hotelsaas.bean;
 
 public class DeviceLocationBean {
 
-    private Integer regionId;
+    private long regionId;
     private String regionName;
 
-    public Integer getRegionId() {
+    public long getRegionId() {
         return regionId;
     }
 
-    public void setRegionId(Integer regionId) {
+    public void setRegionId(long regionId) {
         this.regionId = regionId;
     }
 

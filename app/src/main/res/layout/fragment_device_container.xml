@@ -18,11 +18,6 @@
         app:maxImageSize="16dp" />
 
     <ViewStub
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-         />
-
-    <ViewStub
         android:id="@+id/content_view_stub"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout="@layout/layout_loading" />
+
     <ViewStub
         android:id="@+id/net_error_view_stub"
         android:layout_width="match_parent"
