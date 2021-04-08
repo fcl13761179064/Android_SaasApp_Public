@@ -88,7 +88,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
 
     protected void initMagicIndicator() {
-        mPresenter.getAllDeviceLocation(room_id);
+        mPresenter.getAllDeviceLocation();
 
     }
 

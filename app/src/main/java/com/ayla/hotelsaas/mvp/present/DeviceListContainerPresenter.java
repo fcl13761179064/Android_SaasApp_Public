@@ -54,11 +54,11 @@ public class DeviceListContainerPresenter extends BasePresenter<DeviceListContai
     }
 
     /**
-     * 加载列表
+     * 加载区域位置
      *
-     * @param resourceRoomId
+     * @param
      */
-    public void getAllDeviceLocation(long resourceRoomId) {
+    public void getAllDeviceLocation() {
         Disposable subscribe = RequestModel.getInstance()
                 .getAllDeviceLocation()
                 .subscribeOn(Schedulers.io())

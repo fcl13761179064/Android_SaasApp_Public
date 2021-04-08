@@ -10,6 +10,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.databinding.ActivityDeviceAddSuccessBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
@@ -26,6 +27,7 @@ import java.util.List;
 
 public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessView, DeviceAddSuccessPresenter> implements DeviceAddSuccessView {
     private ActivityDeviceAddSuccessBinding binding;
+    private List<DeviceLocationBean> deviceListBean;
 
     @Override
     protected DeviceAddSuccessPresenter initPresenter() {
@@ -55,13 +57,7 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
 
     @Override
     protected void initListener() {
-        List<String> purposeCategoryBeans = new ArrayList<>();
-        purposeCategoryBeans.add("全屋");
-        purposeCategoryBeans.add("卧室");
-        purposeCategoryBeans.add("顶楼");
-        purposeCategoryBeans.add("床上");
-        purposeCategoryBeans.add("大地");
-        purposeCategoryBeans.add("手机");
+        mPresenter.getAllDeviceLocation();
         binding.tvLocationPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +65,7 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                         .setSubTitle("请选择设备所属位置")
                         .setTitle("设备位置")
                         .setLocationIconRes(R.mipmap.choose_location_icon, 1000)
-                        .setData(purposeCategoryBeans)
+                        .setData(deviceListBean)
                         .setDefaultIndex(0)
                         .setCallback(new ItemPickerDialog.Callback<String>() {
                             @Override
@@ -164,6 +160,11 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
     @Override
     public void renameFailed(Throwable throwable) {
         CustomToast.makeText(this, TempUtils.getLocalErrorMsg("修改失败", throwable), R.drawable.ic_toast_warming);
+    }
+
+    @Override
+    public void loadDeviceLocationSuccess(List<DeviceLocationBean> deviceListBean) {
+       this.deviceListBean=deviceListBean;
     }
 
     @Override

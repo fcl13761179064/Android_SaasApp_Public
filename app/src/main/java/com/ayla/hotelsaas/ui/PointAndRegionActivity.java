@@ -54,6 +54,14 @@ public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, 
 
     @Override
     protected void initListener() {
+        mBinding.rlPointName.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
         mBinding.rlRegionName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
