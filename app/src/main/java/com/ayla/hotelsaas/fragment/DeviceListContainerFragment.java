@@ -112,6 +112,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
                     @Override
                     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                         mPresenter.loadData(room_id);
+                        mPresenter.getAllDeviceLocation();
                     }
                 });
                 deviceListContainerBinding.tlTabs.setupWithViewPager(deviceListContainerBinding.viewPager);

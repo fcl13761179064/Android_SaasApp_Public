@@ -89,6 +89,11 @@ public class DeviceListBean {
         private String pointName;
         private long regionId;
         private String regionName;
+
+        public void setRegionName(String regionName) {
+            this.regionName = regionName;
+        }
+
         private int bindType;//设备绑定绑定类型，【0：默认，1：待绑定】
         private String pid;
         private int productType;//产品类型 1、网关设备 2、设备

@@ -28,6 +28,8 @@ import java.util.List;
 public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessView, DeviceAddSuccessPresenter> implements DeviceAddSuccessView {
     private ActivityDeviceAddSuccessBinding binding;
     private List<DeviceLocationBean> deviceListBean;
+    private int defIndex = -1;
+    private String LocationName = "";
 
     @Override
     protected DeviceAddSuccessPresenter initPresenter() {
@@ -58,22 +60,37 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
     @Override
     protected void initListener() {
         mPresenter.getAllDeviceLocation();
+        deviceListBean = new ArrayList<>();
         binding.tvLocationPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                List<String> purposeCategoryBeans = new ArrayList<>();
+                for (int x = 0; x < deviceListBean.size(); x++) {
+                    purposeCategoryBeans.add(deviceListBean.get(x).getRegionName());
+
+                }
+
+                for (int x = 0; x < deviceListBean.size(); x++) {
+                    if (TextUtils.equals(deviceListBean.get(x).getRegionName(), LocationName)) {
+                        defIndex = x;
+                        break;
+                    }
+                }
                 ItemPickerDialog.newInstance()
                         .setSubTitle("请选择设备所属位置")
                         .setTitle("设备位置")
                         .setLocationIconRes(R.mipmap.choose_location_icon, 1000)
-                        .setData(deviceListBean)
-                        .setDefaultIndex(0)
+                        .setData(purposeCategoryBeans)
+                        .setDefaultIndex(defIndex)
                         .setCallback(new ItemPickerDialog.Callback<String>() {
+
                             @Override
                             public void onCallback(String newLocationName) {
                                 if (TextUtils.isEmpty(newLocationName) || newLocationName.trim().isEmpty()) {
                                     CustomToast.makeText(getBaseContext(), "设备名称不能为空", R.drawable.ic_toast_warming);
                                     return;
                                 }
+                                LocationName = newLocationName;
                                 binding.tvLocationPoint.setText(newLocationName);
                             }
                         })
@@ -164,7 +181,7 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
 
     @Override
     public void loadDeviceLocationSuccess(List<DeviceLocationBean> deviceListBean) {
-       this.deviceListBean=deviceListBean;
+        this.deviceListBean = deviceListBean;
     }
 
     @Override
