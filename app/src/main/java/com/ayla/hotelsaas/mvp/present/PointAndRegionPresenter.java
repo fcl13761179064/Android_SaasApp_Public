@@ -71,7 +71,7 @@ public class PointAndRegionPresenter extends BasePresenter<PointAndRegionView> {
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
-                        mView.modifyRegionSuccess(pointName);
+                        mView.modifyRegionSuccess(regionName);
                     }
                 }, new UnifiedErrorConsumer() {
                     @Override

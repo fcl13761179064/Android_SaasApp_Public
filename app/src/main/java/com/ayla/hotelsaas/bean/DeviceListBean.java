@@ -88,6 +88,11 @@ public class DeviceListBean {
         private String purposeName;//用途名称  et:吸顶灯 、吊灯
         private String pointName;
         private long regionId;
+
+        public void setRegionId(long regionId) {
+            this.regionId = regionId;
+        }
+
         private String regionName;
 
         public void setRegionName(String regionName) {

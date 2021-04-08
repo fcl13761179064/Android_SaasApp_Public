@@ -25,19 +25,15 @@ import io.reactivex.schedulers.Schedulers;
  * @时间 2020/7/14
  */
 public class DeviceListContainerPresenter extends BasePresenter<DeviceListContainerView> {
-
     /**
      * 加载列表
      *
      * @param resourceRoomId
      */
     public void loadData(long resourceRoomId) {
-        Disposable subscribe = RequestModel.getInstance().getAllDeviceLocation().flatMap(new Function<List<DeviceLocationBean>, ObservableSource<DeviceListBean>>() {
-            @Override
-            public ObservableSource apply(@NonNull List<DeviceLocationBean> deviceLocationBeans) throws Exception {
-                return RequestModel.getInstance().getDeviceList(resourceRoomId, 1, Integer.MAX_VALUE, deviceLocationBeans.get(0).getRegionId());
-            }
-        }).subscribeOn(Schedulers.io())
+        Disposable subscribe = RequestModel.getInstance()
+                .getAllDeviceList(resourceRoomId, 1, Integer.MAX_VALUE)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DeviceListBean>() {
                     @Override
@@ -51,7 +47,7 @@ public class DeviceListContainerPresenter extends BasePresenter<DeviceListContai
                     }
                 });
         addSubscrebe(subscribe);
-    }
+}
 
     /**
      * 加载区域位置

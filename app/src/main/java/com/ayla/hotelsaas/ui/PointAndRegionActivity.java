@@ -12,6 +12,8 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.databinding.ActivityPointAndRegionBinding;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.events.RegionChangeEvent;
+import com.ayla.hotelsaas.events.SceneChangedEvent;
 import com.ayla.hotelsaas.mvp.present.PointAndRegionPresenter;
 import com.ayla.hotelsaas.mvp.view.PointAndRegionView;
 import com.ayla.hotelsaas.widget.ItemPickerDialog;
@@ -29,8 +31,9 @@ import java.util.List;
 public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, PointAndRegionPresenter> implements PointAndRegionView {
     ActivityPointAndRegionBinding mBinding;
     private List<DeviceLocationBean> deviceListBean;
-    private int defIndex=-1;
+    private int defIndex = -1;
     private String locationName;
+    private long regionId = -1l;
 
     @Override
     protected PointAndRegionPresenter initPresenter() {
@@ -94,7 +97,15 @@ public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, 
                                     return;
                                 }
                                 locationName = newLocationName;
-                                mPresenter.modifyRegionName(devicesBean.getDeviceId(), devicesBean.getNickname(), newLocationName, devicesBean.getRegionId(), devicesBean.getRegionName());
+                                for (int x = 0; x < deviceListBean.size(); x++) {
+                                    if (TextUtils.equals(deviceListBean.get(x).getRegionName(), newLocationName)) {
+                                        defIndex = x;
+                                        break;
+                                    }
+                                }
+                                EventBus.getDefault().post(new RegionChangeEvent());
+                                regionId = deviceListBean.get(defIndex).getRegionId();
+                                mPresenter.modifyRegionName(devicesBean.getDeviceId(), devicesBean.getNickname(), "", regionId, newLocationName);
                             }
                         })
                         .show(getSupportFragmentManager(), "dialog");
@@ -129,6 +140,7 @@ public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, 
 
     @Override
     public void modifySuccess(String pointName) {
+        mBinding.tvPointnameRight.setText(pointName);
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
         devicesBean.setPointName(pointName);
         EventBus.getDefault().post(new DeviceChangedEvent(devicesBean.getDeviceId()));

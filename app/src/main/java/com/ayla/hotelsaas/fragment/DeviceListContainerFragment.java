@@ -8,7 +8,6 @@ import android.view.ViewStub;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.ayla.hotelsaas.R;
@@ -22,6 +21,7 @@ import com.ayla.hotelsaas.databinding.ViewStubDeviceListContainerBinding;
 import com.ayla.hotelsaas.databinding.WidgetEmptyViewBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.events.RegionChangeEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListContainerPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
@@ -35,7 +35,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListContainerView, DeviceListContainerPresenter> implements DeviceListContainerView {
@@ -135,6 +134,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
     @Override
     protected void initData() {
+
         mAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
             public int getItemPosition(@NonNull Object object) {
@@ -143,13 +143,13 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
             @NonNull
             @Override
-            public Fragment getItem(int position) {
-                return new DeviceListFragmentNew(room_id, deviceListBean.getDevices(),LocationBeans.get(position).getRegionId(),position);
+            public DeviceListFragmentNew getItem(int position) {
+                return new DeviceListFragmentNew(room_id, deviceListBean.getDevices(), LocationBeans.get(position).getRegionId(),position);
             }
 
             @Override
             public int getCount() {
-                return deviceListBean == null ? 0 :LocationBeans.size();
+                return deviceListBean == null ? 0 : LocationBeans.size();
             }
 
             @Nullable
@@ -191,7 +191,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
     @Override
     public void loadDeviceLocationSuccess(List<DeviceLocationBean> data) {
-       LocationBeans = data;
+        LocationBeans = data;
         deviceListContainerBinding.viewPager.setAdapter(mAdapter);
         binding.loadingViewStub.setVisibility(View.GONE);
         CommonNavigator commonNavigator = new CommonNavigator(getActivity());
@@ -225,6 +225,11 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceRemoved(DeviceAddEvent event) {
+        loadData();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleDeviceRemoved(RegionChangeEvent event) {
         loadData();
     }
 

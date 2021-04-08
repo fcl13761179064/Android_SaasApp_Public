@@ -64,6 +64,7 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
      */
     public void loadData(long resourceRoomId,long regionId) {
         Disposable subscribe = RequestModel.getInstance().getDeviceList(resourceRoomId, 1, Integer.MAX_VALUE, regionId).subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DeviceListBean>() {
                     @Override

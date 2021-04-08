@@ -30,6 +30,7 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
     private List<DeviceLocationBean> deviceListBean;
     private int defIndex = -1;
     private String LocationName = "";
+    private long regionId=-1l;
 
     @Override
     protected DeviceAddSuccessPresenter initPresenter() {
@@ -91,6 +92,13 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                                     return;
                                 }
                                 LocationName = newLocationName;
+                                for (int x = 0; x < deviceListBean.size(); x++) {
+                                    if (TextUtils.equals(deviceListBean.get(x).getRegionName(), newLocationName)) {
+                                        defIndex = x;
+                                        break;
+                                    }
+                                }
+                                regionId = deviceListBean.get(defIndex).getRegionId();
                                 binding.tvLocationPoint.setText(newLocationName);
                             }
                         })
@@ -163,7 +171,11 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                 if (TextUtils.equals(newNickname, nickname) && TextUtils.equals(newLocationName, pointName) && TextUtils.equals(tv_location_name, device.getRegionName())) {
                     finish();
                 } else {
-                    mPresenter.deviceRenameMethod(device.getDeviceId(), newNickname, newLocationName, device.getRegionId(), tv_location_name);
+                    if (regionId==-1l){
+                        mPresenter.deviceRenameMethod(device.getDeviceId(), newNickname, newLocationName, device.getRegionId(), device.getRegionName());
+                    }else {
+                        mPresenter.deviceRenameMethod(device.getDeviceId(), newNickname, newLocationName,regionId, tv_location_name);
+                    }
                 }
             }
         });

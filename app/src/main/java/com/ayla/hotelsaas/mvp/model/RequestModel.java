@@ -226,6 +226,23 @@ public class RequestModel {
      * @param //每页加载量
      * @return
      */
+    public Observable<DeviceListBean> getAllDeviceList(long roomId, int pageNum, int maxNum) {
+        JsonObject body = new JsonObject();
+        body.addProperty("roomId", roomId);
+        body.addProperty("pageNo", pageNum);
+        body.addProperty("pageSize", maxNum);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().getDeviceList(body111).compose(new BaseResultTransformer<BaseResult<DeviceListBean>, DeviceListBean>() {
+        });
+    }
+
+    /**
+     * 获取设备列表
+     *
+     * @param //页码    从1开始
+     * @param //每页加载量
+     * @return
+     */
     public Observable<DeviceListBean> getDeviceList(long roomId, int pageNum, int maxNum, long regionId) {
         JsonObject body = new JsonObject();
         body.addProperty("roomId", roomId);
