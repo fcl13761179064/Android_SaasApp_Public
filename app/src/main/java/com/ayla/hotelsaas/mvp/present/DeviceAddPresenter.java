@@ -508,12 +508,12 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
     }
 
     public String generateNickName(String dsn, String deviceName) {
-        String newNickname;
-        if (dsn.length() > 4) {
+       /* if (dsn.length() > 4) { //产品优化，不需要dsn，默认名称为产品名称，后续依次+数字排序（+2/3/4……）
             newNickname = deviceName + "_" + dsn.substring(dsn.length() - 4);
         } else {
             newNickname = deviceName + "_" + dsn;
-        }
+        }*/
+        String  newNickname = deviceName;
         return newNickname;
     }
 }
