@@ -5,6 +5,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
@@ -307,4 +308,8 @@ public interface ApiService {
 
     @POST("/api/v1/build/scene/getRuleListByUniqListFunction")
     Observable<BaseResult<List<RuleEngineBean>>> getRuleListByUniqListFunction(@Body RequestBody body);
+
+    @GET("/api/v1/build/billrooms/region")
+    Observable<BaseResult<List<DeviceLocationBean>>> getAllDeviceLocation();
+
 }

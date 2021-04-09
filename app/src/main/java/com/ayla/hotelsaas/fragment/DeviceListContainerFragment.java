@@ -8,27 +8,34 @@ import android.view.ViewStub;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.adapter.ScaleTabAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.databinding.FragmentDeviceContainerBinding;
 import com.ayla.hotelsaas.databinding.ViewStubDeviceListContainerBinding;
 import com.ayla.hotelsaas.databinding.WidgetEmptyViewBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.events.RegionChangeEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListContainerPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
+import net.lucode.hackware.magicindicator.ViewPagerHelper;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListContainerView, DeviceListContainerPresenter> implements DeviceListContainerView {
 
@@ -37,9 +44,8 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     private final Long room_id;
     FragmentDeviceContainerBinding binding;
     ViewStubDeviceListContainerBinding deviceListContainerBinding;
-
-
     FragmentStatePagerAdapter mAdapter;
+    private List<DeviceLocationBean> LocationBeans;
 
     public DeviceListContainerFragment(Long room_id) {
         this.room_id = room_id;
@@ -79,6 +85,12 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         loadData();
     }
 
+
+    protected void initMagicIndicator() {
+        mPresenter.getAllDeviceLocation();
+
+    }
+
     @Override
     protected void initListener() {
         binding.floatBtn.setOnClickListener(new View.OnClickListener() {
@@ -94,26 +106,15 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
             public void onInflate(ViewStub stub, View inflated) {
                 deviceListContainerBinding = ViewStubDeviceListContainerBinding.bind(inflated);
                 deviceListContainerBinding.deviceRefreshLayout.setEnableRefresh(false);
+                initMagicIndicator();
                 deviceListContainerBinding.deviceRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
                     @Override
                     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                         mPresenter.loadData(room_id);
+                        mPresenter.getAllDeviceLocation();
                     }
                 });
-                deviceListContainerBinding.viewPager.setAdapter(mAdapter);
                 deviceListContainerBinding.tlTabs.setupWithViewPager(deviceListContainerBinding.viewPager);
-//                deviceListContainerBinding.emptyDeviceViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
-//                    @Override
-//                    public void onInflate(ViewStub stub, View inflated) {
-//                        EmptyDeviceListBinding bind = EmptyDeviceListBinding.bind(inflated);
-//                        bind.tvEmptyText.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//
-//                            }
-//                        });
-//                    }
-//                });
             }
         });
         binding.netErrorViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
@@ -133,6 +134,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
     @Override
     protected void initData() {
+
         mAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
             public int getItemPosition(@NonNull Object object) {
@@ -141,19 +143,19 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
             @NonNull
             @Override
-            public Fragment getItem(int position) {
-                return new DeviceListFragmentNew(room_id, deviceListBean.getDevices());
+            public DeviceListFragmentNew getItem(int position) {
+                return new DeviceListFragmentNew(room_id, deviceListBean.getDevices(), LocationBeans.get(position).getRegionId(),position);
             }
 
             @Override
             public int getCount() {
-                return deviceListBean == null ? 0 : 1;
+                return deviceListBean == null ? 0 : LocationBeans.size();
             }
 
             @Nullable
             @Override
             public CharSequence getPageTitle(int position) {
-                return "全部";
+                return LocationBeans.get(position).getRegionName();
             }
         };
     }
@@ -174,14 +176,31 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         MyApplication.getInstance().setDevicesBean(data.getDevices());
 
         if (data.getDevices().size() == 0) {
+            deviceListContainerBinding.homeTabLayout.setVisibility(View.GONE);
             deviceListContainerBinding.emptyDeviceViewStub.setVisibility(View.VISIBLE);
             deviceListContainerBinding.viewPager.setVisibility(View.GONE);
         } else {
+            deviceListContainerBinding.homeTabLayout.setVisibility(View.VISIBLE);
             deviceListContainerBinding.emptyDeviceViewStub.setVisibility(View.GONE);
             deviceListContainerBinding.viewPager.setVisibility(View.VISIBLE);
         }
         deviceListContainerBinding.tlTabs.setVisibility(View.GONE);
+
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void loadDeviceLocationSuccess(List<DeviceLocationBean> data) {
+        LocationBeans = data;
+        deviceListContainerBinding.viewPager.setAdapter(mAdapter);
+        binding.loadingViewStub.setVisibility(View.GONE);
+        CommonNavigator commonNavigator = new CommonNavigator(getActivity());
+        commonNavigator.setAdjustMode(false);
+        ScaleTabAdapter adapter = new ScaleTabAdapter(data, deviceListContainerBinding.viewPager, deviceListContainerBinding.homeTabLayout);
+        commonNavigator.setAdapter(adapter);
+        deviceListContainerBinding.homeTabLayout.setNavigator(commonNavigator);
+        ViewPagerHelper.bind(deviceListContainerBinding.homeTabLayout, deviceListContainerBinding.viewPager);
+        deviceListContainerBinding.viewPager.setCurrentItem(0, false);
     }
 
     @Override
@@ -206,6 +225,11 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceRemoved(DeviceAddEvent event) {
+        loadData();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleDeviceRemoved(RegionChangeEvent event) {
         loadData();
     }
 

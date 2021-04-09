@@ -10,17 +10,27 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
+import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.databinding.ActivityDeviceAddSuccessBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceAddSuccessPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView;
 import com.ayla.hotelsaas.utils.TempUtils;
+import com.ayla.hotelsaas.widget.ItemPickerDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessView, DeviceAddSuccessPresenter> implements DeviceAddSuccessView {
     private ActivityDeviceAddSuccessBinding binding;
+    private List<DeviceLocationBean> deviceListBean;
+    private int defIndex = -1;
+    private String LocationName = "";
+    private long regionId=-1l;
 
     @Override
     protected DeviceAddSuccessPresenter initPresenter() {
@@ -50,6 +60,51 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
 
     @Override
     protected void initListener() {
+        mPresenter.getAllDeviceLocation();
+        deviceListBean = new ArrayList<>();
+        binding.tvLocationPoint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> purposeCategoryBeans = new ArrayList<>();
+                for (int x = 0; x < deviceListBean.size(); x++) {
+                    purposeCategoryBeans.add(deviceListBean.get(x).getRegionName());
+
+                }
+
+                for (int x = 0; x < deviceListBean.size(); x++) {
+                    if (TextUtils.equals(deviceListBean.get(x).getRegionName(), LocationName)) {
+                        defIndex = x;
+                        break;
+                    }
+                }
+                ItemPickerDialog.newInstance()
+                        .setSubTitle("请选择设备所属位置")
+                        .setTitle("设备位置")
+                        .setLocationIconRes(R.mipmap.choose_location_icon, 1000)
+                        .setData(purposeCategoryBeans)
+                        .setDefaultIndex(defIndex)
+                        .setCallback(new ItemPickerDialog.Callback<String>() {
+
+                            @Override
+                            public void onCallback(String newLocationName) {
+                                if (TextUtils.isEmpty(newLocationName) || newLocationName.trim().isEmpty()) {
+                                    CustomToast.makeText(getBaseContext(), "设备名称不能为空", R.drawable.ic_toast_warming);
+                                    return;
+                                }
+                                LocationName = newLocationName;
+                                for (int x = 0; x < deviceListBean.size(); x++) {
+                                    if (TextUtils.equals(deviceListBean.get(x).getRegionName(), newLocationName)) {
+                                        defIndex = x;
+                                        break;
+                                    }
+                                }
+                                regionId = deviceListBean.get(defIndex).getRegionId();
+                                binding.tvLocationPoint.setText(newLocationName);
+                            }
+                        })
+                        .show(getSupportFragmentManager(), "dialog");
+            }
+        });
         binding.etInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,15 +162,20 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                     return;
                 }
                 String pointName = device.getPointName();
+                String tv_location_name = binding.tvLocationPoint.getText().toString();
                 String newLocationName = binding.tvLocationName.getText().toString();
                 if (TextUtils.isEmpty(newLocationName) || newLocationName.trim().isEmpty()) {
                     CustomToast.makeText(MyApplication.getContext(), "设备点位不能为空", R.drawable.ic_toast_warming);
                     return;
                 }
-                if (TextUtils.equals(newNickname, nickname) && TextUtils.equals(newLocationName, pointName)) {
+                if (TextUtils.equals(newNickname, nickname) && TextUtils.equals(newLocationName, pointName) && TextUtils.equals(tv_location_name, device.getRegionName())) {
                     finish();
                 } else {
-                    mPresenter.deviceRenameMethod(device.getDeviceId(), newNickname, newLocationName, device.getRegionId(), device.getRegionName());
+                    if (regionId==-1l){
+                        mPresenter.deviceRenameMethod(device.getDeviceId(), newNickname, newLocationName, device.getRegionId(), device.getRegionName());
+                    }else {
+                        mPresenter.deviceRenameMethod(device.getDeviceId(), newNickname, newLocationName,regionId, tv_location_name);
+                    }
                 }
             }
         });
@@ -129,6 +189,11 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
     @Override
     public void renameFailed(Throwable throwable) {
         CustomToast.makeText(this, TempUtils.getLocalErrorMsg("修改失败", throwable), R.drawable.ic_toast_warming);
+    }
+
+    @Override
+    public void loadDeviceLocationSuccess(List<DeviceLocationBean> deviceListBean) {
+        this.deviceListBean = deviceListBean;
     }
 
     @Override

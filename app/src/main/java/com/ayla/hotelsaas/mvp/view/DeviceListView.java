@@ -9,7 +9,7 @@ import java.util.List;
 public interface DeviceListView extends BaseView {
 
     void loadDataSuccess(DeviceListBean.DevicesBean devicesBean, List<DeviceCategoryBean> data);
-
+    void loadDeviceDataSuccess(DeviceListBean data);
     void loadDataFailed(Throwable throwable) ;
 
 }
