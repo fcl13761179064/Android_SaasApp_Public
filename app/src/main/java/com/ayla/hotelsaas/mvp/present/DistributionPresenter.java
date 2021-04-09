@@ -36,7 +36,7 @@ public class DistributionPresenter extends BasePresenter<DistributionView> {
                         List<Observable<Integer>> jobs = new ArrayList<>();
                         for (RoomManageBean.RecordsBean recordsBean : recordsBeans) {
                             Observable<Integer> getCountObservable = RequestModel.getInstance()
-                                    .getDeviceList(recordsBean.getId(), 1, Integer.MAX_VALUE)
+                                    .getDeviceList(recordsBean.getId(), 1, Integer.MAX_VALUE,1l)
                                     .map(new Function<DeviceListBean, Integer>() {
                                         @Override
                                         public Integer apply(@NonNull DeviceListBean deviceListBean) throws Exception {

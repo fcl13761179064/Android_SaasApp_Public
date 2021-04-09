@@ -9,13 +9,20 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.databinding.ActivityPointAndRegionBinding;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.events.RegionChangeEvent;
+import com.ayla.hotelsaas.events.SceneChangedEvent;
 import com.ayla.hotelsaas.mvp.present.PointAndRegionPresenter;
 import com.ayla.hotelsaas.mvp.view.PointAndRegionView;
+import com.ayla.hotelsaas.widget.ItemPickerDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 开关用途设置
@@ -23,6 +30,10 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, PointAndRegionPresenter> implements PointAndRegionView {
     ActivityPointAndRegionBinding mBinding;
+    private List<DeviceLocationBean> deviceListBean;
+    private int defIndex = -1;
+    private String locationName;
+    private long regionId = -1l;
 
     @Override
     protected PointAndRegionPresenter initPresenter() {
@@ -44,6 +55,7 @@ public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, 
 
     @Override
     protected void initView() {
+        mPresenter.getAllDeviceLocation();
         String deviceId = getIntent().getStringExtra("deviceId");
         devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
         if (devicesBean != null) {
@@ -54,6 +66,51 @@ public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, 
 
     @Override
     protected void initListener() {
+        mBinding.rlPointName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> purposeCategoryBeans = new ArrayList<>();
+                for (int x = 0; x < deviceListBean.size(); x++) {
+                    purposeCategoryBeans.add(deviceListBean.get(x).getRegionName());
+
+                }
+
+                for (int x = 0; x < deviceListBean.size(); x++) {
+                    if (TextUtils.equals(deviceListBean.get(x).getRegionName(), locationName)) {
+                        defIndex = x;
+                        break;
+                    }
+                }
+
+                ItemPickerDialog.newInstance()
+                        .setSubTitle("请选择设备所属位置")
+                        .setTitle("设备位置")
+                        .setLocationIconRes(R.mipmap.choose_location_icon, 1000)
+                        .setData(purposeCategoryBeans)
+                        .setDefaultIndex(defIndex)
+                        .setCallback(new ItemPickerDialog.Callback<String>() {
+
+                            @Override
+                            public void onCallback(String newLocationName) {
+                                if (TextUtils.isEmpty(newLocationName) || newLocationName.trim().isEmpty()) {
+                                    CustomToast.makeText(getBaseContext(), "设备名称不能为空", R.drawable.ic_toast_warming);
+                                    return;
+                                }
+                                locationName = newLocationName;
+                                for (int x = 0; x < deviceListBean.size(); x++) {
+                                    if (TextUtils.equals(deviceListBean.get(x).getRegionName(), newLocationName)) {
+                                        defIndex = x;
+                                        break;
+                                    }
+                                }
+                                EventBus.getDefault().post(new RegionChangeEvent());
+                                regionId = deviceListBean.get(defIndex).getRegionId();
+                                mPresenter.modifyRegionName(devicesBean.getDeviceId(), devicesBean.getNickname(), "", regionId, newLocationName);
+                            }
+                        })
+                        .show(getSupportFragmentManager(), "dialog");
+            }
+        });
         mBinding.rlRegionName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,5 +144,19 @@ public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, 
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
         devicesBean.setPointName(pointName);
         EventBus.getDefault().post(new DeviceChangedEvent(devicesBean.getDeviceId()));
+    }
+
+    @Override
+    public void modifyRegionSuccess(String pointName) {
+        mBinding.tvRegionnameRight.setText(pointName);
+        devicesBean.setRegionName(pointName);
+        CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
+        EventBus.getDefault().post(new DeviceChangedEvent(devicesBean.getDeviceId()));
+    }
+
+
+    @Override
+    public void loadDeviceLocationSuccess(List<DeviceLocationBean> deviceListBean) {
+        this.deviceListBean = deviceListBean;
     }
 }

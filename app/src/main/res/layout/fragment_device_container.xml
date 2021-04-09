@@ -28,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout="@layout/layout_loading" />
+
     <ViewStub
         android:id="@+id/net_error_view_stub"
         android:layout_width="match_parent"

@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.adapter.DeviceListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.databinding.FragmentDeviceListNewBinding;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListPresenter;
@@ -35,6 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, DeviceListPresenter> implements DeviceListView {
+
+    private final long regionId;
+    private  int  position;
     FragmentDeviceListNewBinding binding;
     List<DeviceListBean.DevicesBean> devices;
 
@@ -44,9 +48,11 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     private long room_id;
 
-    public DeviceListFragmentNew(long room_id, List<DeviceListBean.DevicesBean> devices) {
+    public DeviceListFragmentNew(long room_id, List<DeviceListBean.DevicesBean> devices, long regionId, int position) {
         this.room_id = room_id;
         this.devices = devices;
+        this.regionId = regionId;
+        this.position = position;
     }
 
     @Override
@@ -95,7 +101,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
         mAdapter = new DeviceListAdapter(null);
         mAdapter.bindToRecyclerView(binding.deviceRecyclerview);
-        mAdapter.setEmptyView(R.layout.layout_loading);
+        mAdapter.setEmptyView(R.layout.empty_device_order);
     }
 
     @Override
@@ -126,13 +132,15 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     @Override
     protected void initData() {
-        if (devices != null) {
+        if (devices != null && position==0 ) {
             List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
             for (DeviceListBean.DevicesBean devicesBean : devices) {
                 DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
                 deviceItems.add(deviceItem);
             }
             mAdapter.setNewData(deviceItems);
+        }else {
+            mPresenter.loadData(room_id,regionId);
         }
     }
 
@@ -151,6 +159,16 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
         intent.putExtra("addForWait", addForWaitBundle);
 
         deviceCategoryHandler.bindOrReplace(data, intent);//添加待绑定的设备
+    }
+
+    @Override
+    public void loadDeviceDataSuccess(DeviceListBean data) {
+        List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
+        for (DeviceListBean.DevicesBean devicesBean : data.getDevices()) {
+            DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
+            deviceItems.add(deviceItem);
+        }
+        mAdapter.setNewData(deviceItems);
     }
 
     @Override

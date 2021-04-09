@@ -88,7 +88,17 @@ public class DeviceListBean {
         private String purposeName;//用途名称  et:吸顶灯 、吊灯
         private String pointName;
         private long regionId;
+
+        public void setRegionId(long regionId) {
+            this.regionId = regionId;
+        }
+
         private String regionName;
+
+        public void setRegionName(String regionName) {
+            this.regionName = regionName;
+        }
+
         private int bindType;//设备绑定绑定类型，【0：默认，1：待绑定】
         private String pid;
         private int productType;//产品类型 1、网关设备 2、设备

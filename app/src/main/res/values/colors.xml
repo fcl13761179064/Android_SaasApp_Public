@@ -39,4 +39,8 @@
 
     <!--dialog的颜色-->
     <color name="custome_dialog">#333333</color>
+
+    <color name="gray_3">#333333</color>
+    <color name="gray_6">#666666</color>
+    <color name="common_green">#00B648</color>
 </resources>

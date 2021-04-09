@@ -29,6 +29,8 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 
+import com.blankj.utilcode.util.ConvertUtils;
+
 /**
  * 屏幕管理工具类
  * dp(dip): device independent pixels(设备独立像素). 不同设备有不同的显示效果,这个和设备硬件有关，一般我们为了支持WVGA、HVGA和QVGA 推荐使用这个，不依赖像素。
@@ -299,5 +301,11 @@ public class DensityUtils {
         view.destroyDrawingCache();
         return bp;
 
+    }
+    /**
+     *  dp转px
+     */
+    public static  int setDptoPx(int dp){
+        return ConvertUtils.dp2px((float) dp);
     }
 }

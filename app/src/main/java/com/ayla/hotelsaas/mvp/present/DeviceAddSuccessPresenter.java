@@ -1,8 +1,11 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView;
+
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -31,6 +34,30 @@ public class DeviceAddSuccessPresenter extends BasePresenter<DeviceAddSuccessVie
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
                         mView.renameSuccess(nickName);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.renameFailed(throwable);
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
+
+    /**
+     * 加载区域位置
+     *
+     * @param
+     */
+    public void getAllDeviceLocation() {
+        Disposable subscribe = RequestModel.getInstance()
+                .getAllDeviceLocation()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<DeviceLocationBean>>() {
+                    @Override
+                    public void accept(List<DeviceLocationBean> deviceListBean) throws Exception {
+                        mView.loadDeviceLocationSuccess(deviceListBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

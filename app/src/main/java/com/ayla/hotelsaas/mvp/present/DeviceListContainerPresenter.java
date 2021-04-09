@@ -3,12 +3,20 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
+import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
 
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -17,7 +25,6 @@ import io.reactivex.schedulers.Schedulers;
  * @时间 2020/7/14
  */
 public class DeviceListContainerPresenter extends BasePresenter<DeviceListContainerView> {
-
     /**
      * 加载列表
      *
@@ -25,7 +32,7 @@ public class DeviceListContainerPresenter extends BasePresenter<DeviceListContai
      */
     public void loadData(long resourceRoomId) {
         Disposable subscribe = RequestModel.getInstance()
-                .getDeviceList(resourceRoomId, 1, Integer.MAX_VALUE)
+                .getAllDeviceList(resourceRoomId, 1, Integer.MAX_VALUE)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DeviceListBean>() {
@@ -40,6 +47,29 @@ public class DeviceListContainerPresenter extends BasePresenter<DeviceListContai
                     }
                 });
         addSubscrebe(subscribe);
-    }
+}
 
+    /**
+     * 加载区域位置
+     *
+     * @param
+     */
+    public void getAllDeviceLocation() {
+        Disposable subscribe = RequestModel.getInstance()
+                .getAllDeviceLocation()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<DeviceLocationBean>>() {
+                    @Override
+                    public void accept(List<DeviceLocationBean> deviceListBean) throws Exception {
+                        mView.loadDeviceLocationSuccess(deviceListBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.loadDataFinish(throwable);
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
 }

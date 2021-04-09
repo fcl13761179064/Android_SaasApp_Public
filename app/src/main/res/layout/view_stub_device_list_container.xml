@@ -12,6 +12,7 @@
         android:background="@color/white"
         app:tabMode="scrollable" />
 
+
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/device_refreshLayout"
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
         android:layout_below="@id/tl_tabs"
         app:srlEnableLoadMore="false">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -29,10 +30,19 @@
                 android:layout_height="match_parent"
                 android:layout="@layout/empty_device_order" />
 
+         <net.lucode.hackware.magicindicator.MagicIndicator
+                android:id="@+id/home_tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@color/color_ffffff"
+                />
+
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
+                android:layout_height="match_parent"
+                android:layout_below="@+id/home_tabLayout"
+                />
+        </RelativeLayout>
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </LinearLayout>

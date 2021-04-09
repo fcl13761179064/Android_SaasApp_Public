@@ -9,6 +9,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
@@ -225,11 +226,29 @@ public class RequestModel {
      * @param //每页加载量
      * @return
      */
-    public Observable<DeviceListBean> getDeviceList(long roomId, int pageNum, int maxNum) {
+    public Observable<DeviceListBean> getAllDeviceList(long roomId, int pageNum, int maxNum) {
         JsonObject body = new JsonObject();
         body.addProperty("roomId", roomId);
         body.addProperty("pageNo", pageNum);
         body.addProperty("pageSize", maxNum);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
+        return getApiService().getDeviceList(body111).compose(new BaseResultTransformer<BaseResult<DeviceListBean>, DeviceListBean>() {
+        });
+    }
+
+    /**
+     * 获取设备列表
+     *
+     * @param //页码    从1开始
+     * @param //每页加载量
+     * @return
+     */
+    public Observable<DeviceListBean> getDeviceList(long roomId, int pageNum, int maxNum, long regionId) {
+        JsonObject body = new JsonObject();
+        body.addProperty("roomId", roomId);
+        body.addProperty("pageNo", pageNum);
+        body.addProperty("pageSize", maxNum);
+        body.addProperty("regionId", regionId);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), body.toString());
         return getApiService().getDeviceList(body111).compose(new BaseResultTransformer<BaseResult<DeviceListBean>, DeviceListBean>() {
         });
@@ -962,6 +981,17 @@ public class RequestModel {
                         }
                         throw new Exception(throwable);
                     }
+                });
+    }
+
+    /**
+     * 获取所有设备位置，全屋还是 卧室
+     *
+     * @return
+     */
+    public Observable<List<DeviceLocationBean>> getAllDeviceLocation() {
+        return getApiService().getAllDeviceLocation()
+                .compose(new BaseResultTransformer<BaseResult<List<DeviceLocationBean>>,List<DeviceLocationBean>>() {
                 });
     }
 }
