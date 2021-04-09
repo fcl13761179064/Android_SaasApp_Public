@@ -144,7 +144,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
             @NonNull
             @Override
             public DeviceListFragmentNew getItem(int position) {
-                return new DeviceListFragmentNew(room_id, deviceListBean.getDevices(), LocationBeans.get(position).getRegionId(),position);
+                return new DeviceListFragmentNew(room_id,  LocationBeans.get(position).getRegionId(),position);
             }
 
             @Override
