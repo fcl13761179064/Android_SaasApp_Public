@@ -8,9 +8,9 @@
     <com.ayla.hotelsaas.widget.AppBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:center_tv="创建新项目"
+        app:center_tv="新项目创建"
         app:left_iv="@mipmap/icon_back_black"
-        app:right_tv="完成创建"
+        app:right_tv="创建"
         app:right_tv_color="@color/colorAccent" />
 
     <RelativeLayout

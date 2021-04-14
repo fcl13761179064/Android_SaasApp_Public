@@ -2,41 +2,41 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListTabAdapter;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
-import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
-import com.ayla.hotelsaas.fragment.DeviceListFragmentNew;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
+import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
+import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.widget.AppBar;
-import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.ayla.hotelsaas.widget.Programe_change_AppBar;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
  * 我的项目页面
  */
-public class ProjectListActivity extends BaseMvpActivity {
+public class ProjectListActivity extends BaseMvpActivity<ProjectListView, ProjectListPresenter> implements ProjectListView {
     private final int REQUEST_CODE_CREATE_PROJECT = 0x10;
 
     @BindView(R.id.appBar)
-    AppBar appBar;
+    Programe_change_AppBar appBar;
 
     @Nullable
     @BindView(R.id.magic_inditator)
@@ -46,15 +46,21 @@ public class ProjectListActivity extends BaseMvpActivity {
 
     private List<String> roomBeans;
     private FragmentStatePagerAdapter mAdapter;
+    private WorkOrderBean data;
+
 
     @Override
-    protected BasePresenter initPresenter() {
-        return null;
+    protected ProjectListPresenter initPresenter() {
+        return new ProjectListPresenter();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().hasExtra("upgrade")) {
+            VersionUpgradeBean versionUpgradeBean = (VersionUpgradeBean)getIntent().getSerializableExtra("upgrade");
+            Constance.saveVersionUpgradeInfo(versionUpgradeBean);
+        }
     }
 
     @Override
@@ -98,6 +104,13 @@ public class ProjectListActivity extends BaseMvpActivity {
 
     @Override
     protected void initListener() {
+        TextView tv_title_change = appBar.findViewById(R.id.tv_content);
+        tv_title_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
         mAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public int getItemPosition(@NonNull Object object) {
@@ -134,8 +147,20 @@ public class ProjectListActivity extends BaseMvpActivity {
         startActivityForResult(new Intent(this, CreateProjectActivity.class), REQUEST_CODE_CREATE_PROJECT);
     }
 
+
+
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+    }
+
+    @Override
+    public void showData(WorkOrderBean data) {
+     this.data =data;
+    }
+
+    @Override
+    public void onRequestFailed(Throwable throwable) {
+
     }
 }

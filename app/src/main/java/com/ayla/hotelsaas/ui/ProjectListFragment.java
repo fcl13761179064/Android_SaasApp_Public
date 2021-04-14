@@ -93,12 +93,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
 
     @Override
     protected void initView(View view) {
-        if (getActivity().getIntent().hasExtra("upgrade")) {
-            VersionUpgradeBean versionUpgradeBean = (VersionUpgradeBean) getActivity().getIntent().getSerializableExtra("upgrade");
-            Constance.saveVersionUpgradeInfo(versionUpgradeBean);
-        }
         mPresenter.refresh();
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override

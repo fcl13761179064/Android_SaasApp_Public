@@ -5,11 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.ayla.hotelsaas.widget.AppBar
+    <com.ayla.hotelsaas.widget.Programe_change_AppBar
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:center_tv="我的项目"
+        app:center_tv="智慧酒店"
         app:left_iv="@drawable/person_center" />
 
         <LinearLayout
