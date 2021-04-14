@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -76,6 +77,10 @@ public class SwitchDefaultSettingActivity extends BaseMvpActivity<SwitchDefaultS
     @Override
     public void updateSuccess() {
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
+        Intent intent = new Intent(this, DeviceMoreActivity.class);
+        startActivity(intent);
+        finish();
+
     }
 
     private void syncShow(boolean isOn) {
