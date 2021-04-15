@@ -52,7 +52,7 @@ public class Programe_change_AppBar extends FrameLayout {
 
     private @DrawableRes
     int left_iv, right_iv;
-    private String left_tv, right_tv, center_tv;
+    public String left_tv, right_tv, center_tv;
     private int right_tv_color;
     private boolean bottom_line_visibility;
 
@@ -174,6 +174,10 @@ public class Programe_change_AppBar extends FrameLayout {
     public void setCenterText(String text) {
         center_tv = text;
         adjustContent();
+    }
+
+    public TextView getTitleTextView() {
+       return titleTextView;
     }
 }
 
