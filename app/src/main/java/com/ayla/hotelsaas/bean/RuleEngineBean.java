@@ -202,8 +202,8 @@ public class RuleEngineBean implements Serializable {
 
             private String cronExpression;//生效时间段表达式，只有当这个ConditionItem类型是生效时间段时才会有值。
 
-            private int bit;
-            private int compareValue;
+            private Integer bit;
+            private Integer compareValue;
 
             public int getJoinType() {
                 return joinType;
@@ -261,19 +261,19 @@ public class RuleEngineBean implements Serializable {
                 this.cronExpression = cronExpression;
             }
 
-            public int getBit() {
+            public Integer getBit() {
                 return bit;
             }
 
-            public void setBit(int bit) {
+            public void setBit(Integer bit) {
                 this.bit = bit;
             }
 
-            public int getCompareValue() {
+            public Integer getCompareValue() {
                 return compareValue;
             }
 
-            public void setCompareValue(int compareValue) {
+            public void setCompareValue(Integer compareValue) {
                 this.compareValue = compareValue;
             }
         }
