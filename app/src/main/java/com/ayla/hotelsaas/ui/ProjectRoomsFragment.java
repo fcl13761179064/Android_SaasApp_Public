@@ -29,6 +29,8 @@ import java.util.Observer;
 
 import butterknife.BindView;
 
+import static com.ayla.hotelsaas.ui.MainActivity.RESULT_CODE_RENAMED;
+
 /**
  * 酒店层级页面
  */
@@ -159,7 +161,7 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
             intent.putExtra("roomName", roomName);
             intent.putExtra("roomTypeId", treeListBean.getRoomTypeId());
             intent.putExtra("removeEnable", bean.getType() != 0);//展箱、展厅 说明是自己创建的。
-            startActivity(intent);
+            startActivityForResult(intent, RESULT_CODE_RENAMED);
         } else {
             String title = treeListBean.getContentName();
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
@@ -185,6 +187,15 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
                     tab.select();
                 }
             });
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_CODE_RENAMED) {
+            getActivity().setResult(RESULT_CODE_RENAMED);
         }
     }
 }

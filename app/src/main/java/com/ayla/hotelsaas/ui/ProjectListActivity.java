@@ -26,7 +26,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
-
+import static com.ayla.hotelsaas.ui.MainActivity.RESULT_CODE_RENAMED;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -43,6 +43,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     RecyclerView mRecyclerView;
     @BindView(R.id.appBar)
     AppBar appBar;
+
 
     private ProjectListAdapter mAdapter;
 
@@ -122,7 +123,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 WorkOrderBean.ResultListBean item = mAdapter.getItem(position);
-                startActivity(new Intent(getApplicationContext(), ProjectMainActivity.class).putExtra("bean", item));
+                startActivityForResult(new Intent(getApplicationContext(), ProjectMainActivity.class).putExtra("bean", item),RESULT_CODE_RENAMED);
             }
         });
     }
@@ -185,6 +186,8 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CREATE_PROJECT && resultCode == RESULT_OK) {
             mSmartRefreshLayout.autoRefresh();
+        }else if (resultCode == RESULT_CODE_RENAMED) {
+            mPresenter.refresh();
         }
     }
 
