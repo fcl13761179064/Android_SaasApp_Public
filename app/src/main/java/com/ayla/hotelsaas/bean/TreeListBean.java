@@ -15,7 +15,7 @@ public class TreeListBean implements Serializable {
     private String id;
     private String parentId;
     private String contentName;
-    private int roomTypeId;//房型
+    private long roomTypeId;//房型
     private List<TreeListBean> children;
 
     public String getId() {
@@ -50,11 +50,11 @@ public class TreeListBean implements Serializable {
         this.children = children;
     }
 
-    public int getRoomTypeId() {
+    public long getRoomTypeId() {
         return roomTypeId;
     }
 
-    public void setRoomTypeId(int roomTypeId) {
+    public void setRoomTypeId(long roomTypeId) {
         this.roomTypeId = roomTypeId;
     }
 }
