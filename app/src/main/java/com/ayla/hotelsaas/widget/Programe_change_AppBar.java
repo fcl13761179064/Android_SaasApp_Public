@@ -36,6 +36,7 @@ public class Programe_change_AppBar extends FrameLayout {
     private LinearLayout leftLinearLayout;
     private LinearLayout rightLinearLayout;
     private View bottom_line;
+    private LinearLayout page_change;
 
     public Programe_change_AppBar(@NonNull Context context) {
         this(context, null);
@@ -67,6 +68,7 @@ public class Programe_change_AppBar extends FrameLayout {
         leftLinearLayout = findViewById(R.id.left_ll);
         rightLinearLayout = findViewById(R.id.right_ll);
         bottom_line = findViewById(R.id.bottom_line);
+        page_change = findViewById(R.id.page_change);
 
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AppBar, defStyleAttr, 0);
         left_iv = ta.getResourceId(R.styleable.AppBar_left_iv, 0);
@@ -176,8 +178,8 @@ public class Programe_change_AppBar extends FrameLayout {
         adjustContent();
     }
 
-    public TextView getTitleTextView() {
-       return titleTextView;
+    public LinearLayout getTitleLayoutView() {
+       return page_change;
     }
 }
 

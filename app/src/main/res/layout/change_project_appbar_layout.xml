@@ -44,30 +44,37 @@
 
         <LinearLayout
             android:id="@+id/appbar_center_container"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toStartOf="@id/right_ll"
             android:layout_toEndOf="@id/left_ll"
             android:gravity="center">
 
-            <TextView
-                android:id="@+id/tv_title"
+            <LinearLayout
+                android:id="@+id/page_change"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:lines="1"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text="title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/color_333333"
-                android:textSize="17sp" />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/pic_saas_miya_change"
-                />
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:text="title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/color_333333"
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/pic_saas_miya_change" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
