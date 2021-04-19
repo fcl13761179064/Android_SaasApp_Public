@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 
@@ -14,8 +13,8 @@ import io.reactivex.schedulers.Schedulers;
 public class ProjectListPresenter extends BasePresenter<ProjectListView> {
     private int currentPage = 1;
 
-    public void loadData() {
-        Disposable subscribe = RequestModel.getInstance().getWorkOrderList(currentPage, 50)
+    public void loadData(String tradeId) {
+        Disposable subscribe = RequestModel.getInstance().getWorkOrderList(currentPage, 2,tradeId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<WorkOrderBean>() {
@@ -33,8 +32,8 @@ public class ProjectListPresenter extends BasePresenter<ProjectListView> {
         addSubscrebe(subscribe);
     }
 
-    public void refresh() {
+    public void refresh(String tradeId) {
         currentPage = 1;
-        loadData();
+        loadData(tradeId);
     }
 }

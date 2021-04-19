@@ -2,10 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,10 +17,8 @@ import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
-import com.ayla.hotelsaas.popmenu.PopMenu;
-import com.ayla.hotelsaas.popmenu.UserMenu;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.Programe_change_AppBar;
-import com.blankj.utilcode.util.ToastUtils;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -53,9 +48,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     private List<String> roomBeans;
     private FragmentStatePagerAdapter mAdapter;
     private WorkOrderBean data;
-    private static final int USER_SEARCH = 0;
-    private static final int USER_ADD = 1;
-    private UserMenu mMenu;
 
     @Override
     protected ProjectListPresenter initPresenter() {
@@ -66,7 +58,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getIntent().hasExtra("upgrade")) {
-            VersionUpgradeBean versionUpgradeBean = (VersionUpgradeBean)getIntent().getSerializableExtra("upgrade");
+            VersionUpgradeBean versionUpgradeBean = (VersionUpgradeBean) getIntent().getSerializableExtra("upgrade");
             Constance.saveVersionUpgradeInfo(versionUpgradeBean);
         }
     }
@@ -90,17 +82,17 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @Override
     protected void initView() {
-
-        roomBeans = new ArrayList<>();
-        for (int x = 0; x < 3; x++) {
-            if (x == 0) {
-                roomBeans.add("全部");
-            } else if (x == 1) {
-                roomBeans.add("施工中");
-            } else {
-                roomBeans.add("完成");
-            }
+        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
+        if ("1".equalsIgnoreCase(title_type)) {
+            appBar.setCenterText("智慧酒店");
+        } else {
+            appBar.setCenterText("地产行业");
         }
+        roomBeans = new ArrayList<>();
+        for (int x = 0; x < 1; x++) {
+            roomBeans.add("施工中");
+        }
+
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdjustMode(false);
         ProjectListTabAdapter adapter = new ProjectListTabAdapter(roomBeans, viewPager, magic_inditator);
@@ -112,13 +104,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @Override
     protected void initListener() {
-       LinearLayout tv_title_change = appBar.getTitleLayoutView();
-        tv_title_change.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initMenu(v);
-            }
-        });
         mAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public int getItemPosition(@NonNull Object object) {
@@ -128,7 +113,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             @NonNull
             @Override
             public ProjectListFragment getItem(int position) {
-                return new ProjectListFragment("0");
+                return new ProjectListFragment(appBar);
             }
 
             @Override
@@ -155,31 +140,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         startActivityForResult(new Intent(this, CreateProjectActivity.class), REQUEST_CODE_CREATE_PROJECT);
     }
 
-
-    private void initMenu(View view) {
-        mMenu = new UserMenu(this);
-        mMenu.addItem("智慧酒店", USER_SEARCH);
-        mMenu.addItem("地产行业", USER_ADD);
-        mMenu.setOnItemSelectedListener(new PopMenu.OnItemSelectedListener() {
-            @Override
-            public void selected(View view, PopMenu.Item item, int position) {
-                switch (item.id) {
-                    case USER_SEARCH:
-
-                        ToastUtils.showShort("rwerqwerewq");
-                        break;
-                    case USER_ADD:
-
-                        ToastUtils.showShort("rwerqwerew呃呃我惹我去q");
-
-                        break;
-                }
-
-            }
-        });
-        mMenu.showAsDropDown(view);
-
-    }
 
     @Override
     public void onBackPressed() {

@@ -3,58 +3,54 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListAdapter;
-import com.ayla.hotelsaas.adapter.ProjectListTabAdapter;
 import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
-import com.ayla.hotelsaas.bean.TreeListBean;
-import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-import com.ayla.hotelsaas.events.RegionChangeEvent;
 import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
+import com.ayla.hotelsaas.popmenu.PopMenu;
+import com.ayla.hotelsaas.popmenu.UserMenu;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.AppBar;
+import com.ayla.hotelsaas.widget.Programe_change_AppBar;
 import com.blankj.utilcode.util.SizeUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
 
-import net.lucode.hackware.magicindicator.MagicIndicator;
-import net.lucode.hackware.magicindicator.ViewPagerHelper;
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * 我的项目页面
  */
 public class ProjectListFragment extends BaseMvpFragment<ProjectListView, ProjectListPresenter> implements ProjectListView {
     private final int REQUEST_CODE_CREATE_PROJECT = 0x10;
+    private Programe_change_AppBar appBar;
+    private static final int USER_SEARCH = 0;
+    private static final int USER_ADD = 1;
+    private UserMenu mMenu;
+
 
     @BindView(R.id.SmartRefreshLayout)
     SmartRefreshLayout mSmartRefreshLayout;
@@ -64,15 +60,49 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
 
     private ProjectListAdapter mAdapter;
     private List<String> roomBeans;
+    private String saas_saft_img;
 
-    public ProjectListFragment(String s) {
-
+    public ProjectListFragment(Programe_change_AppBar appBar) {
+        this.appBar = appBar;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initMenu(v);
+            }
+        });
         EventBus.getDefault().register(this);
+    }
+
+
+    private void initMenu(View view) {
+        mMenu = new UserMenu(getContext());
+        mMenu.addItem("智慧酒店", USER_SEARCH);
+        mMenu.addItem("地产行业", USER_ADD);
+        mMenu.setOnItemSelectedListener(new PopMenu.OnItemSelectedListener() {
+            @Override
+            public void selected(View view, PopMenu.Item item, int position) {
+                switch (item.id) {
+                    case USER_SEARCH:
+                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
+                        mPresenter.refresh("1");
+                        appBar.setCenterText("智慧酒店");
+                        break;
+                    case USER_ADD:
+                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
+                        mPresenter.refresh("2");
+                        appBar.setCenterText("地产行业");
+
+                        break;
+                }
+
+            }
+        });
+        mMenu.showAsDropDown(view);
     }
 
     @Override
@@ -93,7 +123,8 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
 
     @Override
     protected void initView(View view) {
-        mPresenter.refresh();
+        saas_saft_img = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
+        mPresenter.refresh(saas_saft_img);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -117,12 +148,14 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         mSmartRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                mPresenter.loadData();
+                saas_saft_img = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
+                mPresenter.loadData(saas_saft_img);
             }
 
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                mPresenter.refresh();
+                saas_saft_img = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
+                mPresenter.refresh(saas_saft_img);
             }
         });
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -168,7 +201,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                 @Override
                 public void onClick(View v) {
                     mAdapter.setEmptyView(R.layout.layout_loading);
-                    mPresenter.refresh();
+                    mPresenter.refresh(saas_saft_img);
                 }
             });
         } else {
@@ -189,10 +222,9 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     }
 
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void RenameSuccess(RoomChangedEvent event) {
-        mPresenter.refresh();
+        mPresenter.refresh(saas_saft_img);
     }
 
 }

@@ -94,7 +94,7 @@ public interface ApiService {
     Observable<BaseResult<DeviceCategoryDetailBean>> fetchDeviceCategoryDetail(@Path("pid") String pid);
 
     @GET("api/v1/build/constructbill")
-    Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
+    Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("tradeId") String tradeId);
 
     /**
      * 创建项目单

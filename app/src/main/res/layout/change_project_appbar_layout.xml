@@ -48,12 +48,14 @@
             android:layout_height="match_parent"
             android:layout_toStartOf="@id/right_ll"
             android:layout_toEndOf="@id/left_ll"
+            android:orientation="horizontal"
             android:gravity="center">
 
             <LinearLayout
                 android:id="@+id/page_change"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:orientation="horizontal"
                 android:gravity="center">
 
                 <TextView
