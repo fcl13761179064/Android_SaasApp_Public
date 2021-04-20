@@ -11,6 +11,7 @@ import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.ProcessUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.export.external.TbsCoreSettings;
@@ -70,6 +71,14 @@ public class MyApplication extends AApplication {
             initX5();
             IoTSmart.init(this, new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
         }
+
+        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
+        if ("1".equalsIgnoreCase(title_type)) {
+            IoTSmart.setAuthCode("saasproduction");
+        } else {
+            IoTSmart.setAuthCode("miyaproduction");
+        }
+
     }
 
     private void initBugly() {

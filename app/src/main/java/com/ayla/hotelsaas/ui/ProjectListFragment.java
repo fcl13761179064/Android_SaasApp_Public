@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -91,12 +92,13 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                         SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
                         mPresenter.refresh("1");
                         appBar.setCenterText("智慧酒店");
+                        restartApp(getContext());
                         break;
                     case USER_ADD:
                         SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
                         mPresenter.refresh("2");
                         appBar.setCenterText("地产行业");
-
+                        restartApp(getContext());
                         break;
                 }
 
@@ -104,6 +106,17 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         });
         mMenu.showAsDropDown(view);
     }
+
+    /**
+     * 重启应用
+     * @param context
+     */
+    public static void restartApp(Context context){
+        final Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.ayla.hotelsaas");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
+
 
     @Override
     public void onDestroy() {

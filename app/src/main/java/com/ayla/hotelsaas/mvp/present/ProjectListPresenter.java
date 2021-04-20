@@ -14,7 +14,7 @@ public class ProjectListPresenter extends BasePresenter<ProjectListView> {
     private int currentPage = 1;
 
     public void loadData(String tradeId) {
-        Disposable subscribe = RequestModel.getInstance().getWorkOrderList(currentPage, 2,tradeId)
+        Disposable subscribe = RequestModel.getInstance().getWorkOrderList(currentPage, 50,tradeId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<WorkOrderBean>() {

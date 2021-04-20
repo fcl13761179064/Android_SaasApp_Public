@@ -31,7 +31,7 @@ public class Constance {
 
     public static String sProdUrl = "https://abp-prod.ayla.com.cn";//正式环境
     public static String sQaUrl = "https://abp-test.ayla.com.cn";//测试环境
-    public static String sDevUrl = "http://106.14.31.32:8099";//DEV环境
+    public static String sDevUrl = "http://106.14.31.32:80";//DEV环境
 
     public static String getBaseUrl() {
         String url;

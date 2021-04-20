@@ -96,7 +96,6 @@ public class RetrofitHelper {
         public Response intercept(Chain chain) throws IOException {
             Request.Builder requestBuilder = chain.request().newBuilder();
             requestBuilder.header("serviceId", "3");
-            requestBuilder.header("userid", "1298510272788484174");
             if (MyApplication.getInstance() != null) {
                 final String save_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
                 if (save_token != null) {
