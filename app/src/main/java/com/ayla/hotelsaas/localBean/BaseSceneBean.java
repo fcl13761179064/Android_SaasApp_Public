@@ -178,22 +178,22 @@ public abstract class BaseSceneBean implements Serializable {
         private String sourceDeviceId;
         private int sourceDeviceType;//0:艾拉 1：阿里
 
-        private int bit;
-        private int compareValue;
+        private Integer bit;
+        private Integer compareValue;
 
-        public int getBit() {
+        public Integer getBit() {
             return bit;
         }
 
-        public void setBit(int bit) {
+        public void setBit(Integer bit) {
             this.bit = bit;
         }
 
-        public int getCompareValue() {
+        public Integer getCompareValue() {
             return compareValue;
         }
 
-        public void setCompareValue(int compareValue) {
+        public void setCompareValue(Integer compareValue) {
             this.compareValue = compareValue;
         }
 

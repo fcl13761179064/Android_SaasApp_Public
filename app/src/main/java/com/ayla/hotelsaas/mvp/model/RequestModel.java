@@ -988,9 +988,10 @@ public class RequestModel {
      * 获取所有设备位置，全屋还是 卧室
      *
      * @return
+     * @param room_id
      */
-    public Observable<List<DeviceLocationBean>> getAllDeviceLocation() {
-        return getApiService().getAllDeviceLocation()
+    public Observable<List<DeviceLocationBean>> getAllDeviceLocation(Long room_id) {
+        return getApiService().getAllDeviceLocation(room_id)
                 .compose(new BaseResultTransformer<BaseResult<List<DeviceLocationBean>>,List<DeviceLocationBean>>() {
                 });
     }

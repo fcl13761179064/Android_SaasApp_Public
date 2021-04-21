@@ -30,7 +30,7 @@ public class Constance {
 
     public static String sProdUrl = "https://abp-prod.ayla.com.cn";//正式环境
     public static String sQaUrl = "https://abp-test.ayla.com.cn";//测试环境
-    public static String sDevUrl = "http://106.15.231.103";//DEV环境
+    public static String sDevUrl = "http://106.14.31.32";//DEV环境
 
     public static String getBaseUrl() {
         String url;
@@ -92,6 +92,9 @@ public class Constance {
 
     //refresh token
     public static String SP_Refresh_Token = "refresh_token";
+
+    //登录保存key
+    public static String SP_ROOM_ID = "room_id";
 
     public static void saveVersionUpgradeInfo(VersionUpgradeBean versionUpgradeBean) {
         if (versionUpgradeBean != null) {
