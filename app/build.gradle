@@ -19,7 +19,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode Integer.parseInt(new Date().format("yyyyMMdd"))
-        versionName "1.11.2"
+        versionName "2.4.21"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
