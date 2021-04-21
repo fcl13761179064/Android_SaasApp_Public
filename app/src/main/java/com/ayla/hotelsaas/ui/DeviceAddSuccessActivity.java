@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -16,6 +17,7 @@ import com.ayla.hotelsaas.databinding.ActivityDeviceAddSuccessBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceAddSuccessPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.ItemPickerDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
@@ -31,6 +33,7 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
     private int defIndex = -1;
     private String LocationName = "";
     private long regionId=-1l;
+    private long roomId;
 
     @Override
     protected DeviceAddSuccessPresenter initPresenter() {
@@ -53,6 +56,7 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
     @Override
     protected void initView() {
         device = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("device");
+        roomId = SharePreferenceUtils.getLong(this, Constance.SP_ROOM_ID, 0);
         binding.etInput.setText(device.getNickname());
         binding.tvLocationPoint.setText(device.getRegionName());
         binding.tvLocationName.setText(device.getPointName());
@@ -60,7 +64,7 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
 
     @Override
     protected void initListener() {
-        mPresenter.getAllDeviceLocation();
+        mPresenter.getAllDeviceLocation(roomId);
         deviceListBean = new ArrayList<>();
         binding.tvLocationPoint.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
-import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.PointAndRegionView;
@@ -93,9 +92,9 @@ public class PointAndRegionPresenter extends BasePresenter<PointAndRegionView> {
      *
      * @param
      */
-    public void getAllDeviceLocation() {
+    public void getAllDeviceLocation(Long room_id) {
         Disposable subscribe = RequestModel.getInstance()
-                .getAllDeviceLocation()
+                .getAllDeviceLocation(room_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

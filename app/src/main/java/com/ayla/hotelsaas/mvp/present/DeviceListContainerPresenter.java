@@ -4,19 +4,14 @@ package com.ayla.hotelsaas.mvp.present;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
-import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
 
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -53,10 +48,11 @@ public class DeviceListContainerPresenter extends BasePresenter<DeviceListContai
      * 加载区域位置
      *
      * @param
+     * @param room_id
      */
-    public void getAllDeviceLocation() {
+    public void getAllDeviceLocation(Long room_id) {
         Disposable subscribe = RequestModel.getInstance()
-                .getAllDeviceLocation()
+                .getAllDeviceLocation(room_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<DeviceLocationBean>>() {
