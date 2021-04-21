@@ -148,12 +148,12 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
             @NonNull
             @Override
             public DeviceListFragmentNew getItem(int position) {
-                return new DeviceListFragmentNew(room_id,  LocationBeans.get(position).getRegionId(),position);
+                return new DeviceListFragmentNew(room_id, deviceListBean.getDevices(), LocationBeans.get(position).getRegionId(),position);
             }
 
             @Override
             public int getCount() {
-                return deviceListBean == null ? 0 : LocationBeans.size();
+                return  LocationBeans.size();
             }
 
             @Nullable
@@ -196,6 +196,10 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     @Override
     public void loadDeviceLocationSuccess(List<DeviceLocationBean> data) {
         LocationBeans = data;
+        DeviceLocationBean deviceLocationBean = new DeviceLocationBean();
+        deviceLocationBean.setRegionName("全部");
+        deviceLocationBean.setRegionId(-1l);
+        LocationBeans.add(0, deviceLocationBean);
         deviceListContainerBinding.viewPager.setAdapter(mAdapter);
         binding.loadingViewStub.setVisibility(View.GONE);
         CommonNavigator commonNavigator = new CommonNavigator(getActivity());

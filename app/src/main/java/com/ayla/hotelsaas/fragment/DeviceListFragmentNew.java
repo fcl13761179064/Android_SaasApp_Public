@@ -38,6 +38,7 @@ import java.util.List;
 public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, DeviceListPresenter> implements DeviceListView {
 
     private final long regionId;
+    private  List<DeviceListBean.DevicesBean> devices;
     private int position;
     FragmentDeviceListNewBinding binding;
 
@@ -47,10 +48,11 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     private long room_id;
 
-    public DeviceListFragmentNew(long room_id, long regionId, int position) {
+    public DeviceListFragmentNew(long room_id, List<DeviceListBean.DevicesBean> deviceListBean, long regionId, int position) {
         this.room_id = room_id;
         this.regionId = regionId;
         this.position = position;
+        this.devices = deviceListBean;
     }
 
     @Override
@@ -130,7 +132,16 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     @Override
     protected void initData() {
-        mPresenter.loadData(room_id, regionId);
+        if (devices != null && position ==0) {
+            List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
+            for (DeviceListBean.DevicesBean devicesBean : devices) {
+                DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
+                deviceItems.add(deviceItem);
+            }
+            mAdapter.setNewData(deviceItems);
+        }else {
+            mPresenter.loadData(room_id,regionId);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

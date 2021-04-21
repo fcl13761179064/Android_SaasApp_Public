@@ -6,6 +6,7 @@ public class DeviceLocationBean {
     private long regionId;
     private String regionName;
 
+
     public long getRegionId() {
         return regionId;
     }
