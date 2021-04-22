@@ -70,15 +70,8 @@ public class MyApplication extends AApplication {
             initBugly();
             initX5();
             IoTSmart.init(this, new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
-        }
-
-        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
-        if ("1".equalsIgnoreCase(title_type)) {
             IoTSmart.setAuthCode("saasproduction");
-        } else {
-            IoTSmart.setAuthCode("miyaproduction");
         }
-
     }
 
     private void initBugly() {

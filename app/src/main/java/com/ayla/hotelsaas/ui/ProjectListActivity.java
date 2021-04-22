@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListTabAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -22,7 +24,6 @@ import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 import java.util.ArrayList;
 import java.util.List;
-import static com.ayla.hotelsaas.ui.MainActivity.RESULT_CODE_RENAMED;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -81,9 +82,12 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
             appBar.setCenterText("智慧酒店");
+            IoTSmart.setAuthCode("saasproduction");
         } else {
             appBar.setCenterText("地产行业");
+            IoTSmart.setAuthCode("miyaproduction");
         }
+
         roomBeans = new ArrayList<>();
         for (int x = 0; x < 1; x++) {
             roomBeans.add("施工中");
