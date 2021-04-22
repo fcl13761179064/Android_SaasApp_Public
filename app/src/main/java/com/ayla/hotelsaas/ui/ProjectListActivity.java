@@ -82,10 +82,10 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
             appBar.setCenterText("智慧酒店");
-            IoTSmart.setAuthCode("saas_production");
+            IoTSmart.setAuthCode("saasproduction");
         } else {
             appBar.setCenterText("地产行业");
-            IoTSmart.setAuthCode("miya_production");
+            IoTSmart.setAuthCode("miyaproduction");
         }
 
         roomBeans = new ArrayList<>();
