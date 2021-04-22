@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.popmenu.PopMenu;
+import com.ayla.hotelsaas.popmenu.PopupWindowUtil;
 import com.ayla.hotelsaas.popmenu.UserMenu;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
@@ -37,6 +39,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -73,7 +76,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initMenu(v);
+                menuClick(v);
             }
         });
         EventBus.getDefault().register(this);
@@ -105,6 +108,37 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
             }
         });
         mMenu.showAsDropDown(view);
+    }
+
+    //菜单按钮onClick事件
+    public void menuClick(View view) {
+        final List<String> items = new ArrayList<>();
+        items.add("智慧酒店");
+        items.add("地产行业");
+        final PopupWindowUtil popupWindow = new PopupWindowUtil(getActivity(), items);
+        popupWindow.setItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                popupWindow.dismiss();
+                switch ((int) id) {
+                    case USER_SEARCH:
+                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
+                        mPresenter.refresh("1");
+                        appBar.setCenterText("智慧酒店");
+                        restartApp(getContext());
+                        break;
+                    case USER_ADD:
+                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
+                        mPresenter.refresh("2");
+                        appBar.setCenterText("地产行业");
+                        restartApp(getContext());
+                        break;
+                }
+
+            }
+        });
+        //根据后面的数字 手动调节窗口的宽度
+        popupWindow.show(view, 2);
     }
 
     /**
