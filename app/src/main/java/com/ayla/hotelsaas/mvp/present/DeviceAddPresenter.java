@@ -10,6 +10,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.data.net.SelfMsgException;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceAddView;
+import com.blankj.utilcode.util.LogUtils;
 import com.sunseaiot.larkairkiss.LarkConfigCallback;
 import com.sunseaiot.larkairkiss.LarkConfigDefines;
 import com.sunseaiot.larkairkiss.LarkSmartConfigManager;
@@ -357,9 +358,11 @@ public class DeviceAddPresenter extends BasePresenter<DeviceAddView> {
                                     @Override
                                     public void onSuccess(String subIotId, String subProductKey, String subDeviceName) {
                                         emitter.onNext(new String[]{subIotId, subProductKey, subDeviceName});
+                                        LogUtils.d("222222",authCode);
                                         emitter.onComplete();
                                     }
                                 });
+                                LogUtils.d("222222",authCode);
                                 nodeHelper[0].startBind(authCode, dsn, deviceCategory, 60);
                             }
                         });

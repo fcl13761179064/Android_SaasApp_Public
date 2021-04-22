@@ -48,6 +48,10 @@ public interface ApiService {
     @GET("api/v2/sso/{resourceId}")
     Observable<BaseResult<String>> authCode(@Path("resourceId") String scopeId);
 
+    @GET("api/v2/sso/2/{resourceId}")
+    Observable<BaseResult<String>> authCodetwo(@Path("resourceId") String scopeId);
+
+
     @GET("api/v1/build/hotelcontent/approom")
     Observable<BaseResult<RoomManageBean>> getcreateRoom(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
 
