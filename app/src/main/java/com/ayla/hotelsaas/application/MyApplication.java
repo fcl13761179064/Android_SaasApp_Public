@@ -70,7 +70,7 @@ public class MyApplication extends AApplication {
             initBugly();
             initX5();
             IoTSmart.init(this, new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
-            IoTSmart.setAuthCode("saasproduction");
+            IoTSmart.setAuthCode("saas_production");
         }
     }
 
