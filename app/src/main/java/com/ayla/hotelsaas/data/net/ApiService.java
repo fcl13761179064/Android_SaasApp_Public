@@ -309,7 +309,7 @@ public interface ApiService {
     @POST("/api/v1/build/scene/getRuleListByUniqListFunction")
     Observable<BaseResult<List<RuleEngineBean>>> getRuleListByUniqListFunction(@Body RequestBody body);
 
-    @GET("/api/v1/build/billrooms/region")
-    Observable<BaseResult<List<DeviceLocationBean>>> getAllDeviceLocation();
+    @GET("/api/v1/build/billrooms/region/{roomId}")
+    Observable<BaseResult<List<DeviceLocationBean>>> getAllDeviceLocation(@Path("roomId") long roomId);
 
 }

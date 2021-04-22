@@ -49,9 +49,9 @@ public class DeviceAddSuccessPresenter extends BasePresenter<DeviceAddSuccessVie
      *
      * @param
      */
-    public void getAllDeviceLocation() {
+    public void getAllDeviceLocation(Long roomId) {
         Disposable subscribe = RequestModel.getInstance()
-                .getAllDeviceLocation()
+                .getAllDeviceLocation(roomId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<DeviceLocationBean>>() {
