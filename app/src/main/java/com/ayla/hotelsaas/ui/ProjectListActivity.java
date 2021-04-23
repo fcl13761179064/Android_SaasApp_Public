@@ -89,7 +89,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         for (int x = 0; x < 1; x++) {
             roomBeans.add("施工中");
         }
-
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdjustMode(false);
         ProjectListTabAdapter adapter = new ProjectListTabAdapter(roomBeans, viewPager, magic_inditator);
