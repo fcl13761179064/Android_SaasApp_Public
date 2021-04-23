@@ -74,10 +74,10 @@ public class A2GatewaySelectActivity extends BaseMvpActivity<ZigBeeAddSelectGate
                 if (TempUtils.isDeviceOnline(device)) {
                     addInfo.putInt("cuId", device.getCuId());
                     if (device.getCuId() == 0) {
-                        addInfo.putString("deviceCategory", nodeBean.getOemModel().get(0));
+                        addInfo.putString("deviceCategory", nodeBean.getOemModel().get("0"));
                         addInfo.putInt("networkType", 3);
                     } else {
-                        addInfo.putString("deviceCategory",nodeBean.getOemModel().get(1));
+                        addInfo.putString("deviceCategory",nodeBean.getOemModel().get("1"));
                         addInfo.putInt("networkType", 4);
                     }
                     Intent intent = new Intent().putExtra("deviceId", device.getDeviceId())
@@ -90,7 +90,7 @@ public class A2GatewaySelectActivity extends BaseMvpActivity<ZigBeeAddSelectGate
             }
         });
     }
-    
+
 
     @Override
     protected void initListener() {
