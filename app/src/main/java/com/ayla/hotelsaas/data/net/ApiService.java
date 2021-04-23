@@ -84,7 +84,7 @@ public interface ApiService {
     @DELETE("api/v1/build/hotelcontent/approom/{id}")
     Observable<BaseResult<String>> deleteRoomNum(@Path("id") long roomId);
 
-    @GET("/api/v1/build/spark/devicetypes")
+    @GET("/api/v3/build/spark/devicetypes/product/")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
     @POST("/api/v1/build/device/getDeviceActionOrCondition")
