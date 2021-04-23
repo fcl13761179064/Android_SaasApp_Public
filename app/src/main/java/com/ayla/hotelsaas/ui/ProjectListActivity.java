@@ -91,10 +91,10 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         }
         if ("1".equalsIgnoreCase(title_type)) {
             appBar.setCenterText("智慧酒店");
-            IoTSmart.setAuthCode("devsaas");
+            IoTSmart.setAuthCode("china_production");
         } else {
             appBar.setCenterText("地产行业");
-            IoTSmart.setAuthCode("devmiya");
+            IoTSmart.setAuthCode("dev_miya");
         }
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdjustMode(false);
