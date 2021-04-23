@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -93,7 +94,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                 switch (item.id) {
                     case USER_SEARCH:
                         SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
-                        mPresenter.refresh("2");
+                        mPresenter.refresh("1");
                         appBar.setCenterText("地产行业");
                         restartApp(getContext());
                         break;
@@ -142,9 +143,10 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
 
     /**
      * 重启应用
+     *
      * @param context
      */
-    public static void restartApp(Context context){
+    public static void restartApp(Context context) {
         final Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.ayla.hotelsaas");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
@@ -170,7 +172,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     @Override
     protected void initView(View view) {
         saas_saft_img = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
-        mPresenter.refresh("2");
+        setRefreshData();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -194,14 +196,12 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         mSmartRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                saas_saft_img = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
-                mPresenter.loadData("2");
+                setLoadData();
             }
 
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                saas_saft_img = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
-                mPresenter.refresh("2");
+                setRefreshData();
             }
         });
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -247,7 +247,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                 @Override
                 public void onClick(View v) {
                     mAdapter.setEmptyView(R.layout.layout_loading);
-                    mPresenter.refresh("2");
+                    setRefreshData();
                 }
             });
         } else {
@@ -261,6 +261,21 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         }
     }
 
+    public void setLoadData() {
+        if ("1".equalsIgnoreCase(saas_saft_img)) {
+            mPresenter.loadData("1");
+        } else {
+            mPresenter.loadData("2");
+        }
+    }
+
+    public void setRefreshData() {
+        if ("1".equalsIgnoreCase(saas_saft_img)) {
+            mPresenter.refresh("1");
+        } else {
+            mPresenter.refresh("2");
+        }
+    }
 
     @OnClick(R.id.bt_add)
     void handleAdd() {
@@ -270,7 +285,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void RenameSuccess(RoomChangedEvent event) {
-        mPresenter.refresh("2");
+        setRefreshData();
     }
 
 }

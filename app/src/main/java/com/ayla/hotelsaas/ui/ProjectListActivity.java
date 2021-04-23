@@ -89,6 +89,13 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         for (int x = 0; x < 1; x++) {
             roomBeans.add("施工中");
         }
+        if ("1".equalsIgnoreCase(title_type)) {
+            appBar.setCenterText("智慧酒店");
+            IoTSmart.setAuthCode("devsaas");
+        } else {
+            appBar.setCenterText("地产行业");
+            IoTSmart.setAuthCode("devmiya");
+        }
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdjustMode(false);
         ProjectListTabAdapter adapter = new ProjectListTabAdapter(roomBeans, viewPager, magic_inditator);
