@@ -33,6 +33,7 @@ proguard/
 captures/
 
 # IntelliJ (IDE配置文件)
+*.iml
 .idea
 
 
