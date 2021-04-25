@@ -116,7 +116,7 @@ public class DeviceCategoryHandler {
         if (subBeans.length == 1) {
             DeviceCategoryBean.SubBean.NodeBean nodeBean = subBeans[0];
             boolean is_has_A2 = loadGateway(aylaGateways);
-            if (is_has_A2) {
+            if (is_has_A2 && nodeBean.getOemModel().size()>1) {
                 Bundle addInfo = generateA2AddInfoBundle(nodeBean);
                 Intent mainActivity = new Intent(fromContext, A2GatewaySelectActivity.class);
                 mainActivity.putExtra("addInfo", addInfo);
