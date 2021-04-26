@@ -182,7 +182,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(actionItem.getTargetDeviceId());
                             if (devicesBean != null) {
                                 for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
-                                    if (TextUtils.equals(devicesBean.getPid(), deviceTemplateBean.getDeviceCategory())) {//找出了设备和物模型
+                                    if (TextUtils.equals(devicesBean.getPid(), deviceTemplateBean.getPid())) {//找出了设备和物模型
                                         for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
                                             if (TextUtils.equals(attribute.getCode(), actionItem.getLeftValue())) {
                                                 actionItem.setFunctionName(attribute.getDisplayName());
@@ -209,7 +209,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(conditionItem.getSourceDeviceId());
                             if (devicesBean != null) {
                                 for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
-                                    if (TextUtils.equals(devicesBean.getPid(), deviceTemplateBean.getDeviceCategory())) {//找出了设备和物模型
+                                    if (TextUtils.equals(devicesBean.getPid(), deviceTemplateBean.getPid())) {//找出了设备和物模型
                                         for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
                                             if (TextUtils.equals(attribute.getCode(), conditionItem.getLeftValue())) {
                                                 conditionItem.setFunctionName(attribute.getDisplayName());

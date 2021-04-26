@@ -27,7 +27,7 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * 添加、替换 设备的 操作业务处理
- * 实现者必须在{@link Activity#onActivityResult(int, int, Intent)} 中调用本类的{@link #onActivityResult(int, int, Intent)}
+ * 实现者必须在{@link Activity#(int, int, Intent)} 中调用本类的{@link #onActivityResult(int, int, Intent)}
  */
 public class DeviceCategoryHandler {
     private final int REQUEST_CODE_ADD_DEVICE = 0X1071;
@@ -316,7 +316,7 @@ public class DeviceCategoryHandler {
     }
 
     /**
-     * 必须在实现者的{@link Activity#onActivityResult(int, int, Intent)} 中调用
+     * 必须在实现者的{@link Activity#(int, int, Intent)} 中调用
      *
      * @param requestCode
      * @param resultCode
