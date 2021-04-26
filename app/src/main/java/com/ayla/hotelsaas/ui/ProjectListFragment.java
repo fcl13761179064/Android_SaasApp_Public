@@ -97,13 +97,11 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                     case USER_SEARCH:
                         SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
                         mPresenter.refresh("1");
-                        IoTSmart.setAuthCode("china_production");
                         restartApp(getContext());
                         break;
                     case USER_ADD:
                         SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
                         mPresenter.refresh("2");
-                        IoTSmart.setAuthCode("dev_miya");
                         restartApp(getContext());
                         break;
                 }

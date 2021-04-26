@@ -94,7 +94,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             IoTSmart.setAuthCode("china_production");
         } else {
             appBar.setCenterText("地产行业");
-            IoTSmart.setAuthCode("dev_miya");
+            IoTSmart.setAuthCode("miya");
         }
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdjustMode(false);
