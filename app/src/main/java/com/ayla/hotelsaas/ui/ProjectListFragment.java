@@ -83,33 +83,6 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         EventBus.getDefault().register(this);
     }
 
-
-    private void initMenu(View view) {
-        mMenu = new UserMenu(getContext());
-        mMenu.addItem("地产行业", USER_SEARCH);
-        mMenu.addItem("地产行业", USER_ADD);
-        mMenu.setOnItemSelectedListener(new PopMenu.OnItemSelectedListener() {
-            @Override
-            public void selected(View view, PopMenu.Item item, int position) {
-                switch (item.id) {
-                    case USER_SEARCH:
-                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
-                        mPresenter.refresh("1");
-                        appBar.setCenterText("地产行业");
-                        restartApp(getContext());
-                        break;
-                    case USER_ADD:
-                        mPresenter.refresh("2");
-                        appBar.setCenterText("地产行业");
-                        restartApp(getContext());
-                        break;
-                }
-
-            }
-        });
-        mMenu.showAsDropDown(view);
-    }
-
     //菜单按钮onClick事件
     public void menuClick(View view) {
         final List<String> items = new ArrayList<>();
@@ -124,13 +97,13 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                     case USER_SEARCH:
                         SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
                         mPresenter.refresh("1");
-                        appBar.setCenterText("智慧酒店");
+                        IoTSmart.setAuthCode("china_production");
                         restartApp(getContext());
                         break;
                     case USER_ADD:
                         SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
                         mPresenter.refresh("2");
-                        appBar.setCenterText("地产行业");
+                        IoTSmart.setAuthCode("dev_miya");
                         restartApp(getContext());
                         break;
                 }
@@ -196,11 +169,13 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         mSmartRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+
                 setLoadData();
             }
 
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+
                 setRefreshData();
             }
         });
@@ -262,6 +237,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     }
 
     public void setLoadData() {
+        saas_saft_img = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(saas_saft_img)) {
             mPresenter.loadData("1");
         } else {
@@ -270,6 +246,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     }
 
     public void setRefreshData() {
+        saas_saft_img = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(saas_saft_img)) {
             mPresenter.refresh("1");
         } else {
