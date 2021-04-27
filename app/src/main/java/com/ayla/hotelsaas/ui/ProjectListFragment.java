@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,8 @@ import com.ayla.hotelsaas.adapter.ProjectListAdapter;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.events.RefreshDataEvent;
 import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
@@ -35,6 +38,7 @@ import com.ayla.hotelsaas.widget.Programe_change_AppBar;
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
@@ -65,6 +69,8 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
 
     @BindView(R.id.RecyclerView)
     RecyclerView mRecyclerView;
+    @BindView(R.id.bt_add)
+    ImageButton bt_add;
 
     private ProjectListAdapter mAdapter;
     private List<String> roomBeans;
@@ -126,7 +132,6 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }*/
-
     public static void restartApp(Context context) {
         // 获取启动的intent
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
@@ -174,6 +179,12 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         mAdapter.setEmptyView(R.layout.layout_loading);
         mSmartRefreshLayout.setEnableLoadMore(false);
         mSmartRefreshLayout.setEnableRefresh(false);
+        String title_type = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
+        if ("1".equalsIgnoreCase(title_type)) {
+            bt_add.setVisibility(View.VISIBLE);
+        } else {
+            bt_add.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -269,6 +280,11 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     @OnClick(R.id.bt_add)
     void handleAdd() {
         startActivityForResult(new Intent(getContext(), CreateProjectActivity.class), REQUEST_CODE_CREATE_PROJECT);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshData(RefreshDataEvent event) {
+        setRefreshData();
     }
 
 

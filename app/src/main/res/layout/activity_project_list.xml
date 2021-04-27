@@ -32,16 +32,4 @@
 
         </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/bt_add"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="28dp"
-        android:layout_marginBottom="122dp"
-        android:background="@drawable/green_btn_bg_small_corner"
-        android:src="@mipmap/add_device_btn"
-        app:fabSize="mini"
-        app:maxImageSize="18dp" />
 </RelativeLayout>

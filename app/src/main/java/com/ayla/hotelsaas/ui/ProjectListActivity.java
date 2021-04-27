@@ -1,7 +1,9 @@
 package com.ayla.hotelsaas.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.Programe_change_AppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -36,11 +39,9 @@ import butterknife.OnClick;
  * 我的项目页面
  */
 public class ProjectListActivity extends BaseMvpActivity<ProjectListView, ProjectListPresenter> implements ProjectListView {
-    private final int REQUEST_CODE_CREATE_PROJECT = 0x10;
 
     @BindView(R.id.appBar)
     Programe_change_AppBar appBar;
-
     @Nullable
     @BindView(R.id.magic_inditator)
     MagicIndicator magic_inditator;
@@ -138,11 +139,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     protected void appBarLeftIvClicked() {
         startActivity(new Intent(this, PersonCenterActivity.class));
-    }
-
-    @OnClick(R.id.bt_add)
-    void handleAdd() {
-        startActivityForResult(new Intent(this, CreateProjectActivity.class), REQUEST_CODE_CREATE_PROJECT);
     }
 
 
