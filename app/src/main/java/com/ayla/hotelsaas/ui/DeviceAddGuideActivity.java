@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddGuidePresenter;
@@ -125,13 +126,13 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
         } else {
             shakeButton();
         }
-
-      /*  String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
+        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
+       String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
-            IoTSmart.setAuthCode("china_production");
+            IoTSmart.setAuthCode("dev_saas");
         } else {
-            IoTSmart.setAuthCode("dev_miya");
-        }*/
+            IoTSmart.setAuthCode("china_production");
+        }
     }
 
     private void shakeButton() {
