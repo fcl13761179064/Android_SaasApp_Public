@@ -118,6 +118,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
      * @param context
      */
     public static void restartApp(Context context) {
+
         final Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.ayla.hotelsaas");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);

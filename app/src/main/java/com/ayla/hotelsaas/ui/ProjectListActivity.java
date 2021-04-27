@@ -74,6 +74,15 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else {
             imageView.setImageResource(R.drawable.person_center);
         }
+
+        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
+        /*if ("1".equalsIgnoreCase(title_type)) {
+            appBar.setCenterText("智慧酒店");
+            IoTSmart.setAuthCode("china_production");
+        } else {
+            appBar.setCenterText("地产行业");
+            IoTSmart.setAuthCode("dev_miya");
+        }*/
     }
 
     @Override
@@ -83,18 +92,9 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @Override
     protected void initView() {
-        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
-        appBar.setCenterText("地产行业");
         roomBeans = new ArrayList<>();
         for (int x = 0; x < 1; x++) {
             roomBeans.add("施工中");
-        }
-        if ("1".equalsIgnoreCase(title_type)) {
-            appBar.setCenterText("智慧酒店");
-            IoTSmart.setAuthCode("china_production");
-        } else {
-            appBar.setCenterText("地产行业");
-            IoTSmart.setAuthCode("miya");
         }
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdjustMode(false);
@@ -104,6 +104,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         ViewPagerHelper.bind(magic_inditator, viewPager);
         viewPager.setCurrentItem(0, false);
     }
+
 
     @Override
     protected void initListener() {

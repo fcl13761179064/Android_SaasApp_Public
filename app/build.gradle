@@ -87,24 +87,26 @@ android {
 }
 
 
-task replaceAliPicture() {
-    String taskName = gradle.startParameter.taskNames[0]
-    if (taskName != null) {
-        if (taskName.contains("assembleProd")) {//使用正式图片
-            println("replaceAliPicture:当前替换阿里安全图片为pro")
-            copy {
-                from("${buildFile.parent}/ali_pic/pro/yw_1222_china_production.jpg")
-                into("${buildFile.parent}/src/main/res/drawable")
-            }
-        } else {//使用开发图片
-            println("replaceAliPicture:当前替换阿里安全图片为dev")
-            copy {
-                from("${buildFile.parent}/ali_pic/dev/yw_1222_china_production.jpg")
-                into("${buildFile.parent}/src/main/res/drawable")
+    /*task replaceAliPicture() {
+        String taskName = gradle.startParameter.taskNames[0]
+        if (taskName != null) {
+            if (taskName.contains("assembleProd")) {//使用正式图片
+                println("replaceAliPicture:当前替换阿里安全图片为pro")
+                copy {
+                    from("${buildFile.parent}/ali_pic/pro/yw_1222_china_production.jpg")
+                    into("${buildFile.parent}/src/main/res/drawable")
+                }
+            } else {//使用开发图片
+                println("replaceAliPicture:当前替换阿里安全图片为dev")
+                copy {
+                    from("${buildFile.parent}/ali_pic/dev/yw_1222_china_production.jpg")
+                    into("${buildFile.parent}/src/main/res/drawable")
+                }
             }
         }
-    }
-}
+    }*/
+
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation 'com.github.bumptech.glide:glide:4.9.0'
