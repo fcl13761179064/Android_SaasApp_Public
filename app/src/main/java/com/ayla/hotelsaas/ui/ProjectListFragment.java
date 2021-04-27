@@ -131,9 +131,9 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         // 获取启动的intent
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
         PendingIntent restartIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-        // 设置杀死应用后2秒重启
+        // 设置杀死应用后0.5秒重启
         AlarmManager mgr = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 500, restartIntent);
         // 重启应用
         android.os.Process.killProcess(android.os.Process.myPid());
     }
