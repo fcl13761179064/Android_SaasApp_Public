@@ -69,8 +69,6 @@ public class MyApplication extends AApplication {
         if (ProcessUtils.isMainProcess()) {
             initBugly();
             initX5();
-            IoTSmart.init(this, new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
-
         }
     }
 

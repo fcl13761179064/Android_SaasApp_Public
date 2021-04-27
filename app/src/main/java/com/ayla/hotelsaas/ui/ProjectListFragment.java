@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aliyun.iot.aep.sdk.IoTSmart;
+import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -117,13 +120,23 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
      *
      * @param context
      */
-    public static void restartApp(Context context) {
+   /* public static void restartApp(Context context) {
 
         final Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.ayla.hotelsaas");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
-    }
+    }*/
 
+    public static void restartApp(Context context) {
+        // 获取启动的intent
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        PendingIntent restartIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        // 设置杀死应用后2秒重启
+        AlarmManager mgr = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, restartIntent);
+        // 重启应用
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
 
     @Override
     public void onDestroy() {

@@ -75,7 +75,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else {
             imageView.setImageResource(R.drawable.person_center);
         }
-        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
         String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
             appBar.setCenterText("智慧酒店");
@@ -84,6 +83,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             appBar.setCenterText("地产行业");
             IoTSmart.setAuthCode("china_production");
         }
+        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
     }
 
     @Override

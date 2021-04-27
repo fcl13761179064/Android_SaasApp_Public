@@ -126,13 +126,13 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
         } else {
             shakeButton();
         }
-        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
             IoTSmart.setAuthCode("dev_saas");
         } else {
             IoTSmart.setAuthCode("china_production");
         }
+        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
     }
 
     private void shakeButton() {
