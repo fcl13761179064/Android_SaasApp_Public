@@ -6,50 +6,39 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.aliyun.iot.aep.sdk.IoTSmart;
-import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListAdapter;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.events.RefreshDataEvent;
 import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
-import com.ayla.hotelsaas.popmenu.PopMenu;
 import com.ayla.hotelsaas.popmenu.PopupWindowUtil;
 import com.ayla.hotelsaas.popmenu.UserMenu;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
-import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.Programe_change_AppBar;
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -102,16 +91,23 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 popupWindow.dismiss();
+                String title_type = SharePreferenceUtils.getString(getContext(), Constance.SP_SAAS, "1");
                 switch ((int) id) {
                     case USER_SEARCH:
-                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
+                        if ("1".equals(title_type)){
+                            return;
+                        }
                         mPresenter.refresh("1");
                         restartApp(getContext());
+                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
                         break;
                     case USER_ADD:
-                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
+                        if ("2".equals(title_type)){
+                            return;
+                        }
                         mPresenter.refresh("2");
                         restartApp(getContext());
+                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
                         break;
                 }
 
@@ -133,14 +129,25 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         context.startActivity(intent);
     }*/
     public static void restartApp(Context context) {
-        // 获取启动的intent
-        Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-        PendingIntent restartIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-        // 设置杀死应用后0.5秒重启
-        AlarmManager mgr = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 500, restartIntent);
-        // 重启应用
-        android.os.Process.killProcess(android.os.Process.myPid());
+        String title_type = SharePreferenceUtils.getString(context, Constance.SP_SAAS, "1");
+        if ("1".equalsIgnoreCase(title_type)) {
+            CustomToast.makeText(context, "切换到地产行业", R.drawable.ic_toast_warming);
+        } else {
+            CustomToast.makeText(context, "切换到智慧酒店", R.drawable.ic_toast_warming);
+        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // 获取启动的intent
+                Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+                PendingIntent restartIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+                // 设置杀死应用后2秒重启
+                AlarmManager mgr = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis(), restartIntent);
+                // 重启应用
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        }, 1000);
     }
 
     @Override
