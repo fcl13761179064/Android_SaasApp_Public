@@ -6,4 +6,7 @@ public final class DeviceRemovedEvent {
     public DeviceRemovedEvent(String deviceId) {
         this.deviceId = deviceId;
     }
+
+    public DeviceRemovedEvent() {
+    }
 }

@@ -19,6 +19,7 @@ import com.ayla.hotelsaas.adapter.ProjectListAdapter;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.events.RefreshDataEvent;
 import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
@@ -294,6 +295,10 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         setRefreshData();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void DeviceRemoved(DeviceRemovedEvent event) {
+        setRefreshData();
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void RenameSuccess(RoomChangedEvent event) {
