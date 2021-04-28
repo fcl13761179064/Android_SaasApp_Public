@@ -1,32 +1,37 @@
 package com.ayla.hotelsaas.ui;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
+import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.adapter.ProjectListAdapter;
+import com.ayla.hotelsaas.adapter.ProjectListTabAdapter;
 import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
-import com.ayla.hotelsaas.utils.TempUtils;
-import com.ayla.hotelsaas.widget.AppBar;
-import com.blankj.utilcode.util.SizeUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.scwang.smart.refresh.layout.SmartRefreshLayout;
-import com.scwang.smart.refresh.layout.api.RefreshLayout;
-import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
-import static com.ayla.hotelsaas.ui.MainActivity.RESULT_CODE_RENAMED;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
+import com.ayla.hotelsaas.widget.Programe_change_AppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import net.lucode.hackware.magicindicator.MagicIndicator;
+import net.lucode.hackware.magicindicator.ViewPagerHelper;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -34,18 +39,23 @@ import butterknife.OnClick;
  * 我的项目页面
  */
 public class ProjectListActivity extends BaseMvpActivity<ProjectListView, ProjectListPresenter> implements ProjectListView {
-    private final int REQUEST_CODE_CREATE_PROJECT = 0x10;
 
-    @BindView(R.id.SmartRefreshLayout)
-    SmartRefreshLayout mSmartRefreshLayout;
-
-    @BindView(R.id.RecyclerView)
-    RecyclerView mRecyclerView;
     @BindView(R.id.appBar)
-    AppBar appBar;
+    Programe_change_AppBar appBar;
+    @Nullable
+    @BindView(R.id.magic_inditator)
+    MagicIndicator magic_inditator;
+    @BindView(R.id.viewPager)
+    ViewPager viewPager;
 
+    private List<String> roomBeans;
+    private FragmentStatePagerAdapter mAdapter;
+    private WorkOrderBean data;
 
-    private ProjectListAdapter mAdapter;
+    @Override
+    protected ProjectListPresenter initPresenter() {
+        return new ProjectListPresenter();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +64,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             VersionUpgradeBean versionUpgradeBean = (VersionUpgradeBean) getIntent().getSerializableExtra("upgrade");
             Constance.saveVersionUpgradeInfo(versionUpgradeBean);
         }
-        mPresenter.refresh();
     }
 
     @Override
@@ -67,18 +76,15 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else {
             imageView.setImageResource(R.drawable.person_center);
         }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        mAdapter.setNewData(null);
-        mSmartRefreshLayout.autoRefresh();
-    }
-
-    @Override
-    protected ProjectListPresenter initPresenter() {
-        return new ProjectListPresenter();
+        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
+        if ("1".equalsIgnoreCase(title_type)) {
+            appBar.setCenterText("智慧酒店");
+            IoTSmart.setAuthCode("dev_saas");
+        } else {
+            appBar.setCenterText("地产行业");
+            IoTSmart.setAuthCode("china_production");
+        }
+        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
     }
 
     @Override
@@ -88,111 +94,66 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @Override
     protected void initView() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-                int size = SizeUtils.dp2px(10);
-                int position = parent.getChildAdapterPosition(view);
-
-                outRect.set(0, (position == 0) ? size : 0, 0, size);
-            }
-        });
-        mAdapter = new ProjectListAdapter(R.layout.item_project_list);
-        mAdapter.bindToRecyclerView(mRecyclerView);
-        mAdapter.setEmptyView(R.layout.layout_loading);
-        mSmartRefreshLayout.setEnableLoadMore(false);
-        mSmartRefreshLayout.setEnableRefresh(false);
+        roomBeans = new ArrayList<>();
+        for (int x = 0; x < 1; x++) {
+            roomBeans.add("施工中");
+        }
+        CommonNavigator commonNavigator = new CommonNavigator(this);
+        commonNavigator.setAdjustMode(false);
+        ProjectListTabAdapter adapter = new ProjectListTabAdapter(roomBeans, viewPager, magic_inditator);
+        commonNavigator.setAdapter(adapter);
+        magic_inditator.setNavigator(commonNavigator);
+        ViewPagerHelper.bind(magic_inditator, viewPager);
+        viewPager.setCurrentItem(0, false);
     }
+
 
     @Override
     protected void initListener() {
-        mSmartRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+        mAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                mPresenter.loadData();
+            public int getItemPosition(@NonNull Object object) {
+                return POSITION_NONE;
+            }
+
+            @NonNull
+            @Override
+            public ProjectListFragment getItem(int position) {
+                return new ProjectListFragment(appBar);
             }
 
             @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                mPresenter.refresh();
+            public int getCount() {
+                return roomBeans.size() == 0 ? 0 : roomBeans.size();
             }
-        });
-        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+
+            @Nullable
             @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                WorkOrderBean.ResultListBean item = mAdapter.getItem(position);
-                startActivityForResult(new Intent(getApplicationContext(), ProjectMainActivity.class).putExtra("bean", item),RESULT_CODE_RENAMED);
+            public CharSequence getPageTitle(int position) {
+                return roomBeans.get(position);
             }
-        });
+        };
+        viewPager.setAdapter(mAdapter);
     }
 
-    @Override
-    public void showData(WorkOrderBean data) {
-        mAdapter.setEmptyView(R.layout.empty_project_list);
-        mSmartRefreshLayout.setEnableRefresh(true);
-        mSmartRefreshLayout.setEnableLoadMore(true);
 
-        if (mSmartRefreshLayout.isRefreshing()) {
-            mSmartRefreshLayout.finishRefresh();
-            mAdapter.setNewData(data.getResultList());
-        } else if (mSmartRefreshLayout.isLoading()) {
-            mSmartRefreshLayout.finishLoadMore();
-            mAdapter.addData(data.getResultList());
-        } else {
-            mAdapter.setNewData(data.getResultList());
-        }
-
-        boolean lastPage = data.getCurrentPage() >= data.getTotalPages();
-        mSmartRefreshLayout.setNoMoreData(lastPage);
-    }
-
-    @Override
-    public void onRequestFailed(Throwable throwable) {
-        CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
-        if (mAdapter.getData().isEmpty()) {//如果是空的数据
-            mAdapter.setEmptyView(R.layout.widget_empty_view);
-            mAdapter.getEmptyView().findViewById(R.id.bt_refresh).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mAdapter.setEmptyView(R.layout.layout_loading);
-                    mPresenter.refresh();
-                }
-            });
-        } else {
-            mSmartRefreshLayout.setEnableRefresh(true);
-            mAdapter.setEmptyView(R.layout.empty_project_list);
-        }
-        if (mSmartRefreshLayout.isRefreshing()) {
-            mSmartRefreshLayout.finishRefresh(false);
-        } else if (mSmartRefreshLayout.isLoading()) {
-            mSmartRefreshLayout.finishLoadMore(false);
-        }
-    }
-
-    @Override
     protected void appBarLeftIvClicked() {
         startActivity(new Intent(this, PersonCenterActivity.class));
     }
 
-    @OnClick(R.id.bt_add)
-    void handleAdd() {
-        startActivityForResult(new Intent(this, CreateProjectActivity.class), REQUEST_CODE_CREATE_PROJECT);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_CREATE_PROJECT && resultCode == RESULT_OK) {
-            mSmartRefreshLayout.autoRefresh();
-        }else if (resultCode == RESULT_CODE_RENAMED) {
-            mPresenter.refresh();
-        }
-    }
 
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+    }
+
+    @Override
+    public void showData(WorkOrderBean data) {
+        this.data = data;
+    }
+
+    @Override
+    public void onRequestFailed(Throwable throwable) {
+
     }
 }

@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.ayla.hotelsaas.mvp.present.RoomMorePresenter;
 import com.ayla.hotelsaas.mvp.view.RoomMoreView;
@@ -149,7 +150,7 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
         CustomToast.makeText(this, "移除成功", R.drawable.ic_success);
         Intent mainActivity = new Intent(this, ProjectListActivity.class);
         startActivity(mainActivity);
-        setResult(RESULT_CODE_REMOVED);
+        EventBus.getDefault().post(new DeviceRemovedEvent());
         finish();
     }
 

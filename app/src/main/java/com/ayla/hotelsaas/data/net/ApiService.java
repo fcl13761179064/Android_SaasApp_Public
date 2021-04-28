@@ -48,6 +48,10 @@ public interface ApiService {
     @GET("api/v2/sso/{resourceId}")
     Observable<BaseResult<String>> authCode(@Path("resourceId") String scopeId);
 
+    @GET("api/v2/sso/2/{resourceId}")
+    Observable<BaseResult<String>> authCodetwo(@Path("resourceId") String scopeId);
+
+
     @GET("api/v1/build/hotelcontent/approom")
     Observable<BaseResult<RoomManageBean>> getcreateRoom(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
 
@@ -94,7 +98,7 @@ public interface ApiService {
     Observable<BaseResult<DeviceCategoryDetailBean>> fetchDeviceCategoryDetail(@Path("pid") String pid);
 
     @GET("api/v1/build/constructbill")
-    Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize);
+    Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("tradeId") String tradeId);
 
     /**
      * 创建项目单
