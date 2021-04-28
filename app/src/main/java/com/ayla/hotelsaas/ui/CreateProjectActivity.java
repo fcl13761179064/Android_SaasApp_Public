@@ -10,10 +10,14 @@ import androidx.fragment.app.DialogFragment;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.events.RefreshDataEvent;
 import com.ayla.hotelsaas.mvp.present.CreateProjectPresenter;
 import com.ayla.hotelsaas.mvp.view.CreateProjectView;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -137,7 +141,7 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
 
     @Override
     public void onSuccess() {
-        setResult(RESULT_OK);
+        EventBus.getDefault().post(new RefreshDataEvent());
         finish();
     }
 }
