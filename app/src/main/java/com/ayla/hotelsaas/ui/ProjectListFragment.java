@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,13 +8,16 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -35,11 +39,14 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -95,7 +102,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                 String title_type = SharePreferenceUtils.getString(getContext(), Constance.SP_SAAS, "1");
                 switch ((int) id) {
                     case USER_SEARCH:
-                        if ("1".equals(title_type)){
+                        if ("1".equals(title_type)) {
                             return;
                         }
                         mPresenter.refresh("1");
@@ -103,7 +110,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                         SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
                         break;
                     case USER_ADD:
-                        if ("2".equals(title_type)){
+                        if ("2".equals(title_type)) {
                             return;
                         }
                         mPresenter.refresh("2");
@@ -136,19 +143,25 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         } else {
             CustomToast.makeText(context, "切换到智慧酒店", R.drawable.ic_toast_warming);
         }
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // 获取启动的intent
                 Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-                PendingIntent restartIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-                // 设置杀死应用后2秒重启
-                AlarmManager mgr = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-                mgr.set(AlarmManager.RTC, System.currentTimeMillis(), restartIntent);
-                // 重启应用
-                android.os.Process.killProcess(android.os.Process.myPid());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(intent);
+                System.exit(0);
             }
-        }, 1000);
+        }, 500);// 1秒钟后重启应用
+
+       /* // 获取启动的intent
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        PendingIntent restartIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        // 设置杀死应用后2秒重启
+        AlarmManager mgr = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis()+2000, restartIntent);
+        android.os.Process.killProcess(android.os.Process.myPid());*/
+
     }
 
     @Override
