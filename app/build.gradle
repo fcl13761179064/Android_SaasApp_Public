@@ -86,8 +86,8 @@ android {
     }
 }
 
-
-/*task replaceAliPicture() {
+/*
+task replaceAliPicture() {
     String taskName = gradle.startParameter.taskNames[0]
     if (taskName != null) {
         if (taskName.contains("assembleProd")) {//使用正式图片

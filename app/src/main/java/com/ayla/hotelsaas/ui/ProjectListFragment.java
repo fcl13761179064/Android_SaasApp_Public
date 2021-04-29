@@ -152,7 +152,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                 context.startActivity(intent);
                 System.exit(0);
             }
-        }, 500);// 1秒钟后重启应用
+        }, 1000);// 1秒钟后重启应用
 
        /* // 获取启动的intent
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());

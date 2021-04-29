@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,6 +35,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static android.icu.text.UnicodeSet.from;
 
 /**
  * 我的项目页面
@@ -77,14 +80,25 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             imageView.setImageResource(R.drawable.person_center);
         }
         String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
-        if ("1".equalsIgnoreCase(title_type)) {
-            appBar.setCenterText("智慧酒店");
-            IoTSmart.setAuthCode("dev_saas");
-        } else {
-            appBar.setCenterText("地产行业");
-            IoTSmart.setAuthCode("china_production");
+        if (Constance.isNetworkDebug()) {//这个判断是dev，qa环境
+            if ("1".equalsIgnoreCase(title_type)) {
+                appBar.setCenterText("智慧酒店");
+                IoTSmart.setAuthCode("dev_saas");
+            } else {
+                appBar.setCenterText("地产行业");
+                IoTSmart.setAuthCode("dev_miya");
+            }
+            IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
+        } else {//这个是prod环境
+            if ("1".equalsIgnoreCase(title_type)) {
+                appBar.setCenterText("智慧酒店");
+                IoTSmart.setAuthCode("pord_saas");
+            } else {
+                appBar.setCenterText("地产行业");
+                IoTSmart.setAuthCode("china_production");
+            }
+            IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
         }
-        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
     }
 
     @Override
