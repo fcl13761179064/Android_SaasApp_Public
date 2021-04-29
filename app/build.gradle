@@ -86,7 +86,7 @@ android {
     }
 }
 
-
+/*
 task replaceAliPicture() {
     String taskName = gradle.startParameter.taskNames[0]
     if (taskName != null) {
@@ -112,7 +112,7 @@ task replaceAliPicture() {
             }
         }
     }
-}
+}*/
 
 
 dependencies {
