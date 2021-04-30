@@ -12,12 +12,16 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatCheckBox;
 
+import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddGuideView;
 import com.ayla.hotelsaas.utils.ImageLoader;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 
 import butterknife.BindView;
@@ -122,6 +126,22 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
         } else {
             shakeButton();
         }
+        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
+        if (Constance.isNetworkDebug()) {//这个判断是dev，qa环境
+            if ("1".equalsIgnoreCase(title_type)) {
+                IoTSmart.setAuthCode("dev_saas");
+            } else {
+                IoTSmart.setAuthCode("dev_miya");
+            }
+            IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
+        } else {//这个是prod环境
+            if ("1".equalsIgnoreCase(title_type)) {
+                IoTSmart.setAuthCode("pord_saas");
+            } else {
+                IoTSmart.setAuthCode("china_production");
+            }
+        }
+        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
     }
 
     private void shakeButton() {

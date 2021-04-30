@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.SPUtils;
  * @时间 2020/7/8
  */
 public class Constance {
+    public static final String SP_SAAS = "1";
     /**
      * 是否处于开发状态。
      */

@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.mvp.model;
 
 import android.text.TextUtils;
 
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
@@ -30,6 +31,7 @@ import com.ayla.hotelsaas.data.net.ApiService;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.data.net.ServerBadException;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -143,10 +145,11 @@ public class RequestModel {
      *
      * @param pageNum 页码 从1开始
      * @param maxNum  每页加载量
+     * @param tradeId
      * @return
      */
-    public Observable<WorkOrderBean> getWorkOrderList(int pageNum, int maxNum) {
-        return getApiService().getWorkOrders(pageNum, maxNum)
+    public Observable<WorkOrderBean> getWorkOrderList(int pageNum, int maxNum, String tradeId) {
+        return getApiService().getWorkOrders(pageNum, maxNum,tradeId)
                 .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
                 });
     }
@@ -203,8 +206,9 @@ public class RequestModel {
      * 获取authcode
      */
     public Observable<String> getAuthCode(String roomId) {
-        return getApiService().authCode(roomId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
-        });
+            return getApiService().authCodetwo(roomId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
+            });
+
     }
 
     /**
