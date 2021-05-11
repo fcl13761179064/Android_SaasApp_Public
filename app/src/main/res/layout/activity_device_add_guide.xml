@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:center_tv="添加设备"
+        app:right_iv="@mipmap/function_change_pic"
+        app:right_tv="AP 配网"
         app:left_iv="@mipmap/icon_back_black" />
 
     <ImageView
