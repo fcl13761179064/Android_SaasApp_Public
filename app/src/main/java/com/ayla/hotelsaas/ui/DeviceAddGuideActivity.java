@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -23,8 +24,11 @@ import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
+import com.ayla.hotelsaas.databinding.ActivityDeviceAddGuideBinding;
+import com.ayla.hotelsaas.databinding.ActivityDeviceAddSuccessBinding;
 import com.ayla.hotelsaas.mvp.present.DeviceAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddGuideView;
+import com.ayla.hotelsaas.popmenu.ApNetpopupWindowUtil;
 import com.ayla.hotelsaas.popmenu.PopupWindowUtil;
 import com.ayla.hotelsaas.utils.ImageLoader;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
@@ -54,8 +58,9 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
     AppCompatCheckBox checkBox;
     @BindView(R.id.bt)
     Button button;
-    @BindView(R.id.right_ll)
-    LinearLayout right_ll;
+    @BindView(R.id.appBar)
+    AppBar appBar;
+
     private static final int USER_SEARCH = 0;
     private static final int USER_ADD = 1;
     private Bundle addInfo;
@@ -73,6 +78,7 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
         return new DeviceAddGuidePresenter();
     }
 
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_device_add_guide;
@@ -84,7 +90,8 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
 
     @Override
     protected void initListener() {
-        right_ll.setOnClickListener(new View.OnClickListener() {
+        TextView viewById = appBar.findViewById(R.id.tv_right);
+        viewById.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 menuClick(v);
@@ -98,18 +105,14 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
     public void menuClick(View view) {
         final List<String> items = new ArrayList<>();
         items.add("网线配网");
-        items.add("AP配网");
-        final PopupWindowUtil popupWindow = new PopupWindowUtil(this ,items);
+        items.add("AP 配网");
+        final ApNetpopupWindowUtil popupWindow = new ApNetpopupWindowUtil(this ,items);
         popupWindow.setItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 popupWindow.dismiss();
-                String title_type = SharePreferenceUtils.getString(getContext(), Constance.SP_SAAS, "1");
                 switch ((int) id) {
                     case USER_SEARCH:
-                        if ("1".equals(title_type)) {
-                            return;
-                        }
 
                         break;
                     case USER_ADD:
@@ -119,8 +122,9 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
 
             }
         });
+        popupWindow.setOff(-30,0);
         //根据后面的数字 手动调节窗口的宽度
-        popupWindow.show(view, 2);
+        popupWindow.show(view, 300);
     }
 
     private void handleJump() {

@@ -117,7 +117,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
             }
         });
         //根据后面的数字 手动调节窗口的宽度
-        popupWindow.show(view, 2);
+        popupWindow.show(view, 350);
     }
 
     /**

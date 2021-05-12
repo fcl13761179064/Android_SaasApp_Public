@@ -16,7 +16,7 @@ import com.ayla.hotelsaas.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PopupWindowUtil {
+public class ApNetpopupWindowUtil {
 
     private ListView listView;
     private PopupWindow window;
@@ -25,7 +25,7 @@ public class PopupWindowUtil {
     //窗口在y轴的偏移量
     private int yOff = 0;
 
-    public PopupWindowUtil(Context context, List<String> datas) {
+    public ApNetpopupWindowUtil(Context context, List<String> datas) {
 
         window = new PopupWindow(context);
         //ViewGroup.LayoutParams.WRAP_CONTENT，自动包裹所有的内容
@@ -104,7 +104,7 @@ public class PopupWindowUtil {
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView tvItem;
             if (convertView == null) {
-                convertView = LayoutInflater.from(context).inflate(R.layout.lv_item_pw_menu, null);
+                convertView = LayoutInflater.from(context).inflate(R.layout.ap_net_lv_item_pw_menu, null);
                 tvItem = (TextView) convertView.findViewById(R.id.tv_item_pw_menu);
                 convertView.setTag(tvItem);
             } else {
