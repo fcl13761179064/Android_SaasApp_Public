@@ -34,7 +34,7 @@ public class AppBar extends FrameLayout {
     public TextView rightTextView;
     private TextView titleTextView;
     private LinearLayout leftLinearLayout;
-    private LinearLayout rightLinearLayout;
+    public LinearLayout rightLinearLayout;
     private View bottom_line;
 
     public AppBar(@NonNull Context context) {

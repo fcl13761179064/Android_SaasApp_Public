@@ -70,7 +70,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:gravity="end"
             android:orientation="horizontal">
 
             <TextView
@@ -92,8 +91,9 @@
                 android:layout_width="@dimen/appbar_height"
                 android:layout_height="@dimen/appbar_height"
                 android:paddingRight="16dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
+                android:paddingTop="14dp"
+                android:layout_gravity="center"
+                android:paddingBottom="14dp"
                 android:src="@mipmap/function_change_pic"
                 />
 
