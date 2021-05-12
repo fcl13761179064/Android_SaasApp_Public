@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.SPUtils;
  */
 public class Constance {
     public static final String SP_SAAS = "1";
+    public static final String AP_NET_SELECT = "1";
     /**
      * 是否处于开发状态。
      */

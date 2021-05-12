@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import java.util.List;
 
 public class ApNetpopupWindowUtil {
 
+    private String ap_choose;
     private ListView listView;
     private PopupWindow window;
     //窗口在x轴偏移量
@@ -25,7 +28,7 @@ public class ApNetpopupWindowUtil {
     //窗口在y轴的偏移量
     private int yOff = 0;
 
-    public ApNetpopupWindowUtil(Context context, List<String> datas) {
+    public ApNetpopupWindowUtil(Context context, List<String> datas, String ap_choose) {
 
         window = new PopupWindow(context);
         //ViewGroup.LayoutParams.WRAP_CONTENT，自动包裹所有的内容
@@ -41,6 +44,7 @@ public class ApNetpopupWindowUtil {
         listView.setTag(window);
         //设置显示的视图
         window.setContentView(localView);
+        this.ap_choose = ap_choose;
     }
 
     public void setItemClickListener(AdapterView.OnItemClickListener listener) {
@@ -102,15 +106,17 @@ public class ApNetpopupWindowUtil {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            TextView tvItem;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(context).inflate(R.layout.ap_net_lv_item_pw_menu, null);
-                tvItem = (TextView) convertView.findViewById(R.id.tv_item_pw_menu);
-                convertView.setTag(tvItem);
-            } else {
-                tvItem = (TextView) convertView.getTag();
-            }
+            convertView = LayoutInflater.from(context).inflate(R.layout.ap_net_lv_item_pw_menu, null);
+            TextView tvItem = (TextView) convertView.findViewById(R.id.tv_item_pw_menu);
+            ImageView iv_right_arrow = (ImageView) convertView.findViewById(R.id.iv_right_arrow);
+
+            String ap_position = position + 1 + "";
             tvItem.setText(getItem(position) + "");
+            if (ap_choose.equals(ap_position)) {
+                iv_right_arrow.setVisibility(View.VISIBLE);
+            } else {
+                iv_right_arrow.setVisibility(View.INVISIBLE);
+            }
             return convertView;
         }
     }

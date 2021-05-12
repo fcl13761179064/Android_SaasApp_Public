@@ -61,8 +61,8 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
     @BindView(R.id.appBar)
     AppBar appBar;
 
-    private static final int USER_SEARCH = 0;
-    private static final int USER_ADD = 1;
+    private static final int LiNE_NET= 0;
+    private static final int AP_NET = 1;
     private Bundle addInfo;
 
     @Override
@@ -106,17 +106,19 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
         final List<String> items = new ArrayList<>();
         items.add("网线配网");
         items.add("AP 配网");
-        final ApNetpopupWindowUtil popupWindow = new ApNetpopupWindowUtil(this ,items);
+        String ap_choose = SharePreferenceUtils.getString(getContext(), Constance.AP_NET_SELECT, "1");
+        final ApNetpopupWindowUtil popupWindow = new ApNetpopupWindowUtil(this ,items,ap_choose);
         popupWindow.setItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 popupWindow.dismiss();
                 switch ((int) id) {
-                    case USER_SEARCH:
+                    case LiNE_NET:
+                       SharePreferenceUtils.saveString(getContext(), Constance.AP_NET_SELECT, "1");
 
                         break;
-                    case USER_ADD:
-
+                    case AP_NET:
+                        SharePreferenceUtils.saveString(getContext(), Constance.AP_NET_SELECT, "2");
                         break;
                 }
 

@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="7dp"
         >
 
@@ -17,12 +17,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="8dp"
-            android:src="@mipmap/icon_right_select" />
+            android:visibility="invisible"
+            android:background="@mipmap/icon_right_select"
+          />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="15dp"
         android:layout_height="wrap_content">
 
         <TextView
