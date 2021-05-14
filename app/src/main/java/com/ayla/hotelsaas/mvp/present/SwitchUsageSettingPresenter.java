@@ -77,7 +77,7 @@ public class SwitchUsageSettingPresenter extends BasePresenter<SwitchUsageSettin
                                             String[] purposeId = new String[selfNames.length];
                                             for (int i = 0; i < purposeId.length; i++) {
                                                 for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                                    if (attribute.getCode().endsWith(":Onoff") && attribute.getCode().startsWith(String.valueOf(i + 1) + ":")) {
+                                                    if (attribute.getCode().endsWith(":Onoff") && attribute.getCode().startsWith(String.valueOf(i + 1) + ":") || (attribute.getCode().startsWith("PowerSwitch_")) && attribute.getCode().endsWith(String.valueOf(i + 1))) {
                                                         purposeId[i] = attribute.getCode();
                                                         break;
                                                     }

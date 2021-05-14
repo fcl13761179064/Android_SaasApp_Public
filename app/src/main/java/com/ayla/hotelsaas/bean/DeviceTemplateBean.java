@@ -15,10 +15,19 @@ public class DeviceTemplateBean {
 
     private String version;
     private String deviceCategory;
+    private String pid;
     private long deviceType;//    AYLA(0,"艾拉设备"),    ALI(1,"阿里设备");
     private long deviceNodeType;//    NODE(0,"节点设备"),    GATEWAY(1,"网关设备");
     private List<AttributesBean> attributes;
     private List<AttributesBean> extendAttributes;
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
 
     public String getVersion() {
         return version;
