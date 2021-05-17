@@ -151,8 +151,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                         public DeviceTemplateBean apply(@NonNull BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
                                             return deviceTemplateBeanBaseResult.data;
                                         }
-                                    })
-                                            .compose(RequestModel.getInstance().modifyTemplateDisplayName(enableDevice.getDeviceId())));
+                                    }).compose(RequestModel.getInstance().modifyTemplateDisplayName(enableDevice.getDeviceId())));
                                     break;
                                 }
                             }
@@ -181,7 +180,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             if (devicesBean != null) {
                                 for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
                                     for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                        if (TextUtils.equals(devicesBean.getPid(), deviceTemplateBean.getPid())) {//找出了设备和物模型
+                                        if (TextUtils.equals(devicesBean.getDeviceId(), deviceTemplateBean.getDeviceId())) {//找出了设备和物模型
                                             if (TextUtils.equals(attribute.getCode(), actionItem.getLeftValue())) {
                                                 actionItem.setFunctionName(attribute.getDisplayName());
 
@@ -208,7 +207,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             if (devicesBean != null) {
                                 for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
                                     for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                        if (TextUtils.equals(devicesBean.getPid(), deviceTemplateBean.getPid())) {//找出了设备和物模型
+                                        if (TextUtils.equals(devicesBean.getDeviceId(), deviceTemplateBean.getDeviceId())) {//找出了设备和物模型
                                             if (TextUtils.equals(attribute.getCode(), conditionItem.getLeftValue())) {
                                                 conditionItem.setFunctionName(attribute.getDisplayName());
 
