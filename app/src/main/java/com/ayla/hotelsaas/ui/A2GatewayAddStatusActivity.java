@@ -88,7 +88,7 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<DeviceAddGuideVi
 
 
     private void handleJump() {
-        Intent mainActivity = new Intent(this, ScanActivity.class);
+        Intent mainActivity = new Intent(this, ApDistributeActivity.class);
         startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_SCAN);
     }
 
