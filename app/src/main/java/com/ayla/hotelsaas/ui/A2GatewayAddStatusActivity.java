@@ -47,8 +47,8 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<DeviceAddGuideVi
 
     @BindView(R.id.iv)
     ImageView imageView;
-    @BindView(R.id.tv_content)
-    TextView textView;
+    @BindView(R.id.gataway_name)
+    TextView gataway_name;
     @BindView(R.id.bt)
     Button button;
     @BindView(R.id.appBar)
@@ -97,9 +97,7 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<DeviceAddGuideVi
         if (o != null) {
             String guidePic = o.getNetworkGuidePic();
             String guideDesc = o.getNetworkGuideDesc();
-
             ImageLoader.loadImg(imageView, guidePic, 0, 0);
-            textView.setText(guideDesc);
         }
     }
 
