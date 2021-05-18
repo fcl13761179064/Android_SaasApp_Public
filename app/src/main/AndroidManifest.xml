@@ -64,6 +64,12 @@
             android:name=".ui.GatewaySelectActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.A2GatewaySelectActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.FunctionRenameActivity"
             android:launchMode="singleTask"

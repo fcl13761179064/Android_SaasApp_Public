@@ -902,15 +902,13 @@ public class RequestModel {
             @NonNull
             @Override
             public ObservableSource<DeviceTemplateBean> apply(@NonNull Observable<DeviceTemplateBean> upstream) {
-                return upstream.zipWith(RequestModel.getInstance()
-                                .fetchPropertyNickname(devicesBean.getCuId(), deviceId),
-                        new BiFunction<DeviceTemplateBean, List<PropertyNicknameBean>, DeviceTemplateBean>() {
+                return upstream.zipWith(RequestModel.getInstance().fetchPropertyNickname(devicesBean.getCuId(), deviceId), new BiFunction<DeviceTemplateBean, List<PropertyNicknameBean>, DeviceTemplateBean>() {
                             @Override
                             public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<PropertyNicknameBean> propertyNicknameBeans) throws Exception {
                                 for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans.getAttributes()) {
+                                    attributesBeans.setDeviceId(deviceId);
                                     for (PropertyNicknameBean propertyNicknameBean : propertyNicknameBeans) {
-                                        if ("nickName".equals(propertyNicknameBean.getPropertyType()) &&
-                                                TextUtils.equals(attributesBean.getCode(), propertyNicknameBean.getPropertyName())) {
+                                        if ("nickName".equals(propertyNicknameBean.getPropertyType()) && TextUtils.equals(attributesBean.getCode(), propertyNicknameBean.getPropertyName())) {
                                             attributesBean.setDisplayName(propertyNicknameBean.getPropertyValue());
                                         }
                                         if ("Words".equals(propertyNicknameBean.getPropertyType())) {

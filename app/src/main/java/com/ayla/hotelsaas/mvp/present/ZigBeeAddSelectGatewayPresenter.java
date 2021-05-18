@@ -30,4 +30,25 @@ public class ZigBeeAddSelectGatewayPresenter extends BasePresenter<ZigBeeAddSele
         }
         mView.showGateways(gateways);
     }
+
+    /**
+     * 过滤出指定的网关
+     * @param sourceId  <0时 ，不区分网关所属云。
+     */
+    public void loadA2Gateway(int sourceId) {
+        List<DeviceListBean.DevicesBean> gateways = new ArrayList<>();
+        List<DeviceListBean.DevicesBean> devicesBean = MyApplication.getInstance().getDevicesBean();
+        if (devicesBean != null) {
+            for (DeviceListBean.DevicesBean device : devicesBean) {
+                if (TempUtils.isDeviceGateway(device)) {
+                    if (sourceId < 0) {
+                        gateways.add(device);
+                    } else if (device.getCuId() == sourceId || device.getPid().equalsIgnoreCase("ZBGW0-A000002")) {
+                        gateways.add(device);
+                    }
+                }
+            }
+        }
+        mView.showGateways(gateways);
+    }
 }
