@@ -906,9 +906,9 @@ public class RequestModel {
                             @Override
                             public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<PropertyNicknameBean> propertyNicknameBeans) throws Exception {
                                 for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans.getAttributes()) {
+                                    attributesBeans.setDeviceId(deviceId);
                                     for (PropertyNicknameBean propertyNicknameBean : propertyNicknameBeans) {
-                                        if ("nickName".equals(propertyNicknameBean.getPropertyType()) &&
-                                                TextUtils.equals(attributesBean.getCode(), propertyNicknameBean.getPropertyName())) {
+                                        if ("nickName".equals(propertyNicknameBean.getPropertyType()) && TextUtils.equals(attributesBean.getCode(), propertyNicknameBean.getPropertyName())) {
                                             attributesBean.setDisplayName(propertyNicknameBean.getPropertyValue());
                                         }
                                         if ("Words".equals(propertyNicknameBean.getPropertyType())) {

@@ -78,12 +78,7 @@ public class AppBar extends FrameLayout {
         bottom_line_visibility = ta.getBoolean(R.styleable.AppBar_appbar_bottom_line, true);
         right_tv_color = ta.getColor(R.styleable.AppBar_right_tv_color, ContextCompat.getColor(getContext(), R.color.color_333333));
         ta.recycle();
-        rightLinearLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ToastUtils.showShort("4343344334");
-            }
-        });
+
         adjustContent();
     }
 

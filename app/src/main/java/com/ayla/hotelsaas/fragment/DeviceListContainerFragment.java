@@ -148,6 +148,9 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
             @Override
             public int getCount() {
+                if (LocationBeans==null){
+                    return 0;
+                }else
                 return  LocationBeans.size();
             }
 

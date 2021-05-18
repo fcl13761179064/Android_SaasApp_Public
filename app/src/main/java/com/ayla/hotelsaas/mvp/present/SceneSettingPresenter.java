@@ -151,8 +151,7 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                         public DeviceTemplateBean apply(@NonNull BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
                                             return deviceTemplateBeanBaseResult.data;
                                         }
-                                    })
-                                            .compose(RequestModel.getInstance().modifyTemplateDisplayName(enableDevice.getDeviceId())));
+                                    }).compose(RequestModel.getInstance().modifyTemplateDisplayName(enableDevice.getDeviceId())));
                                     break;
                                 }
                             }
@@ -181,20 +180,22 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             if (devicesBean != null) {
                                 for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
                                     for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                        if (TextUtils.equals(attribute.getCode(), actionItem.getLeftValue())) {
-                                            actionItem.setFunctionName(attribute.getDisplayName());
+                                        if (TextUtils.equals(devicesBean.getDeviceId(), deviceTemplateBean.getDeviceId())) {//找出了设备和物模型
+                                            if (TextUtils.equals(attribute.getCode(), actionItem.getLeftValue())) {
+                                                actionItem.setFunctionName(attribute.getDisplayName());
 
-                                            List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
-                                            DeviceTemplateBean.AttributesBean.SetupBean setupBean = attribute.getSetup();
-                                            if (attributeValue != null) {
-                                                for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
-                                                    if (TextUtils.equals(valueBean.getValue(), actionItem.getRightValue())) {
-                                                        actionItem.setValueName(valueBean.getDisplayName());
+                                                List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
+                                                DeviceTemplateBean.AttributesBean.SetupBean setupBean = attribute.getSetup();
+                                                if (attributeValue != null) {
+                                                    for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
+                                                        if (TextUtils.equals(valueBean.getValue(), actionItem.getRightValue())) {
+                                                            actionItem.setValueName(valueBean.getDisplayName());
+                                                        }
                                                     }
+                                                } else if (setupBean != null) {
+                                                    String unit = setupBean.getUnit();
+                                                    actionItem.setValueName(String.format("%s%s", actionItem.getRightValue(), TextUtils.isEmpty(unit) ? "" : unit));
                                                 }
-                                            } else if (setupBean != null) {
-                                                String unit = setupBean.getUnit();
-                                                actionItem.setValueName(String.format("%s%s", actionItem.getRightValue(), TextUtils.isEmpty(unit) ? "" : unit));
                                             }
                                         }
                                     }
@@ -206,27 +207,29 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             if (devicesBean != null) {
                                 for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
                                     for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                        if (TextUtils.equals(attribute.getCode(), conditionItem.getLeftValue())) {
-                                            conditionItem.setFunctionName(attribute.getDisplayName());
+                                        if (TextUtils.equals(devicesBean.getDeviceId(), deviceTemplateBean.getDeviceId())) {//找出了设备和物模型
+                                            if (TextUtils.equals(attribute.getCode(), conditionItem.getLeftValue())) {
+                                                conditionItem.setFunctionName(attribute.getDisplayName());
 
-                                            List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
-                                            DeviceTemplateBean.AttributesBean.SetupBean setupBean = attribute.getSetup();
-                                            List<DeviceTemplateBean.AttributesBean.BitValueBean> bitValue = attribute.getBitValue();
-                                            if (attributeValue != null) {
-                                                for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
-                                                    if (TextUtils.equals(valueBean.getValue(), conditionItem.getRightValue())) {
-                                                        conditionItem.setValueName(valueBean.getDisplayName());
+                                                List<DeviceTemplateBean.AttributesBean.ValueBean> attributeValue = attribute.getValue();
+                                                DeviceTemplateBean.AttributesBean.SetupBean setupBean = attribute.getSetup();
+                                                List<DeviceTemplateBean.AttributesBean.BitValueBean> bitValue = attribute.getBitValue();
+                                                if (attributeValue != null) {
+                                                    for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributeValue) {
+                                                        if (TextUtils.equals(valueBean.getValue(), conditionItem.getRightValue())) {
+                                                            conditionItem.setValueName(valueBean.getDisplayName());
+                                                        }
                                                     }
-                                                }
-                                            } else if (setupBean != null) {
-                                                String unit = setupBean.getUnit();
-                                                conditionItem.setValueName(String.format("%s%s", conditionItem.getRightValue(), TextUtils.isEmpty(unit) ? "" : unit));
-                                            } else if (bitValue != null) {
-                                                for (DeviceTemplateBean.AttributesBean.BitValueBean bitValueBean : bitValue) {
-                                                    if (bitValueBean.getBit() == conditionItem.getBit() &&
-                                                            bitValueBean.getCompareValue() == conditionItem.getCompareValue() &&
-                                                            TextUtils.equals(conditionItem.getRightValue(), String.valueOf(bitValueBean.getValue()))) {
-                                                        conditionItem.setValueName(bitValueBean.getDisplayName());
+                                                } else if (setupBean != null) {
+                                                    String unit = setupBean.getUnit();
+                                                    conditionItem.setValueName(String.format("%s%s", conditionItem.getRightValue(), TextUtils.isEmpty(unit) ? "" : unit));
+                                                } else if (bitValue != null) {
+                                                    for (DeviceTemplateBean.AttributesBean.BitValueBean bitValueBean : bitValue) {
+                                                        if (bitValueBean.getBit() == conditionItem.getBit() &&
+                                                                bitValueBean.getCompareValue() == conditionItem.getCompareValue() &&
+                                                                TextUtils.equals(conditionItem.getRightValue(), String.valueOf(bitValueBean.getValue()))) {
+                                                            conditionItem.setValueName(bitValueBean.getDisplayName());
+                                                        }
                                                     }
                                                 }
                                             }

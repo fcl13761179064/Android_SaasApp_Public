@@ -213,6 +213,15 @@
             android:name=".ui.SwitchDefaultSettingActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.A2GatewayAddGuideActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.A2GatewayAddStatusActivity"
+            android:screenOrientation="portrait" />
+
+
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
             android:label="dexopt"
