@@ -22,6 +22,7 @@
     <string name="forgit_tv_show">忘记密码</string>
     <string name="exit"></string>
 
+
     <!-- 底部tab-->
     <string name="title_style">Style</string>
     <string name="title_example">Example</string>
@@ -31,5 +32,6 @@
     <string name="sing_out">确定退出当前账号</string>
     <string name="remove_device_title">确定是否移除</string>
     <string name="remove_device_content">移除设备后将不可恢复，您是否移除该设备</string>
-
+    <string name="helper">找不到要连接的路由器？</string>
+    <string name="common_next">下一步</string>
 </resources>

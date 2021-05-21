@@ -1,41 +1,22 @@
 package com.ayla.hotelsaas.ui;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.animation.CycleInterpolator;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatCheckBox;
-
-import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddGuideView;
-import com.ayla.hotelsaas.popmenu.ApNetpopupWindowUtil;
 import com.ayla.hotelsaas.utils.ImageLoader;
-import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static com.ayla.hotelsaas.application.MyApplication.getContext;
 
 /**
  * wifi设备、节点设备 配网引导页面
@@ -88,7 +69,7 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<DeviceAddGuideVi
 
 
     private void handleJump() {
-        Intent mainActivity = new Intent(this, ApDistributeActivity.class);
+        Intent mainActivity = new Intent(this, ApWifiDistributeActivity.class);
         startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_SCAN);
     }
 

@@ -17,8 +17,6 @@ import androidx.annotation.NonNull;
 import com.aliyun.iot.aep.sdk.page.LocationUtil;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BasicActivity;
-import com.ayla.hotelsaas.databinding.ActivityApWifiPasswordInputBinding;
-import com.ayla.hotelsaas.databinding.ActivitySwitchDefaultSettingBinding;
 import com.ayla.hotelsaas.utils.WifiUtil;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.blankj.utilcode.constant.PermissionConstants;
@@ -34,7 +32,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ApDistributeActivity extends BasicActivity {
+
+public class ApWifiDistributeActivity extends BasicActivity {
 
     @BindView(R.id.et_wifi_name)
     public EditText mWiFiNameEditText;
@@ -46,7 +45,9 @@ public class ApDistributeActivity extends BasicActivity {
     public TextView awi_tv_wifi_more;
     @BindView(R.id.awi_iv_pwd_toggle)
     public ImageView awi_iv_pwd_toggle;
-    private boolean isHidden=true;
+    @BindView(R.id.wifi_help)
+    public TextView wifi_help;
+    private boolean isHidden = true;
     private boolean permissionHasAsked;//标记是否已经提示授权位置信息
 
     @Override
@@ -63,51 +64,60 @@ public class ApDistributeActivity extends BasicActivity {
     @Override
     protected void onResume() {
         super.onResume();
-            String connectWifiSsid = WifiUtil.getConnectWifiSsid();
-            mWiFiNameEditText.setText(connectWifiSsid);
-            mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
+        String connectWifiSsid = WifiUtil.getConnectWifiSsid();
+        mWiFiNameEditText.setText(connectWifiSsid);
+        mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
 
-            if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
-                if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
-                    if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
-                        CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning);
-                    }
-                } else {//定位权限没有
-                    if (!permissionHasAsked) {
-                        CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
-                            @Override
-                            public void onDone(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                                PermissionUtils.permission(PermissionConstants.LOCATION)
-                                        .callback(new PermissionUtils.FullCallback() {
-                                            @Override
-                                            public void onGranted(@NonNull List<String> granted) {
-                                                String connectWifiSsid = WifiUtil.getConnectWifiSsid();
-                                                mWiFiNameEditText.setText(connectWifiSsid);
-                                                mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
-                                            }
-
-                                            @Override
-                                            public void onDenied(@NonNull List<String> deniedForever, @NonNull List<String> denied) {
-                                                if (deniedForever.size() > 0) {
-                                                    Intent settingsIntent = IntentUtils.getLaunchAppDetailsSettingsIntent(AppUtils.getAppPackageName());
-                                                    startActivity(settingsIntent);
-//                                                  CustomToast.makeText(getApplicationContext(), "你拒绝了访问位置信息的授权，无法自动填充WiFi名称", R.drawable.ic_warning);
-                                                }
-                                            }
-                                        }).request();
-                            }
-
-                            @Override
-                            public void onCancel(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                            }
-                        }).setTitle("无法自动获取WiFi名称").setContent("授权程序访问位置信息后，将可以自动填入连接的WiFi名").show(getSupportFragmentManager(), "wifi dialog");
-                    }
-                    permissionHasAsked = true;
+        if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
+            if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
+                if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
+                    CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning);
+                    enableWiFiNameInput(true);
                 }
+            } else {//定位权限没有
+                if (!permissionHasAsked) {
+                    CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
+                        @Override
+                        public void onDone(CustomAlarmDialog dialog) {
+                            dialog.dismissAllowingStateLoss();
+                            PermissionUtils.permission(PermissionConstants.LOCATION)
+                                    .callback(new PermissionUtils.FullCallback() {
+                                        @Override
+                                        public void onGranted(@NonNull List<String> granted) {
+                                            String connectWifiSsid = WifiUtil.getConnectWifiSsid();
+                                            mWiFiNameEditText.setText(connectWifiSsid);
+                                            mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
+                                            enableWiFiNameInput(false);
+                                        }
+
+                                        @Override
+                                        public void onDenied(@NonNull List<String> deniedForever, @NonNull List<String> denied) {
+                                            if (deniedForever.size() > 0) {
+                                                Intent settingsIntent = IntentUtils.getLaunchAppDetailsSettingsIntent(AppUtils.getAppPackageName());
+                                                startActivity(settingsIntent);
+//                                                  CustomToast.makeText(getApplicationContext(), "你拒绝了访问位置信息的授权，无法自动填充WiFi名称", R.drawable.ic_warning);
+                                            }
+                                        }
+                                    }).request();
+                        }
+
+                        @Override
+                        public void onCancel(CustomAlarmDialog dialog) {
+                            dialog.dismissAllowingStateLoss();
+                        }
+                    }).setTitle("无法自动获取WiFi名称").setContent("授权程序访问位置信息后，将可以自动填入连接的WiFi名").show(getSupportFragmentManager(), "wifi dialog");
+                }
+                permissionHasAsked = true;
             }
+        } else {
+            enableWiFiNameInput(false);
+        }
     }
+
+    private void enableWiFiNameInput(Boolean isEnable) {
+        mWiFiNameEditText.setEnabled(isEnable);
+    }
+
 
     @Override
     protected void initView() {
@@ -127,16 +137,6 @@ public class ApDistributeActivity extends BasicActivity {
                 }
             }).setTitle("未连接WiFi").setContent("检查到当前手机未连接 Wi-Fi，请进行连接").show(getSupportFragmentManager(), "wifi dialog");
         }
-       /* awi_tv_help.setOnClickListener {
-            CommonDialog(requireContext()).apply {
-                setTitleText("找不到要连接的路由器？")
-                setMessageText("1.请确保当前路由器已设置密码。部分设备不支持连接到到未加密的路由器。\n\n2.请确保当前路由器不需要二次身份与密码验证。\n\n3.部分设备暂不支持5GHz网络连接。请查看设备说明书，确定当前设备支持的网络连接类型。\n\n4.请确保路由器未设置隐藏ssid。已设置隐藏ssid的路由器无法在列表中显示，请修改路由器设置后重新尝试连接。")
-                setMessageTextSize(12f)
-                setMessageGravity(Gravity.START)
-                hiddenCancelView()
-                setConfirmText("关闭")
-                setOnConfirmClickListeners(View.OnClickListener { dismiss() })
-            }.show()*/
 
     }
 
@@ -152,8 +152,8 @@ public class ApDistributeActivity extends BasicActivity {
             CustomToast.makeText(this, "WIFI密码不小于8位", R.drawable.ic_toast_warming);
         } else {
             saveWifiPwd(name, pwd);
-            setResult(RESULT_OK, new Intent().putExtra("wifiName", name).putExtra("wifiPassword", pwd));
-            finish();
+            Intent intent = new Intent(this,ApDistributeGuideActivity.class);
+            startActivity(intent);
         }
         KeyboardUtils.hideSoftInput(btn_next);
     }
@@ -189,6 +189,33 @@ public class ApDistributeActivity extends BasicActivity {
 
     @Override
     protected void initListener() {
+        wifi_help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomAlarmDialog
+                        .newInstance(new CustomAlarmDialog.Callback() {
+                            @Override
+                            public void onDone(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                            }
+
+                            @Override
+                            public void onCancel(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                            }
+                        })
+                        .setTitle(getResources().getString(R.string.helper))
+                        .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                        .setContent("1.请确保当前路由器已设置密码。部分设备不支持连接到到未加密的路由器。\n" +
+                                "\n" +
+                                "2.请确保当前路由器不需要二次身份与密码验证。\n" +
+                                "\n" +
+                                "3.部分设备暂不支持5GHz网络连接。请查看设备说明书，确定当前设备支持的网络连接类型。\n" +
+                                "\n" +
+                                "4.请确保路由器未设置隐藏SSID。已设置隐藏SSID的路由器无法在列表中显示，请修改路由器设置后重新尝试连接。")
+                        .show(getSupportFragmentManager(), "");
+            }
+        });
         awi_tv_wifi_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,8 +227,10 @@ public class ApDistributeActivity extends BasicActivity {
             public void onClick(View v) {
                 if (isHidden) {
                     //设置EditText文本为可见的
+                    awi_iv_pwd_toggle.setSelected(true);
                     mWiFiPasswordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 } else {
+                    awi_iv_pwd_toggle.setSelected(false);
                     //设置EditText文本为隐藏的
                     mWiFiPasswordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }

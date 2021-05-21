@@ -5,6 +5,7 @@ import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.SPUtils;
 
+
 /**
  * @描述 常量类
  * @作者 fanchunlei
@@ -116,4 +117,8 @@ public class Constance {
             return null;
         }
     }
+
+    //艾拉wifi SSId正则
+    public static String DEFAULT_SSID_REGEX = "Ayla-([0-9a-zA-Z]+|DevKit)";
+
 }

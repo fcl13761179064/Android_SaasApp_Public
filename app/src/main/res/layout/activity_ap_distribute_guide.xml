@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv="添加设备"
+        app:left_iv="@mipmap/icon_back_black"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/jd_iv_picture"
+        android:layout_width="match_parent"
+        android:layout_height="188dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="35dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_ap_join_distribute" />
+
+    <TextView
+        android:id="@+id/tv_show"
+        android:layout_width="96dp"
+        android:layout_height="22dp"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:text="进入配网模式"
+        android:textColor="#ff333333"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/jd_iv_picture"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/jd_tv_step1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginEnd="35dp"
+        android:text="AP配网开启：请将网关通电并长按网关按钮5s，直到Wi-Fi灯慢闪。"
+        android:textColor="@color/color_999999"
+        android:textSize="13sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_show" />
+
+    <TextView
+        android:id="@+id/jd_tv_step2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="35dp"
+        android:text="AP配网成功：Wi-Fi灯快闪后恢复常亮。"
+        android:textColor="@color/color_999999"
+        android:textSize="13sp"
+        app:layout_constraintTop_toBottomOf="@id/jd_tv_step1" />
+
+    <TextView
+        android:id="@+id/jd_tv_step3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="35dp"
+        android:text="AP配网失败或超时：Wi-Fi灯熄灭，请重新开启AP配网模式。"
+        android:textColor="@color/color_999999"
+        android:textSize="13sp"
+        app:layout_constraintTop_toBottomOf="@id/jd_tv_step2" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <CheckBox
+            android:id="@+id/jd_cb_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_16"
+            android:button="@drawable/common_check_selector"
+            android:paddingStart="8dp"
+            android:layout_gravity="center"
+            android:text="已确认上述操作"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/sp_14" />
+
+        <Button
+            android:id="@+id/jd_btn_next"
+            style="@style/NPButtonStyle"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginBottom="64dp"
+            android:text="@string/common_next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </LinearLayout>
+</LinearLayout>
