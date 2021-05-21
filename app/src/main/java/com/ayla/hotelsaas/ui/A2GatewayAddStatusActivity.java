@@ -38,12 +38,14 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<DeviceAddGuideVi
     private static final int LiNE_NET = 0;
     private static final int AP_NET = 1;
     private Bundle addInfo;
+    private String deviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addInfo = getIntent().getBundleExtra("addInfo");
         String pid = addInfo.getString("pid");
+        deviceId = getIntent().getStringExtra("deviceId");
         mPresenter.getNetworkConfigGuide(pid);
     }
 
@@ -70,6 +72,8 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<DeviceAddGuideVi
 
     private void handleJump() {
         Intent mainActivity = new Intent(this, ApWifiDistributeActivity.class);
+        mainActivity.putExtras(getIntent());
+        mainActivity.putExtra("deviceId",deviceId);
         startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_SCAN);
     }
 

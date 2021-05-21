@@ -152,7 +152,10 @@ public class ApWifiDistributeActivity extends BasicActivity {
             CustomToast.makeText(this, "WIFI密码不小于8位", R.drawable.ic_toast_warming);
         } else {
             saveWifiPwd(name, pwd);
-            Intent intent = new Intent(this,ApDistributeGuideActivity.class);
+            Intent intent = new Intent(this, ApDistributeGuideActivity.class);
+            intent.putExtra("ssid", name);
+            intent.putExtra("pwd", pwd);
+            intent.putExtras(getIntent());
             startActivity(intent);
         }
         KeyboardUtils.hideSoftInput(btn_next);

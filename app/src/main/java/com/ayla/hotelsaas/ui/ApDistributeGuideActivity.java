@@ -37,9 +37,9 @@ public class ApDistributeGuideActivity extends BasicActivity {
                 if(!jd_cb_confirm.isChecked()){
                     CustomToast.makeText(ApDistributeGuideActivity.this, "请先阅读设备配网引导", R.drawable.ic_warning);
                 }else {
-                    /*Intent intent = new Intent(ApDistributeGuideActivity.this,ApWifiConnectToA2GagtewayActivity.class);
-                    startActivity(intent);*/
-
+                    Intent intent = new Intent(ApDistributeGuideActivity.this,ApWifiConnectToA2GagtewayActivity.class);
+                    intent.putExtras(getIntent());
+                    startActivity(intent);
                 }
 
             }

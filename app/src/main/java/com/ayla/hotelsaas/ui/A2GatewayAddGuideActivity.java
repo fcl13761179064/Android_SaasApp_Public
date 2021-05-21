@@ -146,7 +146,7 @@ public class A2GatewayAddGuideActivity extends BaseMvpActivity<DeviceAddGuideVie
                     if (!TextUtils.isEmpty(deviceId)) {
                         Intent mainActivity = new Intent(this, A2GatewayAddStatusActivity.class);
                         Bundle addInfo = getIntent().getBundleExtra("addInfo");
-                        addInfo.putString("deviceId", deviceId);
+                        mainActivity.putExtra("deviceId", deviceId);
                         mainActivity.putExtra("addInfo", addInfo);
                         startActivity(mainActivity);
                         return;
