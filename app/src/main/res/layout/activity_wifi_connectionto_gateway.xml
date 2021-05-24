@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:text="02. 连接成功后，返回【艾拉智家】"
+        android:text="02. 连接成功后，返回【艾拉工程】"
         android:textColor="@color/color_3C3C3C"
         android:textSize="@dimen/text_middle_size"
         android:textStyle="bold" />
