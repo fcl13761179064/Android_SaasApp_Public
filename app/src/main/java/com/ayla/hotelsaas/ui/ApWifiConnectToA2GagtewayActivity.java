@@ -16,6 +16,10 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
 
      @BindView(R.id.sd_btn_action)
     Button sd_btn_action;
+    private String ssid;
+    private String pwd;
+    private String dsn;
+
     @Override
     protected int getLayoutId() {
         return  R.layout.activity_wifi_connectionto_gateway;
@@ -33,16 +37,15 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
 
     @Override
     protected void initView() {
-        String ssid = getIntent().getStringExtra("ssid");
-        String pwd = getIntent().getStringExtra("pwd");
-        String dsn = getIntent().getStringExtra("deviceId");
-        mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this,dsn,ssid,pwd);
+        ssid = getIntent().getStringExtra("ssid");
+        pwd = getIntent().getStringExtra("pwd");
+        dsn = getIntent().getStringExtra("deviceId");
 
     }
 
     @Override
     protected void initListener() {
-
+        mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this,dsn,ssid,pwd);
     }
 
     @Override
