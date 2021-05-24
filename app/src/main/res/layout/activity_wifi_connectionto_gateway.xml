@@ -85,7 +85,7 @@
 
     <Button
         android:id="@+id/sd_btn_action"
-        style="@style/NPButtonStyle"
+        style="@style/ApEnableButtonStyle"
         android:layout_marginTop="30dp"
         android:enabled="false"
         android:layout_marginStart="@dimen/dp_16"

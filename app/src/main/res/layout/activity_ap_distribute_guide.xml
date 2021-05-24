@@ -94,7 +94,7 @@
 
         <Button
             android:id="@+id/jd_btn_next"
-            style="@style/NPButtonStyle"
+            style="@style/ApButtonStyle"
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginEnd="@dimen/dp_16"
             android:layout_marginBottom="64dp"

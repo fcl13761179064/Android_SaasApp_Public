@@ -1,16 +1,21 @@
 package com.ayla.hotelsaas.ui;
 
 import android.view.View;
+import android.widget.Button;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.APWifiToGateWayPresenter;
 import com.ayla.hotelsaas.mvp.view.APwifiToGateWayView;
+import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
 import com.blankj.utilcode.util.ToastUtils;
+
+import butterknife.BindView;
 
 public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToGateWayView, APWifiToGateWayPresenter> implements APwifiToGateWayView {
 
-
+     @BindView(R.id.sd_btn_action)
+    Button sd_btn_action;
     @Override
     protected int getLayoutId() {
         return  R.layout.activity_wifi_connectionto_gateway;
@@ -41,12 +46,15 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
     }
 
     @Override
-    public void onFailed(Throwable throwable) {
+    public void onFailed(Throwable throwable)
+    {
+        sd_btn_action.setEnabled(false);
         ToastUtils.showShort("连接网关 Wi-Fi 失败，请重试");
     }
 
     @Override
-    public void onSuccess() {
+    public void onSuccess(AylaSetupDevice aylaSetupDevice) {
+        sd_btn_action.setEnabled(true);
         ToastUtils.showShort("323232323223");
     }
 }
