@@ -76,7 +76,7 @@ public interface ApiService {
     @GET("api/v1/build/user/mybaseinfo")
     Observable<BaseResult<PersonCenter>> getUserInfo();
 
-    @GET("api/v1/build/device/{deviceId}/{scopeId}/nodes")
+    @GET("api/v3/build/device/{deviceId}/{scopeId}/nodes")
     Observable<BaseResult<List<GatewayNodeBean>>> getGatewayNodes(@Path("deviceId") String deviceId, @Path("scopeId") long scopeId);
 
     @POST("api/v2/sso/refresh")
@@ -91,10 +91,10 @@ public interface ApiService {
     @GET("/api/v3/build/spark/devicetypes/product/")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
-    @POST("/api/v1/build/device/getDeviceActionOrCondition")
+    @POST("/api/v3/build/device/getDeviceActionOrCondition")
     Observable<BaseResult<List<DeviceCategoryDetailBean>>> fetchDeviceCategoryDetail(@Body RequestBody body);
 
-    @POST("/api/v1/build/device/getDeviceActionOrCondition/{pid}")
+    @POST("/api/v3/build/device/getDeviceActionOrCondition/{pid}")
     Observable<BaseResult<DeviceCategoryDetailBean>> fetchDeviceCategoryDetail(@Path("pid") String pid);
 
     @GET("api/v1/build/constructbill")
@@ -111,7 +111,7 @@ public interface ApiService {
     @GET("api/v1/build/billrooms")
     Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("billId") String billId);
 
-    @POST("api/v1/build/device/list")
+    @POST("/api/v3/build/device/list")
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
     @POST("api/v1/build/device/bind")
@@ -275,7 +275,7 @@ public interface ApiService {
      *
      * @return
      */
-    @GET("/api/v1/build/batch/export/{roomId}")
+    @GET("/api/v2/build/batch/export/{roomId}")
     Observable<BaseResult<String>> roomExport(@Path("roomId") long roomId);
 
     /**
