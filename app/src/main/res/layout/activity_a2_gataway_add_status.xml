@@ -63,6 +63,18 @@
         android:layout_marginRight="16dp"
         android:src="#f8f8f8" />
 
+    <TextView
+        android:id="@+id/tv_gateway_bind_status"
+        android:layout_width="343dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_16"
+        android:visibility="gone"
+        android:text="网关已被绑定，您可以长按网关按钮 15s 将网关恢复出厂设置后重新添加。"
+        android:textColor="#ff999999"
+        android:textSize="14sp"
+        />
+
 
     <Button
         android:id="@+id/bt"

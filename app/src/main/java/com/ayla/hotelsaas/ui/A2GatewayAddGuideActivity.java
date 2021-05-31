@@ -21,6 +21,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.A2BindInfoBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddGuideView;
@@ -188,6 +189,7 @@ public class A2GatewayAddGuideActivity extends BaseMvpActivity<DeviceAddGuideVie
             textView.setText(guideDesc);
         }
     }
+
 
     @Override
     public void getGuideInfoFailed(Throwable throwable) {

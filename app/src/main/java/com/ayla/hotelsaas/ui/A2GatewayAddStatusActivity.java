@@ -2,14 +2,18 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.A2BindInfoBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
+import com.ayla.hotelsaas.mvp.present.A2DeviceBindPresenter;
 import com.ayla.hotelsaas.mvp.present.DeviceAddGuidePresenter;
+import com.ayla.hotelsaas.mvp.view.A2DeviceBindView;
 import com.ayla.hotelsaas.mvp.view.DeviceAddGuideView;
 import com.ayla.hotelsaas.utils.ImageLoader;
 import com.ayla.hotelsaas.utils.TempUtils;
@@ -22,7 +26,7 @@ import butterknife.OnClick;
  * wifi设备、节点设备 配网引导页面
  * 进入必须带上{@link Bundle addInfo}
  */
-public class A2GatewayAddStatusActivity extends BaseMvpActivity<DeviceAddGuideView, DeviceAddGuidePresenter> implements DeviceAddGuideView {
+public class A2GatewayAddStatusActivity extends BaseMvpActivity<A2DeviceBindView, A2DeviceBindPresenter> implements A2DeviceBindView {
     private final int REQUEST_CODE_FOR_DSN_INPUT = 0X11;
     private final int REQUEST_CODE_FOR_DSN_SCAN = 0X12;
 
@@ -34,6 +38,8 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<DeviceAddGuideVi
     Button button;
     @BindView(R.id.appBar)
     AppBar appBar;
+    @BindView(R.id.tv_gateway_bind_status)
+    TextView tv_gateway_bind_status;
 
     private static final int LiNE_NET = 0;
     private static final int AP_NET = 1;
@@ -45,13 +51,15 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<DeviceAddGuideVi
         super.onCreate(savedInstanceState);
         addInfo = getIntent().getBundleExtra("addInfo");
         String pid = addInfo.getString("pid");
-        deviceId = getIntent().getStringExtra("deviceId");
+        deviceId = addInfo.getString("deviceId");
         mPresenter.getNetworkConfigGuide(pid);
+        mPresenter.getA2BindInfo(deviceId);
+        gataway_name.setText(deviceId);
     }
 
     @Override
-    protected DeviceAddGuidePresenter initPresenter() {
-        return new DeviceAddGuidePresenter();
+    protected A2DeviceBindPresenter initPresenter() {
+        return new A2DeviceBindPresenter();
     }
 
 
@@ -73,7 +81,7 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<DeviceAddGuideVi
     private void handleJump() {
         Intent mainActivity = new Intent(this, ApWifiDistributeActivity.class);
         mainActivity.putExtras(getIntent());
-        mainActivity.putExtra("deviceId",deviceId);
+        mainActivity.putExtra("deviceId", deviceId);
         startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_SCAN);
     }
 
@@ -84,6 +92,21 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<DeviceAddGuideVi
             String guideDesc = o.getNetworkGuideDesc();
             ImageLoader.loadImg(imageView, guidePic, 0, 0);
         }
+    }
+
+    @Override
+    public void getBindInfoSuccess(A2BindInfoBean o) {
+        if (o.getBindStatus()) {
+            tv_gateway_bind_status.setVisibility(View.VISIBLE);
+        } else {
+            tv_gateway_bind_status.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
+    public void getBindInfoFail(String o) {
+
     }
 
     @Override

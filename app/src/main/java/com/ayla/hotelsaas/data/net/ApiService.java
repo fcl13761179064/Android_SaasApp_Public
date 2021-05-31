@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.data.net;
 
+import com.ayla.hotelsaas.bean.A2BindInfoBean;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -315,5 +316,9 @@ public interface ApiService {
 
     @GET("/api/v1/build/billrooms/region/{roomId}")
     Observable<BaseResult<List<DeviceLocationBean>>> getAllDeviceLocation(@Path("roomId") long roomId);
+
+
+    @GET("/api/v1/build/device/getDeviceBindStatus/{deviceId}")
+    Observable<BaseResult<A2BindInfoBean>> getA2BindInfo(@Path("deviceId") String pid);
 
 }
