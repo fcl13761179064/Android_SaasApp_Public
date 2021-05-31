@@ -263,6 +263,11 @@ public class RequestModel {
         });
     }
 
+
+    public Observable<Object> getDevicePid(String pid) {
+        return getApiService().getDevicePid(pid).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
+        });
+    }
     /**
      * 获取品类支持的条件、功能 项目 详情
      *

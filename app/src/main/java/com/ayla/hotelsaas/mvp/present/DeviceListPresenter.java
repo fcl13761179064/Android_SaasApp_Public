@@ -57,6 +57,36 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
     }
 
 
+    public void getTagetPid(String pid) {
+        Disposable subscribe = RequestModel.getInstance().getDevicePid(pid)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object deviceCategoryBeans) throws Exception {
+                        mView.loadDeviceDataSuccessssss(deviceCategoryBeans);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.loadDataFailed(throwable);
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
+
     /**
      * 加载列表
      *

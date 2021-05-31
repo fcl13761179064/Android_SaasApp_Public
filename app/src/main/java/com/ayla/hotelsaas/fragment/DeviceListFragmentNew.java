@@ -26,6 +26,7 @@ import com.ayla.hotelsaas.ui.DeviceDetailH5Activity;
 import com.ayla.hotelsaas.ui.DeviceMoreActivity;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.blankj.utilcode.util.SizeUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -106,6 +107,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     @Override
     protected void initListener() {
+        mPresenter.getTagetPid("00000");
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -169,6 +171,11 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
             deviceItems.add(deviceItem);
         }
         mAdapter.setNewData(deviceItems);
+    }
+
+    @Override
+    public void loadDeviceDataSuccessssss(Object data) {
+        ToastUtils.showShort("");
     }
 
     @Override

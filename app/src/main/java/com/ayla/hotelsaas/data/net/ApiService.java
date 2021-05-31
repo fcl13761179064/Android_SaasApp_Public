@@ -91,6 +91,9 @@ public interface ApiService {
     @GET("/api/v3/build/spark/devicetypes/product/")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
+    @GET("/mp/product/api/v3/product/{pid}")
+    Observable<BaseResult<Object>> getDevicePid(@Path("pid") String pid);
+
     @POST("/api/v3/build/device/getDeviceActionOrCondition")
     Observable<BaseResult<List<DeviceCategoryDetailBean>>> fetchDeviceCategoryDetail(@Body RequestBody body);
 

@@ -195,8 +195,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         mAdapter.setEmptyView(R.layout.layout_loading);
         mSmartRefreshLayout.setEnableLoadMore(false);
         mSmartRefreshLayout.setEnableRefresh(false);
-        String title_type = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
-        if ("1".equalsIgnoreCase(title_type)) {
+        if ("1".equalsIgnoreCase(saas_saft_img)) {
             bt_add.setVisibility(View.VISIBLE);
         } else {
             bt_add.setVisibility(View.GONE);
