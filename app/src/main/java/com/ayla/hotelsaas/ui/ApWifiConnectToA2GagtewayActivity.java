@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 
@@ -46,12 +47,20 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
     @Override
     protected void initListener() {
         mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this,dsn,ssid,pwd);
+        sd_btn_action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ApWifiConnectToA2GagtewayActivity.this,DeviceAddActivity.class);
+                intent.putExtras(getIntent());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void onFailed(Throwable throwable)
     {
-        sd_btn_action.setEnabled(false);
+        sd_btn_action.setEnabled(true);
         ToastUtils.showShort("连接网关 Wi-Fi 失败，请重试");
     }
 
