@@ -20,6 +20,7 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
+import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
@@ -133,7 +134,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             @NonNull
             @Override
             public ProjectListFragment getItem(int position) {
-                return new ProjectListFragment(appBar);
+                return new ProjectListFragment();
             }
 
             @Override

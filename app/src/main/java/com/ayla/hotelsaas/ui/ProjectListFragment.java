@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -68,21 +69,25 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     private List<String> roomBeans;
     private String saas_saft_img;
 
-    public ProjectListFragment(Programe_change_AppBar appBar) {
-        this.appBar = appBar;
+    @Override
+    public void onAttach(Activity context) {
+        super.onAttach(context);
+      ProjectListActivity projectListActivity =(ProjectListActivity)context;
+      projectListActivity.appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              menuClick(v);
+          }
+      });
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                menuClick(v);
-            }
-        });
         EventBus.getDefault().register(this);
     }
+
+
 
     //菜单按钮onClick事件
     public void menuClick(View view) {
