@@ -8,9 +8,8 @@ import java.util.List;
 
 public interface DeviceListView extends BaseView {
 
-    void loadDataSuccess(DeviceListBean.DevicesBean devicesBean, List<DeviceCategoryBean> data);
+    void loadDataSuccess(DeviceListBean.DevicesBean devicesBean, List<DeviceCategoryBean> data, Object o);
     void loadDeviceDataSuccess(DeviceListBean data);
-    void loadDeviceDataSuccessssss(Object data);
     void loadDataFailed(Throwable throwable) ;
 
 }

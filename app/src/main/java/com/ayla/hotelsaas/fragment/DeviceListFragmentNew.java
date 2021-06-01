@@ -16,7 +16,6 @@ import com.ayla.hotelsaas.adapter.DeviceListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.databinding.FragmentDeviceListNewBinding;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListPresenter;
@@ -39,7 +38,7 @@ import java.util.List;
 public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, DeviceListPresenter> implements DeviceListView {
 
     private final long regionId;
-    private  List<DeviceListBean.DevicesBean> devices;
+    private List<DeviceListBean.DevicesBean> devices;
     private int position;
     FragmentDeviceListNewBinding binding;
 
@@ -107,7 +106,6 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     @Override
     protected void initListener() {
-        mPresenter.getTagetPid("00000");
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -126,7 +124,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
                     if (devicesBean.getDeviceUseType() == 1) {//如果是用途设备，跳过
                         return;
                     }
-                    mPresenter.loadCategory(devicesBean);
+                    mPresenter.loadCategory(devicesBean, devicesBean.getPid());
                 }
             }
         });
@@ -134,15 +132,15 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     @Override
     protected void initData() {
-        if (devices != null && position ==0) {
+        if (devices != null && position == 0) {
             List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
             for (DeviceListBean.DevicesBean devicesBean : devices) {
                 DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
                 deviceItems.add(deviceItem);
             }
             mAdapter.setNewData(deviceItems);
-        }else {
-            mPresenter.loadData(room_id,regionId);
+        } else {
+            mPresenter.loadData(room_id, regionId);
         }
     }
 
@@ -152,7 +150,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
     }
 
     @Override
-    public void loadDataSuccess(DeviceListBean.DevicesBean devicesBean, List<DeviceCategoryBean> data) {
+    public void loadDataSuccess(DeviceListBean.DevicesBean devicesBean, List<DeviceCategoryBean> data, Object o) {
         Intent intent = new Intent();
         Bundle addForWaitBundle = new Bundle();
         addForWaitBundle.putString("waitBindDeviceId", devicesBean.getDeviceId());
@@ -160,7 +158,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
         addForWaitBundle.putString("pid", devicesBean.getPid());
         intent.putExtra("addForWait", addForWaitBundle);
 
-        deviceCategoryHandler.bindOrReplace(data, intent);//添加待绑定的设备
+        deviceCategoryHandler.bindOrReplace(data, intent, o);//添加待绑定的设备
     }
 
     @Override
@@ -171,11 +169,6 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
             deviceItems.add(deviceItem);
         }
         mAdapter.setNewData(deviceItems);
-    }
-
-    @Override
-    public void loadDeviceDataSuccessssss(Object data) {
-        ToastUtils.showShort("");
     }
 
     @Override
