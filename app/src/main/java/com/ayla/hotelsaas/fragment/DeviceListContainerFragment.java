@@ -39,20 +39,20 @@ import java.util.List;
 public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListContainerView, DeviceListContainerPresenter> implements DeviceListContainerView {
 
 
-    private final Long room_id;
     FragmentDeviceContainerBinding binding;
     ViewStubDeviceListContainerBinding deviceListContainerBinding;
     FragmentStatePagerAdapter mAdapter;
     private List<DeviceLocationBean> LocationBeans;
+    private long room_id;
 
-    public DeviceListContainerFragment(Long room_id) {
-        this.room_id = room_id;
-        SharePreferenceUtils.saveLong(getActivity(), Constance.SP_ROOM_ID, room_id);
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments()!=null){
+            room_id = getArguments().getLong("room_id");
+        }
+        SharePreferenceUtils.saveLong(getActivity(), Constance.SP_ROOM_ID, room_id);
         EventBus.getDefault().register(this);
     }
 
