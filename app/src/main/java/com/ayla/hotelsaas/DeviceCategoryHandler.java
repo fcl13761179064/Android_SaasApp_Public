@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.ui.A2GatewaySelectActivity;
 import com.ayla.hotelsaas.ui.AylaGatewayAddGuideActivity;
 import com.ayla.hotelsaas.ui.CustomToast;
@@ -22,6 +23,12 @@ import com.ayla.hotelsaas.utils.TempUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -63,6 +70,7 @@ public class DeviceCategoryHandler {
         addForWaitBundle = intent.getBundleExtra("addForWait");
         if (addForWaitBundle != null) {//绑定待添加设备逻辑
             String pid = addForWaitBundle.getString("pid");
+
             for (DeviceCategoryBean deviceCategoryBean : deviceCategoryBeans) {
                 for (DeviceCategoryBean.SubBean subBean : deviceCategoryBean.getSub()) {
                     for (DeviceCategoryBean.SubBean.NodeBean nodeBean : subBean.getNode()) {

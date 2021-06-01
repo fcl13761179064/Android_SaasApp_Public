@@ -52,7 +52,6 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         if (getArguments()!=null){
             room_id = getArguments().getLong("room_id");
         }
-        SharePreferenceUtils.saveLong(getActivity(), Constance.SP_ROOM_ID, room_id);
         EventBus.getDefault().register(this);
     }
 
