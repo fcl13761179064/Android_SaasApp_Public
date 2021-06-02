@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.adapter.DeviceListAdapter;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.databinding.FragmentDeviceListNewBinding;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListPresenter;
@@ -150,7 +151,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
     }
 
     @Override
-    public void loadDataSuccess(DeviceListBean.DevicesBean devicesBean, List<DeviceCategoryBean> data, Object o) {
+    public void loadDataSuccess(DeviceListBean.DevicesBean devicesBean, List<DeviceCategoryBean> data, DeviceCategoryBean.SubBean.NodeBean deviceNodeBean) {
         Intent intent = new Intent();
         Bundle addForWaitBundle = new Bundle();
         addForWaitBundle.putString("waitBindDeviceId", devicesBean.getDeviceId());
@@ -158,7 +159,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
         addForWaitBundle.putString("pid", devicesBean.getPid());
         intent.putExtra("addForWait", addForWaitBundle);
 
-        deviceCategoryHandler.bindOrReplace(data, intent, o);//添加待绑定的设备
+        deviceCategoryHandler.bindOrReplace(data, intent, deviceNodeBean);//添加待绑定的设备
     }
 
     @Override

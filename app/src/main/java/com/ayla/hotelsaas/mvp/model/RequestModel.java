@@ -11,6 +11,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
+import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
@@ -264,8 +265,8 @@ public class RequestModel {
     }
 
 
-    public Observable<Object> getDevicePid(String pid) {
-        return getApiService().getDevicePid(pid).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
+    public Observable<DeviceCategoryBean.SubBean.NodeBean> getDevicePid(String pid) {
+        return getApiService().getDevicePid(pid).compose(new BaseResultTransformer<BaseResult<DeviceCategoryBean.SubBean.NodeBean>, DeviceCategoryBean.SubBean.NodeBean>() {
         });
     }
     /**

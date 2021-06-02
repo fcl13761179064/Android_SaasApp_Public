@@ -72,13 +72,15 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     @Override
     public void onAttach(Activity context) {
         super.onAttach(context);
-      ProjectListActivity projectListActivity =(ProjectListActivity)context;
-      projectListActivity.appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              menuClick(v);
-          }
-      });
+        ProjectListActivity projectListActivity = (ProjectListActivity) context;
+        if (projectListActivity.appBar != null || projectListActivity.appBar.getTitleLayoutView()!=null) {
+            projectListActivity.appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    menuClick(v);
+                }
+            });
+        }
     }
 
     @Override

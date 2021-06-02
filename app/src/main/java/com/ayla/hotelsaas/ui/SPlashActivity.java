@@ -50,6 +50,8 @@ public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter>
         }
 
         final String sava_token = SharePreferenceUtils.getString(SPlashActivity.this, Constance.SP_Login_Token, null);
+       // final String sava_token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjk5MjY1NDgxODg2MjE2MjEzIiwidXNlck5hbWUiOiLkuI3opoHliqjkvZXkuInog5YiLCJsb2dpblR5cGUiOiIxIiwibG9naW5Tb3VyY2UiOiIxIiwiYXlsYUFwcGxpY2F0aW9uSWQiOiIzIiwidHlwZSI6ImF1dGhfdG9rZW4iLCJpYXQiOjE2MjI2MDQwMzR9.W5jGA-wBoQieRyVMzi4Oik4wki1TXaPIsCmMKN5Pb_k";
+       // SharePreferenceUtils.saveString(SPlashActivity.this, Constance.SP_Login_Token, "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjk5MjY1NDgxODg2MjE2MjEzIiwidXNlck5hbWUiOiLkuI3opoHliqjkvZXkuInog5YiLCJsb2dpblR5cGUiOiIxIiwibG9naW5Tb3VyY2UiOiIxIiwiYXlsYUFwcGxpY2F0aW9uSWQiOiIzIiwidHlwZSI6ImF1dGhfdG9rZW4iLCJpYXQiOjE2MjI2MTMwNDd9.04WjvGB9LvypIh7PTtDJzaXgf9pKPH-mB4bPG6Y3-zg");
         Intent intent;
         if (TextUtils.isEmpty(sava_token)) {
             intent = new Intent(SPlashActivity.this, LoginActivity.class);

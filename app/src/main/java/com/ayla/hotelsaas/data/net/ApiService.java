@@ -6,6 +6,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
+import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
@@ -91,8 +92,8 @@ public interface ApiService {
     @GET("/api/v3/build/spark/devicetypes/product/")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
-    @GET("/mp/product/api/v3/product/{pid}")
-    Observable<BaseResult<Object>> getDevicePid(@Path("pid") String pid);
+    @GET("/api/v3/build/spark/devicetypes/product/{pid}")//A2新添加的一个接口，
+    Observable<BaseResult<DeviceCategoryBean.SubBean.NodeBean>> getDevicePid(@Path("pid") String pid);
 
     @POST("/api/v3/build/device/getDeviceActionOrCondition")
     Observable<BaseResult<List<DeviceCategoryDetailBean>>> fetchDeviceCategoryDetail(@Body RequestBody body);

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.ui.A2GatewaySelectActivity;
 import com.ayla.hotelsaas.ui.AylaGatewayAddGuideActivity;
 import com.ayla.hotelsaas.ui.CustomToast;
@@ -54,28 +55,18 @@ public class DeviceCategoryHandler {
 
     /**
      * 添加待绑定设备 或者 替换设备
-     *  @param deviceCategoryBeans
+     *
+     * @param deviceCategoryBeans
      * @param intent              添加待绑定设备时，包含{@link Bundle addForWait}
      *                            替换设备时，包含{@link Bundle replaceInfo}
-     * @param o
      */
-    public void bindOrReplace(List<DeviceCategoryBean> deviceCategoryBeans, Intent intent, Object o) {
+    public void bindOrReplace(List<DeviceCategoryBean> deviceCategoryBeans, Intent intent, DeviceCategoryBean.SubBean.NodeBean deviceNodeBean) {
         addForWaitBundle = intent.getBundleExtra("addForWait");
-        if (addForWaitBundle != null) {//绑定待添加设备逻辑
-            String pid = addForWaitBundle.getString("pid");
-
-            for (DeviceCategoryBean deviceCategoryBean : deviceCategoryBeans) {
-                for (DeviceCategoryBean.SubBean subBean : deviceCategoryBean.getSub()) {
-                    for (DeviceCategoryBean.SubBean.NodeBean nodeBean : subBean.getNode()) {
-                        if (TextUtils.equals(pid, nodeBean.getPid())) {
-                            handleAddJump(new DeviceCategoryBean.SubBean.NodeBean[]{nodeBean});
-                            return;
-                        }
-                    }
-                }
-            }
-//            handleShouldExit();
+        if (deviceNodeBean != null && addForWaitBundle != null) {//绑定待添加设备逻辑
+            handleAddJump(new DeviceCategoryBean.SubBean.NodeBean[]{deviceNodeBean});
+            return;
         }
+
         replaceInfoBundle = intent.getBundleExtra("replaceInfo");
         if (replaceInfoBundle != null) {//替换设备逻辑
             String replaceDeviceId = replaceInfoBundle.getString("replaceDeviceId");
@@ -93,6 +84,7 @@ public class DeviceCategoryHandler {
             }
 //            handleShouldExit();
         }
+
     }
 
     /**
@@ -117,7 +109,7 @@ public class DeviceCategoryHandler {
         if (subBeans.length == 1) {
             DeviceCategoryBean.SubBean.NodeBean nodeBean = subBeans[0];
             boolean is_has_A2 = loadGateway(aylaGateways);
-            if (is_has_A2 && nodeBean.getOemModel().size()>1) {
+            if (is_has_A2 && nodeBean.getOemModel().size() > 1) {
                 Bundle addInfo = generateA2AddInfoBundle(nodeBean);
                 Intent mainActivity = new Intent(fromContext, A2GatewaySelectActivity.class);
                 mainActivity.putExtra("addInfo", addInfo);

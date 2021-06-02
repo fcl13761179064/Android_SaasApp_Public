@@ -5,6 +5,7 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
+import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 
@@ -30,14 +31,14 @@ import io.reactivex.schedulers.Schedulers;
 public class DeviceListPresenter extends BasePresenter<DeviceListView> {
 
     public void loadCategory(DeviceListBean.DevicesBean devicesBean, String pid) {
-        Disposable subscribe = Observable.zip(RequestModel.getInstance().getDeviceCategory(), RequestModel.getInstance().getDevicePid(pid), new BiFunction<List<DeviceCategoryBean>, Object, List<Object>>() {
+        Disposable subscribe = Observable.zip(RequestModel.getInstance().getDeviceCategory(), RequestModel.getInstance().getDevicePid(pid), new BiFunction<List<DeviceCategoryBean>, DeviceCategoryBean.SubBean.NodeBean, List<Object>>() {
             @NonNull
             @Override
-            public List<Object> apply(@NonNull List<DeviceCategoryBean> deviceCategoryBeans,  Object o) throws Exception {
+            public List<Object> apply(@NonNull List<DeviceCategoryBean> deviceCategoryBeans,  DeviceCategoryBean.SubBean.NodeBean deviceNodeBean) throws Exception {
 
-                return zipdatas(deviceCategoryBeans,o);
+                return zipdatas(deviceCategoryBeans,deviceNodeBean);
             }
-            private List<Object> zipdatas(List<DeviceCategoryBean> mListDeviceCategoryBean , Object s) {
+            private List<Object> zipdatas(List<DeviceCategoryBean> mListDeviceCategoryBean , DeviceCategoryBean.SubBean.NodeBean s) {
                 List<Object> listData = new ArrayList<>();
                 listData.add(mListDeviceCategoryBean);
                 listData.add(s);
@@ -61,8 +62,8 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                     @Override
                     public void accept(List<Object> objects) throws Exception {
                         List<DeviceCategoryBean> mListDeviceCategoryBean = (List<DeviceCategoryBean>) objects.get(0);
-                        Object o = objects.get(1);
-                        mView.loadDataSuccess(devicesBean, mListDeviceCategoryBean,o);
+                        DeviceCategoryBean.SubBean.NodeBean deviceNodeBean = (DeviceCategoryBean.SubBean.NodeBean) objects.get(1);
+                        mView.loadDataSuccess(devicesBean, mListDeviceCategoryBean,deviceNodeBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
