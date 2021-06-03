@@ -375,7 +375,7 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
             propertyValue = _dsnCodeValue[2];
         }
         String displayName = state.getString("displayName");
-        String imgUrl = state.getString("imgUrl");
+        String imgUrl = state.optString("imgUrl");
         long sceneId = state.getLong("sceneId");
         long ruleId = state.optLong("ruleId");
 

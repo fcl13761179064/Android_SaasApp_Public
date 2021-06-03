@@ -80,25 +80,24 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else {
             imageView.setImageResource(R.drawable.person_center);
         }
+
         String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
         if (Constance.isNetworkDebug()) {//这个判断是dev，qa环境
             if ("1".equalsIgnoreCase(title_type)) {
                 appBar.setCenterText("智慧酒店");
-                IoTSmart.setAuthCode("dev_saas");
+                IoTSmart.setAuthCode("china_production");
             } else {
                 appBar.setCenterText("地产行业");
                 IoTSmart.setAuthCode("dev_miya");
             }
-            IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
         } else {//这个是prod环境
             if ("1".equalsIgnoreCase(title_type)) {
                 appBar.setCenterText("智慧酒店");
-                IoTSmart.setAuthCode("pord_saas");
+                IoTSmart.setAuthCode("prod_saas");
             } else {
                 appBar.setCenterText("地产行业");
-                IoTSmart.setAuthCode("china_production");
+                IoTSmart.setAuthCode("prod_miya");
             }
-            IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
         }
     }
 
