@@ -25,6 +25,7 @@ import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 
 import butterknife.BindView;
+import io.sentry.Sentry;
 
 /**
  * @描述 首页
@@ -64,6 +65,12 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
 
     @Override
     protected void initView() {
+        try {
+            throw new Exception("This is a test.");
+        } catch (Exception e) {
+            Sentry.captureException(e);
+        }
+
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
         SharePreferenceUtils.saveLong(this, Constance.SP_ROOM_ID, mRoom_ID);
         String mRoom_name = getIntent().getStringExtra("roomName");

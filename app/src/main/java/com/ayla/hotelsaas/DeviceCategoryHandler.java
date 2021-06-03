@@ -31,7 +31,7 @@ import static android.app.Activity.RESULT_OK;
  * 实现者必须在{@link Activity#(int, int, Intent)} 中调用本类的{@link #onActivityResult(int, int, Intent)}
  */
 public class DeviceCategoryHandler {
-    private final int REQUEST_CODE_ADD_DEVICE = 0X1071;
+    public static final int REQUEST_CODE_ADD_DEVICE = 0X1071;
     private final int REQUEST_CODE_SELECT_GATEWAY = 0X1072;
 
     private final long scopeId;
@@ -250,6 +250,7 @@ public class DeviceCategoryHandler {
         if (replaceInfoBundle != null) {
             addInfo.putString("replaceDeviceId", replaceInfoBundle.getString("replaceDeviceId"));
             addInfo.putString("nickname", replaceInfoBundle.getString("replaceDeviceNickname"));
+            addInfo.putString("targetGatewayDeviceId", replaceInfoBundle.getString("targetGatewayDeviceId"));
         }
         return addInfo;
     }
@@ -266,6 +267,7 @@ public class DeviceCategoryHandler {
         if (replaceInfoBundle != null) {
             addInfo.putString("replaceDeviceId", replaceInfoBundle.getString("replaceDeviceId"));
             addInfo.putString("nickname", replaceInfoBundle.getString("replaceDeviceNickname"));
+            addInfo.putString("targetGatewayDeviceId", replaceInfoBundle.getString("targetGatewayDeviceId"));
         }
         return addInfo;
     }
