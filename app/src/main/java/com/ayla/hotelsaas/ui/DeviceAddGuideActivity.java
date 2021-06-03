@@ -126,22 +126,6 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
         } else {
             shakeButton();
         }
-        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
-        if (Constance.isNetworkDebug()) {//这个判断是dev，qa环境
-            if ("1".equalsIgnoreCase(title_type)) {
-                IoTSmart.setAuthCode("dev_saas");
-            } else {
-                IoTSmart.setAuthCode("dev_miya");
-            }
-            IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
-        } else {//这个是prod环境
-            if ("1".equalsIgnoreCase(title_type)) {
-                IoTSmart.setAuthCode("pord_saas");
-            } else {
-                IoTSmart.setAuthCode("china_production");
-            }
-        }
-        IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
     }
 
     private void shakeButton() {

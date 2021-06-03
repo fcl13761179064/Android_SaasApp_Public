@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
+
+import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -61,6 +63,7 @@ public class MyApplication extends AApplication {
         if (ProcessUtils.isMainProcess()) {
           //  initBugly();
             initX5();
+            IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
         }
     }
 
