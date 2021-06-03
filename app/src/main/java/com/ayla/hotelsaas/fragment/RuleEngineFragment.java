@@ -76,7 +76,6 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
         if (getArguments()!=null){
             mRoom_id = getArguments().getLong("room_id");
         }
-        SharePreferenceUtils.saveLong(getActivity(), Constance.SP_ROOM_ID, mRoom_id);
     }
 
     @Override

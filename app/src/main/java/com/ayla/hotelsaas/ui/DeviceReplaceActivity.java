@@ -73,7 +73,7 @@ public class DeviceReplaceActivity extends BaseMvpActivity<DeviceReplaceView, De
         replaceInfoBundle.putString("replaceDeviceNickname", replaceDeviceBean.getNickname());
         intent.putExtra("replaceInfo", replaceInfoBundle);
 
-        deviceCategoryHandler.bindOrReplace(deviceCategoryBeans, intent);//替换设备
+        deviceCategoryHandler.bindOrReplace(deviceCategoryBeans, intent, null);//替换设备
     }
 
     @Override

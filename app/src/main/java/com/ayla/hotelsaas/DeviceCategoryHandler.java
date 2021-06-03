@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.ui.A2GatewaySelectActivity;
 import com.ayla.hotelsaas.ui.AylaGatewayAddGuideActivity;
 import com.ayla.hotelsaas.ui.CustomToast;
@@ -30,7 +31,7 @@ import static android.app.Activity.RESULT_OK;
  * 实现者必须在{@link Activity#(int, int, Intent)} 中调用本类的{@link #onActivityResult(int, int, Intent)}
  */
 public class DeviceCategoryHandler {
-    private final int REQUEST_CODE_ADD_DEVICE = 0X1071;
+    public static final int REQUEST_CODE_ADD_DEVICE = 0X1071;
     private final int REQUEST_CODE_SELECT_GATEWAY = 0X1072;
 
     private final long scopeId;
@@ -59,22 +60,13 @@ public class DeviceCategoryHandler {
      * @param intent              添加待绑定设备时，包含{@link Bundle addForWait}
      *                            替换设备时，包含{@link Bundle replaceInfo}
      */
-    public void bindOrReplace(List<DeviceCategoryBean> deviceCategoryBeans, Intent intent) {
+    public void bindOrReplace(List<DeviceCategoryBean> deviceCategoryBeans, Intent intent, DeviceCategoryBean.SubBean.NodeBean deviceNodeBean) {
         addForWaitBundle = intent.getBundleExtra("addForWait");
-        if (addForWaitBundle != null) {//绑定待添加设备逻辑
-            String pid = addForWaitBundle.getString("pid");
-            for (DeviceCategoryBean deviceCategoryBean : deviceCategoryBeans) {
-                for (DeviceCategoryBean.SubBean subBean : deviceCategoryBean.getSub()) {
-                    for (DeviceCategoryBean.SubBean.NodeBean nodeBean : subBean.getNode()) {
-                        if (TextUtils.equals(pid, nodeBean.getPid())) {
-                            handleAddJump(new DeviceCategoryBean.SubBean.NodeBean[]{nodeBean});
-                            return;
-                        }
-                    }
-                }
-            }
-//            handleShouldExit();
+        if (deviceNodeBean != null && addForWaitBundle != null) {//绑定待添加设备逻辑
+            handleAddJump(new DeviceCategoryBean.SubBean.NodeBean[]{deviceNodeBean});
+            return;
         }
+
         replaceInfoBundle = intent.getBundleExtra("replaceInfo");
         if (replaceInfoBundle != null) {//替换设备逻辑
             String replaceDeviceId = replaceInfoBundle.getString("replaceDeviceId");
@@ -92,6 +84,7 @@ public class DeviceCategoryHandler {
             }
 //            handleShouldExit();
         }
+
     }
 
     /**
@@ -116,7 +109,7 @@ public class DeviceCategoryHandler {
         if (subBeans.length == 1) {
             DeviceCategoryBean.SubBean.NodeBean nodeBean = subBeans[0];
             boolean is_has_A2 = loadGateway(aylaGateways);
-            if (is_has_A2 && nodeBean.getOemModel().size()>1) {
+            if (is_has_A2 && nodeBean.getOemModel().size() > 1) {
                 Bundle addInfo = generateA2AddInfoBundle(nodeBean);
                 Intent mainActivity = new Intent(fromContext, A2GatewaySelectActivity.class);
                 mainActivity.putExtra("addInfo", addInfo);
@@ -257,6 +250,7 @@ public class DeviceCategoryHandler {
         if (replaceInfoBundle != null) {
             addInfo.putString("replaceDeviceId", replaceInfoBundle.getString("replaceDeviceId"));
             addInfo.putString("nickname", replaceInfoBundle.getString("replaceDeviceNickname"));
+            addInfo.putString("targetGatewayDeviceId", replaceInfoBundle.getString("targetGatewayDeviceId"));
         }
         return addInfo;
     }
@@ -273,6 +267,7 @@ public class DeviceCategoryHandler {
         if (replaceInfoBundle != null) {
             addInfo.putString("replaceDeviceId", replaceInfoBundle.getString("replaceDeviceId"));
             addInfo.putString("nickname", replaceInfoBundle.getString("replaceDeviceNickname"));
+            addInfo.putString("targetGatewayDeviceId", replaceInfoBundle.getString("targetGatewayDeviceId"));
         }
         return addInfo;
     }

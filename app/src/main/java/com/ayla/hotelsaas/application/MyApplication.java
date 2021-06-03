@@ -4,24 +4,16 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
-import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.ProcessUtils;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.export.external.TbsCoreSettings;
 import com.tencent.smtt.sdk.QbSdk;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by fcl13761179064 on 2020/6/3.
@@ -67,12 +59,12 @@ public class MyApplication extends AApplication {
         Log.d(TAG, "version name: " + BuildConfig.VERSION_NAME + ", version code: " + BuildConfig.VERSION_CODE);
         mInstance = this;
         if (ProcessUtils.isMainProcess()) {
-            initBugly();
+          //  initBugly();
             initX5();
         }
     }
 
-    private void initBugly() {
+   /* private void initBugly() {
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
         strategy.setCrashHandleCallback(new CrashReport.CrashHandleCallback() {
             public Map<String, String> onCrashHandleStart(
@@ -102,7 +94,7 @@ public class MyApplication extends AApplication {
         });
 
         CrashReport.initCrashReport(getApplicationContext(), "8863fabcca", Constance.isNetworkDebug());
-    }
+    }*/
 
     private void initX5() {
         // 在调用TBS初始化、创建WebView之前进行如下配置

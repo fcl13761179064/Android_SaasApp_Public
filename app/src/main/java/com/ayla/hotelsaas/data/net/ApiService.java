@@ -6,6 +6,7 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
+import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
@@ -76,7 +77,7 @@ public interface ApiService {
     @GET("api/v1/build/user/mybaseinfo")
     Observable<BaseResult<PersonCenter>> getUserInfo();
 
-    @GET("api/v1/build/device/{deviceId}/{scopeId}/nodes")
+    @GET("api/v3/build/device/{deviceId}/{scopeId}/nodes")
     Observable<BaseResult<List<GatewayNodeBean>>> getGatewayNodes(@Path("deviceId") String deviceId, @Path("scopeId") long scopeId);
 
     @POST("api/v2/sso/refresh")
@@ -91,10 +92,13 @@ public interface ApiService {
     @GET("/api/v3/build/spark/devicetypes/product/")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
-    @POST("/api/v1/build/device/getDeviceActionOrCondition")
+    @GET("/api/v3/build/spark/devicetypes/product/{pid}")//A2新添加的一个接口，
+    Observable<BaseResult<DeviceCategoryBean.SubBean.NodeBean>> getDevicePid(@Path("pid") String pid);
+
+    @POST("/api/v3/build/device/getDeviceActionOrCondition")
     Observable<BaseResult<List<DeviceCategoryDetailBean>>> fetchDeviceCategoryDetail(@Body RequestBody body);
 
-    @POST("/api/v1/build/device/getDeviceActionOrCondition/{pid}")
+    @POST("/api/v3/build/device/getDeviceActionOrCondition/{pid}")
     Observable<BaseResult<DeviceCategoryDetailBean>> fetchDeviceCategoryDetail(@Path("pid") String pid);
 
     @GET("api/v1/build/constructbill")
@@ -111,7 +115,7 @@ public interface ApiService {
     @GET("api/v1/build/billrooms")
     Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("billId") String billId);
 
-    @POST("api/v1/build/device/list")
+    @POST("/api/v3/build/device/list")
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
     @POST("api/v1/build/device/bind")
@@ -275,7 +279,7 @@ public interface ApiService {
      *
      * @return
      */
-    @GET("/api/v1/build/batch/export/{roomId}")
+    @GET("/api/v2/build/batch/export/{roomId}")
     Observable<BaseResult<String>> roomExport(@Path("roomId") long roomId);
 
     /**
