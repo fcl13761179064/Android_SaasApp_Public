@@ -8,8 +8,10 @@ import androidx.annotation.NonNull;
 
 import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.aliyun.iot.aep.sdk.framework.AApplication;
+import com.aliyun.iot.aep.sdk.framework.config.GlobalConfig;
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.ProcessUtils;
 import com.tencent.smtt.export.external.TbsCoreSettings;
 import com.tencent.smtt.sdk.QbSdk;
@@ -63,7 +65,25 @@ public class MyApplication extends AApplication {
         if (ProcessUtils.isMainProcess()) {
           //  initBugly();
             initX5();
+            String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
+            Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCodesss():" + GlobalConfig.getInstance().getAuthCode());
+            Log.d(TAG, "onResume::" +title_type);
+            if (Constance.isNetworkDebug()) {//这个判断是dev，qa环境
+                if ("1".equalsIgnoreCase(title_type)) {
+                    IoTSmart.setAuthCode("dev_saas");
+                } else {
+                    IoTSmart.setAuthCode("dev_miya");
+                }
+            } else {//这个是prod环境
+                if ("1".equalsIgnoreCase(title_type)) {
+                    IoTSmart.setAuthCode("china_production");
+                } else {
+                    IoTSmart.setAuthCode("prod_miya");
+                }
+            }
             IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
+
+
         }
     }
 

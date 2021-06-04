@@ -27,6 +27,7 @@ import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.Programe_change_AppBar;
+import com.blankj.utilcode.util.ProcessUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -83,25 +84,10 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             imageView.setImageResource(R.drawable.person_center);
         }
 
-        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
-        if (Constance.isNetworkDebug()) {//这个判断是dev，qa环境
-            if ("1".equalsIgnoreCase(title_type)) {
-                appBar.setCenterText("智慧酒店");
-                IoTSmart.setAuthCode("china_production");
-            } else {
-                appBar.setCenterText("地产行业");
-                IoTSmart.setAuthCode("dev_miya");
-            }
-        } else {//这个是prod环境
-            if ("1".equalsIgnoreCase(title_type)) {
-                appBar.setCenterText("智慧酒店");
-                IoTSmart.setAuthCode("pord_saas");
-            } else {
-                appBar.setCenterText("地产行业");
-                IoTSmart.setAuthCode("prod_miya");
-            }
-        }
+
         Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCode():" + GlobalConfig.getInstance().getAuthCode());
+        Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
+
     }
 
     @Override
