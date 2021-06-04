@@ -66,7 +66,6 @@ public class MyApplication extends AApplication {
           //  initBugly();
             initX5();
             String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
-            Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCodesss():" + GlobalConfig.getInstance().getAuthCode());
             Log.d(TAG, "onResume::" +title_type);
             if (Constance.isNetworkDebug()) {//这个判断是dev，qa环境
                 if ("1".equalsIgnoreCase(title_type)) {
@@ -76,14 +75,15 @@ public class MyApplication extends AApplication {
                 }
             } else {//这个是prod环境
                 if ("1".equalsIgnoreCase(title_type)) {
-                    IoTSmart.setAuthCode("china_production");
+                    IoTSmart.setAuthCode("prod_saas");
                 } else {
                     IoTSmart.setAuthCode("prod_miya");
                 }
             }
             IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
-
-
+            Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCodesss():" + GlobalConfig.getInstance().getAuthCode());
+            Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCode():" + GlobalConfig.getInstance().getAuthCode());
+            Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
         }
     }
 
