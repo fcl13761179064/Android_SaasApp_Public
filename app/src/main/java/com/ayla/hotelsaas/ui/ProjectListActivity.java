@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -13,6 +14,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.aliyun.iot.aep.sdk.IoTSmart;
+import com.aliyun.iot.aep.sdk.framework.config.GlobalConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListTabAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -93,12 +95,13 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else {//这个是prod环境
             if ("1".equalsIgnoreCase(title_type)) {
                 appBar.setCenterText("智慧酒店");
-                IoTSmart.setAuthCode("prod_saas");
+                IoTSmart.setAuthCode("pord_saas");
             } else {
                 appBar.setCenterText("地产行业");
                 IoTSmart.setAuthCode("prod_miya");
             }
         }
+        Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCode():" + GlobalConfig.getInstance().getAuthCode());
     }
 
     @Override
