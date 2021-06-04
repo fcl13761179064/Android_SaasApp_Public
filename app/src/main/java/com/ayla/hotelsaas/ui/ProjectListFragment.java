@@ -107,17 +107,17 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                         if ("1".equals(title_type)) {
                             return;
                         }
+                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
                         mPresenter.refresh("1");
                         restartApp(getContext());
-                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
                         break;
                     case USER_ADD:
                         if ("2".equals(title_type)) {
                             return;
                         }
+                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
                         mPresenter.refresh("2");
                         restartApp(getContext());
-                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
                         break;
                 }
 
