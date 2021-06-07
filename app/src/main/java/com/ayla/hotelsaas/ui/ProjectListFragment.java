@@ -152,7 +152,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                 Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(intent);
-                System.exit(0);
+                android.os.Process.killProcess(android.os.Process.myPid());
             }
         }, 1000);// 1秒钟后重启应用
 
