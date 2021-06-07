@@ -141,9 +141,9 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     public static void restartApp(Context context) {
         String title_type = SharePreferenceUtils.getString(context, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
-            CustomToast.makeText(context, "切换到地产行业", R.drawable.ic_toast_warming);
-        } else {
             CustomToast.makeText(context, "切换到智慧酒店", R.drawable.ic_toast_warming);
+        } else {
+            CustomToast.makeText(context, "切换到地产行业", R.drawable.ic_toast_warming);
         }
 
         new Handler().postDelayed(new Runnable() {
