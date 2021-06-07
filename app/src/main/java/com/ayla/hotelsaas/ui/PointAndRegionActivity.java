@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 开关用途设置
+ * 设备位置页面
  * 进入需要带上 deviceId  scopeId
  */
 public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, PointAndRegionPresenter> implements PointAndRegionView {
@@ -57,7 +57,7 @@ public class PointAndRegionActivity extends BaseMvpActivity<PointAndRegionView, 
 
     @Override
     protected void initView() {
-      Long  roomId = SharePreferenceUtils.getLong(this, Constance.SP_ROOM_ID, 0);
+      Long roomId = SharePreferenceUtils.getLong(this, Constance.SP_ROOM_ID, 0);
         mPresenter.getAllDeviceLocation(roomId);
         String deviceId = getIntent().getStringExtra("deviceId");
         devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);

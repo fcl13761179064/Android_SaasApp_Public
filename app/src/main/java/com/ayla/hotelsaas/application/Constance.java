@@ -30,7 +30,7 @@ public class Constance {
             default:
                 networkDebug = false;
         }
-        networkDebug = networkDebug || BuildConfig.DEBUG;
+//        networkDebug = networkDebug || BuildConfig.DEBUG;
     }
 
     public static String sProdUrl = "https://abp-prod.ayla.com.cn";//正式环境

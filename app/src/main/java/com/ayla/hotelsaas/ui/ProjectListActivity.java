@@ -7,11 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListTabAdapter;
 import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
@@ -67,26 +65,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else {
             imageView.setImageResource(R.drawable.person_center);
         }
-        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
-        if (Constance.isNetworkDebug()) {//这个判断是dev，qa环境
-            if ("1".equalsIgnoreCase(title_type)) {
-                appBar.setCenterText("智慧酒店");
-                IoTSmart.setAuthCode("dev_saas");
-            } else {
-                appBar.setCenterText("地产行业");
-                IoTSmart.setAuthCode("dev_miya");
-            }
-            IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
-        } else {//这个是prod环境
-            if ("1".equalsIgnoreCase(title_type)) {
-                appBar.setCenterText("智慧酒店");
-                IoTSmart.setAuthCode("pord_saas");
-            } else {
-                appBar.setCenterText("地产行业");
-                IoTSmart.setAuthCode("china_production");
-            }
-            IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
-        }
     }
 
     @Override
@@ -107,6 +85,12 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         magic_inditator.setNavigator(commonNavigator);
         ViewPagerHelper.bind(magic_inditator, viewPager);
         viewPager.setCurrentItem(0, false);
+        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
+        if ("1".equalsIgnoreCase(title_type)) {
+            appBar.setCenterText("智慧酒店");
+        } else {
+            appBar.setCenterText("地产行业");
+        }
     }
 
 
@@ -121,7 +105,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             @NonNull
             @Override
             public ProjectListFragment getItem(int position) {
-                return new ProjectListFragment(appBar);
+                return new ProjectListFragment();
             }
 
             @Override

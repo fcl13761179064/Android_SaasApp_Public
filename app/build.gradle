@@ -19,7 +19,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode Integer.parseInt(new Date().format("yyyyMMdd"))
-        versionName "2.4.22"
+        versionName "2.6.11"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
@@ -147,7 +147,7 @@ dependencies {
     implementation rootProject.libraries.utilcode
     implementation rootProject.libraries.eventbus
     implementation 'com.xw.repo:bubbleseekbar:3.20'
-    implementation 'com.tencent.bugly:crashreport:3.1.9'
+    implementation 'io.sentry:sentry-android:4.3.0'
     implementation project(':dsbridge')
 
     implementation 'com.github.AylaAsia:HongYanConfigLib:0.0.10'

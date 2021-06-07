@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,9 +9,7 @@ import android.view.ViewStub;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ScaleTabAdapter;
-import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -24,8 +23,6 @@ import com.ayla.hotelsaas.events.RegionChangeEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListContainerPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
-import com.ayla.hotelsaas.ui.LoginActivity;
-import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -39,20 +36,19 @@ import java.util.List;
 public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListContainerView, DeviceListContainerPresenter> implements DeviceListContainerView {
 
 
-    private final Long room_id;
     FragmentDeviceContainerBinding binding;
     ViewStubDeviceListContainerBinding deviceListContainerBinding;
     FragmentStatePagerAdapter mAdapter;
     private List<DeviceLocationBean> LocationBeans;
+    private long room_id;
 
-    public DeviceListContainerFragment(Long room_id) {
-        this.room_id = room_id;
-        SharePreferenceUtils.saveLong(getActivity(), Constance.SP_ROOM_ID, room_id);
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments()!=null){
+            room_id = getArguments().getLong("room_id");
+        }
         EventBus.getDefault().register(this);
     }
 

@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -68,21 +69,27 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     private List<String> roomBeans;
     private String saas_saft_img;
 
-    public ProjectListFragment(Programe_change_AppBar appBar) {
-        this.appBar = appBar;
+    @Override
+    public void onAttach(Activity context) {
+        super.onAttach(context);
+        ProjectListActivity projectListActivity = (ProjectListActivity) context;
+        if (projectListActivity.appBar != null || projectListActivity.appBar.getTitleLayoutView()!=null) {
+            projectListActivity.appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    menuClick(v);
+                }
+            });
+        }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                menuClick(v);
-            }
-        });
         EventBus.getDefault().register(this);
     }
+
+
 
     //菜单按钮onClick事件
     public void menuClick(View view) {
@@ -100,17 +107,17 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                         if ("1".equals(title_type)) {
                             return;
                         }
+                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
                         mPresenter.refresh("1");
                         restartApp(getContext());
-                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
                         break;
                     case USER_ADD:
                         if ("2".equals(title_type)) {
                             return;
                         }
+                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
                         mPresenter.refresh("2");
                         restartApp(getContext());
-                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
                         break;
                 }
 
@@ -134,9 +141,9 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     public static void restartApp(Context context) {
         String title_type = SharePreferenceUtils.getString(context, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
-            CustomToast.makeText(context, "切换到地产行业", R.drawable.ic_toast_warming);
-        } else {
             CustomToast.makeText(context, "切换到智慧酒店", R.drawable.ic_toast_warming);
+        } else {
+            CustomToast.makeText(context, "切换到地产行业", R.drawable.ic_toast_warming);
         }
 
         new Handler().postDelayed(new Runnable() {
@@ -145,7 +152,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                 Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(intent);
-                System.exit(0);
+                android.os.Process.killProcess(android.os.Process.myPid());
             }
         }, 1000);// 1秒钟后重启应用
 
@@ -195,8 +202,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         mAdapter.setEmptyView(R.layout.layout_loading);
         mSmartRefreshLayout.setEnableLoadMore(false);
         mSmartRefreshLayout.setEnableRefresh(false);
-        String title_type = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
-        if ("1".equalsIgnoreCase(title_type)) {
+        if ("1".equalsIgnoreCase(saas_saft_img)) {
             bt_add.setVisibility(View.VISIBLE);
         } else {
             bt_add.setVisibility(View.GONE);

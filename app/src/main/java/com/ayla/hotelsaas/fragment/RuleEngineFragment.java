@@ -17,6 +17,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.RuleEnginePagerAdapter;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -29,6 +30,7 @@ import com.ayla.hotelsaas.mvp.view.RuleEngineView;
 import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.GatewaySelectActivity;
 import com.ayla.hotelsaas.ui.SceneSettingActivity;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.CustomSheet;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -50,7 +52,6 @@ import butterknife.BindView;
  * RuleEngine页面
  */
 public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEnginePresenter> implements RuleEngineView {
-    private final long mRoom_ID;
     public static final int REQUEST_CODE_SETTING = 0X10;
     private final int REQUEST_CODE_SELECT_GATEWAY = 0X11;
     @BindView(R.id.tl_tabs)
@@ -65,15 +66,16 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
     ViewPager mViewPager;
 
     private RuleEnginePagerAdapter mAdapter;
+    private long mRoom_id;
 
-    public RuleEngineFragment(long mRoom_ID) {
-        this.mRoom_ID = mRoom_ID;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        if (getArguments()!=null){
+            mRoom_id = getArguments().getLong("room_id");
+        }
     }
 
     @Override
@@ -106,7 +108,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 if (mPresenter != null) {
-                    mPresenter.loadData(mRoom_ID);
+                    mPresenter.loadData(mRoom_id);
                 }
             }
         });
@@ -120,7 +122,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                             @Override
                             public void callback(int index) {
                                 Intent intent = new Intent(getActivity(), SceneSettingActivity.class);
-                                intent.putExtra("scopeId", mRoom_ID);
+                                intent.putExtra("scopeId", mRoom_id);
                                 intent.putExtra("siteType", index == 0 ? 1 : 2);
                                 if (index == 0) {//选择了本地联动
                                     List<DeviceListBean.DevicesBean> gateways = new ArrayList<>();
@@ -163,7 +165,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
 
     @Override
     protected void initData() {
-        mPresenter.loadData(mRoom_ID);
+        mPresenter.loadData(mRoom_id);
     }
 
     @Override
@@ -211,7 +213,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
                 public void onClick(View v) {
                     mFrameLayout.removeViewAt(mFrameLayout.getChildCount() - 1);
                     mFrameLayout.addView(LayoutInflater.from(getContext()).inflate(R.layout.layout_loading, null));
-                    mPresenter.loadData(mRoom_ID);
+                    mPresenter.loadData(mRoom_id);
                 }
             });
             mSmartRefreshLayout.setVisibility(View.INVISIBLE);
@@ -241,7 +243,11 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
         mSmartRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                mSmartRefreshLayout.autoRefresh();//自动刷新
+                try {
+                    mSmartRefreshLayout.autoRefresh();//自动刷新
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

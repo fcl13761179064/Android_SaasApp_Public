@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ayla.hotelsaas.DeviceCategoryHandler;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ZigBeeAddSelectGatewayAdapter;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -102,11 +103,35 @@ public class A2GatewaySelectActivity extends BaseMvpActivity<ZigBeeAddSelectGate
         super.onCreate(savedInstanceState);
         addInfo = getIntent().getBundleExtra("addInfo");
         nodeBean = (DeviceCategoryBean.SubBean.NodeBean) getIntent().getSerializableExtra("nodeBean");
-        mPresenter.loadA2Gateway(1);
+        String targetGatewayDeviceId = (String) addInfo.get("targetGatewayDeviceId");
+        if (targetGatewayDeviceId != null) {
+            mPresenter.loadA2Gatewaytwo(1,targetGatewayDeviceId);
+        }else {
+            mPresenter.loadA2Gateway(1);
+        }
     }
 
     @Override
     public void showGateways(List<DeviceListBean.DevicesBean> devices) {
         mAdapter.setNewData(devices);
+    }
+
+    @Override
+    public void showRelaceGateWays(List<DeviceListBean.DevicesBean> gateways) {
+        DeviceListBean.DevicesBean devicesBean = gateways.get(0);
+        if (TempUtils.isDeviceOnline(devicesBean)) {
+            addInfo.putInt("cuId", devicesBean.getCuId());
+            if (devicesBean.getCuId() == 0) {
+                addInfo.putString("deviceCategory", nodeBean.getOemModel().get("0"));
+                addInfo.putInt("networkType", 3);
+            } else {
+                addInfo.putString("deviceCategory",nodeBean.getOemModel().get("1"));
+                addInfo.putInt("networkType", 4);
+            }
+            Intent intent = new Intent().putExtra("deviceId", devicesBean.getDeviceId())
+                    .putExtra("addInfo", addInfo);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 }

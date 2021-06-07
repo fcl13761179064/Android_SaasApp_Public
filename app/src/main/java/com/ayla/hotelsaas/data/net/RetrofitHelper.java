@@ -84,6 +84,10 @@ public class RetrofitHelper {
             }
         }).setLevel(Constance.isNetworkDebug() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.BASIC));
         builder.retryOnConnectionFailure(true);
+
+//        builder.sslSocketFactory(SSLUtil.getSslSocketFactory().sSLSocketFactory, SSLUtil.getSslSocketFactory().trustManager)
+//                .hostnameVerifier(SSLUtil.UnSafeHostnameVerifier);
+
         return builder.build();
     }
 
