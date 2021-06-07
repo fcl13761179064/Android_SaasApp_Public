@@ -83,11 +83,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else {
             imageView.setImageResource(R.drawable.person_center);
         }
-
-
-        Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCode():" + GlobalConfig.getInstance().getAuthCode());
-        Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
-
     }
 
     @Override
@@ -108,6 +103,12 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         magic_inditator.setNavigator(commonNavigator);
         ViewPagerHelper.bind(magic_inditator, viewPager);
         viewPager.setCurrentItem(0, false);
+        String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
+        if ("1".equalsIgnoreCase(title_type)) {
+            appBar.setCenterText("智慧酒店");
+        } else {
+            appBar.setCenterText("地产行业");
+        }
     }
 
 
