@@ -17,10 +17,10 @@ stages:
 
 job_lint:
   stage: lint
-#  only:
-#    - /^issue[-|/].+$/
-#    - /^feature[-|/].+$/
-#    - /^bugfix[-|/].+$/
+  #  only:
+  #    - /^issue[-|/].+$/
+  #    - /^feature[-|/].+$/
+  #    - /^bugfix[-|/].+$/
   script:
     - echo "开始Lint"
     - gradle -Pci --console=plain :app:lint -PbuildDir=lint
@@ -29,6 +29,25 @@ job_lint:
     - docker
     - android
     - hk
+
+job_signing_prepare:
+  stage: signing_prepare
+  script:
+    - echo "开始创建签名文件"
+    - echo $JKS_BASE64 | base64 -d > lark.jks
+    - echo "storePassword=$storePassword" > signing.properties
+    - echo "keyPassword=$keyPassword" >> signing.properties
+    - echo "keyAlias=$keyAlias" >> signing.properties
+    - echo "创建签名文件结束"
+  only:
+    - master
+  artifacts:
+    paths:
+      - lark.jks
+      - signing.properties
+  tags:
+    - android
+
 
 job_assemble:
   stage: assemble
@@ -50,10 +69,15 @@ job_assemble:
 job_publish:
   stage: publish
   only:
-    - prod
+    refs:
+      - prod
+    changes:
+      - CHANGELOG.MD
   script:
     - echo "开始上传APP到蒲公英"
-    - curl -F 'file=@app/build/outputs/apk/prod/release/app-prod-release.apk' -F '_api_key=76e04e812ccbf2cf9b501dfbc278dda5' https://www.pgyer.com/apiv2/app/upload
+    - buildUpdateDescription=$(cat CHANGELOG.MD)
+    - echo "buildUpdateDescription=$buildUpdateDescription"
+    - curl -F 'file=@app/build/outputs/apk/prod/release/app-prod-release.apk' -F '_api_key=$pgyer_api_key"   https://www.pgyer.com/apiv2/app/upload
     - echo "上传APP到蒲公英结束"
   tags:
     - docker
