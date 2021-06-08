@@ -35,16 +35,16 @@ job_signing_prepare:
   script:
     - echo "开始创建签名文件"
     - echo $JKS_BASE64 | base64 -d > lark.jks
-    - echo "storePassword=$storePassword" > ss.properties
-    - echo "keyPassword=$keyPassword" >> ss.properties
-    - echo "keyAlias=$keyAlias" >> ss.properties
+    - echo "storePassword=$storePassword" > siging.properties
+    - echo "keyPassword=$keyPassword" >> siging.properties
+    - echo "keyAlias=$keyAlias" >> siging.properties
     - echo "创建签名文件结束"
   only:
     - master
   artifacts:
     paths:
       - ayla_test.jks
-      - ss.properties
+      - siging.properties
   tags:
     - android
 
