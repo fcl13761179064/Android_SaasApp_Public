@@ -34,7 +34,7 @@ job_signing_prepare:
   stage: signing_prepare
   script:
     - echo "开始创建签名文件"
-    - echo $JKS_BASE64 | base64 -d > lark.jks
+    - echo $JKS_BASE64 | base64 -d > ayla_test.jks
     - echo "storePassword=$storePassword" > siging.properties
     - echo "keyPassword=$keyPassword" >> siging.properties
     - echo "keyAlias=$keyAlias" >> siging.properties
