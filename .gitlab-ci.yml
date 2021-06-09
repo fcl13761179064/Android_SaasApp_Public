@@ -21,7 +21,7 @@ job_lint:
   #    - /^bugfix[-|/].+$/
   script:
     - echo "开始Lint"
-    - gradle -Pci --console=plain :app:lint -PbuildDir=lint
+    - ./gradlew -Pci --console=plain :app:lint -PbuildDir=lint
     - echo "Lint结束"
   tags:
     - iOS
@@ -57,7 +57,7 @@ job_assemble:
     - prod
   script:
     - echo "开始打包"
-    - gradle assembleProdRelease
+    - ./gradlew :app:assembleRelease
     - echo "打包结束"
   artifacts:
     paths:
