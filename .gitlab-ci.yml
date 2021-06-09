@@ -30,35 +30,11 @@ job_lint:
     - android
     - hk
 
-job_signing_prepare:
-  stage: signing_prepare
-  script:
-    - echo "开始创建签名文件"
-    - echo $JKS_BASE64 | base64 -d > ayla_test.jks
-    - echo "storePassword=$storePassword" > siging.properties
-    - echo "keyPassword=$keyPassword" >> siging.properties
-    - echo "keyAlias=$keyAlias" >> siging.properties
-    - echo "创建签名文件结束"
-  only:
-    refs:
-      - master
-      changes:
-        - CHANGELOG.MD
-  artifacts:
-    paths:
-      - ayla_test.jks
-      - siging.properties
-  tags:
-    - android
-
-
 job_assemble:
   stage: assemble
   only:
-    refs:
-      - master
-    changes:
-      - CHANGELOG.MD
+    - master
+    - prod
   script:
     - echo "开始打包"
     - gradle assembleProdRelease
@@ -74,16 +50,10 @@ job_assemble:
 job_publish:
   stage: publish
   only:
-    refs:
-      - prod
-      - master
-    changes:
-      - CHANGELOG.MD
+    - prod
   script:
     - echo "开始上传APP到蒲公英"
-    - buildUpdateDescription=$(cat CHANGELOG.MD)
-    - echo "buildUpdateDescription=$buildUpdateDescription"
-    - curl -F 'file=@app/build/outputs/apk/prod/release/app-prod-release.apk' -F '_api_key=$pgyer_api_key' -F "buildUpdateDescription=$buildUpdateDescription"  https://www.pgyer.com/apiv2/app/upload
+    - curl -F 'file=@app/build/outputs/apk/prod/release/app-prod-release.apk' -F '_api_key=76e04e812ccbf2cf9b501dfbc278dda5' https://www.pgyer.com/apiv2/app/upload
     - echo "上传APP到蒲公英结束"
   tags:
     - docker
