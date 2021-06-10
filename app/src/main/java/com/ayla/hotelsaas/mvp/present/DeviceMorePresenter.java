@@ -126,8 +126,10 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                     public List<DeviceTemplateBean.AttributesBean> apply(@NonNull DeviceTemplateBean deviceTemplateBean) throws Exception {
                         List<DeviceTemplateBean.AttributesBean> defaultAttributesBeans = new ArrayList<>();
                         for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                            if (attribute.getCode().endsWith(":OnoffDefault") && (!"ZBSW0-A000001".equalsIgnoreCase(pid) && !"ZBSW0-A000002".equalsIgnoreCase(pid)&& !"ZBSW0-A000003".equalsIgnoreCase(pid) && !"ZBSW0-A000004".equalsIgnoreCase(pid))) {//是默认开关的设置属性格式
-                                defaultAttributesBeans.add(attribute);
+                            if (attribute.getCode().endsWith(":OnoffDefault")) {//是默认开关的设置属性格式
+                                if (!"ZBSW0-A000001".equalsIgnoreCase(pid) && !"ZBSW0-A000002".equalsIgnoreCase(pid)&& !"ZBSW0-A000003".equalsIgnoreCase(pid) && !"ZBSW0-A000004".equalsIgnoreCase(pid)
+                                        && !"ZBSW0-A000008".equalsIgnoreCase(pid)&& !"ZBSW0-A000006".equalsIgnoreCase(pid) && !"ZBSW0-A000007".equalsIgnoreCase(pid))
+                                    defaultAttributesBeans.add(attribute);
                             }
                         }
                         List<DeviceTemplateBean.AttributesBean> attributesBeans = new ArrayList<>();
