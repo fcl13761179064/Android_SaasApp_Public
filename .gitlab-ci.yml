@@ -3,9 +3,6 @@ image: aylacn/android-build:28-jdk8
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false" # 禁用 gradle 守护进程
 
-before_script:
-  - export ANDROID_HOME=/Users/fanchunlei/Library/Android/sdk
-
 stages:
   - lint
   - signing_prepare
@@ -14,10 +11,6 @@ stages:
 
 job_lint:
   stage: lint
-  #  only:
-  #    - /^issue[-|/].+$/
-  #    - /^feature[-|/].+$/
-  #    - /^bugfix[-|/].+$/
   script:
     - echo "开始Lint"
     - gradle -Pci --console=plain :app:lint -PbuildDir=lint
