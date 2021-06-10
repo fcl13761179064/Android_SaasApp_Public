@@ -5,7 +5,7 @@ variables:
 
 before_script:
   - chmod ./gradlew
-  - export ANDROID_HOME=/Users/ayla/Library/Android/sdk
+  - export ANDROID_HOME=/Users/fanchunlei/Library/Android/sdk
 
 stages:
   - lint
