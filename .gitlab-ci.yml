@@ -4,6 +4,7 @@ variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false" # 禁用 gradle 守护进程
 
 before_script:
+  - - chmod ./gradlew
   - export ANDROID_HOME=/Users/fanchunlei/Library/Android/sdk
 
 stages:
