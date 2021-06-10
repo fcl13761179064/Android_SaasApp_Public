@@ -92,8 +92,13 @@ public class A2GatewayAddGuideActivity extends BaseMvpActivity<DeviceAddGuideVie
     protected void initListener() {
         viewById = appBar.findViewById(R.id.iv_right);
         tv_right = appBar.findViewById(R.id.tv_right);
-        SharePreferenceUtils.saveString(getContext(), Constance.AP_NET_SELECT, "1");
-        tv_right.setText("网线配网");
+        String ap_type = SharePreferenceUtils.getString(getContext(), Constance.AP_NET_SELECT, "-1");
+        if ("1".equalsIgnoreCase(ap_type)) {
+            tv_right.setText("网线配网");
+        } else {
+            tv_right.setText("AP 配网");
+        }
+
         viewById.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

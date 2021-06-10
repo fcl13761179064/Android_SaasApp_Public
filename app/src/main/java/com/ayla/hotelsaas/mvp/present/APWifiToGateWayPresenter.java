@@ -58,7 +58,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                         if (scanResult.SSID.matches(Constance.DEFAULT_SSID_REGEX.toString())) {
                             return true;
                         }
-                        return true;
+                        return false;
                     }
                 }, new AylaCallback<ScanResult[]>() {
                     @Override
@@ -93,7 +93,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
 
                             @Override
                             public void onFailed(@NonNull Throwable throwable) {
-                                LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点失败，${throwable.localizedMessage}");
+                                LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点失败，"+throwable.getMessage());
                                 emitter.onError(throwable);
                             }
                         });
@@ -105,7 +105,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
         objectObservable.flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {
             @Override
             public ObservableSource<AylaSetupDevice> apply(AylaSetupDevice aylaSetupDevice) throws Exception {
-                if (aylaSetupDevice.getDsn() != inputDsn) {
+                if (!inputDsn.equals(aylaSetupDevice.getDsn())) {
                     Observable.error(new Exception("网关连接不匹配"));
                 } else {
                     connectDeviceToServiceObservalble = Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {

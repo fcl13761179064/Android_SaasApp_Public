@@ -60,7 +60,7 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
     @Override
     public void onFailed(Throwable throwable)
     {
-        sd_btn_action.setEnabled(true);
+        sd_btn_action.setEnabled(false);
         ToastUtils.showShort("连接网关 Wi-Fi 失败，请重试");
     }
 
