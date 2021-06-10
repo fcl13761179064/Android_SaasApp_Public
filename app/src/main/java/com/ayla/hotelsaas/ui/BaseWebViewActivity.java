@@ -77,7 +77,7 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
         });
         IX5WebViewExtension x5WebViewExtension = mWebView.getX5WebViewExtension();
         Log.d(TAG, "onCreate: "+x5WebViewExtension);
-        WebView.setWebContentsDebuggingEnabled(true);
+        WebView.setWebContentsDebuggingEnabled(Constance.isNetworkDebug());
     }
 
     protected abstract View getEmptyView();

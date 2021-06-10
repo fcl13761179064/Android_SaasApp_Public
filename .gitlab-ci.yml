@@ -70,7 +70,7 @@ job_publish:
   stage: publish
   only:
     refs:
-      - master
+      - prod
     changes:
       - CHANGELOG.MD
   script:
