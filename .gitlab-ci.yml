@@ -20,7 +20,7 @@ job_lint:
   #    - /^bugfix[-|/].+$/
   script:
     - echo "开始Lint"
-    - ./gradlew -Pci --console=plain :app:lint -PbuildDir=lint
+    - gradle -Pci --console=plain :app:lint -PbuildDir=lint
     - echo "Lint结束"
   tags:
     - iOS
