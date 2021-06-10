@@ -83,6 +83,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else {
             imageView.setImageResource(R.drawable.person_center);
         }
+        Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
     }
 
     @Override
