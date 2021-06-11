@@ -19,6 +19,8 @@ import com.ayla.ng.lib.bootstrap.connectivity.AylaConnectivityManager;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.NetworkUtils;
 
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -98,6 +100,23 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                             }
                         });
                     }
+                }).retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+                        long startTime = System.currentTimeMillis();
+                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                long currentTime = System.currentTimeMillis();
+                                long s = currentTime - startTime;
+                                if (s > 60_000) {
+                                    return Observable.error(throwable);
+                                } else {
+                                    return Observable.timer(3, TimeUnit.SECONDS);
+                                }
+                            }
+                        });
+                    }
                 });
                 return mConnextNewDeviceobservable;
             }
@@ -123,6 +142,23 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                                 public void onFailed(@NonNull Throwable throwable) {
                                     LogUtils.d("connectToApDevice: AP设备连接到家庭WiFi热点失败，${throwable.localizedMessage}");
                                     emitter.onError(throwable); //此处正常处理
+                                }
+                            });
+                        }
+                    }).retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                        @Override
+                        public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+                            long startTime = System.currentTimeMillis();
+                            return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                                @Override
+                                public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                    long currentTime = System.currentTimeMillis();
+                                    long s = currentTime - startTime;
+                                    if (s > 60_000) {
+                                        return Observable.error(throwable);
+                                    } else {
+                                        return Observable.timer(3, TimeUnit.SECONDS);
+                                    }
                                 }
                             });
                         }
