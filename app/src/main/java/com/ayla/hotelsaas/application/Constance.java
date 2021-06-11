@@ -115,4 +115,7 @@ public class Constance {
             return null;
         }
     }
+
+    //场景物模板属性code
+    public static  String SCENE_TEMPLATE_CODE = "KeyValueNotification.KeyValue";
 }

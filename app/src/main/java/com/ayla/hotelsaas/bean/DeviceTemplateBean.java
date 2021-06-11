@@ -20,7 +20,16 @@ public class DeviceTemplateBean {
     private long deviceType;//    AYLA(0,"艾拉设备"),    ALI(1,"阿里设备");
     private long deviceNodeType;//    NODE(0,"节点设备"),    GATEWAY(1,"网关设备");
     private List<AttributesBean> attributes;
+    private List<EventbutesBean> events;
     private List<AttributesBean> extendAttributes;
+
+    public List<EventbutesBean> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<EventbutesBean> events) {
+        this.events = events;
+    }
 
     public String getDeviceId() {
         return deviceId;
@@ -319,6 +328,18 @@ public class DeviceTemplateBean {
             public void setCompareValue(int compareValue) {
                 this.compareValue = compareValue;
             }
+        }
+    }
+
+    public static  class EventbutesBean  extends AttributesBean implements Serializable {
+
+        private List<AttributesBean> outParams;
+        public List<AttributesBean> getOutParams() {
+            return outParams;
+        }
+
+        public void setOutParams(List<AttributesBean> outParams) {
+            this.outParams = outParams;
         }
     }
 }
