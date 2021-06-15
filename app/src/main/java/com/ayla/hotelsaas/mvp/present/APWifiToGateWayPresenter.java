@@ -182,7 +182,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
-                        mView.showProgress();
+                        mView.showProgress("wifi链接中");
                     }
                 })
                 .doFinally(new Action() {
