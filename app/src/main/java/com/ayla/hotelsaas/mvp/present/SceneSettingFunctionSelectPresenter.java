@@ -56,6 +56,12 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
                     public List<DeviceTemplateBean.AttributesBean> apply(@NonNull List<String> properties, @NonNull DeviceTemplateBean deviceTemplateBean) throws Exception {
                         DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
                         List<DeviceTemplateBean.AttributesBean> data = new ArrayList<>();
+
+                        /**
+                         * @update 2021年6月8日 新增支持event类型
+                         * 1.A.事件情况
+                         * 2.A.B事件情况
+                         */
                         for (String property : properties) {
                             if (property != Constance.SCENE_TEMPLATE_CODE && property.contains(".")) {//event事件类型
                                 if (property.endsWith(".")) {//A.情况
