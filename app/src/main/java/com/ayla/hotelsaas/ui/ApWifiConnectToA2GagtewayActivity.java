@@ -50,7 +50,7 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
         sd_btn_action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ApWifiConnectToA2GagtewayActivity.this,DeviceAddActivity.class);
+                Intent intent = new Intent(ApWifiConnectToA2GagtewayActivity.this,ApDeviceAddActivity.class);
                 intent.putExtras(getIntent());
                 startActivity(intent);
             }

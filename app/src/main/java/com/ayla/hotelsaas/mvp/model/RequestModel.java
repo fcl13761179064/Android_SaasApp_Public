@@ -1020,4 +1020,16 @@ public class RequestModel {
         return getApiService().getA2BindInfo(deviceId).compose(new BaseResultTransformer<BaseResult<A2BindInfoBean>, A2BindInfoBean>() {
         });
     }
+
+
+    /**
+     * ap配网
+     *
+     * @return
+     */
+    public Observable<Object> Apnetwork(String deviceId, int cuId,String setupToken) {
+        return getApiService().ApNetwork(deviceId,cuId,setupToken).compose(new BaseResultTransformer<BaseResult<Object>, Object>() {
+        });
+    }
+
 }
