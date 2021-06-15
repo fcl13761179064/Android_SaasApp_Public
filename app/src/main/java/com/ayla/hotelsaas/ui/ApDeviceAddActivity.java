@@ -81,6 +81,16 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     public ImageView mP3View;
     @BindView(R.id.tv_p3)
     public TextView mP3TextView;
+    private int cuId;
+    private long scopeId;
+    private String deviceCategory;
+    private String pid;
+    private String productName;
+    private String nickname;
+    private String waitBindDeviceId;
+    private String replaceDeviceId;
+    private Bundle addInfo;
+    private String randomNum;
 
     @Override
     protected ApNetworkPresenter initPresenter() {
@@ -120,21 +130,22 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     private int bindProgress;//记录进度
 
     private void startBind() {
-        Bundle addInfo = getIntent().getBundleExtra("addInfo");
+        randomNum = getIntent().getStringExtra("randomNum");
+        addInfo = getIntent().getBundleExtra("addInfo");
         int networkType = addInfo.getInt("networkType");
-        int cuId = addInfo.getInt("cuId");
-        long scopeId = addInfo.getLong("scopeId");
-        String deviceCategory = addInfo.getString("deviceCategory");
-        String pid = addInfo.getString("pid");
-        String productName = addInfo.getString("productName");
-        String nickname = addInfo.getString("nickname");
-        String waitBindDeviceId = addInfo.getString("waitBindDeviceId");
-        String replaceDeviceId = addInfo.getString("replaceDeviceId");
+        cuId = addInfo.getInt("cuId");
+        scopeId = addInfo.getLong("scopeId");
+        deviceCategory = addInfo.getString("deviceCategory");
+        pid = addInfo.getString("pid");
+        productName = addInfo.getString("productName");
+        nickname = addInfo.getString("nickname");
+        waitBindDeviceId = addInfo.getString("waitBindDeviceId");
+        replaceDeviceId = addInfo.getString("replaceDeviceId");
 
         mPresenter.Apnetwork(
                 addInfo.getString("deviceId"),
                 cuId,
-                nickname);
+                randomNum);
     }
 
     @OnClick(R.id.bt_bind)
@@ -193,11 +204,20 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     }
 
     @Override
-    public void bindSuccess(Object devicesBean) {
-        startActivityForResult(new Intent(this, DeviceAddSuccessActivity.class)
-                        .putExtra("device", (Bundle) devicesBean),
-                REQUEST_CODE_ADD_SUCCESS);
+    public void confireApStatus(Boolean b) {
+        mPresenter.bindAylaNode(
+                addInfo.getString("deviceId"),
+                cuId,
+                scopeId,
+                deviceCategory,
+                pid,
+                productName,
+                nickname,
+                waitBindDeviceId,
+                replaceDeviceId,
+                randomNum);
     }
+
 
     private String errorMsg;
 
@@ -221,6 +241,56 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
         }
         errorMsg = TempUtils.getLocalErrorMsg("设备绑定失败\n请再检查设备状态后重试", throwable);
         bindProgress = -1;
+        refreshBindShow();
+    }
+    @Override
+    public void bindSuccess(DeviceListBean.DevicesBean devicesBean) {
+        startActivityForResult(new Intent(this, DeviceAddSuccessActivity.class)
+                        .putExtra("device", devicesBean),
+                REQUEST_CODE_ADD_SUCCESS);
+    }
+
+
+
+    @Override
+    public void step3Finish() {
+        Log.d(TAG, "bindZigBeeDeviceSuccess: ");
+        bindProgress = 5;
+        refreshBindShow();
+    }
+
+    @Override
+    public void step3Start() {
+        Log.d(TAG, "bindZigBeeDeviceStart: ");
+        bindProgress = 4;
+        refreshBindShow();
+    }
+
+    @Override
+    public void step2Finish() {
+        Log.d(TAG, "fetchCandidatesSuccess: ");
+        bindProgress = 3;
+        refreshBindShow();
+    }
+
+    @Override
+    public void step2Start() {
+        Log.d(TAG, "fetchCandidatesStart: ");
+        bindProgress = 2;
+        refreshBindShow();
+    }
+
+    @Override
+    public void step1Finish() {
+        Log.d(TAG, "gatewayConnectSuccess: ");
+        bindProgress = 1;
+        refreshBindShow();
+    }
+
+    @Override
+    public void step1Start() {
+        Log.d(TAG, "gatewayConnectStart: " + Thread.currentThread().getName());
+        bindProgress = 0;
         refreshBindShow();
     }
 

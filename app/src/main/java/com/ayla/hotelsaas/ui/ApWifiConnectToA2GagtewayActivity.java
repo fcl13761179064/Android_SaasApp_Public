@@ -20,6 +20,7 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
     private String ssid;
     private String pwd;
     private String dsn;
+    private String randomString;
 
     @Override
     protected int getLayoutId() {
@@ -51,6 +52,7 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ApWifiConnectToA2GagtewayActivity.this,ApDeviceAddActivity.class);
+                intent.putExtra("randomNum",randomString);
                 intent.putExtras(getIntent());
                 startActivity(intent);
             }
@@ -65,8 +67,8 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
     }
 
     @Override
-    public void onSuccess(AylaSetupDevice aylaSetupDevice) {
+    public void onSuccess(AylaSetupDevice aylaSetupDevice, String randomString) {
         sd_btn_action.setEnabled(true);
-        ToastUtils.showShort("323232323223");
+        this.randomString=randomString;
     }
 }

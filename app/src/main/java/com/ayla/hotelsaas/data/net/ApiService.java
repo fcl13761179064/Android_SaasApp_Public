@@ -325,7 +325,7 @@ public interface ApiService {
     @GET("/api/v1/build/device/getDeviceBindStatus/{deviceId}")
     Observable<BaseResult<A2BindInfoBean>> getA2BindInfo(@Path("deviceId") String pid);
 
-    @GET("/api/v1/build/device/{deviceId}/connected/{cuId}/{setupToken}")
-    Observable<BaseResult<Object>> ApNetwork(@Path("deviceId") String deviceId,@Path("cuId") int cuId, @Path("setupToken") String setupToken);
+    @GET("/api/v1/build/device/{deviceId}/connected")
+    Observable<BaseResult<Boolean>> ApNetwork(@Path("deviceId") String deviceId,@Query("cuId") int cuId, @Query("setupToken") String setupToken);
 
 }

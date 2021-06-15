@@ -5,5 +5,5 @@ import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
 
 public interface APwifiToGateWayView extends BaseView {
     void onFailed(Throwable throwable);
-    void onSuccess(AylaSetupDevice aylaSetupDevice);
+    void onSuccess(AylaSetupDevice aylaSetupDevice, String randomString);
 }

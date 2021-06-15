@@ -40,6 +40,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
     private Observable<AylaSetupDevice> mConnextNewDeviceobservable;
     private Observable<AylaSetupDevice> connectDeviceToServiceObservalble;
     Boolean isNeedExit = true;
+    private String randomString;
 
     public void connectToApDevice(Context context, String inputDsn, String homeWiFiSSid, String homeWiFiPwd) {
 
@@ -130,7 +131,8 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                     connectDeviceToServiceObservalble = Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
                         @Override
                         public void subscribe(ObservableEmitter<AylaSetupDevice> emitter) throws Exception {
-                            aylaWiFiSetup.connectDeviceToService(homeWiFiSSid, homeWiFiPwd, Constance.getRandomString(8), 20, new AylaCallback<Object>() {
+                            randomString = Constance.getRandomString(8);
+                            aylaWiFiSetup.connectDeviceToService(homeWiFiSSid, homeWiFiPwd, randomString, 20, new AylaCallback<Object>() {
                                 @Override
                                 public void onSuccess(@NonNull Object result) {
                                     LogUtils.d("connectToApDevice: AP设备连接到家庭WiFi热点成功${result}");
@@ -191,7 +193,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                 }).subscribe(new Consumer<AylaSetupDevice>() {
             @Override
             public void accept(AylaSetupDevice aylaSetupDevice) throws Exception {
-                mView.onSuccess(aylaSetupDevice);
+                mView.onSuccess(aylaSetupDevice,randomString);
 
             }
         }, new Consumer<Throwable>() {

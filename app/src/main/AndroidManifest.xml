@@ -223,6 +223,7 @@
         <activity android:name=".ui.ApWifiDistributeActivity" />
         <activity android:name=".ui.ApDistributeGuideActivity" />
         <activity android:name=".ui.ApWifiConnectToA2GagtewayActivity" />
+        <activity android:name=".ui.ApDeviceAddActivity" />
 
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
