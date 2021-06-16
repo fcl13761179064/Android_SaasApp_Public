@@ -27,7 +27,7 @@ public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter>
 
     @Override
     protected void initView() {
-
+      
     }
 
     @Override
