@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.mvp.present;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.ScanResult;
+import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Predicate;
@@ -96,7 +97,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
 
                             @Override
                             public void onFailed(@NonNull Throwable throwable) {
-                                LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点失败，"+throwable.getMessage());
+                                LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点失败，" + throwable.getMessage());
                                 emitter.onError(throwable);
                             }
                         });
@@ -182,18 +183,24 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
-                        mView.showProgress("wifi链接中");
+                        mView.showProgress("连接中...");
                     }
                 })
                 .doFinally(new Action() {
                     @Override
                     public void run() throws Exception {
-                        mView.hideProgress();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mView.hideProgress();
+                            }
+                        }, 2000);
+
                     }
                 }).subscribe(new Consumer<AylaSetupDevice>() {
             @Override
             public void accept(AylaSetupDevice aylaSetupDevice) throws Exception {
-                mView.onSuccess(aylaSetupDevice,randomString);
+                mView.onSuccess(aylaSetupDevice, randomString);
 
             }
         }, new Consumer<Throwable>() {

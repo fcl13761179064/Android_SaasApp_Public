@@ -2,14 +2,17 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -17,6 +20,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.ApNetworkPresenter;
 import com.ayla.hotelsaas.mvp.view.ApDeviceAddView;
 import com.ayla.hotelsaas.utils.TempUtils;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -243,13 +247,13 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
         bindProgress = -1;
         refreshBindShow();
     }
+
     @Override
     public void bindSuccess(DeviceListBean.DevicesBean devicesBean) {
         startActivityForResult(new Intent(this, DeviceAddSuccessActivity.class)
                         .putExtra("device", devicesBean),
                 REQUEST_CODE_ADD_SUCCESS);
     }
-
 
 
     @Override
