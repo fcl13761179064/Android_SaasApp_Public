@@ -12,6 +12,7 @@ import com.ayla.hotelsaas.mvp.present.SplashPresenter;
 import com.ayla.hotelsaas.mvp.view.SplashView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
+import com.blankj.utilcode.util.LogUtils;
 
 public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter> implements SplashView {
     @Override
@@ -27,7 +28,7 @@ public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter>
 
     @Override
     protected void initView() {
-
+      
     }
 
     @Override
