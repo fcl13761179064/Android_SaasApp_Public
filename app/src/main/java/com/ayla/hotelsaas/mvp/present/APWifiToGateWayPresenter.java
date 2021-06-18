@@ -74,7 +74,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
 
                     @Override
                     public void onFailed(@NonNull Throwable throwable) {
-                        emitter.onError(new Exception("连接到AP设备WiFi热点失败"));
+                        emitter.onError(new Exception("扫描到你需要的设备的wifi热点失败"));
 
                     }
                 });
@@ -127,12 +127,13 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
             @Override
             public ObservableSource<AylaSetupDevice> apply(AylaSetupDevice aylaSetupDevice) throws Exception {
                 if (!inputDsn.equals(aylaSetupDevice.getDsn())) {
-                    Observable.error(new Exception("网关连接不匹配"));
+                    Observable.error(new Exception("网关dsn不匹配"));
                 } else {
                     connectDeviceToServiceObservalble = Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
                         @Override
                         public void subscribe(ObservableEmitter<AylaSetupDevice> emitter) throws Exception {
                             randomString = Constance.getRandomString(8);
+                            //ap设备，如A2网关去链接到路由器
                             aylaWiFiSetup.connectDeviceToService(homeWiFiSSid, homeWiFiPwd, randomString, 20, new AylaCallback<Object>() {
                                 @Override
                                 public void onSuccess(@NonNull Object result) {
