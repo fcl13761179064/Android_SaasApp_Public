@@ -1027,7 +1027,7 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<Boolean> Apnetwork(String deviceId, int cuId,String setupToken) {
+    public Observable<Boolean> Apnetwork(String deviceId, long cuId,String setupToken) {
         return getApiService().ApNetwork(deviceId,cuId,setupToken).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
         });
     }

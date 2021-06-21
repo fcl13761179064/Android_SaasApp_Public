@@ -41,16 +41,16 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
 
     @Override
     protected void initView() {
+        ssid = getIntent().getStringExtra("ssid");
+        pwd = getIntent().getStringExtra("pwd");
+        dsn = getIntent().getStringExtra("deviceId");
+
         if (is_relatation_success) {
             sd_btn_action.setEnabled(true);
         } else {
             mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this, dsn, ssid, pwd);
             sd_btn_action.setEnabled(false);
         }
-        ssid = getIntent().getStringExtra("ssid");
-        pwd = getIntent().getStringExtra("pwd");
-        dsn = getIntent().getStringExtra("deviceId");
-
     }
 
     @Override
@@ -81,5 +81,11 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
         intent.putExtra("randomNum", randomString);
         intent.putExtras(getIntent());
         startActivity(intent);
+    }
+
+    @Override
+    protected void appBarLeftIvClicked() {
+        super.appBarLeftIvClicked();
+        finish();
     }
 }

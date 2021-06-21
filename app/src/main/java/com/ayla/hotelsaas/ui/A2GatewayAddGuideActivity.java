@@ -155,34 +155,46 @@ public class A2GatewayAddGuideActivity extends BaseMvpActivity<DeviceAddGuideVie
             if (data != null) {
                 String deviceId = data.getStringExtra("result").trim();
                 if (!TextUtils.isEmpty(deviceId)) {
-                    if (deviceId.startsWith("Lark_DSN:") && deviceId.endsWith("##")) {
+                    if (deviceId.startsWith("Lark_DSN:") && deviceId.endsWith("##") && requestCode == REQUEST_CODE_FOR_DSN_SCAN) {
                         deviceId = deviceId.substring(9, deviceId.length() - 2).trim();
-                    }
-                    if (!TextUtils.isEmpty(deviceId)) {
-                        String type = SharePreferenceUtils.getString(getContext(), Constance.AP_NET_SELECT, "1");
-                        if ("1".equalsIgnoreCase(type)) {
-                            Intent mainActivity = new Intent(this, DeviceAddActivity.class);
-                            Bundle addInfo = getIntent().getBundleExtra("addInfo");
-                            addInfo.putString("deviceId", deviceId);
-                            mainActivity.putExtra("addInfo", addInfo);
-                            startActivity(mainActivity);
-                        } else {
-                            Intent mainActivity = new Intent(this, A2GatewayAddStatusActivity.class);
-                            Bundle addInfo = getIntent().getBundleExtra("addInfo");
-                            addInfo.putString("deviceId", deviceId);
-                            mainActivity.putExtra("addInfo", addInfo);
-                            startActivity(mainActivity);
-                        }
-                        return;
+                        checkRelue(deviceId);
+                    } else if (requestCode == REQUEST_CODE_FOR_DSN_INPUT) {
+                        checkRelue(deviceId);
+                    } else {
+                        CustomToast.makeText(this, "无效的设备ID号", R.drawable.ic_toast_warming);
                     }
                 }
+            } else {
+                CustomToast.makeText(this, "无效的设备ID号", R.drawable.ic_toast_warming);
             }
-            CustomToast.makeText(this, "无效的设备ID号", R.drawable.ic_toast_warming);
         } else if (requestCode == REQUEST_CODE_FOR_DSN_SCAN && resultCode == ScanActivity.RESULT_FOR_INPUT) {//扫码页面回退到手动输入页面
             Intent mainActivity = new Intent(this, GatewayAddDsnInputActivity.class);
             startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_INPUT);
         }
     }
+
+
+    public void checkRelue(String deviceId) {
+        if (!TextUtils.isEmpty(deviceId)) {
+            String type = SharePreferenceUtils.getString(getContext(), Constance.AP_NET_SELECT, "1");
+            if ("1".equalsIgnoreCase(type)) {
+                Intent mainActivity = new Intent(this, DeviceAddActivity.class);
+                Bundle addInfo = getIntent().getBundleExtra("addInfo");
+                addInfo.putString("deviceId", deviceId);
+                mainActivity.putExtra("addInfo", addInfo);
+                startActivity(mainActivity);
+            } else {
+                Intent mainActivity = new Intent(this, A2GatewayAddStatusActivity.class);
+                Bundle addInfo = getIntent().getBundleExtra("addInfo");
+                addInfo.putString("deviceId", deviceId);
+                mainActivity.putExtra("addInfo", addInfo);
+                startActivity(mainActivity);
+            }
+            return;
+        }
+    }
+
+
 
     @Override
     public void getGuideInfoSuccess(NetworkConfigGuideBean o) {

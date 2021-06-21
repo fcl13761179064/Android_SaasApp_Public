@@ -33,11 +33,10 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.adapter.rxjava2.Result;
 
 public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView> {
 
-    private AylaWiFiSetup aylaWiFiSetup;
+    public AylaWiFiSetup aylaWiFiSetup;
     private Observable<AylaSetupDevice> mConnextNewDeviceobservable;
     private Observable<AylaSetupDevice> connectDeviceToServiceObservalble;
     Boolean isNeedExit = true;
@@ -123,7 +122,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                 return mConnextNewDeviceobservable;
             }
         });
-        objectObservable.flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {
+        Disposable disposable = objectObservable.flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {
             @Override
             public ObservableSource<AylaSetupDevice> apply(AylaSetupDevice aylaSetupDevice) throws Exception {
                 if (!inputDsn.equals(aylaSetupDevice.getDsn())) {
@@ -193,24 +192,27 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                if (mView == null) {
+                                    return;
+                                }
                                 mView.hideProgress();
                             }
                         }, 2000);
 
                     }
                 }).subscribe(new Consumer<AylaSetupDevice>() {
-            @Override
-            public void accept(AylaSetupDevice aylaSetupDevice) throws Exception {
-                mView.onSuccess(aylaSetupDevice, randomString);
+                    @Override
+                    public void accept(AylaSetupDevice aylaSetupDevice) throws Exception {
+                        mView.onSuccess(aylaSetupDevice, randomString);
 
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-                mView.onFailed(throwable);
-            }
-        });
-
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.onFailed(throwable);
+                    }
+                });
+        addSubscrebe(disposable);
     }
 
 }

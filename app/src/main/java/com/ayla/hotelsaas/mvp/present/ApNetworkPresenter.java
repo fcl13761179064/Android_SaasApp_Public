@@ -23,7 +23,9 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.Subject;
 
 /**
  * @描述
@@ -32,18 +34,23 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class ApNetworkPresenter extends BasePresenter<ApDeviceAddView> {
 
+    private long startTime;
+
     public void Apnetwork(String deviceId, int cuId, String setupToken) {
-        Disposable subscribe = RequestModel.getInstance().Apnetwork(deviceId, cuId,setupToken )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(new Consumer<Disposable>() {
+        Disposable subscribe = RequestModel.getInstance().Apnetwork(deviceId, cuId, setupToken)
+                .map(new Function<Boolean, Boolean>() {
                     @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        mView.step1Start();
+                    public Boolean apply(@NonNull Boolean aBoolean) throws Exception {
+                        if (!aBoolean){
+                           throw new  RuntimeException("接口返回false");
+                        }
+                        return aBoolean;
                     }
-                }).retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                })
+                .observeOn(Schedulers.io())
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
-                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+                    public ObservableSource<?> apply(@NonNull Observable<Throwable> throwableObservable) throws Exception {
                         long startTime = System.currentTimeMillis();
                         return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
                             @Override
@@ -59,21 +66,23 @@ public class ApNetworkPresenter extends BasePresenter<ApDeviceAddView> {
                         });
                     }
                 })
-                .doFinally(new Action() {
+                .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
-                    public void run() throws Exception {
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.step1Start();
                     }
                 })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Boolean>() {
                     @Override
-                    public void accept(Boolean s) throws Exception {
-                        mView.confireApStatus(s);
+                    public void accept(Boolean o) throws Exception {
+                        mView.confireApStatus(o);
+
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         mView.bindFailed(throwable);
-                        mView.step1Finish();
                     }
                 });
         addSubscrebe(subscribe);
@@ -87,10 +96,10 @@ public class ApNetworkPresenter extends BasePresenter<ApDeviceAddView> {
                 .bindOrReplaceDeviceWithDSN(dsn, waitBindDeviceId, replaceDeviceId, cuId, scopeId, 2, deviceCategory, pid, nickname)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(new Consumer<Disposable>() {
+                .doFinally(new Action() {
                     @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        mView.step1Start();
+                    public void run() throws Exception {
+                        mView.step1Finish();
                     }
                 })
                 .subscribe(new Consumer<DeviceListBean.DevicesBean>() {
@@ -113,7 +122,7 @@ public class ApNetworkPresenter extends BasePresenter<ApDeviceAddView> {
         } else {
             newNickname = deviceName + "_" + dsn;
         }*/
-        String  newNickname = deviceName;
+        String newNickname = deviceName;
         return newNickname;
     }
 }
