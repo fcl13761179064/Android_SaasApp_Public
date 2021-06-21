@@ -14,8 +14,8 @@ import java.util.Random;
  * @时间 2020/7/8
  */
 public class Constance {
-    public static final String SP_SAAS = "1";
-    public static final String AP_NET_SELECT = "1";
+    public static  String SP_SAAS = "saas";
+    public static  String AP_NET_SELECT = "net";
     /**
      * 是否处于开发状态。
      */
