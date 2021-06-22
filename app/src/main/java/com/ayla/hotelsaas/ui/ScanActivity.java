@@ -152,6 +152,7 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
                     CustomAlarmDialog.newInstance().setTitle("信息错误")
                             .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
                             .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                            .setEnsureText("重试")
                             .setDoneCallback(new CustomAlarmDialog.Callback() {
                                 @Override
                                 public void onDone(CustomAlarmDialog dialog) {
@@ -176,6 +177,7 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
                 CustomAlarmDialog.newInstance().setTitle("信息错误")
                         .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
                         .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                        .setEnsureText("重试")
                         .setDoneCallback(new CustomAlarmDialog.Callback() {
                             @Override
                             public void onDone(CustomAlarmDialog dialog) {
