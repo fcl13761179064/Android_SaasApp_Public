@@ -67,6 +67,7 @@ public class A2GatewayAddGuideActivity extends BaseMvpActivity<DeviceAddGuideVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharePreferenceUtils.saveString(getContext(), Constance.AP_NET_SELECT, "1");
         addInfo = getIntent().getBundleExtra("addInfo");
         String pid = addInfo.getString("pid");
         mPresenter.getNetworkConfigGuide(pid);
@@ -92,12 +93,7 @@ public class A2GatewayAddGuideActivity extends BaseMvpActivity<DeviceAddGuideVie
     protected void initListener() {
         viewById = appBar.findViewById(R.id.iv_right);
         tv_right = appBar.findViewById(R.id.tv_right);
-        String ap_type = SharePreferenceUtils.getString(getContext(), Constance.AP_NET_SELECT, "1");
-        if ("1".equalsIgnoreCase(ap_type)) {
-            tv_right.setText("网线配网");
-        } else {
-            tv_right.setText("AP 配网");
-        }
+        tv_right.setText("网线配网");
 
         viewById.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,13 +147,14 @@ public class A2GatewayAddGuideActivity extends BaseMvpActivity<DeviceAddGuideVie
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_FOR_DSN_INPUT && resultCode == RESULT_OK) {//获取到了DSN
+        if ((requestCode == REQUEST_CODE_FOR_DSN_SCAN || requestCode == REQUEST_CODE_FOR_DSN_INPUT) && resultCode == RESULT_OK) {//获取到了DSN
             if (data != null) {
                 String deviceId = data.getStringExtra("result").trim();
                 if (!TextUtils.isEmpty(deviceId)) {
+                    if (deviceId.startsWith("Lark_DSN:") && deviceId.endsWith("##")) {
+                        deviceId = deviceId.substring(9, deviceId.length() - 2).trim();
+                    }
                     checkRelue(deviceId);
-                }else {
-                    CustomToast.makeText(this, "无效的设备ID号", R.drawable.ic_toast_warming);
                 }
             }
         } else if (requestCode == REQUEST_CODE_FOR_DSN_SCAN && resultCode == ScanActivity.RESULT_FOR_INPUT) {//扫码页面回退到手动输入页面

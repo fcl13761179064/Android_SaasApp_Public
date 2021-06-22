@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.APWifiToGateWayPresenter;
 import com.ayla.hotelsaas.mvp.view.APwifiToGateWayView;
 import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
+import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
@@ -18,6 +20,8 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
 
     @BindView(R.id.sd_btn_action)
     Button sd_btn_action;
+    @BindView(R.id.tv_connect_ap)
+    TextView tv_connect_ap;
     private String ssid;
     private String pwd;
     private String dsn;
@@ -47,14 +51,18 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
 
         if (is_relatation_success) {
             sd_btn_action.setEnabled(true);
-        } else {
-            mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this, dsn, ssid, pwd);
-            sd_btn_action.setEnabled(false);
         }
     }
 
     @Override
     protected void initListener() {
+        tv_connect_ap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this, dsn, ssid, pwd);
+                sd_btn_action.setEnabled(false);
+            }
+        });
         sd_btn_action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

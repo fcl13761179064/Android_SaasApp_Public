@@ -13,6 +13,7 @@ import androidx.media.MediaBrowserServiceCompat;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.mvp.view.APwifiToGateWayView;
+import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
 import com.ayla.ng.lib.bootstrap.AylaWiFiSetup;
 import com.ayla.ng.lib.bootstrap.common.AylaCallback;
@@ -51,7 +52,6 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
         } catch (Exception e) {
             apConfigResult.setValue(e.toString());
             e.printStackTrace();
-            ToastUtils.showShort("请检查位置权限...");
             return;
         }
         String gatewayIp = NetworkUtils.getGatewayByWifi();
@@ -85,6 +85,10 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
 
             @Override
             public ObservableSource<AylaSetupDevice> apply(String apSSid) throws Exception {
+                if (!NetworkUtils.getWifiEnabled()) {
+                    ToastUtils.showShort("请检查网络...");
+                    return Observable.error(new Exception("扫描到你需要的设备的wifi热点失败"));
+                }
                 mConnextNewDeviceobservable = Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
                     @Override
                     public void subscribe(ObservableEmitter<AylaSetupDevice> emitter) throws Exception {
@@ -111,6 +115,10 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                         return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
                             @Override
                             public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                if (!NetworkUtils.getWifiEnabled()) {
+                                    ToastUtils.showShort("请检查网络...");
+                                    return Observable.error(throwable);
+                                }
                                 long currentTime = System.currentTimeMillis();
                                 long s = currentTime - startTime;
                                 if (s > 60_000) {
@@ -158,6 +166,10 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                             return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
                                 @Override
                                 public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                    if (!NetworkUtils.getWifiEnabled()) {
+                                        ToastUtils.showShort("请检查网络...");
+                                        return Observable.error(throwable);
+                                    }
                                     long currentTime = System.currentTimeMillis();
                                     long s = currentTime - startTime;
                                     if (s > 60_000) {
@@ -192,16 +204,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                 .doFinally(new Action() {
                     @Override
                     public void run() throws Exception {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mView == null) {
-                                    return;
-                                }
-                                mView.hideProgress();
-                            }
-                        }, 2000);
-
+                        mView.hideProgress();
                     }
                 }).subscribe(new Consumer<AylaSetupDevice>() {
                     @Override

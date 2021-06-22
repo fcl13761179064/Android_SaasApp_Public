@@ -209,6 +209,7 @@ public class ApWifiDistributeActivity extends BasicActivity {
                         })
                         .setTitle(getResources().getString(R.string.helper))
                         .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                        .setFontLocation(CustomAlarmDialog.Location.LEFT)
                         .setContent("1.请确保当前路由器已设置密码。部分设备不支持连接到到未加密的路由器。\n" +
                                 "\n" +
                                 "2.请确保当前路由器不需要二次身份与密码验证。\n" +

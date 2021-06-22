@@ -142,13 +142,36 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
 
     @Override
     public void onScanQRCodeSuccess(String result) {
-        vibrate();
+        try {
+            String deviceId = result.trim();
+            if (!TextUtils.isEmpty(deviceId)) {
+                if (deviceId.startsWith("Lark_DSN:") && deviceId.endsWith("##")) {
+                    setResult(RESULT_OK, new Intent().putExtra("result", result));
+                    finish();
+                } else {
+                    CustomAlarmDialog.newInstance().setTitle("信息错误")
+                            .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
+                            .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                            .setDoneCallback(new CustomAlarmDialog.Callback() {
+                                @Override
+                                public void onDone(CustomAlarmDialog dialog) {
+                                    dialog.dismissAllowingStateLoss();
+                                    mZXingView.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                        }
+                                    });
+                                }
 
-        String deviceId = result.trim();
-        if (!TextUtils.isEmpty(deviceId)) {
-            if (deviceId.startsWith("Lark_DSN:") && deviceId.endsWith("##")) {
-                setResult(RESULT_OK, new Intent().putExtra("result", result));
-                finish();
+                                @Override
+                                public void onCancel(CustomAlarmDialog dialog) {
+
+                                }
+                            })
+                            .show(getSupportFragmentManager(), "dialog");
+                    return;
+                }
             } else {
                 CustomAlarmDialog.newInstance().setTitle("信息错误")
                         .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
@@ -173,28 +196,12 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
                         .show(getSupportFragmentManager(), "dialog");
                 return;
             }
-        }else {
-            CustomAlarmDialog.newInstance().setTitle("信息错误")
-                    .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
-                    .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
-                    .setDoneCallback(new CustomAlarmDialog.Callback() {
-                        @Override
-                        public void onDone(CustomAlarmDialog dialog) {
-                            dialog.dismissAllowingStateLoss();
-                            mZXingView.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
-                                }
-                            });
-                        }
 
-                        @Override
-                        public void onCancel(CustomAlarmDialog dialog) {
-
-                        }
-                    })
-                    .show(getSupportFragmentManager(), "dialog");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        vibrate();
+        if (TextUtils.isEmpty(result)) {
             return;
         }
 

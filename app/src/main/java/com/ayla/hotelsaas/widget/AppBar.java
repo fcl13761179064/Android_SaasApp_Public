@@ -176,5 +176,12 @@ public class AppBar extends FrameLayout {
         center_tv = text;
         adjustContent();
     }
+
+
+    public void setLeftImageView(int leftiv) {
+        left_iv = leftiv;
+        adjustContent();
+    }
+
 }
 
