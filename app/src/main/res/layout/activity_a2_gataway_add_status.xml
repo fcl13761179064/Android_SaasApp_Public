@@ -61,7 +61,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:src="#f8f8f8" />
+        android:background="@mipmap/ap_getway_img"
+       />
 
     <TextView
         android:id="@+id/tv_gateway_bind_status"

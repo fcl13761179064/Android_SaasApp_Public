@@ -19,6 +19,7 @@ import com.ayla.ng.lib.bootstrap.common.AylaCallback;
 import com.ayla.ng.lib.bootstrap.connectivity.AylaConnectivityManager;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.NetworkUtils;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -50,6 +51,8 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
         } catch (Exception e) {
             apConfigResult.setValue(e.toString());
             e.printStackTrace();
+            ToastUtils.showShort("请检查位置权限...");
+            return;
         }
         String gatewayIp = NetworkUtils.getGatewayByWifi();
         Observable<AylaSetupDevice> objectObservable = Observable.create(new ObservableOnSubscribe<String>() {

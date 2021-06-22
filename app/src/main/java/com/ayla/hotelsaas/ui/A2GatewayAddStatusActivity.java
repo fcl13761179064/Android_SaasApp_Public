@@ -52,7 +52,7 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<A2DeviceBindView
         addInfo = getIntent().getBundleExtra("addInfo");
         String pid = addInfo.getString("pid");
         deviceId = addInfo.getString("deviceId");
-        mPresenter.getNetworkConfigGuide(pid);
+       // mPresenter.getNetworkConfigGuide(pid);
         mPresenter.getA2BindInfo(deviceId);
         gataway_name.setText(deviceId);
     }
@@ -98,6 +98,7 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<A2DeviceBindView
     public void getBindInfoSuccess(A2BindInfoBean o) {
         if (o.getBindStatus()) {
             tv_gateway_bind_status.setVisibility(View.VISIBLE);
+            button.setVisibility(View.GONE);
         } else {
             tv_gateway_bind_status.setVisibility(View.GONE);
         }
