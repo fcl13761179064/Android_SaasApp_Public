@@ -9,6 +9,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -142,8 +143,61 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
     @Override
     public void onScanQRCodeSuccess(String result) {
         vibrate();
-        setResult(RESULT_OK, new Intent().putExtra("result", result));
-        finish();
+
+        String deviceId = result.trim();
+        if (!TextUtils.isEmpty(deviceId)) {
+            if (deviceId.startsWith("Lark_DSN:") && deviceId.endsWith("##")) {
+                setResult(RESULT_OK, new Intent().putExtra("result", result));
+                finish();
+            } else {
+                CustomAlarmDialog.newInstance().setTitle("信息错误")
+                        .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
+                        .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                        .setDoneCallback(new CustomAlarmDialog.Callback() {
+                            @Override
+                            public void onDone(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                                mZXingView.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancel(CustomAlarmDialog dialog) {
+
+                            }
+                        })
+                        .show(getSupportFragmentManager(), "dialog");
+                return;
+            }
+        }else {
+            CustomAlarmDialog.newInstance().setTitle("信息错误")
+                    .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
+                    .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                    .setDoneCallback(new CustomAlarmDialog.Callback() {
+                        @Override
+                        public void onDone(CustomAlarmDialog dialog) {
+                            dialog.dismissAllowingStateLoss();
+                            mZXingView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancel(CustomAlarmDialog dialog) {
+
+                        }
+                    })
+                    .show(getSupportFragmentManager(), "dialog");
+            return;
+        }
+
     }
 
     private void vibrate() {

@@ -151,21 +151,14 @@ public class A2GatewayAddGuideActivity extends BaseMvpActivity<DeviceAddGuideVie
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == REQUEST_CODE_FOR_DSN_SCAN || requestCode == REQUEST_CODE_FOR_DSN_INPUT) && resultCode == RESULT_OK) {//获取到了DSN
+        if (requestCode == REQUEST_CODE_FOR_DSN_INPUT && resultCode == RESULT_OK) {//获取到了DSN
             if (data != null) {
                 String deviceId = data.getStringExtra("result").trim();
                 if (!TextUtils.isEmpty(deviceId)) {
-                    if (deviceId.startsWith("Lark_DSN:") && deviceId.endsWith("##") && requestCode == REQUEST_CODE_FOR_DSN_SCAN) {
-                        deviceId = deviceId.substring(9, deviceId.length() - 2).trim();
-                        checkRelue(deviceId);
-                    } else if (requestCode == REQUEST_CODE_FOR_DSN_INPUT) {
-                        checkRelue(deviceId);
-                    } else {
-                        CustomToast.makeText(this, "无效的设备ID号", R.drawable.ic_toast_warming);
-                    }
+                    checkRelue(deviceId);
+                }else {
+                    CustomToast.makeText(this, "无效的设备ID号", R.drawable.ic_toast_warming);
                 }
-            } else {
-                CustomToast.makeText(this, "无效的设备ID号", R.drawable.ic_toast_warming);
             }
         } else if (requestCode == REQUEST_CODE_FOR_DSN_SCAN && resultCode == ScanActivity.RESULT_FOR_INPUT) {//扫码页面回退到手动输入页面
             Intent mainActivity = new Intent(this, GatewayAddDsnInputActivity.class);
@@ -193,7 +186,6 @@ public class A2GatewayAddGuideActivity extends BaseMvpActivity<DeviceAddGuideVie
             return;
         }
     }
-
 
 
     @Override
