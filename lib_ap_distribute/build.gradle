@@ -1,34 +1,40 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
-apply from: "config.gradle"
-buildscript {
-    repositories {
-        //修改成国内阿里云的maven地址，否则某些地方下载不下来
-        maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-        google()
-        jcenter()
-
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.2'
-        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
+plugins {
+    id 'com.android.library'
 }
 
-allprojects {
-    repositories {
-        //修改成国内阿里云的maven地址，否则某些地方下载不下来
-        maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-        maven {
-            url 'https://jitpack.io'
+apply from: 'libs/ayla_dependence.gradle'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.0"
+
+    defaultConfig {
+        minSdkVersion 23    //aylaSDK required
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        google()
-        jcenter()
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
