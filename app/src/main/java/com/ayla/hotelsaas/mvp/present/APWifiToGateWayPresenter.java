@@ -83,7 +83,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
 
                     @Override
                     public void onFailed(@NonNull Throwable throwable) {
-                        emitter.onError(new Exception("未发现网关发出的wifi..."));
+                        emitter.onError(new Exception("找不到指定的网关设备,请重试..."));
 
                     }
                 });
@@ -114,26 +114,6 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                             }
                         });
                     }
-                }).retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
-                        long startTime = System.currentTimeMillis();
-                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
-                            @Override
-                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
-                                if (!NetworkUtils.getWifiEnabled()) {
-                                    return Observable.error(new Exception("请检查网络"));
-                                }
-                                long currentTime = System.currentTimeMillis();
-                                long s = currentTime - startTime;
-                                if (s > 60_000) {
-                                    return Observable.error(throwable);
-                                } else {
-                                    return Observable.timer(3, TimeUnit.SECONDS);
-                                }
-                            }
-                        });
-                    }
                 });
                 return mConnextNewDeviceobservable;
             }
@@ -153,6 +133,10 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                                 @Override
                                 public void onSuccess(@NonNull Object result) {
                                     LogUtils.d("connectToApDevice: AP设备连接到家庭WiFi热点成功${result}");
+                                    if ((int)result==1){
+                                        emitter.onError(new Exception("AP设备连接到家庭WiFi热点失败"));//此处正常处理
+                                        return;
+                                    }
                                     emitter.onNext(aylaSetupDevice);
                                     emitter.onComplete();
                                 }
@@ -160,27 +144,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                                 @Override
                                 public void onFailed(@NonNull Throwable throwable) {
                                     LogUtils.d("connectToApDevice: AP设备连接到家庭WiFi热点失败，${throwable.localizedMessage}");
-                                    emitter.onError(new Exception("连接网关 Wi-Fi 失败，请重试.."));
-                                }
-                            });
-                        }
-                    }).retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
-                        @Override
-                        public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
-                            long startTime = System.currentTimeMillis();
-                            return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
-                                @Override
-                                public ObservableSource<?> apply(Throwable throwable) throws Exception {
-                                    if (!NetworkUtils.getWifiEnabled()) {
-                                        return Observable.error(new Exception("请检查网络"));
-                                    }
-                                    long currentTime = System.currentTimeMillis();
-                                    long s = currentTime - startTime;
-                                    if (s > 60_000) {
-                                        return Observable.error(throwable);
-                                    } else {
-                                        return Observable.timer(3, TimeUnit.SECONDS);
-                                    }
+                                    emitter.onError(new Exception("AP设备连接到家庭WiFi热点失败"));//此处正常处理
                                 }
                             });
                         }
