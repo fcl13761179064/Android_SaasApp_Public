@@ -89,8 +89,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
             @Override
             public ObservableSource<AylaSetupDevice> apply(String apSSid) throws Exception {
                 if (!NetworkUtils.getWifiEnabled()) {
-                    ToastUtils.showShort("请检查网络...");
-                    return Observable.error(new Exception("扫描到你需要的设备的wifi热点失败"));
+                    return Observable.error(new Exception("请检查网络"));
                 }
                 mConnextNewDeviceobservable = Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
                     @Override
@@ -119,8 +118,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                             @Override
                             public ObservableSource<?> apply(Throwable throwable) throws Exception {
                                 if (!NetworkUtils.getWifiEnabled()) {
-                                    ToastUtils.showShort("请检查网络...");
-                                    return Observable.error(throwable);
+                                    return Observable.error(new Exception("请检查网络"));
                                 }
                                 long currentTime = System.currentTimeMillis();
                                 long s = currentTime - startTime;
@@ -141,7 +139,6 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
             public ObservableSource<AylaSetupDevice> apply(AylaSetupDevice aylaSetupDevice) throws Exception {
                 if (!inputDsn.equals(aylaSetupDevice.getDsn())) {
                     Observable.error(new Exception("网关dsn不匹配"));
-                    CustomToast.makeText(context, "网关dsn不匹配", R.drawable.ic_toast_warming);
                 } else {
                     connectDeviceToServiceObservalble = Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
                         @Override
