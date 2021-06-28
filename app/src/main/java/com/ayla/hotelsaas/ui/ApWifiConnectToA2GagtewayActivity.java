@@ -77,7 +77,7 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
     @Override
     public void onFailed(Throwable throwable) {
         sd_btn_action.setEnabled(false);
-        CustomToast.makeText(this, "连接网关 Wi-Fi 失败，请重试", R.drawable.ic_toast_warming);
+        CustomToast.makeText(this, throwable.getMessage().toString(), R.drawable.ic_toast_warming);
     }
 
     @Override
