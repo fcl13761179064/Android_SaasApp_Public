@@ -60,7 +60,11 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
                             mZXingView.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                    try {
+                                        mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             });
                         } else if (permission.shouldShowRequestPermissionRationale) {
