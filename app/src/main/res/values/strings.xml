@@ -33,5 +33,6 @@
     <string name="remove_device_title">确定是否移除</string>
     <string name="remove_device_content">移除设备后将不可恢复，您是否移除该设备</string>
     <string name="helper">找不到要连接的路由器？</string>
+    <string name="wifi_2.4g_notice">提示</string>
     <string name="common_next">下一步</string>
 </resources>

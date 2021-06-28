@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.mvp.present;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.os.Handler;
 
@@ -10,9 +11,11 @@ import androidx.core.util.Predicate;
 import androidx.lifecycle.MutableLiveData;
 import androidx.media.MediaBrowserServiceCompat;
 
+import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.mvp.view.APwifiToGateWayView;
+import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
 import com.ayla.ng.lib.bootstrap.AylaWiFiSetup;
@@ -138,6 +141,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
             public ObservableSource<AylaSetupDevice> apply(AylaSetupDevice aylaSetupDevice) throws Exception {
                 if (!inputDsn.equals(aylaSetupDevice.getDsn())) {
                     Observable.error(new Exception("网关dsn不匹配"));
+                    CustomToast.makeText(context, "网关dsn不匹配", R.drawable.ic_toast_warming);
                 } else {
                     connectDeviceToServiceObservalble = Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
                         @Override
@@ -147,6 +151,10 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                             aylaWiFiSetup.connectDeviceToService(homeWiFiSSid, homeWiFiPwd, randomString, 20, new AylaCallback<Object>() {
                                 @Override
                                 public void onSuccess(@NonNull Object result) {
+                                    if (result instanceof Integer && (int)result ==1){
+                                        ToastUtils.showShort("手机无法访问网络，请连接可用网络后重试");
+                                        return;
+                                    }
                                     LogUtils.d("connectToApDevice: AP设备连接到家庭WiFi热点成功${result}");
                                     emitter.onNext(aylaSetupDevice);
                                     emitter.onComplete();
