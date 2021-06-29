@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.APWifiToGateWayPresenter;
 import com.ayla.hotelsaas.mvp.view.APwifiToGateWayView;
@@ -59,7 +60,7 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
         tv_connect_ap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this, dsn, ssid, pwd);
+                mPresenter.connectToApDevice(MyApplication.getContext(), dsn, ssid, pwd);
                 sd_btn_action.setEnabled(false);
             }
         });

@@ -117,26 +117,6 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                 });
                 return mConnextNewDeviceobservable;
             }
-        }).retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
-            @Override
-            public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
-                long startTime = System.currentTimeMillis();
-                return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(Throwable throwable) throws Exception {
-                        if (!NetworkUtils.getWifiEnabled()) {
-                            return Observable.error(new Exception("请检查网络"));
-                        }
-                        long currentTime = System.currentTimeMillis();
-                        long s = currentTime - startTime;
-                        if (s > 60_000) {
-                            return Observable.error(throwable);
-                        } else {
-                            return Observable.timer(3, TimeUnit.SECONDS);
-                        }
-                    }
-                });
-            }
         });
         Disposable disposable = objectObservable.flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {
             @Override
@@ -153,10 +133,6 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                                 @Override
                                 public void onSuccess(@NonNull Object result) {
                                     LogUtils.d("connectToApDevice: AP设备连接到家庭WiFi热点成功${result}");
-                                    if ((int)result==1){
-                                        emitter.onError(new Exception("AP设备连接到家庭WiFi热点失败"));//此处正常处理
-                                        return;
-                                    }
                                     emitter.onNext(aylaSetupDevice);
                                     emitter.onComplete();
                                 }
@@ -175,6 +151,15 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
         }).doAfterTerminate(new Action() {
             @Override
             public void run() throws Exception {
+                if (isNeedExit) {
+                    LogUtils.d("connectToApDevice: doAfterTerminate 退出AP配网");
+                    isNeedExit = false;
+                    aylaWiFiSetup.exitSetup();
+                }
+            }
+        }).doOnSubscribe(new Consumer<Disposable>() {
+            @Override
+            public void accept(Disposable disposable) throws Exception {
                 if (isNeedExit) {
                     LogUtils.d("connectToApDevice: doAfterTerminate 退出AP配网");
                     isNeedExit = false;
