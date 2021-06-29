@@ -60,7 +60,7 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
         tv_connect_ap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.connectToApDevice(MyApplication.getContext(), dsn, ssid, pwd);
+                mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this, dsn, ssid, pwd);
                 sd_btn_action.setEnabled(false);
             }
         });

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.os.Handler;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Predicate;
@@ -45,20 +46,22 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
     public AylaWiFiSetup aylaWiFiSetup;
     private Observable<AylaSetupDevice> mConnextNewDeviceobservable;
     private Observable<AylaSetupDevice> connectDeviceToServiceObservalble;
-    Boolean isNeedExit = true;
     private String randomString;
 
-    public void connectToApDevice(Context context, String inputDsn, String homeWiFiSSid, String homeWiFiPwd) {
 
+    public void connectToApDevice(Context context, String inputDsn, String homeWiFiSSid, String homeWiFiPwd) {
         MutableLiveData apConfigResult = new MutableLiveData<MediaBrowserServiceCompat.Result<String>>();
         try {
+            boolean isNeedExit = true;
             aylaWiFiSetup = new AylaWiFiSetup(context, AylaConnectivityManager.from(context, false));
         } catch (Exception e) {
             apConfigResult.setValue(e.toString());
             e.printStackTrace();
-            if (aylaWiFiSetup==null){
+            if (aylaWiFiSetup == null) {
                 CustomToast.makeText(context, "连接网关 Wi-Fi 失败，请重试..", R.drawable.ic_toast_warming);
                 return;
+            } else {
+                aylaWiFiSetup.exitSetup();
             }
         }
         String gatewayIp = NetworkUtils.getGatewayByWifi();
@@ -122,7 +125,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
             @Override
             public ObservableSource<AylaSetupDevice> apply(AylaSetupDevice aylaSetupDevice) throws Exception {
                 if (!inputDsn.equals(aylaSetupDevice.getDsn())) {
-                    throw new  RuntimeException("当前连接设备和所选设备不一致,请确认后重试");
+                    throw new RuntimeException("当前连接设备和所选设备不一致,请确认后重试");
                 } else {
                     connectDeviceToServiceObservalble = Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
                         @Override
@@ -149,17 +152,9 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                 return connectDeviceToServiceObservalble;
             }
         }).doAfterTerminate(new Action() {
+
             @Override
             public void run() throws Exception {
-                if (isNeedExit) {
-                    LogUtils.d("connectToApDevice: doAfterTerminate 退出AP配网");
-                    isNeedExit = false;
-                    aylaWiFiSetup.exitSetup();
-                }
-            }
-        }).doOnSubscribe(new Consumer<Disposable>() {
-            @Override
-            public void accept(Disposable disposable) throws Exception {
                 if (isNeedExit) {
                     LogUtils.d("connectToApDevice: doAfterTerminate 退出AP配网");
                     isNeedExit = false;
