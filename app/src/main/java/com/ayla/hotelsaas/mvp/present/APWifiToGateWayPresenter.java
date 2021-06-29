@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ import com.ayla.ng.lib.bootstrap.connectivity.AylaConnectivityManager;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.ToastUtils;
+
+import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 
@@ -71,6 +74,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                         @Override
                         public void onSuccess(@NonNull ScanResult[] result) {
                             String ssid = result[0].SSID;
+                            LogUtils.d("ttttttt",ssid);
                             emitter.onNext(ssid);
                             emitter.onComplete();
                         }
@@ -104,7 +108,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                                 @Override
                                 public void onFailed(@NonNull Throwable throwable) {
                                     LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点失败，" + throwable.getMessage());
-                                    emitter.onError(throwable);
+                                    emitter.onError(new Exception("连接网关 Wi-Fi 失败，请重试.."));
                                 }
                             });
                         }
@@ -135,6 +139,24 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                                     public void onFailed(@NonNull Throwable throwable) {
                                         LogUtils.d("connectToApDevice: AP设备连接到家庭WiFi热点失败，${throwable.localizedMessage}");
                                         emitter.onError(new Exception("AP设备连接到家庭WiFi热点失败"));//此处正常处理
+                                        try {
+                                            String errorString = throwable.getLocalizedMessage();
+                                            if(errorString.isEmpty()){
+                                                emitter.onError(new Exception("AP设备连接到家庭WiFi热点失败"));
+                                            }else{
+                                                int i = errorString.indexOf("{");
+                                                String substring = errorString.substring(i + 1, errorString.length());
+                                                JSONObject jsonObject = new JSONObject("{" + substring);
+                                                int error = jsonObject.optInt("error", -1);
+                                                if (error==3){
+                                                    emitter.onError(new Exception("WiFi密码不正确")) ;
+                                                }else if (error==4){
+                                                    emitter.onError(new Exception("AP设备连接到家庭WiFi热点失败")) ;
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            emitter.onError(new Throwable(throwable.getLocalizedMessage() !=null  ? throwable.getLocalizedMessage() : "AP设备连接到家庭WiFi热点失败"));
+                                        }
                                     }
                                 });
                             }
