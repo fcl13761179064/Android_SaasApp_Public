@@ -168,26 +168,8 @@ public class ApWifiDistributeActivity extends BasicActivity {
             if (is_2g) {
                 jumpTonextActivity(name, pwd);
             } else {
-                CustomAlarmDialog
-                        .newInstance(new CustomAlarmDialog.Callback() {
-                            @Override
-                            public void onDone(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                                jumpTonextActivity(name, pwd);
 
-                            }
-
-                            @Override
-                            public void onCancel(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                            }
-                        })
-                        .setTitle(getResources().getString(R.string.wifi_2_4g_notice))
-                        .setStyle(CustomAlarmDialog.Style.STYLE_NORMAL)
-                        .setContent("当前WiFi只支持2.4GWiFi")
-                        .show(getSupportFragmentManager(), "");
-
-
+                CustomToast.makeText(ApWifiDistributeActivity.this, "当前WiFi只支持2.4GWiFi", R.drawable.ic_toast_warming);
             }
         } else {
             CustomAlarmDialog

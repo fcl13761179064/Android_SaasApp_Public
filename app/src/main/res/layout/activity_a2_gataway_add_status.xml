@@ -71,7 +71,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/dp_16"
         android:visibility="gone"
-        android:text="网关已被绑定，您可以长按网关按钮 15s 将网关恢复出厂设置后重新添加。"
+        android:text="网关已被绑定，需要您联系相关施工员在施工APP中删除设备，重新进行添加"
         android:textColor="#ff999999"
         android:textSize="14sp"
         />
