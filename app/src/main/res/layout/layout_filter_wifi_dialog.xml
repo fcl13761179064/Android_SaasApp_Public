@@ -44,7 +44,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="242dp"
         android:layout_marginTop="1px"
         android:background="@color/white"
         android:minHeight="200dp"
@@ -53,13 +53,17 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
 
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:background="@drawable/bg_item_pick_dialog"
+        android:background="@drawable/bg_wifi_bottom_dialog"
+        android:text="Wi-Fi 设置"
+        android:layout_marginTop="1dp"
+        android:textColor="#333333"
+        android:gravity="center"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/login_username"
         app:layout_constraintTop_toBottomOf="@+id/rv"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
