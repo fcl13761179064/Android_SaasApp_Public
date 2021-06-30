@@ -5,13 +5,17 @@ import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.SPUtils;
 
+import java.util.Random;
+
+
 /**
  * @描述 常量类
  * @作者 fanchunlei
  * @时间 2020/7/8
  */
 public class Constance {
-    public static final String SP_SAAS = "1";
+    public static  String SP_SAAS = "saas";
+    public static  String AP_NET_SELECT = "net";
     /**
      * 是否处于开发状态。
      */
@@ -119,4 +123,23 @@ public class Constance {
             return null;
         }
     }
+
+    //艾拉wifi SSId正则
+    public static String DEFAULT_SSID_REGEX = "Ayla-([0-9a-zA-Z]+|DevKit)";
+
+    /**
+     * 获取随机字符串
+     */
+    //length用户要求产生字符串的长度
+    public static String getRandomString(int length){
+        String str="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random=new Random();
+        StringBuffer sb=new StringBuffer();
+        for(int i=0;i<length;i++){
+            int number=random.nextInt(62);
+            sb.append(str.charAt(number));
+        }
+        return sb.toString();
+    }
+
 }

@@ -56,10 +56,14 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
     @Override
     protected void initView() {
         device = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("device");
+        String is_ap_normals = getIntent().getStringExtra("is_ap_normal");
         roomId = SharePreferenceUtils.getLong(this, Constance.SP_ROOM_ID, 0);
         binding.etInput.setText(device.getNickname());
         binding.tvLocationPoint.setText(device.getRegionName());
         binding.tvLocationName.setText(device.getPointName());
+        if (!TextUtils.isEmpty(is_ap_normals)){
+            binding.appBar.setLeftImageView(0);
+        }
     }
 
     @Override

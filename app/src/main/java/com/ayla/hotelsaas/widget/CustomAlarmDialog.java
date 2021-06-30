@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.fragment.app.DialogFragment;
 import com.ayla.hotelsaas.R;
 
 public class CustomAlarmDialog extends DialogFragment {
+
     @Deprecated
     public static CustomAlarmDialog newInstance(Callback doneCallback) {
 
@@ -47,10 +49,19 @@ public class CustomAlarmDialog extends DialogFragment {
         STYLE_NORMAL, STYLE_SINGLE_BUTTON,
     }
 
+    public enum Location {
+        LEFT, CENTER,RIGHT
+    }
     private Style style = Style.STYLE_NORMAL;
+    private Location location=Location.CENTER;
 
     public CustomAlarmDialog setStyle(Style style) {
         this.style = style;
+        return this;
+    }
+
+    public CustomAlarmDialog setFontLocation(Location location) {
+        this.location = location;
         return this;
     }
 
@@ -131,6 +142,9 @@ public class CustomAlarmDialog extends DialogFragment {
             titleTextView.setText(title);
         }
         TextView contentTextView = view.findViewById(R.id.tv_content);
+        if (location==Location.LEFT){
+            contentTextView.setGravity(Gravity.LEFT);
+        }
         contentTextView.setText(content);
     }
 

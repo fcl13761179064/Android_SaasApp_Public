@@ -65,7 +65,7 @@ public class PopupWindowUtil {
      */
     public void show(View paramView, int count) {
         //该count 是手动调整窗口的宽度
-        window.setWidth(360);
+        window.setWidth(count);
         //设置窗口显示位置, 后面两个0 是表示偏移量，可以自由设置
         window.showAsDropDown(paramView, xOff, yOff);
         //更新窗口状态

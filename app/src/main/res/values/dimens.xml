@@ -6,4 +6,5 @@
     <dimen name="drawable_padding">-11dp</dimen>
     <dimen name="tab_textsize">10sp</dimen>
     <dimen name="dp_16">16dp</dimen>
+    <dimen name="text_middle_size">18sp</dimen>
 </resources>

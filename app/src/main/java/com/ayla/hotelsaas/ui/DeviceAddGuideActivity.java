@@ -4,9 +4,15 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.view.animation.CycleInterpolator;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -18,14 +24,24 @@ import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
+import com.ayla.hotelsaas.databinding.ActivityDeviceAddGuideBinding;
+import com.ayla.hotelsaas.databinding.ActivityDeviceAddSuccessBinding;
 import com.ayla.hotelsaas.mvp.present.DeviceAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddGuideView;
+import com.ayla.hotelsaas.popmenu.ApNetpopupWindowUtil;
+import com.ayla.hotelsaas.popmenu.PopupWindowUtil;
 import com.ayla.hotelsaas.utils.ImageLoader;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
+import com.ayla.hotelsaas.widget.AppBar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.ayla.hotelsaas.application.MyApplication.getContext;
 
 /**
  * wifi设备、节点设备 配网引导页面
@@ -42,8 +58,11 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
     AppCompatCheckBox checkBox;
     @BindView(R.id.bt)
     Button button;
+    @BindView(R.id.appBar)
+    AppBar appBar;
 
-
+    private static final int LiNE_NET= 0;
+    private static final int AP_NET = 1;
     private Bundle addInfo;
 
     @Override
@@ -59,6 +78,7 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
         return new DeviceAddGuidePresenter();
     }
 
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_device_add_guide;
@@ -72,7 +92,6 @@ public class DeviceAddGuideActivity extends BaseMvpActivity<DeviceAddGuideView, 
     protected void initListener() {
 
     }
-
 
     private void handleJump() {
         int networkType = addInfo.getInt("networkType");

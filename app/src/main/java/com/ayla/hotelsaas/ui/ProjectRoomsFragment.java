@@ -172,7 +172,7 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
             }
 
             //创建新的fragment
-            ProjectRoomBeanFragment fragment = ProjectRoomBeanFragment.newInstance(this, new ArrayList<>(children));
+            ProjectRoomBeanFragment fragment =  ProjectRoomBeanFragment.newInstance(this, new ArrayList<>(children));
             fragmentTransaction.add(R.id.fl_container, fragment, title).commitNow();
 
             //创建新的tab
