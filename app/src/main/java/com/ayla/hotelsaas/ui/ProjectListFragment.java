@@ -73,7 +73,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     public void onAttach(Activity context) {
         super.onAttach(context);
         ProjectListActivity projectListActivity = (ProjectListActivity) context;
-        if (projectListActivity.appBar != null || projectListActivity.appBar.getTitleLayoutView()!=null) {
+        if (projectListActivity !=null && projectListActivity.appBar != null &&  projectListActivity.appBar.getTitleLayoutView()!=null) {
             projectListActivity.appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -202,11 +202,6 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
         mAdapter.setEmptyView(R.layout.layout_loading);
         mSmartRefreshLayout.setEnableLoadMore(false);
         mSmartRefreshLayout.setEnableRefresh(false);
-        if ("1".equalsIgnoreCase(saas_saft_img)) {
-            bt_add.setVisibility(View.VISIBLE);
-        } else {
-            bt_add.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -301,7 +296,9 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
 
     @OnClick(R.id.bt_add)
     void handleAdd() {
-        startActivityForResult(new Intent(getContext(), CreateProjectActivity.class), REQUEST_CODE_CREATE_PROJECT);
+        Intent startActivity = new Intent(getContext(), CreateProjectActivity.class);
+        startActivity.putExtra("project_type",saas_saft_img);
+        startActivityForResult(startActivity, REQUEST_CODE_CREATE_PROJECT);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

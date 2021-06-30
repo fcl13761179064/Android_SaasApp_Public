@@ -94,6 +94,10 @@ public class Constance {
     //refresh token
     public static String SP_Refresh_Token = "refresh_token";
 
+    //sava password account
+    public static String SP_Login_password = "save_password";
+    public static String SP_Login_account = "save_account";
+
     //登录保存key
     public static String SP_ROOM_ID = "room_id";
 
