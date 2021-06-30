@@ -98,23 +98,14 @@ public class FilterWifiDialog extends DialogFragment {
             }
         });
         if (LocationType == 1000) {
-            binding.imageView.setImageResource(iconRes);
             binding.imageView2.setVisibility(View.INVISIBLE);
-            binding.imageView.setVisibility(View.VISIBLE);
         } else {
             binding.imageView2.setImageResource(iconRes);
             binding.imageView2.setVisibility(View.VISIBLE);
-            binding.imageView.setVisibility(View.GONE);
         }
 
-        binding.textView2.setText(title);
         binding.textView3.setText(subTitle);
-        binding.imageView3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismissAllowingStateLoss();
-            }
-        });
+
     }
 
     @Override
