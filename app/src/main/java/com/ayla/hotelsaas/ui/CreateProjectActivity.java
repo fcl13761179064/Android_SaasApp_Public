@@ -3,8 +3,10 @@ package com.ayla.hotelsaas.ui;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
@@ -26,10 +28,19 @@ import butterknife.BindViews;
 import butterknife.OnClick;
 
 public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, CreateProjectPresenter> implements CreateProjectView {
-    @BindViews({R.id.cb_01, R.id.cb_02, R.id.cb_03, R.id.cb_04, R.id.cb_05, R.id.cb_06})
+    @BindViews({R.id.cb_01, R.id.cb_03,  R.id.cb_05, R.id.cb_06})
     List<CheckBox> mCheckBoxList;
     @BindView(R.id.ed_name)
     TextView mEditText;
+    @BindView(R.id.ll_03)
+    LinearLayout ll_03;
+    @BindView(R.id.ll_01)
+    LinearLayout ll_01;
+    @BindView(R.id.cb_01)
+    AppCompatCheckBox cb_01;
+    @BindView(R.id.cb_03)
+    AppCompatCheckBox cb_03;
+    private String project_type;
 
     @Override
     protected CreateProjectPresenter initPresenter() {
@@ -43,6 +54,18 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
 
     @Override
     protected void initView() {
+        project_type = getIntent().getStringExtra("project_type");
+        if ("1".equals(project_type)){
+            ll_03.setVisibility(View.GONE);
+            ll_01.setVisibility(View.VISIBLE);
+            cb_03.setChecked(false);
+            cb_01.setChecked(true);
+        }else {
+            ll_03.setVisibility(View.VISIBLE);
+            ll_01.setVisibility(View.GONE);
+            cb_03.setChecked(true);
+            cb_01.setChecked(false);
+        }
 
     }
 
@@ -51,14 +74,12 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
 
     }
 
-    @OnClick({R.id.cb_01, R.id.cb_02, R.id.cb_03, R.id.cb_04, R.id.cb_05, R.id.cb_06})
+    @OnClick({R.id.cb_01, R.id.cb_03, R.id.cb_05, R.id.cb_06})
     void handleCbClicked(View view) {
         switch (view.getId()) {
             case R.id.cb_01:
-            case R.id.cb_02:
             case R.id.cb_03:
-            case R.id.cb_04:
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 2; i++) {
                     CheckBox checkBox = mCheckBoxList.get(i);
                     if (checkBox.getId() != view.getId()) {
                         checkBox.setChecked(false);
@@ -67,7 +88,7 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
                 break;
             case R.id.cb_05:
             case R.id.cb_06:
-                for (int i = 4; i < 6; i++) {
+                for (int i = 2; i < 4; i++) {
                     CheckBox checkBox = mCheckBoxList.get(i);
                     if (checkBox.getId() != view.getId()) {
                         checkBox.setChecked(false);
@@ -108,7 +129,7 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
             return;
         }
         boolean check = false;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 2; i++) {
             if (mCheckBoxList.get(i).isChecked()) {
                 check = true;
                 trade = i + 1;
@@ -120,10 +141,10 @@ public class CreateProjectActivity extends BaseMvpActivity<CreateProjectView, Cr
             return;
         }
         check = false;
-        for (int i = 4; i < 6; i++) {
+        for (int i = 2; i < 4; i++) {
             if (mCheckBoxList.get(i).isChecked()) {
                 check = true;
-                type = i - 3;
+                type = i - 1;
                 break;
             }
         }

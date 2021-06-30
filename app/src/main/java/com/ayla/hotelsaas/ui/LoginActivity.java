@@ -72,7 +72,8 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
 
     @Override
     protected void initView() {
-
+        String account = SharePreferenceUtils.getString(LoginActivity.this, Constance.SP_Login_account, "");
+        edite_count.setText(account);
     }
 
     @OnClick({R.id.submitBtn})
@@ -94,7 +95,9 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             CustomToast.makeText(this, R.string.account_error, R.drawable.ic_toast_warming);
             return;
         }
-        SoftInputUtil.hideSysSoftInput(LoginActivity.this);
+        if (SoftInputUtil.isOpen()){
+            SoftInputUtil.hideSysSoftInput(this);
+        }
         if (upgradeBean == null) {
             mPresenter.checkVersion();
         } else {
@@ -147,9 +150,10 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
     }
 
     @Override
-    public void loginSuccess(User data) {
+    public void loginSuccess(User data, String account) {
         SharePreferenceUtils.saveString(LoginActivity.this, Constance.SP_Login_Token, data.getAuthToken());
         SharePreferenceUtils.saveString(LoginActivity.this, Constance.SP_Refresh_Token, data.getRefreshToken());
+        SharePreferenceUtils.saveString(LoginActivity.this, Constance.SP_Login_account,account);
         Intent mainActivity = new Intent(this, ProjectListActivity.class);
         mainActivity.putExtra("upgrade", upgradeBean);
         startActivity(mainActivity);
