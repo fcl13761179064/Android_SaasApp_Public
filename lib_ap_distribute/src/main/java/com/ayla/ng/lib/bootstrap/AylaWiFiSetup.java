@@ -171,7 +171,7 @@ public class AylaWiFiSetup {
             public void onErrorResponse(AylaError aylaError) {
                 Log.e(TAG, "connectDeviceToService onErrorResponse: ", aylaError);
                 if(aylaError instanceof NetworkError || aylaError instanceof TimeoutError){
-                    aylaCallback.onFailed(aylaError);
+                    aylaCallback.onSuccess(1);
                 }else{
                     aylaCallback.onFailed(aylaError);
 

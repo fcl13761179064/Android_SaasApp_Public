@@ -177,7 +177,8 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                     return;
                 }
                 if (TextUtils.equals(newNickname, nickname) && TextUtils.equals(newLocationName, pointName) && TextUtils.equals(tv_location_name, device.getRegionName())) {
-                    finish();
+                    Intent mainActivity = new Intent(DeviceAddSuccessActivity.this, MainActivity.class);
+                    startActivity(mainActivity);
                 } else {
                     if (regionId==-1l){
                         mPresenter.deviceRenameMethod(device.getDeviceId(), newNickname, newLocationName, device.getRegionId(), device.getRegionName());

@@ -51,15 +51,14 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
     private Observable<AylaSetupDevice> connectDeviceToServiceObservalble;
     private String randomString;
 
+    MutableLiveData apConfigResult = new MutableLiveData<MediaBrowserServiceCompat.Result<String>>();
 
     public void connectToApDevice(Context context, String inputDsn, String homeWiFiSSid, String homeWiFiPwd) {
         final Boolean[] isNeedExit = {true};
-
-        MutableLiveData apConfigResult = new MutableLiveData<MediaBrowserServiceCompat.Result<String>>();
         try {
             aylaWiFiSetup = new AylaWiFiSetup(context, AylaConnectivityManager.from(context, false));
             String gatewayIp = NetworkUtils.getGatewayByWifi();
-            Observable<AylaSetupDevice> objectObservable = Observable.create(new ObservableOnSubscribe<String>() {
+            Observable.create(new ObservableOnSubscribe<String>() {
                 @Override
                 public void subscribe(ObservableEmitter<String> emitter) throws Exception {
                     aylaWiFiSetup.scanDevices(5, new Predicate<ScanResult>() {
@@ -74,7 +73,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                         @Override
                         public void onSuccess(@NonNull ScanResult[] result) {
                             String ssid = result[0].SSID;
-                            LogUtils.d("ttttttt",ssid);
+                            LogUtils.d("ttttttt", ssid);
                             emitter.onNext(ssid);
                             emitter.onComplete();
                         }
@@ -93,7 +92,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                     if (!NetworkUtils.getWifiEnabled()) {
                         return Observable.error(new Exception("没有网络，请检查网络后再试"));
                     }
-                    mConnextNewDeviceobservable = Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
+                    return Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
                         @Override
                         public void subscribe(ObservableEmitter<AylaSetupDevice> emitter) throws Exception {
                             aylaWiFiSetup.connectToNewDevice(apSSid, 20, new AylaCallback<AylaSetupDevice>() {
@@ -113,56 +112,44 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                             });
                         }
                     });
-                    return mConnextNewDeviceobservable;
                 }
-            });
-            Disposable disposable = objectObservable.flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {
+            }).flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {
+                @Override
+                public ObservableSource<AylaSetupDevice> apply(@io.reactivex.annotations.NonNull AylaSetupDevice aylaSetupDevice) throws Exception {
+                    if (!aylaSetupDevice.getDsn().equals(inputDsn)) {
+                        return Observable.error(new Exception("当前连接设备和所选设备不一致,请确认后重试"));
+                    } else {
+                        return Observable.just(aylaSetupDevice);
+                    }
+                }
+            }).flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {
                 @Override
                 public ObservableSource<AylaSetupDevice> apply(AylaSetupDevice aylaSetupDevice) throws Exception {
-                    if (!inputDsn.equals(aylaSetupDevice.getDsn())) {
-                        throw new RuntimeException("当前连接设备和所选设备不一致,请确认后重试");
-                    } else {
-                        connectDeviceToServiceObservalble = Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
-                            @Override
-                            public void subscribe(ObservableEmitter<AylaSetupDevice> emitter) throws Exception {
-                                randomString = Constance.getRandomString(8);
-                                //ap设备，如A2网关去链接到路由器
-                                aylaWiFiSetup.connectDeviceToService(homeWiFiSSid, homeWiFiPwd, randomString, 20, new AylaCallback<Object>() {
-                                    @Override
-                                    public void onSuccess(@NonNull Object result) {
-                                        LogUtils.d("connectToApDevice: AP设备连接到家庭WiFi热点成功${result}");
-                                        emitter.onNext(aylaSetupDevice);
-                                        emitter.onComplete();
-                                    }
+                    return Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
+                        @Override
+                        public void subscribe(ObservableEmitter<AylaSetupDevice> emitter) throws Exception {
+                            randomString = Constance.getRandomString(8);
+                            //ap设备，如A2网关去链接到路由器
+                            aylaWiFiSetup.connectDeviceToService(homeWiFiSSid, homeWiFiPwd, randomString, 20, new AylaCallback<Object>() {
+                                @Override
+                                public void onSuccess(@NonNull Object result) {
+                                    LogUtils.d("connectToApDevice: AP设备连接到家庭WiFi热点成功${result}");
+                                    emitter.onNext(aylaSetupDevice);
+                                    emitter.onComplete();
+                                }
 
-                                    @Override
-                                    public void onFailed(@NonNull Throwable throwable) {
-                                        LogUtils.d("connectToApDevice: AP设备连接到家庭WiFi热点失败，${throwable.localizedMessage}");
+                                @Override
+                                public void onFailed(@NonNull Throwable throwable) {
+                                    LogUtils.d("connectToApDevice: AP设备连接到家庭WiFi热点失败，${throwable.localizedMessage}");
+                                    try {
                                         emitter.onError(new Exception("AP设备连接到家庭WiFi热点失败"));//此处正常处理
-                                        try {
-                                            String errorString = throwable.getLocalizedMessage();
-                                            if(errorString.isEmpty()){
-                                                emitter.onError(new Exception("AP设备连接到家庭WiFi热点失败"));
-                                            }else{
-                                                int i = errorString.indexOf("{");
-                                                String substring = errorString.substring(i + 1, errorString.length());
-                                                JSONObject jsonObject = new JSONObject("{" + substring);
-                                                int error = jsonObject.optInt("error", -1);
-                                                if (error==3){
-                                                    emitter.onError(new Exception("WiFi密码不正确")) ;
-                                                }else if (error==4){
-                                                    emitter.onError(new Exception("AP设备连接到家庭WiFi热点失败")) ;
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            emitter.onError(new Throwable(throwable.getLocalizedMessage() !=null  ? throwable.getLocalizedMessage() : "AP设备连接到家庭WiFi热点失败"));
-                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-                                });
-                            }
-                        });
-                    }
-                    return connectDeviceToServiceObservalble;
+                                }
+                            });
+                        }
+                    });
                 }
             }).doAfterTerminate(new Action() {
 
@@ -187,19 +174,27 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                         public void run() throws Exception {
                             mView.hideProgress();
                         }
-                    }).subscribe(new Consumer<AylaSetupDevice>() {
-                        @Override
-                        public void accept(AylaSetupDevice aylaSetupDevice) throws Exception {
-                            mView.onSuccess(aylaSetupDevice, randomString);
+                    }).subscribe(new Observer<AylaSetupDevice>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+                    addSubscrebe(d);
+                }
 
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            mView.onFailed(throwable);
-                        }
-                    });
-            addSubscrebe(disposable);
+                @Override
+                public void onNext(AylaSetupDevice aylaSetupDevice) {
+                    mView.onSuccess(aylaSetupDevice, randomString);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    mView.onFailed(e);
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
         } catch (Exception e) {
             apConfigResult.setValue(e.toString());
             e.printStackTrace();
