@@ -67,53 +67,57 @@ public class ApWifiDistributeActivity extends BasicActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String connectWifiSsid = WifiUtil.getConnectWifiSsid();
-        mWiFiNameEditText.setText(connectWifiSsid);
-        mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
+        try {
+            String connectWifiSsid = WifiUtil.getConnectWifiSsid();
+            mWiFiNameEditText.setText(connectWifiSsid);
+            mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
 
-        if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
-            if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
-                if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
-                    CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning);
-                    enableWiFiNameInput(true);
-                }
-            } else {//定位权限没有
-                if (!permissionHasAsked) {
-                    CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
-                        @Override
-                        public void onDone(CustomAlarmDialog dialog) {
-                            dialog.dismissAllowingStateLoss();
-                            PermissionUtils.permission(PermissionConstants.LOCATION)
-                                    .callback(new PermissionUtils.FullCallback() {
-                                        @Override
-                                        public void onGranted(@NonNull List<String> granted) {
-                                            String connectWifiSsid = WifiUtil.getConnectWifiSsid();
-                                            mWiFiNameEditText.setText(connectWifiSsid);
-                                            mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
-                                            enableWiFiNameInput(false);
-                                        }
-
-                                        @Override
-                                        public void onDenied(@NonNull List<String> deniedForever, @NonNull List<String> denied) {
-                                            if (deniedForever.size() > 0) {
-                                                Intent settingsIntent = IntentUtils.getLaunchAppDetailsSettingsIntent(AppUtils.getAppPackageName());
-                                                startActivity(settingsIntent);
-//                                                  CustomToast.makeText(getApplicationContext(), "你拒绝了访问位置信息的授权，无法自动填充WiFi名称", R.drawable.ic_warning);
+            if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
+                if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
+                    if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
+                        CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning);
+                        enableWiFiNameInput(true);
+                    }
+                } else {//定位权限没有
+                    if (!permissionHasAsked) {
+                        CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
+                            @Override
+                            public void onDone(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                                PermissionUtils.permission(PermissionConstants.LOCATION)
+                                        .callback(new PermissionUtils.FullCallback() {
+                                            @Override
+                                            public void onGranted(@NonNull List<String> granted) {
+                                                String connectWifiSsid = WifiUtil.getConnectWifiSsid();
+                                                mWiFiNameEditText.setText(connectWifiSsid);
+                                                mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
+                                                enableWiFiNameInput(false);
                                             }
-                                        }
-                                    }).request();
-                        }
 
-                        @Override
-                        public void onCancel(CustomAlarmDialog dialog) {
-                            dialog.dismissAllowingStateLoss();
-                        }
-                    }).setTitle("获取位置权限").setContent("添加网关需要使用位置权限，用以扫描Wi-Fi热点").setEnsureText("设置").show(getSupportFragmentManager(), "wifi dialog");
+                                            @Override
+                                            public void onDenied(@NonNull List<String> deniedForever, @NonNull List<String> denied) {
+                                                if (deniedForever.size() > 0) {
+                                                    Intent settingsIntent = IntentUtils.getLaunchAppDetailsSettingsIntent(AppUtils.getAppPackageName());
+                                                    startActivity(settingsIntent);
+//                                                  CustomToast.makeText(getApplicationContext(), "你拒绝了访问位置信息的授权，无法自动填充WiFi名称", R.drawable.ic_warning);
+                                                }
+                                            }
+                                        }).request();
+                            }
+
+                            @Override
+                            public void onCancel(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                            }
+                        }).setTitle("获取位置权限").setContent("添加网关需要使用位置权限，用以扫描Wi-Fi热点").setEnsureText("设置").show(getSupportFragmentManager(), "wifi dialog");
+                    }
+                    permissionHasAsked = true;
                 }
-                permissionHasAsked = true;
+            } else {
+                enableWiFiNameInput(false);
             }
-        } else {
-            enableWiFiNameInput(false);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

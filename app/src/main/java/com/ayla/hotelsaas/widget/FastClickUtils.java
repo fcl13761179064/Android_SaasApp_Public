@@ -7,7 +7,7 @@ package com.ayla.hotelsaas.widget;
  */
 public class FastClickUtils {
     private static long lastClickTime;
-    private final static int SPACE_TIME = 800;
+    private final static int SPACE_TIME = 1000;
 
     public static void initLastClickTime() {
         lastClickTime = 0;

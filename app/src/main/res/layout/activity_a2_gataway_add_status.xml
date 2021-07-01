@@ -71,7 +71,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/dp_16"
         android:visibility="gone"
-        android:text="网关已被绑定，需要您联系相关施工员在施工APP中删除设备，重新进行添加"
+        android:text="网关已被绑定，需要您联系相关人员在应用中删除设备，重新进行添加"
         android:textColor="#ff999999"
         android:textSize="14sp"
         />
