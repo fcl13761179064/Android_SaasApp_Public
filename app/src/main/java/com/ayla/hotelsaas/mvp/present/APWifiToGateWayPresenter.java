@@ -112,7 +112,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                                     public void onFailed(@NonNull Throwable throwable) {
                                         LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点失败，" + throwable.getMessage());
                                         try {
-                                            if (subscribe != null && !subscribe.isDisposed()) {
+                                            if (emitter != null && !emitter.isDisposed()) {
                                                 emitter.onError(new Exception("连接网关 Wi-Fi 失败，请重试.."));
                                             }
                                         } catch (Exception e) {
