@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+
 import androidx.fragment.app.Fragment;
+
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -117,15 +119,14 @@ public class DeviceCategoryHandler {
                 int networkType = calculateNetworkType(nodeBean);
                 Bundle addInfo = generateAddInfoBundle(nodeBean);
                 if (networkType == 2) {//艾拉网关
-                    if (nodeBean.getPid().equalsIgnoreCase("ZBGW0-A000002")) {
+                  /*  if (nodeBean.getPid().equalsIgnoreCase("ZBGW0-A000002")) {
                         Intent mainActivity = new Intent(fromContext, A2GatewayAddGuideActivity.class);
                         mainActivity.putExtra("addInfo", addInfo);
                         startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
-                    } else {
-                        Intent mainActivity = new Intent(fromContext, AylaGatewayAddGuideActivity.class);
-                        mainActivity.putExtra("addInfo", addInfo);
-                        startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
-                    }
+                    } else {*/
+                    Intent mainActivity = new Intent(fromContext, AylaGatewayAddGuideActivity.class);
+                    mainActivity.putExtra("addInfo", addInfo);
+                    startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
 
                 } else if (networkType == 3) {//跳转艾拉节点
                     if (aylaGateways.size() == 0) {//没有艾拉网关

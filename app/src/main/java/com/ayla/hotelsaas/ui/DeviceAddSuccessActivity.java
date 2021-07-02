@@ -192,7 +192,8 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
 
     @Override
     public void renameSuccess(String nickName) {
-        finish();
+        Intent mainActivity = new Intent(DeviceAddSuccessActivity.this, MainActivity.class);
+        startActivity(mainActivity);
     }
 
     @Override

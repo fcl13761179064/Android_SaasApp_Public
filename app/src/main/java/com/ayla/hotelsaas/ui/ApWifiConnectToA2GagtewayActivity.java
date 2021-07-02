@@ -1,20 +1,16 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.APWifiToGateWayPresenter;
 import com.ayla.hotelsaas.mvp.view.APwifiToGateWayView;
 import com.ayla.hotelsaas.widget.FastClickUtils;
 import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
-import com.blankj.utilcode.util.NetworkUtils;
-import com.blankj.utilcode.util.ToastUtils;
+
 
 import butterknife.BindView;
 
