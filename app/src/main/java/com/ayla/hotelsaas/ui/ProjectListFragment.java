@@ -54,8 +54,6 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     private Programe_change_AppBar appBar;
     private static final int USER_SEARCH = 0;
     private static final int USER_ADD = 1;
-    private UserMenu mMenu;
-
 
     @BindView(R.id.SmartRefreshLayout)
     SmartRefreshLayout mSmartRefreshLayout;
@@ -64,16 +62,14 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     RecyclerView mRecyclerView;
     @BindView(R.id.bt_add)
     ImageButton bt_add;
-
     private ProjectListAdapter mAdapter;
-    private List<String> roomBeans;
     private String saas_saft_img;
 
     @Override
     public void onAttach(Activity context) {
         super.onAttach(context);
         ProjectListActivity projectListActivity = (ProjectListActivity) context;
-        if (projectListActivity !=null && projectListActivity.appBar != null &&  projectListActivity.appBar.getTitleLayoutView()!=null) {
+        if (projectListActivity != null && projectListActivity.appBar != null && projectListActivity.appBar.getTitleLayoutView() != null) {
             projectListActivity.appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -90,41 +86,44 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     }
 
 
-
     //菜单按钮onClick事件
     public void menuClick(View view) {
-        final List<String> items = new ArrayList<>();
-        items.add("智慧酒店");
-        items.add("地产行业");
-        final PopupWindowUtil popupWindow = new PopupWindowUtil(getActivity(), items);
-        popupWindow.setItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                popupWindow.dismiss();
-                String title_type = SharePreferenceUtils.getString(getContext(), Constance.SP_SAAS, "1");
-                switch ((int) id) {
-                    case USER_SEARCH:
-                        if ("1".equals(title_type)) {
-                            return;
-                        }
-                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
-                        mPresenter.refresh("1");
-                        restartApp(getContext());
-                        break;
-                    case USER_ADD:
-                        if ("2".equals(title_type)) {
-                            return;
-                        }
-                        SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
-                        mPresenter.refresh("2");
-                        restartApp(getContext());
-                        break;
-                }
+        try {
+            final List<String> items = new ArrayList<>();
+            items.add("智慧酒店");
+            items.add("地产行业");
+            final PopupWindowUtil popupWindow = new PopupWindowUtil(getActivity(), items);
+            popupWindow.setItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    popupWindow.dismiss();
+                    String title_type = SharePreferenceUtils.getString(getContext(), Constance.SP_SAAS, "1");
+                    switch ((int) id) {
+                        case USER_SEARCH:
+                            if ("1".equals(title_type)) {
+                                return;
+                            }
+                            SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
+                            mPresenter.refresh("1");
+                            restartApp(getContext());
+                            break;
+                        case USER_ADD:
+                            if ("2".equals(title_type)) {
+                                return;
+                            }
+                            SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
+                            mPresenter.refresh("2");
+                            restartApp(getContext());
+                            break;
+                    }
 
-            }
-        });
-        //根据后面的数字 手动调节窗口的宽度
-        popupWindow.show(view, 350);
+                }
+            });
+            //根据后面的数字 手动调节窗口的宽度
+            popupWindow.show(view, 350);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -297,7 +296,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     @OnClick(R.id.bt_add)
     void handleAdd() {
         Intent startActivity = new Intent(getContext(), CreateProjectActivity.class);
-        startActivity.putExtra("project_type",saas_saft_img);
+        startActivity.putExtra("project_type", saas_saft_img);
         startActivityForResult(startActivity, REQUEST_CODE_CREATE_PROJECT);
     }
 

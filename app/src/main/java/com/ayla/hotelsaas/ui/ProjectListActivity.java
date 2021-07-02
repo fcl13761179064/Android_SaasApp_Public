@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListTabAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -18,11 +20,14 @@ import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.Programe_change_AppBar;
+
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 
 /**
@@ -59,14 +64,16 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     @Override
     protected void onResume() {
         super.onResume();
-        ImageView imageView = appBar.findViewById(R.id.iv_left);
-        VersionUpgradeBean versionUpgradeInfo = Constance.getVersionUpgradeInfo();
-        if (versionUpgradeInfo != null) {
-            imageView.setImageResource(R.drawable.person_center_tip);
-        } else {
-            imageView.setImageResource(R.drawable.person_center);
+        if (appBar != null) {
+            ImageView imageView = appBar.findViewById(R.id.iv_left);
+            VersionUpgradeBean versionUpgradeInfo = Constance.getVersionUpgradeInfo();
+            if (versionUpgradeInfo != null) {
+                imageView.setImageResource(R.drawable.person_center_tip);
+            } else {
+                imageView.setImageResource(R.drawable.person_center);
+            }
+            Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
         }
-        Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
     }
 
     @Override

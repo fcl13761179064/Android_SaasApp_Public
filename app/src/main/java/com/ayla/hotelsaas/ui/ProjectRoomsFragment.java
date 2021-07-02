@@ -35,6 +35,11 @@ import static com.ayla.hotelsaas.ui.MainActivity.RESULT_CODE_RENAMED;
  * 酒店层级页面
  */
 public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, ProjectRoomsPresenter> implements Observer, ProjectRoomsView {
+
+
+    public ProjectRoomsFragment() {
+    }
+
     public static ProjectRoomsFragment newInstance(WorkOrderBean.ResultListBean bean) {
         Bundle args = new Bundle();
         args.putSerializable("bean", bean);
@@ -75,9 +80,10 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
     }
 
     private void loadData() {
-
         mFrameLayout.addView(LayoutInflater.from(getContext()).inflate(R.layout.layout_loading, null));
-        mPresenter.loadData(bean.getId(),bean.getBusinessId());
+        if (bean != null) {
+            mPresenter.loadData(bean.getId(), bean.getBusinessId());
+        }
     }
 
     TabLayout mTabLayout;
@@ -88,7 +94,6 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
 
         ((ViewStub) getView().findViewById(R.id.vs_content)).inflate();
         mTabLayout = getView().findViewById(R.id.tl_tabs);
-
         mTabLayout.setTabTextColors(Color.parseColor("#333333"), ContextCompat.getColor(getContext(), R.color.colorAccent));
         mTabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -124,8 +129,10 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
         });
         TreeListBean treeListBean = new TreeListBean();
         treeListBean.setChildren(treeListBeans);
-        treeListBean.setContentName(bean.getTitle());
-        treeListBean.setId(bean.getBusinessId());
+        if (bean != null) {
+            treeListBean.setContentName(bean.getTitle());
+            treeListBean.setId(bean.getBusinessId());
+        }
         handleSelect(treeListBean);
     }
 
@@ -133,7 +140,6 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
     @Override
     public void loadDataFailed(Throwable throwable) {
         mFrameLayout.removeViewAt(mFrameLayout.getChildCount() - 1);
-
         View errorView = LayoutInflater.from(getContext()).inflate(R.layout.widget_empty_view, null);
         mFrameLayout.addView(errorView);
         errorView.findViewById(R.id.bt_refresh).setOnClickListener(new View.OnClickListener() {
@@ -172,7 +178,7 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
             }
 
             //创建新的fragment
-            ProjectRoomBeanFragment fragment =  ProjectRoomBeanFragment.newInstance(this, new ArrayList<>(children));
+            ProjectRoomBeanFragment fragment = ProjectRoomBeanFragment.newInstance(this, new ArrayList<>(children));
             fragmentTransaction.add(R.id.fl_container, fragment, title).commitNow();
 
             //创建新的tab

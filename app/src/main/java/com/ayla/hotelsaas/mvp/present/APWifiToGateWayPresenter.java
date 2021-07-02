@@ -1,49 +1,31 @@
 package com.ayla.hotelsaas.mvp.present;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.net.wifi.ScanResult;
-import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.core.util.Predicate;
 import androidx.lifecycle.MutableLiveData;
 import androidx.media.MediaBrowserServiceCompat;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.mvp.view.APwifiToGateWayView;
-import com.ayla.hotelsaas.ui.ApDistributeGuideActivity;
 import com.ayla.hotelsaas.ui.CustomToast;
-import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
 import com.ayla.ng.lib.bootstrap.AylaWiFiSetup;
 import com.ayla.ng.lib.bootstrap.common.AylaCallback;
 import com.ayla.ng.lib.bootstrap.connectivity.AylaConnectivityManager;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.NetworkUtils;
-import com.blankj.utilcode.util.ToastUtils;
-
-import org.json.JSONObject;
-
-import java.util.concurrent.TimeUnit;
-
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
-import io.reactivex.functions.Cancellable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.CancellableDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView> {
@@ -112,7 +94,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                                     public void onFailed(@NonNull Throwable throwable) {
                                         LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点失败，" + throwable.getMessage());
                                         try {
-                                            if (subscribe != null && !subscribe.isDisposed()) {
+                                            if (emitter != null && !emitter.isDisposed()) {
                                                 emitter.onError(new Exception("连接网关 Wi-Fi 失败，请重试.."));
                                             }
                                         } catch (Exception e) {
