@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
@@ -38,12 +39,14 @@ public class ProjectRoomBeanFragment extends BaseMvpFragment {
 
     private Observer observer;
 
+    public ProjectRoomBeanFragment() {
+    }
+
     public ProjectRoomBeanFragment(Observer observer) {
         this.observer = observer;
     }
 
     public static ProjectRoomBeanFragment newInstance(Observer observer, ArrayList<TreeListBean> treeListBeans) {
-
         Bundle args = new Bundle();
         args.putSerializable("treeListBeans", treeListBeans);
         ProjectRoomBeanFragment fragment = new ProjectRoomBeanFragment(observer);
@@ -103,6 +106,9 @@ public class ProjectRoomBeanFragment extends BaseMvpFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 TreeListBean item = mAdapter.getItem(position);
+                if (observer == null) {
+                    return;
+                }
                 observer.update(null, item);
             }
         });
@@ -110,8 +116,11 @@ public class ProjectRoomBeanFragment extends BaseMvpFragment {
 
     @Override
     protected void initData() {
-        ArrayList<TreeListBean> treeListBeans = (ArrayList<TreeListBean>) getArguments().getSerializable("treeListBeans");
-        mAdapter.setNewData(treeListBeans);
+        if (getArguments() != null) {
+            ArrayList<TreeListBean> treeListBeans = (ArrayList<TreeListBean>) getArguments().getSerializable("treeListBeans");
+            mAdapter.setNewData(treeListBeans);
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

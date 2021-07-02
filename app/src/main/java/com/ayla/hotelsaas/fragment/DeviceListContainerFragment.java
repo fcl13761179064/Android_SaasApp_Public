@@ -47,7 +47,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments()!=null){
-            room_id = getArguments().getLong("room_id");
+            room_id = getArguments().getLong("room_id",0);
         }
         EventBus.getDefault().register(this);
     }

@@ -74,7 +74,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         if (getArguments()!=null){
-            mRoom_id = getArguments().getLong("room_id");
+            mRoom_id = getArguments().getLong("room_id",0);
         }
     }
 
