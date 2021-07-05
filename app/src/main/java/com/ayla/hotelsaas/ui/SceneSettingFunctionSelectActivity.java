@@ -126,7 +126,11 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
         Intent mainActivity = new Intent(SceneSettingFunctionSelectActivity.this, SceneSettingFunctionDatumSetActivity.class);
         mainActivity.putExtras(getIntent());
         mainActivity.putExtra("autoJump", autoJump);
-        mainActivity.putExtra("deviceId", deviceBean.getDeviceId() != null ? deviceBean.getDeviceId() : "0");
+        if (deviceBean != null && deviceBean.getDeviceId() != null) {
+            mainActivity.putExtra("deviceId", deviceBean.getDeviceId());
+        } else {
+            mainActivity.putExtra("deviceId", "0");
+        }
         mainActivity.putExtra("type", type);
         mainActivity.putExtra("property", attributesBean.getCode());
         startActivityForResult(mainActivity, 0);
@@ -136,8 +140,15 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int type = getIntent().getIntExtra("type", 0);//选择的功能作为条件还是动作。
-        String deviceId = deviceBean.getDeviceId() != null ? deviceBean.getDeviceId() : "0";
-        mPresenter.loadFunction(type == 0, deviceId, deviceBean.getPid());
+        if (deviceBean != null && deviceBean.getDeviceId() != null) {
+            String deviceId = deviceBean.getDeviceId();
+            mPresenter.loadFunction(type == 0, deviceId, deviceBean.getPid());
+        } else {
+            String deviceId = "0";
+            String pid = "0";
+            mPresenter.loadFunction(type == 0, deviceId, pid);
+        }
+
     }
 
     @Override

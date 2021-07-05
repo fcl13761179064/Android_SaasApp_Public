@@ -3,13 +3,14 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
-
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListTabAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -19,8 +20,6 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.ayla.hotelsaas.widget.Programe_change_AppBar;
-
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
@@ -35,13 +34,20 @@ import butterknife.BindView;
  */
 public class ProjectListActivity extends BaseMvpActivity<ProjectListView, ProjectListPresenter> implements ProjectListView {
 
-    @BindView(R.id.appBar)
-    Programe_change_AppBar appBar;
+
     @Nullable
     @BindView(R.id.magic_inditator)
     MagicIndicator magic_inditator;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
+    @BindView(R.id.change_left_ll)
+    LinearLayout change_left_ll;
+    @BindView(R.id.change_iv_left)
+    ImageView change_iv_left;
+    @BindView(R.id.tv_title)
+    TextView tv_title;
+    @BindView(R.id.change_center_title)
+    LinearLayout change_center_title;
 
     private List<String> roomBeans;
     private FragmentStatePagerAdapter mAdapter;
@@ -64,13 +70,12 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     @Override
     protected void onResume() {
         super.onResume();
-        if (appBar != null) {
-            ImageView imageView = appBar.findViewById(R.id.iv_left);
+        if (change_iv_left != null) {
             VersionUpgradeBean versionUpgradeInfo = Constance.getVersionUpgradeInfo();
             if (versionUpgradeInfo != null) {
-                imageView.setImageResource(R.drawable.person_center_tip);
+                change_iv_left.setImageResource(R.drawable.person_center_tip);
             } else {
-                imageView.setImageResource(R.drawable.person_center);
+                change_iv_left.setImageResource(R.drawable.person_center);
             }
             Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
         }
@@ -96,9 +101,9 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         viewPager.setCurrentItem(0, false);
         String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
-            appBar.setCenterText("智慧酒店");
+            tv_title.setText("智慧酒店");
         } else {
-            appBar.setCenterText("地产行业");
+            tv_title.setText("地产行业");
         }
     }
 
@@ -129,12 +134,16 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             }
         };
         viewPager.setAdapter(mAdapter);
+
+        change_left_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProjectListActivity.this, PersonCenterActivity.class));
+            }
+        });
     }
 
 
-    protected void appBarLeftIvClicked() {
-        startActivity(new Intent(this, PersonCenterActivity.class));
-    }
 
 
     @Override
@@ -151,4 +160,5 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     public void onRequestFailed(Throwable throwable) {
 
     }
+
 }
