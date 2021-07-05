@@ -65,10 +65,12 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     private ProjectListAdapter mAdapter;
     private String saas_saft_img;
 
+
     @Override
-    public void onAttach(Activity context) {
-        super.onAttach(context);
-        ProjectListActivity projectListActivity = (ProjectListActivity) context;
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+        ProjectListActivity projectListActivity = (ProjectListActivity)getActivity();
         if (projectListActivity != null && projectListActivity.appBar != null && projectListActivity.appBar.getTitleLayoutView() != null) {
             projectListActivity.appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -77,12 +79,6 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                 }
             });
         }
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
 
