@@ -30,6 +30,7 @@ public class PopupWindowUtil {
         window = new PopupWindow(context);
         //ViewGroup.LayoutParams.WRAP_CONTENT，自动包裹所有的内容
         window.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        window.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setFocusable(true);
         //点击 back 键的时候，窗口会自动消失
         window.setBackgroundDrawable(new BitmapDrawable());
@@ -39,6 +40,7 @@ public class PopupWindowUtil {
 
         listView.setAdapter(new MyAdapter(context, datas));
         listView.setTag(window);
+
         //设置显示的视图
         window.setContentView(localView);
     }

@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 
@@ -26,10 +27,8 @@ import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.popmenu.PopupWindowUtil;
-import com.ayla.hotelsaas.popmenu.UserMenu;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
-import com.ayla.hotelsaas.widget.Programe_change_AppBar;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
@@ -51,7 +50,6 @@ import butterknife.OnClick;
  */
 public class ProjectListFragment extends BaseMvpFragment<ProjectListView, ProjectListPresenter> implements ProjectListView {
     private final int REQUEST_CODE_CREATE_PROJECT = 0x10;
-    private Programe_change_AppBar appBar;
     private static final int USER_SEARCH = 0;
     private static final int USER_ADD = 1;
 
@@ -67,18 +65,23 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-        ProjectListActivity projectListActivity = (ProjectListActivity)getActivity();
-        if (projectListActivity != null && projectListActivity.appBar != null && projectListActivity.appBar.getTitleLayoutView() != null) {
-            projectListActivity.appBar.getTitleLayoutView().setOnClickListener(new View.OnClickListener() {
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        ProjectListActivity projectListActivity = (ProjectListActivity) getActivity();
+        if (projectListActivity.change_center_title != null) {
+            projectListActivity.change_center_title.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     menuClick(v);
                 }
             });
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
 
@@ -116,6 +119,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                 }
             });
             //根据后面的数字 手动调节窗口的宽度
+            popupWindow.setOff(150, 0);
             popupWindow.show(view, 350);
         } catch (Exception e) {
             e.printStackTrace();
