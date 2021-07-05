@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -12,6 +13,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
@@ -19,9 +21,13 @@ import com.ayla.hotelsaas.fragment.RuleEngineFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
 import com.ayla.hotelsaas.mvp.present.MainPresenter;
 import com.ayla.hotelsaas.mvp.view.MainView;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.AppBar;
+import com.ayla.hotelsaas.widget.CustomAlarmDialog;
+import com.ayla.hotelsaas.widget.CustomSheet;
 
 import butterknife.BindView;
+import io.sentry.Sentry;
 
 /**
  * @描述 首页
@@ -62,6 +68,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     @Override
     protected void initView() {
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
+        SharePreferenceUtils.saveLong(this, Constance.SP_ROOM_ID, mRoom_ID);
         String mRoom_name = getIntent().getStringExtra("roomName");
         appBar.setCenterText(mRoom_name);
         appBar.setRightText("更多");
@@ -178,10 +185,18 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     private BaseMvpFragment createBaseFragment(int type) {
         switch (type) {
             case GO_HOME_TYPE: {
-                return new DeviceListContainerFragment(mRoom_ID);
+                Bundle bundle = new Bundle();
+                bundle.putLong("room_id",mRoom_ID);
+                DeviceListContainerFragment deviceListContainerFragment = new DeviceListContainerFragment();
+                deviceListContainerFragment.setArguments(bundle);
+                return deviceListContainerFragment;
             }
             case GO_SECOND_TYPE: {
-                return new RuleEngineFragment(mRoom_ID);
+                Bundle bundle = new Bundle();
+                bundle.putLong("room_id",mRoom_ID);
+                RuleEngineFragment ruleEngineFragment = new RuleEngineFragment();
+                ruleEngineFragment.setArguments(bundle);
+                return ruleEngineFragment;
             }
             case GO_THREE_TYPE: {
                 return new TestFragment();

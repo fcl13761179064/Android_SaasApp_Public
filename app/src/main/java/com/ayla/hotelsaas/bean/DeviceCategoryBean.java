@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 设备添加列表页面
@@ -94,7 +95,7 @@ public class DeviceCategoryBean {
              */
 
             private int id;
-            private String oemModel;
+            private Map<String, String> cloudModel;
             private String pid;
             private String productModel;
             private String productName;
@@ -118,12 +119,13 @@ public class DeviceCategoryBean {
                 this.id = id;
             }
 
-            public String getOemModel() {
-                return oemModel;
+
+            public Map<String, String> getOemModel() {
+                return cloudModel;
             }
 
-            public void setOemModel(String oemModel) {
-                this.oemModel = oemModel;
+            public void setOemModel(Map<String, String> oemModel) {
+                this.cloudModel = oemModel;
             }
 
             public String getPid() {

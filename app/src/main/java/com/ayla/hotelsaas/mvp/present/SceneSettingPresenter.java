@@ -146,15 +146,12 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             }
                             for (DeviceCategoryDetailBean deviceCategoryDetailBean : deviceCategoryDetailBeans) {
                                 if (TextUtils.equals(deviceCategoryDetailBean.getDeviceId(), enableDevice.getDeviceId())) {
-                                    tasks.add(RequestModel.getInstance()
-                                            .fetchDeviceTemplate(enableDevice.getPid())
-                                            .map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
-                                                @Override
-                                                public DeviceTemplateBean apply(@NonNull BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
-                                                    return deviceTemplateBeanBaseResult.data;
-                                                }
-                                            })
-                                            .compose(RequestModel.getInstance().modifyTemplateDisplayName(enableDevice.getDeviceId())));
+                                    tasks.add(RequestModel.getInstance().fetchDeviceTemplate(enableDevice.getPid()).map(new Function<BaseResult<DeviceTemplateBean>, DeviceTemplateBean>() {
+                                        @Override
+                                        public DeviceTemplateBean apply(@NonNull BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
+                                            return deviceTemplateBeanBaseResult.data;
+                                        }
+                                    }).compose(RequestModel.getInstance().modifyTemplateDisplayName(enableDevice.getDeviceId())));
                                     break;
                                 }
                             }
@@ -182,8 +179,8 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(actionItem.getTargetDeviceId());
                             if (devicesBean != null) {
                                 for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
-                                    if (TextUtils.equals(devicesBean.getDeviceCategory(), deviceTemplateBean.getDeviceCategory())) {//找出了设备和物模型
-                                        for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                    for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                        if (TextUtils.equals(devicesBean.getDeviceId(), deviceTemplateBean.getDeviceId())) {//找出了设备和物模型
                                             if (TextUtils.equals(attribute.getCode(), actionItem.getLeftValue())) {
                                                 actionItem.setFunctionName(attribute.getDisplayName());
 
@@ -209,8 +206,8 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                             DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(conditionItem.getSourceDeviceId());
                             if (devicesBean != null) {
                                 for (DeviceTemplateBean deviceTemplateBean : deviceTemplateBeans) {
-                                    if (TextUtils.equals(devicesBean.getDeviceCategory(), deviceTemplateBean.getDeviceCategory())) {//找出了设备和物模型
-                                        for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                    for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                        if (TextUtils.equals(devicesBean.getDeviceId(), deviceTemplateBean.getDeviceId())) {//找出了设备和物模型
                                             if (TextUtils.equals(attribute.getCode(), conditionItem.getLeftValue())) {
                                                 conditionItem.setFunctionName(attribute.getDisplayName());
 

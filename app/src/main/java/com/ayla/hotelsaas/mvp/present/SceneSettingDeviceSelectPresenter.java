@@ -70,7 +70,7 @@ public class SceneSettingDeviceSelectPresenter extends BasePresenter<SceneSettin
                 devicesBeans.clear();
                 devicesBeans.addAll(result);
             }
-        });//排除掉待添加的设备
+        });//创建场景，选择设备，查询设备条件还是动作支持情况
         Disposable subscribe = RequestModel.getInstance()
                 .getDeviceCategoryDetail(scopeId)//查询出设备对条件、动作的支持情况
                 .zipWith(observable, new BiFunction<List<DeviceCategoryDetailBean>, List<DeviceListBean.DevicesBean>, List<DeviceListBean.DevicesBean>>() {

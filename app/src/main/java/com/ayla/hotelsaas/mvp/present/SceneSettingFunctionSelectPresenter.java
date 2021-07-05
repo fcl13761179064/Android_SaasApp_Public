@@ -28,7 +28,8 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
     /**
      * @param deviceId
      */
-    public void loadFunction(boolean condition, String deviceId, String pid) {
+    public void
+    loadFunction(boolean condition, String deviceId, String pid) {
         Disposable subscribe = RequestModel.getInstance()
                 .getDeviceCategoryDetail(pid)
                 .map(new Function<DeviceCategoryDetailBean, List<String>>() {

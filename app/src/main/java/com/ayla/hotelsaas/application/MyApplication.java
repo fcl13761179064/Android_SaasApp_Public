@@ -4,24 +4,20 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.aliyun.iot.aep.sdk.framework.AApplication;
+import com.aliyun.iot.aep.sdk.framework.config.GlobalConfig;
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.ProcessUtils;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.export.external.TbsCoreSettings;
 import com.tencent.smtt.sdk.QbSdk;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by fcl13761179064 on 2020/6/3.
@@ -67,12 +63,31 @@ public class MyApplication extends AApplication {
         Log.d(TAG, "version name: " + BuildConfig.VERSION_NAME + ", version code: " + BuildConfig.VERSION_CODE);
         mInstance = this;
         if (ProcessUtils.isMainProcess()) {
-            initBugly();
+          //  initBugly();
             initX5();
+            String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
+            Log.d(TAG, "onResume::" +title_type);
+            if (Constance.isNetworkDebug()) {//这个判断是dev，qa环境
+                if ("1".equalsIgnoreCase(title_type)) {
+                    IoTSmart.setAuthCode("dev_saas");
+                } else {
+                    IoTSmart.setAuthCode("dev_miya");
+                }
+            } else {//这个是prod环境
+                if ("1".equalsIgnoreCase(title_type)) {
+                    IoTSmart.setAuthCode("prod_saas");
+                } else {
+                    IoTSmart.setAuthCode("prod_miya");
+                }
+            }
+            IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
+            Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCodesss():" + GlobalConfig.getInstance().getAuthCode());
+            Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCode():" + GlobalConfig.getInstance().getAuthCode());
+            Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
         }
     }
 
-    private void initBugly() {
+   /* private void initBugly() {
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
         strategy.setCrashHandleCallback(new CrashReport.CrashHandleCallback() {
             public Map<String, String> onCrashHandleStart(
@@ -102,7 +117,7 @@ public class MyApplication extends AApplication {
         });
 
         CrashReport.initCrashReport(getApplicationContext(), "8863fabcca", Constance.isNetworkDebug());
-    }
+    }*/
 
     private void initX5() {
         // 在调用TBS初始化、创建WebView之前进行如下配置

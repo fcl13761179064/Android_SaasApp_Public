@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ZigBeeAddSelectGatewayView extends BaseView {
     void showGateways(List<DeviceListBean.DevicesBean> devices);
+
+    void showRelaceGateWays(List<DeviceListBean.DevicesBean> gateways);
 }

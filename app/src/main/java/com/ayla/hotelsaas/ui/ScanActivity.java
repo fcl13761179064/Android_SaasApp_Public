@@ -7,7 +7,9 @@ package com.ayla.hotelsaas.ui;
 
 import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,11 +60,35 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
                             mZXingView.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                    try {
+                                        mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             });
                         } else if (permission.shouldShowRequestPermissionRationale) {
-                            CustomToast.makeText(getBaseContext(), "请允许使用相机权限", R.drawable.ic_toast_warming);
+                            CustomAlarmDialog
+                                    .newInstance(new CustomAlarmDialog.Callback() {
+                                        @Override
+                                        public void onDone(CustomAlarmDialog dialog) {
+                                            dialog.dismissAllowingStateLoss();
+                                            Intent localIntent = new Intent();
+                                            localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                                            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+                                            startActivity(localIntent);
+                                        }
+
+                                        @Override
+                                        public void onCancel(CustomAlarmDialog dialog) {
+                                            dialog.dismissAllowingStateLoss();
+                                        }
+                                    })
+                                    .setTitle("获取相机权限")
+                                    .setEnsureText("前往开启")
+                                    .setContent("需要使用相机权限，用以扫描二维码点击“前往开启”打开相机权限")
+                                    .show(getSupportFragmentManager(), "");
                         } else if (firstLoad) {
                             firstLoad = false;
                             CustomAlarmDialog
@@ -120,9 +146,71 @@ public class ScanActivity extends BaseMvpActivity implements QRCodeView.Delegate
 
     @Override
     public void onScanQRCodeSuccess(String result) {
+        try {
+            String deviceId = result.trim();
+            if (!TextUtils.isEmpty(deviceId)) {
+                if (deviceId.startsWith("Lark_DSN:") && deviceId.endsWith("##")) {
+                    setResult(RESULT_OK, new Intent().putExtra("result", result));
+                    finish();
+                } else {
+                    CustomAlarmDialog.newInstance().setTitle("信息错误")
+                            .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
+                            .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                            .setEnsureText("重试")
+                            .setDoneCallback(new CustomAlarmDialog.Callback() {
+                                @Override
+                                public void onDone(CustomAlarmDialog dialog) {
+                                    dialog.dismissAllowingStateLoss();
+                                    mZXingView.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancel(CustomAlarmDialog dialog) {
+
+                                }
+                            })
+                            .show(getSupportFragmentManager(), "dialog");
+                    return;
+                }
+            } else {
+                CustomAlarmDialog.newInstance().setTitle("信息错误")
+                        .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
+                        .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                        .setEnsureText("重试")
+                        .setDoneCallback(new CustomAlarmDialog.Callback() {
+                            @Override
+                            public void onDone(CustomAlarmDialog dialog) {
+                                dialog.dismissAllowingStateLoss();
+                                mZXingView.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancel(CustomAlarmDialog dialog) {
+
+                            }
+                        })
+                        .show(getSupportFragmentManager(), "dialog");
+                return;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         vibrate();
-        setResult(RESULT_OK, new Intent().putExtra("result", result));
-        finish();
+        if (TextUtils.isEmpty(result)) {
+            return;
+        }
+
     }
 
     private void vibrate() {

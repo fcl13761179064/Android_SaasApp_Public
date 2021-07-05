@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -84,6 +85,12 @@ public class RetrofitHelper {
             }
         }).setLevel(Constance.isNetworkDebug() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.BASIC));
         builder.retryOnConnectionFailure(true);
+
+        if(BuildConfig.DEBUG){
+            builder.sslSocketFactory(SSLUtil.getSslSocketFactory().sSLSocketFactory, SSLUtil.getSslSocketFactory().trustManager)
+                    .hostnameVerifier(SSLUtil.UnSafeHostnameVerifier);
+        }
+
         return builder.build();
     }
 

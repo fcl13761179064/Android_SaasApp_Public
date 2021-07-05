@@ -127,13 +127,16 @@ public class DeviceMorePresenter extends BasePresenter<DeviceMoreView> {
                         List<DeviceTemplateBean.AttributesBean> defaultAttributesBeans = new ArrayList<>();
                         for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
                             if (attribute.getCode().endsWith(":OnoffDefault")) {//是默认开关的设置属性格式
-                                defaultAttributesBeans.add(attribute);
+                                if (!"ZBSW0-A000001".equalsIgnoreCase(pid) && !"ZBSW0-A000002".equalsIgnoreCase(pid) && !"ZBSW0-A000003".equalsIgnoreCase(pid) && !"ZBSW0-A000004".equalsIgnoreCase(pid)
+                                        && !"ZBSW0-A000008".equalsIgnoreCase(pid) && !"ZBSW0-A000006".equalsIgnoreCase(pid) && !"ZBSW0-A000007".equalsIgnoreCase(pid)) {
+                                    defaultAttributesBeans.add(attribute);
+                                }
                             }
                         }
                         List<DeviceTemplateBean.AttributesBean> attributesBeans = new ArrayList<>();
                         for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
                             for (DeviceTemplateBean.AttributesBean defaultAttributesBean : defaultAttributesBeans) {
-                                if (attribute.getCode().equals(defaultAttributesBean.getCode().substring(0,defaultAttributesBean.getCode().length()-7))) {
+                                if (attribute.getCode().equals(defaultAttributesBean.getCode().substring(0, defaultAttributesBean.getCode().length() - 7))) {
                                     attributesBeans.add(attribute);
                                 }
                             }

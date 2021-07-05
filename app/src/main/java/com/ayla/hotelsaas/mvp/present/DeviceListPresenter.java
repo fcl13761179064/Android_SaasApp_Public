@@ -5,16 +5,20 @@ import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
+import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -26,9 +30,21 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class DeviceListPresenter extends BasePresenter<DeviceListView> {
 
-    public void loadCategory(DeviceListBean.DevicesBean devicesBean) {
-        Disposable subscribe = RequestModel.getInstance().getDeviceCategory()
-                .subscribeOn(Schedulers.io())
+    public void loadCategory(DeviceListBean.DevicesBean devicesBean, String pid) {
+        Disposable subscribe = Observable.zip(RequestModel.getInstance().getDeviceCategory(), RequestModel.getInstance().getDevicePid(pid), new BiFunction<List<DeviceCategoryBean>, DeviceCategoryBean.SubBean.NodeBean, List<Object>>() {
+            @NonNull
+            @Override
+            public List<Object> apply(@NonNull List<DeviceCategoryBean> deviceCategoryBeans,  DeviceCategoryBean.SubBean.NodeBean deviceNodeBean) throws Exception {
+
+                return zipdatas(deviceCategoryBeans,deviceNodeBean);
+            }
+            private List<Object> zipdatas(List<DeviceCategoryBean> mListDeviceCategoryBean , DeviceCategoryBean.SubBean.NodeBean s) {
+                List<Object> listData = new ArrayList<>();
+                listData.add(mListDeviceCategoryBean);
+                listData.add(s);
+                return listData;
+            }
+        }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
@@ -42,10 +58,12 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<List<DeviceCategoryBean>>() {
+                .subscribe(new Consumer<List<Object>>() {
                     @Override
-                    public void accept(List<DeviceCategoryBean> deviceCategoryBeans) throws Exception {
-                        mView.loadDataSuccess(devicesBean,deviceCategoryBeans);
+                    public void accept(List<Object> objects) throws Exception {
+                        List<DeviceCategoryBean> mListDeviceCategoryBean = (List<DeviceCategoryBean>) objects.get(0);
+                        DeviceCategoryBean.SubBean.NodeBean deviceNodeBean = (DeviceCategoryBean.SubBean.NodeBean) objects.get(1);
+                        mView.loadDataSuccess(devicesBean, mListDeviceCategoryBean,deviceNodeBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -53,16 +71,16 @@ public class DeviceListPresenter extends BasePresenter<DeviceListView> {
                         mView.loadDataFailed(throwable);
                     }
                 });
+
         addSubscrebe(subscribe);
     }
-
 
     /**
      * 加载列表
      *
      * @param resourceRoomId
      */
-    public void loadData(long resourceRoomId,long regionId) {
+    public void loadData(long resourceRoomId, long regionId) {
         Disposable subscribe = RequestModel.getInstance().getDeviceList(resourceRoomId, 1, Integer.MAX_VALUE, regionId).subscribeOn(Schedulers.io())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

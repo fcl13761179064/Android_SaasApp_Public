@@ -5,12 +5,14 @@ import android.text.TextUtils;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
+import com.ayla.hotelsaas.bean.A2BindInfoBean;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
+import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
@@ -53,6 +55,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+
+import static com.ayla.hotelsaas.application.MyApplication.getContext;
 
 /**
  * @描述 网络请求Model
@@ -206,9 +210,14 @@ public class RequestModel {
      * 获取authcode
      */
     public Observable<String> getAuthCode(String roomId) {
+        String type = SharePreferenceUtils.getString(getContext(), Constance.SP_SAAS, "1");
+        if ("1".equals(type)) {
+            return getApiService().authCode(roomId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
+            });
+        } else {
             return getApiService().authCodetwo(roomId).compose(new BaseResultTransformer<BaseResult<String>, String>() {
             });
-
+        }
     }
 
     /**
@@ -263,6 +272,11 @@ public class RequestModel {
         });
     }
 
+
+    public Observable<DeviceCategoryBean.SubBean.NodeBean> getDevicePid(String pid) {
+        return getApiService().getDevicePid(pid).compose(new BaseResultTransformer<BaseResult<DeviceCategoryBean.SubBean.NodeBean>, DeviceCategoryBean.SubBean.NodeBean>() {
+        });
+    }
     /**
      * 获取品类支持的条件、功能 项目 详情
      *
@@ -461,7 +475,7 @@ public class RequestModel {
                 .doOnNext(new Consumer<BaseResult<DeviceTemplateBean>>() {
                     @Override
                     public void accept(BaseResult<DeviceTemplateBean> deviceTemplateBeanBaseResult) throws Exception {
-                        if ("a1UR1BjfznK".equals(pid)) {//触控面板
+                        if ("ZBSCN-A000004".equals(pid)) {//触控面板
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
@@ -562,7 +576,7 @@ public class RequestModel {
                                 }
                             }
                         }
-                        if ("a1dnviXyhqx".equals(pid)) {//六键场景开关
+                        if ("ZBSCN-A000007".equals(pid)) {//六键场景开关
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
@@ -621,7 +635,7 @@ public class RequestModel {
                                 }
                             }
                         }
-                        if ("a1009Fd5ZCJ".equals(pid)) {//紧急按钮设备
+                        if ("ZBSCN-A000006".equals(pid)) {//紧急按钮设备
                             DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
                             if (data != null) {
                                 List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
@@ -902,15 +916,13 @@ public class RequestModel {
             @NonNull
             @Override
             public ObservableSource<DeviceTemplateBean> apply(@NonNull Observable<DeviceTemplateBean> upstream) {
-                return upstream.zipWith(RequestModel.getInstance()
-                                .fetchPropertyNickname(devicesBean.getCuId(), deviceId),
-                        new BiFunction<DeviceTemplateBean, List<PropertyNicknameBean>, DeviceTemplateBean>() {
+                return upstream.zipWith(RequestModel.getInstance().fetchPropertyNickname(devicesBean.getCuId(), deviceId), new BiFunction<DeviceTemplateBean, List<PropertyNicknameBean>, DeviceTemplateBean>() {
                             @Override
                             public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<PropertyNicknameBean> propertyNicknameBeans) throws Exception {
                                 for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans.getAttributes()) {
+                                    attributesBeans.setDeviceId(deviceId);
                                     for (PropertyNicknameBean propertyNicknameBean : propertyNicknameBeans) {
-                                        if ("nickName".equals(propertyNicknameBean.getPropertyType()) &&
-                                                TextUtils.equals(attributesBean.getCode(), propertyNicknameBean.getPropertyName())) {
+                                        if ("nickName".equals(propertyNicknameBean.getPropertyType()) && TextUtils.equals(attributesBean.getCode(), propertyNicknameBean.getPropertyName())) {
                                             attributesBean.setDisplayName(propertyNicknameBean.getPropertyValue());
                                         }
                                         if ("Words".equals(propertyNicknameBean.getPropertyType())) {
@@ -999,4 +1011,25 @@ public class RequestModel {
                 .compose(new BaseResultTransformer<BaseResult<List<DeviceLocationBean>>,List<DeviceLocationBean>>() {
                 });
     }
+
+    /**
+     * A2网关绑定情况信息返回
+     * @return
+     */
+    public Observable<A2BindInfoBean> getA2BindInfo(String deviceId) {
+        return getApiService().getA2BindInfo(deviceId).compose(new BaseResultTransformer<BaseResult<A2BindInfoBean>, A2BindInfoBean>() {
+        });
+    }
+
+
+    /**
+     * ap配网
+     *
+     * @return
+     */
+    public Observable<Boolean> Apnetwork(String deviceId, long cuId,String setupToken) {
+        return getApiService().ApNetwork(deviceId,cuId,setupToken).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
+    }
+
 }

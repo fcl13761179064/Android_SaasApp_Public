@@ -24,6 +24,7 @@ import com.ayla.hotelsaas.widget.AppBar;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,14 +108,15 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
                     String[] split = s.split(" ");
                     String dsn = split[0];
                     String property = split[1];
-
-                    if (TextUtils.equals(deviceBean.getDeviceId(), dsn)) {
-                        if (TextUtils.equals(attributesBean.getCode(), property)) {
-                            if (TextUtils.equals(editProperty, property)) {
-                                break;
+                    if (deviceBean != null && deviceBean.getDeviceId() != null) {
+                        if (TextUtils.equals(deviceBean.getDeviceId(), dsn)) {
+                            if (TextUtils.equals(attributesBean.getCode(), property)) {
+                                if (TextUtils.equals(editProperty, property)) {
+                                    break;
+                                }
+                                CustomToast.makeText(getBaseContext(), "不可重复添加", R.drawable.ic_toast_warming);
+                                return;
                             }
-                            CustomToast.makeText(getBaseContext(), "不可重复添加", R.drawable.ic_toast_warming);
-                            return;
                         }
                     }
                 }
@@ -124,7 +126,11 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
         Intent mainActivity = new Intent(SceneSettingFunctionSelectActivity.this, SceneSettingFunctionDatumSetActivity.class);
         mainActivity.putExtras(getIntent());
         mainActivity.putExtra("autoJump", autoJump);
-        mainActivity.putExtra("deviceId", deviceBean.getDeviceId());
+        if (deviceBean != null && deviceBean.getDeviceId() != null) {
+            mainActivity.putExtra("deviceId", deviceBean.getDeviceId());
+        } else {
+            mainActivity.putExtra("deviceId", "0");
+        }
         mainActivity.putExtra("type", type);
         mainActivity.putExtra("property", attributesBean.getCode());
         startActivityForResult(mainActivity, 0);
@@ -134,7 +140,15 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int type = getIntent().getIntExtra("type", 0);//选择的功能作为条件还是动作。
-        mPresenter.loadFunction(type == 0, deviceBean.getDeviceId(), deviceBean.getPid());
+        if (deviceBean != null && deviceBean.getDeviceId() != null) {
+            String deviceId = deviceBean.getDeviceId();
+            mPresenter.loadFunction(type == 0, deviceId, deviceBean.getPid());
+        } else {
+            String deviceId = "0";
+            String pid = "0";
+            mPresenter.loadFunction(type == 0, deviceId, pid);
+        }
+
     }
 
     @Override

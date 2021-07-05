@@ -30,7 +30,8 @@ import butterknife.BindView;
  * sourceId <0时 ，不区分网关所属云。
  * 返回 网关的deviceId
  */
-public class GatewaySelectActivity extends BaseMvpActivity<ZigBeeAddSelectGatewayView, ZigBeeAddSelectGatewayPresenter> implements ZigBeeAddSelectGatewayView {
+public
+class GatewaySelectActivity extends BaseMvpActivity<ZigBeeAddSelectGatewayView, ZigBeeAddSelectGatewayPresenter> implements ZigBeeAddSelectGatewayView {
     @BindView(R.id.rv)
     public RecyclerView mRecyclerView;
     @BindView(R.id.appBar)
@@ -94,5 +95,10 @@ public class GatewaySelectActivity extends BaseMvpActivity<ZigBeeAddSelectGatewa
     @Override
     public void showGateways(List<DeviceListBean.DevicesBean> devices) {
         mAdapter.setNewData(devices);
+    }
+
+    @Override
+    public void showRelaceGateWays(List<DeviceListBean.DevicesBean> gateways) {
+
     }
 }
