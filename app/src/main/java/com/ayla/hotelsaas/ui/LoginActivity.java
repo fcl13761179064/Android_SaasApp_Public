@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -30,7 +29,6 @@ import com.ayla.hotelsaas.utils.SoftIntPutUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
 import com.blankj.utilcode.util.RegexUtils;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
