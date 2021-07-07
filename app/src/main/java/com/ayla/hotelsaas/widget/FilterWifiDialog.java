@@ -35,7 +35,7 @@ public class FilterWifiDialog extends DialogFragment {
 
     List data = new ArrayList<ScanResult>();
 
-    private int defaultIndex = 0;//默认选中的下标
+    private int defaultIndex = -1;//默认选中的下标
 
     private Callback callback;
 

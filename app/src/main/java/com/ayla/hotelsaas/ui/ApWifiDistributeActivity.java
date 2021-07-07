@@ -54,7 +54,7 @@ public class ApWifiDistributeActivity extends BasicActivity {
     public TextView wifi_help;
     private boolean isHidden = true;
     private boolean permissionHasAsked;//标记是否已经提示授权位置信息
-    private int defIndex = 0;
+    private int defIndex = -1;
     private String locationName;
 
     @Override
