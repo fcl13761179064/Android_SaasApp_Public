@@ -88,7 +88,6 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
                         .newInstance(new CustomAlarmDialog.Callback() {
                             @Override
                             public void onDone(CustomAlarmDialog dialog) {
-                                SharePreferenceUtils.remove(PersonCenterActivity.this, Constance.SP_SAAS);
                                 dialog.dismissAllowingStateLoss();
                                 SharePreferenceUtils.remove(PersonCenterActivity.this, Constance.SP_Login_Token);
                                 SharePreferenceUtils.remove(PersonCenterActivity.this, Constance.SP_Refresh_Token);
