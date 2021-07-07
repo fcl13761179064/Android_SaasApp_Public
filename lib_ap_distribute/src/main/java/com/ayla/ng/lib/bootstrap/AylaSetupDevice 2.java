@@ -7,14 +7,6 @@ public class AylaSetupDevice {
         this.aylaSetupDevice = aylaSetupDevice;
     }
 
-    public com.aylanetworks.aylasdk.setup.AylaSetupDevice getAylaSetupDevice() {
-        return aylaSetupDevice;
-    }
-
-    public void setLanIp(String lanIp) {
-        aylaSetupDevice.setLanIp(lanIp);
-    }
-
     public String getDsn() {
         return aylaSetupDevice.getDsn();
     }

@@ -14,6 +14,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -69,6 +70,8 @@ public class FilterWifiDialog extends DialogFragment {
                 super.setMeasuredDimension(childrenBounds, wSpec, View.MeasureSpec.makeMeasureSpec(SizeUtils.dp2px(300), View.MeasureSpec.AT_MOST));
             }
         });
+
+
         List<CheckableSupport> supports = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
             CheckableSupport support = new CheckableSupport(data.get(i));
@@ -77,7 +80,7 @@ public class FilterWifiDialog extends DialogFragment {
             }
             supports.add(support);
         }
-        esss adapter = new esss(R.layout.itme_picker_enum, supports);
+        esss adapter = new esss(R.layout.filter_itme_picker_enum, supports);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -88,7 +91,8 @@ public class FilterWifiDialog extends DialogFragment {
             }
         });
         binding.rv.setAdapter(adapter);
-        binding.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
+        binding.rv.addItemDecoration(new TestDividerItemDecoration());
+     /*   binding.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
@@ -97,7 +101,7 @@ public class FilterWifiDialog extends DialogFragment {
 
                 outRect.set(0, (position == 0) ? size : 0, 0, size);
             }
-        });
+        });*/
        /* if (LocationType == 1000) {
             binding.imageView2.setVisibility(View.INVISIBLE);
         } else {
@@ -108,6 +112,19 @@ public class FilterWifiDialog extends DialogFragment {
         binding.textView3.setText(subTitle);
 
     }
+    public class TestDividerItemDecoration extends RecyclerView.ItemDecoration {
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+
+//        //如果不是第一个，则设置top的值。
+            if (parent.getChildAdapterPosition(view) != 0){
+                //这里直接硬编码为1px
+                outRect.top = 1;
+            }
+        }
+    }
 
     @Override
     public void onStart() {
@@ -115,7 +132,7 @@ public class FilterWifiDialog extends DialogFragment {
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
         getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         params.windowAnimations = R.style.main_menu_animstyle;
-        params.width = getResources().getDisplayMetrics().widthPixels;
+        params.width = (int)(getResources().getDisplayMetrics().widthPixels/1.2);
         params.gravity = Gravity.CENTER;
         getDialog().getWindow().setAttributes(params);
     }
