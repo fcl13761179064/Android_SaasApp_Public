@@ -22,6 +22,7 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.CheckableSupport;
 import com.ayla.hotelsaas.databinding.LayoutFilterWifiDialogBinding;
 import com.ayla.hotelsaas.databinding.LayoutItemPickDialogBinding;
+import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -34,7 +35,7 @@ public class FilterWifiDialog extends DialogFragment {
 
     List data = new ArrayList<ScanResult>();
 
-    private int defaultIndex = -1;//默认选中的下标
+    private int defaultIndex = 0;//默认选中的下标
 
     private Callback callback;
 
@@ -43,6 +44,7 @@ public class FilterWifiDialog extends DialogFragment {
 
     private String title, subTitle;
     private int LocationType;
+    private CheckableSupport currentSupport;
 
     public static FilterWifiDialog newInstance() {
 
@@ -71,27 +73,29 @@ public class FilterWifiDialog extends DialogFragment {
             }
         });
 
-
         List<CheckableSupport> supports = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
-            CheckableSupport support = new CheckableSupport(data.get(i));
+           currentSupport = new CheckableSupport(data.get(i));
             if (i == defaultIndex) {
-                support.setChecked(true);
+                currentSupport.setChecked(true);
             }
-            supports.add(support);
+            supports.add(currentSupport);
         }
         esss adapter = new esss(R.layout.filter_itme_picker_enum, supports);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                dismissAllowingStateLoss();
-                if (callback != null) {
-                    callback.onCallback(data.get(position));
+                for (int i = 0; i < supports.size(); i++) {
+                    supports.get(i).setChecked(false);
                 }
+                currentSupport = (CheckableSupport) adapter.getData().get(position);
+                defaultIndex=position;
+                currentSupport.setChecked(true);
+                adapter.notifyDataSetChanged();
             }
         });
         binding.rv.setAdapter(adapter);
-        binding.rv.addItemDecoration(new TestDividerItemDecoration());
+        binding.rv.addItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.VERTICAL, 3, R.color.all_bg_color));
      /*   binding.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -110,8 +114,18 @@ public class FilterWifiDialog extends DialogFragment {
         }*/
         binding.imageView2.setVisibility(View.VISIBLE);
         binding.textView3.setText(subTitle);
+        binding.tvConfire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback!=null){
+                    dismissAllowingStateLoss();
+                    callback.onCallback(currentSupport.getData());
+                }
+            }
+        });
 
     }
+
     public class TestDividerItemDecoration extends RecyclerView.ItemDecoration {
 
         @Override
@@ -119,7 +133,7 @@ public class FilterWifiDialog extends DialogFragment {
             super.getItemOffsets(outRect, view, parent, state);
 
 //        //如果不是第一个，则设置top的值。
-            if (parent.getChildAdapterPosition(view) != 0){
+            if (parent.getChildAdapterPosition(view) != 0) {
                 //这里直接硬编码为1px
                 outRect.top = 1;
             }
@@ -132,9 +146,11 @@ public class FilterWifiDialog extends DialogFragment {
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
         getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         params.windowAnimations = R.style.main_menu_animstyle;
-        params.width = (int)(getResources().getDisplayMetrics().widthPixels/1.2);
+        params.width = (int) (getResources().getDisplayMetrics().widthPixels / 1.2);
         params.gravity = Gravity.CENTER;
         getDialog().getWindow().setAttributes(params);
+        getDialog().setCancelable(false);
+        getDialog().setCanceledOnTouchOutside(false);
     }
 
     public FilterWifiDialog setData(List data) {
@@ -167,6 +183,7 @@ public class FilterWifiDialog extends DialogFragment {
         this.defaultIndex = defaultIndex;
         return this;
     }
+
 
     public FilterWifiDialog setCallback(Callback callback) {
         this.callback = callback;

@@ -27,7 +27,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".ui.SPlashActivity"
+            android:name=".ui.ApWifiDistributeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashActivityTheme">
             <intent-filter>
@@ -220,8 +220,8 @@
         <activity
             android:name=".ui.A2GatewayAddStatusActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.ApWifiDistributeActivity"
-            android:screenOrientation="portrait"/>
+      <!--  <activity android:name=".ui.ApWifiDistributeActivity"
+            android:screenOrientation="portrait"/>-->
         <activity android:name=".ui.ApDistributeGuideActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.ApWifiConnectToA2GagtewayActivity"

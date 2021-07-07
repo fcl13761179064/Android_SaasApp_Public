@@ -6,6 +6,7 @@ import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class WifiUtils {
@@ -49,20 +50,20 @@ public class WifiUtils {
      * 获取wifi扫描结果
      */
     public List<ScanResult> getWifiScanResult(){
+        List<String> newList = new ArrayList();
         List<ScanResult> mScanResultList = new ArrayList<>();
         List<ScanResult> scanResultList =  mWifiManager.getScanResults();
-        if(scanResultList != null && scanResultList.size() > 0){
-            for (int i = 0; i < scanResultList.size(); i++) {
-                ScanResult scanResult = scanResultList.get(i);
-                if(scanResult != null && !TextUtils.isEmpty(scanResult.SSID)){
-                    mScanResultList.add(scanResult);
-                }else {
-                    continue;
-                }
+        Iterator it = scanResultList.iterator();
+        while(it.hasNext()){
+            ScanResult obj = (ScanResult) it.next();
+            if (!TextUtils.isEmpty(obj.SSID)&& !newList.contains(obj.SSID)) {
+                newList.add(obj.SSID);
+                mScanResultList.add(obj);
             }
         }
         return mScanResultList;
     }
+
     /**
      * 获取wifi等级，总共分为四级
      * @param rssi

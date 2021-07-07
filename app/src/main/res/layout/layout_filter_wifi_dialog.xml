@@ -49,16 +49,17 @@
         android:layout_marginTop="1px"
         android:background="@color/white"
         android:minHeight="200dp"
-        android:paddingLeft="16dp"
         android:paddingRight="16dp"
+        android:paddingLeft="@dimen/dp_16"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
 
 
     <TextView
+        android:id="@+id/tv_confire"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:text="Wi-Fi 设置"
+        android:text="确定"
         android:layout_marginTop="1dp"
         android:textColor="#333333"
         android:gravity="center"
