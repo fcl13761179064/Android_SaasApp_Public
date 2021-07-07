@@ -9,9 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresPermission;
 import androidx.core.util.Predicate;
+
 import com.android.volley.Response;
-import com.ayla.ng.lib.bootstrap.common.AylaCallback;
-import com.ayla.ng.lib.bootstrap.common.AylaDisposable;
+import com.ayla.ng.lib.common.AylaCallback;
+import com.ayla.ng.lib.common.AylaDisposable;
 import com.aylanetworks.aylasdk.AylaAPIRequest;
 import com.aylanetworks.aylasdk.AylaLog;
 import com.aylanetworks.aylasdk.AylaNetworks;

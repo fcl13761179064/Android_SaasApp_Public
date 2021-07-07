@@ -12,14 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-
 import com.aliyun.iot.aep.sdk.page.LocationUtil;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BasicActivity;
 import com.ayla.hotelsaas.utils.WifiUtil;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
+import com.ayla.hotelsaas.widget.FilterWifiDialog;
 import com.ayla.hotelsaas.widget.WifiUtils;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.AppUtils;
@@ -28,10 +27,7 @@ import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.SPUtils;
-import com.blankj.utilcode.util.ToastUtils;
-
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -208,9 +204,28 @@ public class ApWifiDistributeActivity extends BasicActivity {
     }
 
     private void configWiFi() {
-        Intent intent = new Intent();
+      /*  Intent intent = new Intent();
         intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
-        startActivity(intent);
+        startActivity(intent);*/
+        WifiUtils wifiUtil = WifiUtils.getInstance(this);
+        List<ScanResult> scanResultList = wifiUtil.getWifiScanResult();
+        FilterWifiDialog.newInstance()
+                .setSubTitle("Wi_Fi")
+                .setTitle("设备位置")
+                .setData(scanResultList)
+                .setDefaultIndex(0)
+                .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
+
+                    @Override
+                    public void onCallback(ScanResult newLocationName) {
+                        if (newLocationName!=null) {
+                            CustomToast.makeText(getBaseContext(), "设备名称不能为空", R.drawable.ic_toast_warming);
+                            return;
+                        }
+
+                    }
+                })
+                .show(getSupportFragmentManager(), "dialog");
     }
 
     /**

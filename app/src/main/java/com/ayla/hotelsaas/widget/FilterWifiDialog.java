@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.widget;
 
 import android.graphics.Rect;
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ import java.util.List;
 public class FilterWifiDialog extends DialogFragment {
     LayoutFilterWifiDialogBinding binding;
 
-    List data = new ArrayList<>();
+    List data = new ArrayList<ScanResult>();
 
     private int defaultIndex = -1;//默认选中的下标
 
@@ -97,13 +98,13 @@ public class FilterWifiDialog extends DialogFragment {
                 outRect.set(0, (position == 0) ? size : 0, 0, size);
             }
         });
-        if (LocationType == 1000) {
+       /* if (LocationType == 1000) {
             binding.imageView2.setVisibility(View.INVISIBLE);
         } else {
             binding.imageView2.setImageResource(iconRes);
             binding.imageView2.setVisibility(View.VISIBLE);
-        }
-
+        }*/
+        binding.imageView2.setVisibility(View.VISIBLE);
         binding.textView3.setText(subTitle);
 
     }
@@ -115,7 +116,7 @@ public class FilterWifiDialog extends DialogFragment {
         getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         params.windowAnimations = R.style.main_menu_animstyle;
         params.width = getResources().getDisplayMetrics().widthPixels;
-        params.gravity = Gravity.BOTTOM;
+        params.gravity = Gravity.CENTER;
         getDialog().getWindow().setAttributes(params);
     }
 
@@ -164,7 +165,8 @@ public class FilterWifiDialog extends DialogFragment {
 
         @Override
         protected void convert(BaseViewHolder helper, CheckableSupport item) {
-            helper.setText(R.id.tv, item.getData().toString());
+            String ssid = ((ScanResult) item.getData()).SSID;
+            helper.setText(R.id.tv, ssid);
             helper.setVisible(R.id.iv, item.isChecked());
         }
     }

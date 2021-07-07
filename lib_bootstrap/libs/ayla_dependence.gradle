@@ -1,0 +1,5 @@
+dependencies {
+    implementation 'com.android.volley:volley:1.1.1'
+    implementation 'org.nanohttpd:nanohttpd:2.2.0'
+    implementation 'org.nanohttpd:nanohttpd-nanolets:2.2.0'
+}

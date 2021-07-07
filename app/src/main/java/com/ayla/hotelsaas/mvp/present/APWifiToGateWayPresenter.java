@@ -1,11 +1,10 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import android.content.Context;
-import android.net.wifi.ScanResult;
+
 import androidx.annotation.NonNull;
-import androidx.core.util.Predicate;
 import androidx.lifecycle.MutableLiveData;
-import androidx.media.MediaBrowserServiceCompat;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BasePresenter;
@@ -14,9 +13,13 @@ import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
 import com.ayla.ng.lib.bootstrap.AylaWiFiSetup;
 import com.ayla.ng.lib.bootstrap.common.AylaCallback;
+import com.ayla.ng.lib.bootstrap.common.AylaDisposable;
 import com.ayla.ng.lib.bootstrap.connectivity.AylaConnectivityManager;
+import com.ayla.ng.lib.bootstrap.connectivity.AylaConnectivityManagerAndroid10Imp;
+import com.ayla.ng.lib.bootstrap.connectivity.AylaConnectivityManagerPreAndroid10Imp;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.NetworkUtils;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -26,89 +29,52 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView> {
 
     public AylaWiFiSetup aylaWiFiSetup;
     private String randomString;
-
-    MutableLiveData apConfigResult = new MutableLiveData<MediaBrowserServiceCompat.Result<String>>();
+    MutableLiveData apConfigResult = new MutableLiveData<>();
     private Disposable subscribe;
 
-    public void connectToApDevice(Context context, String inputDsn, String homeWiFiSSid, String homeWiFiPwd) {
+
+    public void connectToApDevice(Context context, String inputDsn, String homeWiFiSSid, String homeWiFiPwd, String deviceSSid) {
         try {
             if (subscribe != null && !subscribe.isDisposed()) {
                 subscribe.dispose();
             }
-            aylaWiFiSetup = new AylaWiFiSetup(context, AylaConnectivityManager.from(context, false));
+            aylaWiFiSetup = new AylaWiFiSetup(context, new AylaConnectivityManagerPreAndroid10Imp(context));//使用AylaConnectivityManagerPreAndroid10Imp是妥协做法，产品要求
             String gatewayIp = NetworkUtils.getGatewayByWifi();
-            subscribe = Observable.create(new ObservableOnSubscribe<String>() {
+            subscribe = Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
                 @Override
-                public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-                    aylaWiFiSetup.scanDevices(5, new Predicate<ScanResult>() {
-                        @Override
-                        public boolean test(ScanResult scanResult) {
-                            if (scanResult.SSID.matches(Constance.DEFAULT_SSID_REGEX.toString())) {
-                                return true;
+                public void subscribe(ObservableEmitter<AylaSetupDevice> emitter) throws Exception {
+                    try {
+                        AylaDisposable aylaDisposable = aylaWiFiSetup.connectToNewDevice(deviceSSid, 20, new AylaCallback<AylaSetupDevice>() {
+                            @Override
+                            public void onSuccess(@NonNull AylaSetupDevice result) {
+                                LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点成功");
+                                if (!emitter.isDisposed()) {
+                                    emitter.onNext(result);
+                                    emitter.onComplete();
+                                }
                             }
-                            return false;
-                        }
-                    }, new AylaCallback<ScanResult[]>() {
-                        @Override
-                        public void onSuccess(@NonNull ScanResult[] result) {
-                            String ssid = result[0].SSID;
-                            LogUtils.d("ttttttt", ssid);
-                            emitter.onNext(ssid);
-                            emitter.onComplete();
-                        }
 
-                        @Override
-                        public void onFailed(@NonNull Throwable throwable) {
-                            emitter.onError(new Exception("找不到指定的网关设备,请重试..."));
-
-                        }
-                    });
-                }
-            }).flatMap(new Function<String, ObservableSource<AylaSetupDevice>>() {
-
-                @Override
-                public ObservableSource<AylaSetupDevice> apply(String apSSid) throws Exception {
-                    if (!NetworkUtils.getWifiEnabled()) {
-                        return Observable.error(new Exception("没有网络，请检查网络后再试"));
+                            @Override
+                            public void onFailed(@NonNull Throwable throwable) {
+                                LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点失败，" + throwable.getMessage());
+                                try {
+                                    if (emitter != null && !emitter.isDisposed()) {
+                                        emitter.onError(new Exception("连接网关 Wi-Fi 失败，请重试.."));
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    return Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
-                        @Override
-                        public void subscribe(ObservableEmitter<AylaSetupDevice> emitter) throws Exception {
-                            try {
-                                aylaWiFiSetup.connectToNewDevice(apSSid, 20, new AylaCallback<AylaSetupDevice>() {
-                                    @Override
-                                    public void onSuccess(@NonNull AylaSetupDevice result) {
-                                        LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点成功");
-                                        result.setLanIp(gatewayIp);
-                                        emitter.onNext(result);
-                                        emitter.onComplete();
-                                    }
-
-                                    @Override
-                                    public void onFailed(@NonNull Throwable throwable) {
-                                        LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点失败，" + throwable.getMessage());
-                                        try {
-                                            if (emitter != null && !emitter.isDisposed()) {
-                                                emitter.onError(new Exception("连接网关 Wi-Fi 失败，请重试.."));
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    });
-                }
+                }//链接设备ap
             }).flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {
                 @Override
                 public ObservableSource<AylaSetupDevice> apply(@io.reactivex.annotations.NonNull AylaSetupDevice aylaSetupDevice) throws Exception {
@@ -118,7 +84,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                         return Observable.just(aylaSetupDevice);
                     }
                 }
-            }).flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {
+            }).flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {//
                 @Override
                 public ObservableSource<AylaSetupDevice> apply(AylaSetupDevice aylaSetupDevice) throws Exception {
                     return Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
@@ -151,8 +117,36 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                         }
                     });
                 }
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+            }).flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {
+                @Override
+                public ObservableSource<AylaSetupDevice> apply(@io.reactivex.annotations.NonNull AylaSetupDevice aylaSetupDevice) throws Exception {
+
+                    return Observable.create(new ObservableOnSubscribe<AylaSetupDevice>() {
+                        @Override
+                        public void subscribe(ObservableEmitter<AylaSetupDevice> emitter) throws Exception {
+                            AylaDisposable aylaDisposable = aylaWiFiSetup.reconnectToOriginalNetwork(20, new AylaCallback() {
+
+                                @Override
+                                public void onSuccess(@NonNull Object result) {
+                                    if (emitter.isDisposed()) {
+                                        emitter.onNext(aylaSetupDevice);
+                                        emitter.onComplete();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailed(@NonNull Throwable throwable) {
+                                    if (emitter.isDisposed()) {
+                                        emitter.onError(new Exception("AP设备连接到家庭WiFi热点失败"));//此处正常处理
+                                    }
+                                }
+                            });
+                        }
+
+                    });
+
+                }
+            }).observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(new Consumer<Disposable>() {
                         @Override
                         public void accept(Disposable disposable) throws Exception {

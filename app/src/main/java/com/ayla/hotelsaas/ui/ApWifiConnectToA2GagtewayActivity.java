@@ -60,7 +60,7 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
                 if (FastClickUtils.isDoubleClick()){
                     return;
                 }
-                mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this, dsn, ssid, pwd);
+                mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this, dsn, ssid, pwd,"Ayla-40aa56fe09d0");
                 sd_btn_action.setEnabled(false);
             }
         });
