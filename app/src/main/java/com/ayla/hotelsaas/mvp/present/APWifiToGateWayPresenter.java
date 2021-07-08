@@ -49,7 +49,7 @@ public class APWifiToGateWayPresenter extends BasePresenter<APwifiToGateWayView>
                 @Override
                 public void subscribe(ObservableEmitter<AylaSetupDevice> emitter) throws Exception {
                     try {
-                        AylaDisposable aylaDisposable = aylaWiFiSetup.connectToNewDevice(deviceSSid, 20, new AylaCallback<AylaSetupDevice>() {
+                     aylaWiFiSetup.connectToNewDevice(deviceSSid, 20, new AylaCallback<AylaSetupDevice>() {
                             @Override
                             public void onSuccess(@NonNull AylaSetupDevice result) {
                                 LogUtils.d("connectToApDevice: 连接到AP设备WiFi热点成功");

@@ -1,9 +1,12 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +17,8 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.utils.WifiUtil;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
+import com.ayla.hotelsaas.widget.FilterWifiDialog;
+import com.ayla.hotelsaas.widget.WifiUtils;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.IntentUtils;
@@ -36,6 +41,10 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
     public EditText mWiFiNameEditText;
     @BindView(R.id.et_pwd)
     public EditText mWiFiPasswordEditText;
+    @BindView(R.id.iv_airkiss_wifi_change)
+    public ImageView iv_airkiss_wifi_change;
+    private int defIndex = -1;
+    private String locationName="-10000";
 
     @Override
     protected BasePresenter initPresenter() {
@@ -53,7 +62,46 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
 
     @Override
     protected void initListener() {
+        WifiUtils wifiUtil = WifiUtils.getInstance(this);
+        List<ScanResult> scanResultList = wifiUtil.getWifiScanResult();
+        for (int x = 0; x < scanResultList.size(); x++) {
+            if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
+                defIndex = x;
+                break;
+            }
+        }
+        iv_airkiss_wifi_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FilterWifiDialog.newInstance()
+                        .setSubTitle("Wi_Fi")
+                        .setTitle("设备位置")
+                        .setData(scanResultList)
+                        .setDefaultIndex(defIndex)
+                        .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
 
+                            @Override
+                            public void onCallback(ScanResult newLocationName) {
+                                if (newLocationName != null) {
+                                    locationName = newLocationName.SSID;
+                                    if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
+                                        CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
+                                        return;
+                                    }
+                                }
+
+                                for (int x = 0; x < scanResultList.size(); x++) {
+                                    if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
+                                        defIndex = x;
+                                        break;
+                                    }
+                                }
+                                mWiFiNameEditText.setText(locationName);
+                            }
+                        })
+                        .show(getSupportFragmentManager(), "dialog");
+            }
+        });
     }
 
     @Override

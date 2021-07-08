@@ -55,7 +55,7 @@ public class ApWifiDistributeActivity extends BasicActivity {
     private boolean isHidden = true;
     private boolean permissionHasAsked;//标记是否已经提示授权位置信息
     private int defIndex = -1;
-    private String locationName;
+    private String locationName="-10000";
 
     @Override
     protected int getLayoutId() {

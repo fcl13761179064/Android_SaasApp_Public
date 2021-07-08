@@ -14,14 +14,12 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.CheckableSupport;
 import com.ayla.hotelsaas.databinding.LayoutFilterWifiDialogBinding;
-import com.ayla.hotelsaas.databinding.LayoutItemPickDialogBinding;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -119,6 +117,9 @@ public class FilterWifiDialog extends DialogFragment {
             public void onClick(View v) {
                 if (callback!=null){
                     dismissAllowingStateLoss();
+                    if (defaultIndex==-1){
+                        return;
+                    }
                     callback.onCallback(currentSupport.getData());
                 }
             }
@@ -202,6 +203,34 @@ public class FilterWifiDialog extends DialogFragment {
             String ssid = ((ScanResult) item.getData()).SSID;
             helper.setText(R.id.tv, ssid);
             helper.setVisible(R.id.iv, item.isChecked());
+            int level = ((ScanResult) item.getData()).level;
+            String capabilities = ((ScanResult) item.getData()).capabilities;
+            if (capabilities.contains("WEP")) {
+                helper.setVisible(R.id.iv_wifi_password, true);
+
+            } else if (capabilities.contains("PSK")) {
+                helper.setVisible(R.id.iv_wifi_password, true);
+
+            } else if (capabilities.contains("EAP")) {
+
+                helper.setVisible(R.id.iv_wifi_password, true);
+            }else if (capabilities.contains("WPA")) {
+
+                helper.setVisible(R.id.iv_wifi_password, true);
+            }else if (capabilities.contains("WPA2")) {
+
+                helper.setVisible(R.id.iv_wifi_password, true);
+            } else {  //不加密
+                helper.setVisible(R.id.iv_wifi_password, false);
+            }
+            if (level<-70){
+                helper.setImageResource(R.id.iv_wifi_info, R.mipmap.wifi_info_one);
+            }else if (level<-50 && level>-70){
+                helper.setImageResource(R.id.iv_wifi_info, R.mipmap.wifi_info_two);
+            }else {
+                helper.setImageResource(R.id.iv_wifi_info, R.mipmap.ap_wifi_three);
+            }
+
         }
     }
 

@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.mvp.present.APWifiToGateWayPresenter;
@@ -57,11 +60,13 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
         tv_connect_ap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (FastClickUtils.isDoubleClick()){
+                if (FastClickUtils.isDoubleClick()) {
                     return;
                 }
-                mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this, dsn, ssid, pwd,"Ayla-40aa56fe09d0");
-                sd_btn_action.setEnabled(false);
+                Intent intent = new Intent();
+                intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+                startActivityForResult(intent   ,1000);
+
             }
         });
         sd_btn_action.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +78,13 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity<APwifiToG
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPresenter.connectToApDevice(ApWifiConnectToA2GagtewayActivity.this, dsn, ssid, pwd, "Ayla-40aa56fe09d0");
+        sd_btn_action.setEnabled(false);
     }
 
     @Override

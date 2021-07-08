@@ -14,7 +14,7 @@
 
         <LinearLayout
             android:id="@+id/left_ll"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
@@ -57,6 +57,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:lines="1"
+                android:layout_gravity="center"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="title"
@@ -67,9 +68,11 @@
 
         <LinearLayout
             android:id="@+id/common_right_ll"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
+            android:gravity="right"
+            android:layout_marginRight="14dp"
             android:orientation="horizontal">
 
             <TextView
@@ -80,7 +83,6 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:lines="1"
-                android:paddingRight="@dimen/dp_16"
                 android:text="left"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/color_333333"
@@ -88,11 +90,9 @@
 
             <ImageView
                 android:id="@+id/iv_right"
-                android:layout_width="@dimen/appbar_height"
-                android:layout_height="@dimen/appbar_height"
-                android:paddingRight="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingTop="14dp"
-                android:layout_gravity="center"
                 android:paddingBottom="14dp"
                 android:src="@mipmap/function_change_pic"
                 />
