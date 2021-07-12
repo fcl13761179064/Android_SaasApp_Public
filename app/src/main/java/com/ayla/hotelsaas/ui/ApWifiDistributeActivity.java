@@ -212,9 +212,6 @@ public class ApWifiDistributeActivity extends BasicActivity {
     }
 
     private void configWiFi() {
-      /*  Intent intent = new Intent();
-        intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
-        startActivity(intent);*/
         WifiUtils wifiUtil = WifiUtils.getInstance(this);
         List<ScanResult> scanResultList = wifiUtil.getWifiScanResult();
         for (int x = 0; x < scanResultList.size(); x++) {
