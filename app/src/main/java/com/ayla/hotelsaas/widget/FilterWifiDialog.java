@@ -20,10 +20,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.CheckableSupport;
 import com.ayla.hotelsaas.databinding.LayoutFilterWifiDialogBinding;
+import com.ayla.hotelsaas.ui.ApWifiConnectToA2GagtewayActivity;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.scwang.smart.refresh.layout.api.RefreshHeader;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
+import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +48,10 @@ public class FilterWifiDialog extends DialogFragment {
     private String title, subTitle;
     private int LocationType;
     private CheckableSupport currentSupport;
+    private esss adapter;
 
     public static FilterWifiDialog newInstance() {
-
         Bundle args = new Bundle();
-
         FilterWifiDialog fragment = new FilterWifiDialog();
         fragment.setArguments(args);
         return fragment;
@@ -64,6 +68,7 @@ public class FilterWifiDialog extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         binding.rv.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public void setMeasuredDimension(Rect childrenBounds, int wSpec, int hSpec) {
@@ -73,13 +78,13 @@ public class FilterWifiDialog extends DialogFragment {
 
         List<CheckableSupport> supports = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
-           currentSupport = new CheckableSupport(data.get(i));
+            currentSupport = new CheckableSupport(data.get(i));
             if (i == defaultIndex) {
                 currentSupport.setChecked(true);
             }
             supports.add(currentSupport);
         }
-        esss adapter = new esss(R.layout.filter_itme_picker_enum, supports);
+        adapter = new esss(R.layout.filter_itme_picker_enum, supports);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -87,10 +92,11 @@ public class FilterWifiDialog extends DialogFragment {
                     supports.get(i).setChecked(false);
                 }
                 currentSupport = (CheckableSupport) adapter.getData().get(position);
-                defaultIndex=position;
+                defaultIndex = position;
                 currentSupport.setChecked(true);
                 adapter.notifyDataSetChanged();
             }
+
         });
         binding.rv.setAdapter(adapter);
         binding.rv.addItemDecoration(new RecycleViewDivider(getContext(), LinearLayoutManager.VERTICAL, 3, R.color.all_bg_color));
@@ -110,21 +116,48 @@ public class FilterWifiDialog extends DialogFragment {
             binding.imageView2.setImageResource(iconRes);
             binding.imageView2.setVisibility(View.VISIBLE);
         }*/
+
         binding.imageView2.setVisibility(View.VISIBLE);
         binding.textView3.setText(subTitle);
         binding.tvConfire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (callback!=null){
+                if (callback != null) {
                     dismissAllowingStateLoss();
-                    if (defaultIndex==-1){
+                    if (defaultIndex == -1) {
                         return;
                     }
                     callback.onCallback(currentSupport.getData());
                 }
             }
         });
+        binding.SmartRefreshLayout.setEnableLoadMore(false);
+        binding.SmartRefreshLayout.setEnableRefresh(true);
+        binding.SmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                setRefreshData();
+            }
+        });
+    }
 
+
+    private void setRefreshData() {
+        WifiUtils wifiUtil = WifiUtils.getInstance(getContext());
+        List<ScanResult> scanResultList = wifiUtil.getWifiScanResult();
+        List<CheckableSupport> supports = new ArrayList<>();
+        for (int i = 0; i < scanResultList.size(); i++) {
+            currentSupport = new CheckableSupport(scanResultList.get(i));
+            supports.add(currentSupport);
+        }
+        if (adapter != null && adapter.getData() != null) {
+            adapter.getData().clear();
+            adapter.setNewData(supports);
+            adapter.loadMoreComplete();
+            if ( binding.SmartRefreshLayout.isRefreshing()) {
+                binding.SmartRefreshLayout.finishRefresh();
+            }
+        }
     }
 
     public class TestDividerItemDecoration extends RecyclerView.ItemDecoration {
@@ -214,20 +247,20 @@ public class FilterWifiDialog extends DialogFragment {
             } else if (capabilities.contains("EAP")) {
 
                 helper.setVisible(R.id.iv_wifi_password, true);
-            }else if (capabilities.contains("WPA")) {
+            } else if (capabilities.contains("WPA")) {
 
                 helper.setVisible(R.id.iv_wifi_password, true);
-            }else if (capabilities.contains("WPA2")) {
+            } else if (capabilities.contains("WPA2")) {
 
                 helper.setVisible(R.id.iv_wifi_password, true);
             } else {  //不加密
                 helper.setVisible(R.id.iv_wifi_password, false);
             }
-            if (level<-70){
+            if (level < -70) {
                 helper.setImageResource(R.id.iv_wifi_info, R.mipmap.wifi_info_one);
-            }else if (level<-50 && level>-70){
+            } else if (level < -50 && level > -70) {
                 helper.setImageResource(R.id.iv_wifi_info, R.mipmap.wifi_info_two);
-            }else {
+            } else {
                 helper.setImageResource(R.id.iv_wifi_info, R.mipmap.ap_wifi_three);
             }
 

@@ -22,6 +22,7 @@ import com.ayla.hotelsaas.mvp.present.ApNetworkPresenter;
 import com.ayla.hotelsaas.mvp.view.ApDeviceAddView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
+import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -98,7 +99,10 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     private String waitBindDeviceId;
     private String replaceDeviceId;
     private Bundle addInfo;
-    private String randomNum;
+    private String ssid;
+    private String pwd;
+    private String dsn;
+    private String deviceSsid;
 
     @Override
     protected ApNetworkPresenter initPresenter() {
@@ -138,7 +142,6 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     private int bindProgress;//记录进度
 
     private void startBind() {
-        randomNum = getIntent().getStringExtra("randomNum");
         addInfo = getIntent().getBundleExtra("addInfo");
         int networkType = addInfo.getInt("networkType");
         cuId = addInfo.getInt("cuId");
@@ -149,11 +152,11 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
         nickname = addInfo.getString("nickname");
         waitBindDeviceId = addInfo.getString("waitBindDeviceId");
         replaceDeviceId = addInfo.getString("replaceDeviceId");
-
-        mPresenter.Apnetwork(
-                addInfo.getString("deviceId"),
-                cuId,
-                randomNum);
+        ssid = getIntent().getStringExtra("ssid");
+        pwd = getIntent().getStringExtra("pwd");
+        dsn = getIntent().getStringExtra("deviceId");
+        deviceSsid = getIntent().getStringExtra("deviceSsid");
+        mPresenter.connectToApDevice(ApDeviceAddActivity.this, dsn, ssid, pwd, deviceSsid, addInfo.getString("deviceId"),cuId);
     }
 
     @OnClick(R.id.bt_bind)
@@ -212,7 +215,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     }
 
     @Override
-    public void confireApStatus(Boolean b) {
+    public void confireApStatus(Boolean b,String randomNum) {
         mPresenter.bindAylaNode(
                 addInfo.getString("deviceId"),
                 cuId,
@@ -301,6 +304,12 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
         Log.d(TAG, "gatewayConnectStart: " + Thread.currentThread().getName());
         bindProgress = 0;
         refreshBindShow();
+    }
+
+
+    @Override
+    public void onFailed(Throwable throwable) {
+        CustomToast.makeText(getContext(), throwable.getMessage(), R.drawable.ic_toast_warming);
     }
 
 }

@@ -126,7 +126,6 @@ public class Constance {
 
     //艾拉wifi SSId正则
     public static String DEFAULT_SSID_REGEX = "Ayla-([0-9a-zA-Z]+|DevKit)";
-
     /**
      * 获取随机字符串
      */
