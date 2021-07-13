@@ -245,7 +245,7 @@ public class ApWifiDistributeActivity extends BasicActivity {
                             e.printStackTrace();
                         }
                     }
-                }else {
+                }else  if (is_wifi_more) {
                     String name = mWiFiNameEditText.getText().toString();
                     if (TextUtils.isEmpty(name)) {
                         for (int x = 0; x < scanResultList.size(); x++) {
