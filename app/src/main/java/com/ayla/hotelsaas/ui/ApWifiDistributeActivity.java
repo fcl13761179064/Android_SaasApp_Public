@@ -52,10 +52,14 @@ public class ApWifiDistributeActivity extends BasicActivity {
     public ImageView awi_iv_pwd_toggle;
     @BindView(R.id.wifi_help)
     public TextView wifi_help;
+    @BindView(R.id.select_wifi)
+    public TextView select_wifi;
     private boolean isHidden = true;
     private boolean permissionHasAsked;//标记是否已经提示授权位置信息
     private int defIndex = -1;
     private String locationName = "-10000";
+    private List<ScanResult> scanResultList;
+    private Boolean is_wifi_more;
 
     @Override
     protected int getLayoutId() {
@@ -71,7 +75,8 @@ public class ApWifiDistributeActivity extends BasicActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        is_wifi_more = false;
+        getPermiss();
     }
 
     private void enableWiFiNameInput(Boolean isEnable) {
@@ -81,74 +86,166 @@ public class ApWifiDistributeActivity extends BasicActivity {
 
     @Override
     protected void initView() {
-        if (!NetworkUtils.isWifiConnected()) {
-            CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
-                @Override
-                public void onDone(CustomAlarmDialog dialog) {
-                    dialog.dismissAllowingStateLoss();
-                    Intent intent = new Intent();
-                    intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
-                    startActivity(intent);
-                }
 
-                @Override
-                public void onCancel(CustomAlarmDialog dialog) {
-                    dialog.dismissAllowingStateLoss();
-                }
-            }).setTitle("未连接WiFi").setContent("检查到当前手机未连接 Wi-Fi，请进行连接").show(getSupportFragmentManager(), "wifi dialog");
-        }
-        getPermiss();
     }
 
 
     public void getPermiss() {
         try {
+            select_wifi.setVisibility(View.GONE);
             String connectWifiSsid = WifiUtil.getConnectWifiSsid();
             mWiFiNameEditText.setText(connectWifiSsid);
             mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
-            if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
-                if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
-                    if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
-                        CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning);
+            WifiUtils wifiUtil = WifiUtils.getInstance(this);
+            scanResultList = wifiUtil.getWifiScanResult();
+            if (scanResultList.size() == 0) {//没有打开wifi按钮,或者没有开启位置权限
+                if (!NetworkUtils.isWifiConnected()) {//1.没有打开wifi按钮，又有没有连接，让去打开wifi按钮
+                    CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
+                        @Override
+                        public void onDone(CustomAlarmDialog dialog) {
+                            dialog.dismissAllowingStateLoss();
+                            Intent intent = new Intent();
+                            intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onCancel(CustomAlarmDialog dialog) {
+                            dialog.dismissAllowingStateLoss();
+                        }
+                    }).setTitle("未连接WiFi").setContent("检查到当前手机未连接 Wi-Fi，请进行连接").show(getSupportFragmentManager(), "wifi dialog");
+                } else if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
+                    if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
+                        if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
+                            if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
+                                CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning);
+                                enableWiFiNameInput(false);
+                            }
+                        } else {//定位权限没有
+                            if (!permissionHasAsked) {
+                                CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
+                                    @Override
+                                    public void onDone(CustomAlarmDialog dialog) {
+                                        dialog.dismissAllowingStateLoss();
+                                        PermissionUtils.permission(PermissionConstants.LOCATION)
+                                                .callback(new PermissionUtils.FullCallback() {
+                                                    @Override
+                                                    public void onGranted(@NonNull List<String> granted) {
+                                                        String connectWifiSsid = WifiUtil.getConnectWifiSsid();
+                                                        mWiFiNameEditText.setText(connectWifiSsid);
+                                                        mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
+                                                        enableWiFiNameInput(false);
+                                                    }
+
+                                                    @Override
+                                                    public void onDenied(@NonNull List<String> deniedForever, @NonNull List<String> denied) {
+                                                        if (deniedForever.size() > 0) {
+                                                            Intent settingsIntent = IntentUtils.getLaunchAppDetailsSettingsIntent(AppUtils.getAppPackageName());
+                                                            startActivity(settingsIntent);
+//                                                  CustomToast.makeText(getApplicationContext(), "你拒绝了访问位置信息的授权，无法自动填充WiFi名称", R.drawable.ic_warning);
+                                                        }
+                                                    }
+                                                }).request();
+                                    }
+
+                                    @Override
+                                    public void onCancel(CustomAlarmDialog dialog) {
+                                        dialog.dismissAllowingStateLoss();
+                                    }
+                                }).setTitle("获取位置权限").setContent("添加网关需要使用位置权限，用以扫描Wi-Fi热点").setEnsureText("设置").show(getSupportFragmentManager(), "wifi dialog");
+                            }
+                            permissionHasAsked = true;
+                        }
+                    } else {
                         enableWiFiNameInput(false);
                     }
-                } else {//定位权限没有
-                    if (!permissionHasAsked) {
-                        CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
-                            @Override
-                            public void onDone(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                                PermissionUtils.permission(PermissionConstants.LOCATION)
-                                        .callback(new PermissionUtils.FullCallback() {
-                                            @Override
-                                            public void onGranted(@NonNull List<String> granted) {
-                                                String connectWifiSsid = WifiUtil.getConnectWifiSsid();
-                                                mWiFiNameEditText.setText(connectWifiSsid);
-                                                mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
-                                                enableWiFiNameInput(false);
-                                            }
-
-                                            @Override
-                                            public void onDenied(@NonNull List<String> deniedForever, @NonNull List<String> denied) {
-                                                if (deniedForever.size() > 0) {
-                                                    Intent settingsIntent = IntentUtils.getLaunchAppDetailsSettingsIntent(AppUtils.getAppPackageName());
-                                                    startActivity(settingsIntent);
-//                                                  CustomToast.makeText(getApplicationContext(), "你拒绝了访问位置信息的授权，无法自动填充WiFi名称", R.drawable.ic_warning);
-                                                }
-                                            }
-                                        }).request();
-                            }
-
-                            @Override
-                            public void onCancel(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                            }
-                        }).setTitle("获取位置权限").setContent("添加网关需要使用位置权限，用以扫描Wi-Fi热点").setEnsureText("设置").show(getSupportFragmentManager(), "wifi dialog");
-                    }
-                    permissionHasAsked = true;
                 }
-            } else {
-                enableWiFiNameInput(false);
+            } else {//位置权限开启，但是没有连接网络wifi
+                if (!NetworkUtils.isWifiConnected()) {
+                    select_wifi.setVisibility(View.VISIBLE);
+                    enableWiFiNameInput(true);
+                }else {
+                  if (is_wifi_more){
+                      try {
+                          String name = mWiFiNameEditText.getText().toString();
+                          if (TextUtils.isEmpty(name)) {
+                              for (int x = 0; x < scanResultList.size(); x++) {
+                                  if (TextUtils.equals(scanResultList.get(x).SSID, "")) {
+                                      defIndex = x;
+                                      break;
+                                  }
+                              }
+                              FilterWifiDialog.newInstance()
+                                      .setSubTitle("Wi_Fi")
+                                      .setTitle("设备位置")
+                                      .setData(scanResultList)
+                                      .setDefaultIndex(defIndex)
+                                      .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
+
+                                          @Override
+                                          public void onCallback(ScanResult newLocationName) {
+                                              if (newLocationName != null) {
+                                                  locationName = newLocationName.SSID;
+                                                  if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
+                                                      CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
+                                                      return;
+                                                  }
+                                              }
+
+                                              for (int x = 0; x < scanResultList.size(); x++) {
+                                                  if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
+                                                      defIndex = x;
+                                                      break;
+                                                  }
+                                              }
+                                              mWiFiNameEditText.setText(locationName);
+                                          }
+                                      })
+                                      .show(getSupportFragmentManager(), "dialog");
+                              enableWiFiNameInput(false);
+                          } else {
+                              for (int x = 0; x < scanResultList.size(); x++) {
+                                  if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
+                                      defIndex = x;
+                                      break;
+                                  }
+                              }
+                              FilterWifiDialog.newInstance()
+                                      .setSubTitle("Wi_Fi")
+                                      .setTitle("设备位置")
+                                      .setData(scanResultList)
+                                      .setDefaultIndex(defIndex)
+                                      .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
+
+                                          @Override
+                                          public void onCallback(ScanResult newLocationName) {
+                                              if (newLocationName != null) {
+                                                  locationName = newLocationName.SSID;
+                                                  if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
+                                                      CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
+                                                      return;
+                                                  }
+                                              }
+
+                                              for (int x = 0; x < scanResultList.size(); x++) {
+                                                  if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
+                                                      defIndex = x;
+                                                      break;
+                                                  }
+                                              }
+                                              mWiFiNameEditText.setText(locationName);
+                                          }
+                                      })
+                                      .show(getSupportFragmentManager(), "dialog");
+                              enableWiFiNameInput(false);
+                          }
+
+
+                      } catch (Exception e) {
+                          e.printStackTrace();
+                      }
+                  }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -258,104 +355,85 @@ public class ApWifiDistributeActivity extends BasicActivity {
 
     private void configWiFi() {
         try {
-            String connectWifiSsid = WifiUtil.getConnectWifiSsid();
-            if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
-                if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
-                    if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
-                        CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning);
-                        enableWiFiNameInput(true);
-                    }
-                } else {//定位权限没有
-                    if (!permissionHasAsked) {
-                        CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
-                            @Override
-                            public void onDone(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                                PermissionUtils.permission(PermissionConstants.LOCATION)
-                                        .callback(new PermissionUtils.FullCallback() {
-                                            @Override
-                                            public void onGranted(@NonNull List<String> granted) {
-                                                String connectWifiSsid = WifiUtil.getConnectWifiSsid();
-                                                mWiFiNameEditText.setText(connectWifiSsid);
-                                                mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
-                                                enableWiFiNameInput(false);
-                                            }
 
-                                            @Override
-                                            public void onDenied(@NonNull List<String> deniedForever, @NonNull List<String> denied) {
-                                                if (deniedForever.size() > 0) {
-                                                    Intent settingsIntent = IntentUtils.getLaunchAppDetailsSettingsIntent(AppUtils.getAppPackageName());
-                                                    startActivity(settingsIntent);
-//                                                  CustomToast.makeText(getApplicationContext(), "你拒绝了访问位置信息的授权，无法自动填充WiFi名称", R.drawable.ic_warning);
-                                                }
-                                            }
-                                        }).request();
-                            }
-
-                            @Override
-                            public void onCancel(CustomAlarmDialog dialog) {
-                                dialog.dismissAllowingStateLoss();
-                            }
-                        }).setTitle("获取位置权限").setContent("添加网关需要使用位置权限，用以扫描Wi-Fi热点").setEnsureText("设置").show(getSupportFragmentManager(), "wifi dialog");
+            String name = mWiFiNameEditText.getText().toString();
+            if (TextUtils.isEmpty(name)) {
+                WifiUtils wifiUtil = WifiUtils.getInstance(this);
+                List<ScanResult> scanResultList = wifiUtil.getWifiScanResult();
+                for (int x = 0; x < scanResultList.size(); x++) {
+                    if (TextUtils.equals(scanResultList.get(x).SSID, "")) {
+                        defIndex = x;
+                        break;
                     }
-                    permissionHasAsked = true;
                 }
-            } else {
-                if (!NetworkUtils.isWifiConnected()) {
-                    CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
-                        @Override
-                        public void onDone(CustomAlarmDialog dialog) {
-                            dialog.dismissAllowingStateLoss();
-                            Intent intent = new Intent();
-                            intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
-                            startActivity(intent);
-                        }
+                FilterWifiDialog.newInstance()
+                        .setSubTitle("Wi_Fi")
+                        .setTitle("设备位置")
+                        .setData(scanResultList)
+                        .setDefaultIndex(defIndex)
+                        .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
 
-                        @Override
-                        public void onCancel(CustomAlarmDialog dialog) {
-                            dialog.dismissAllowingStateLoss();
-                        }
-                    }).setTitle("未连接WiFi").setContent("检查到当前手机未连接 Wi-Fi，请进行连接").show(getSupportFragmentManager(), "wifi dialog");
-                } else {
-                    String name = mWiFiNameEditText.getText().toString();
-                    WifiUtils wifiUtil = WifiUtils.getInstance(this);
-                    List<ScanResult> scanResultList = wifiUtil.getWifiScanResult();
-                    for (int x = 0; x < scanResultList.size(); x++) {
-                        if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
-                            defIndex = x;
-                            break;
-                        }
-                    }
-                    FilterWifiDialog.newInstance()
-                            .setSubTitle("Wi_Fi")
-                            .setTitle("设备位置")
-                            .setData(scanResultList)
-                            .setDefaultIndex(defIndex)
-                            .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
-
-                                @Override
-                                public void onCallback(ScanResult newLocationName) {
-                                    if (newLocationName != null) {
-                                        locationName = newLocationName.SSID;
-                                        if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
-                                            CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
-                                            return;
-                                        }
+                            @Override
+                            public void onCallback(ScanResult newLocationName) {
+                                if (newLocationName != null) {
+                                    locationName = newLocationName.SSID;
+                                    if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
+                                        CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
+                                        return;
                                     }
-
-                                    for (int x = 0; x < scanResultList.size(); x++) {
-                                        if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
-                                            defIndex = x;
-                                            break;
-                                        }
-                                    }
-                                    mWiFiNameEditText.setText(locationName);
                                 }
-                            })
-                            .show(getSupportFragmentManager(), "dialog");
+
+                                for (int x = 0; x < scanResultList.size(); x++) {
+                                    if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
+                                        defIndex = x;
+                                        break;
+                                    }
+                                }
+                                mWiFiNameEditText.setText(locationName);
+                            }
+                        })
+                        .show(getSupportFragmentManager(), "dialog");
+                enableWiFiNameInput(false);
+            } else {
+                WifiUtils wifiUtil = WifiUtils.getInstance(this);
+                List<ScanResult> scanResultList = wifiUtil.getWifiScanResult();
+                for (int x = 0; x < scanResultList.size(); x++) {
+                    if (TextUtils.equals(scanResultList.get(x).SSID, name)) {
+                        defIndex = x;
+                        break;
+                    }
                 }
+                FilterWifiDialog.newInstance()
+                        .setSubTitle("Wi_Fi")
+                        .setTitle("设备位置")
+                        .setData(scanResultList)
+                        .setDefaultIndex(defIndex)
+                        .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
+
+                            @Override
+                            public void onCallback(ScanResult newLocationName) {
+                                if (newLocationName != null) {
+                                    locationName = newLocationName.SSID;
+                                    if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
+                                        CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
+                                        return;
+                                    }
+                                }
+
+                                for (int x = 0; x < scanResultList.size(); x++) {
+                                    if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
+                                        defIndex = x;
+                                        break;
+                                    }
+                                }
+                                mWiFiNameEditText.setText(locationName);
+                            }
+                        })
+                        .show(getSupportFragmentManager(), "dialog");
                 enableWiFiNameInput(false);
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -416,7 +494,8 @@ public class ApWifiDistributeActivity extends BasicActivity {
         awi_tv_wifi_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                configWiFi();
+                is_wifi_more = true;
+                getPermiss();
             }
         });
         awi_iv_pwd_toggle.setOnClickListener(new View.OnClickListener() {
