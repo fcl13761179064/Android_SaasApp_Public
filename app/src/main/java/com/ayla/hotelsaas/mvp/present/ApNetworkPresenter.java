@@ -91,6 +91,22 @@ public class ApNetworkPresenter extends BasePresenter<ApDeviceAddView> {
                             }
                         }
                     })//连接到设备ap
+                    .observeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(Disposable disposable) throws Exception {
+                            mView.step1Start();
+                        }
+                    })//通知开始连接网关
+                    .doOnNext(new Consumer<Object>() {
+                        @Override
+                        public void accept(Object o) throws Exception {
+                            mView.step1Finish();
+                            mView.step2Start();
+                        }
+                    })//通知网关连接成功
                     .flatMap(new Function<AylaSetupDevice, ObservableSource<AylaSetupDevice>>() {
                         @Override
                         public ObservableSource<AylaSetupDevice> apply(AylaSetupDevice aylaSetupDevice) throws Exception {
@@ -146,7 +162,18 @@ public class ApNetworkPresenter extends BasePresenter<ApDeviceAddView> {
                                     });
 
                         }
-                    }).flatMap(new Function<AylaSetupDevice, Observable<Boolean>>() {
+                    }).observeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext(new Consumer<Object>() {
+                        @Override
+                        public void accept(Object o) throws Exception {
+                            mView.step2Finish();
+                            mView.step3Start();
+                        }
+                    })//A2网关是否已经绑定到路由器
+                    .observeOn(Schedulers.io())
+                    .delay(21,TimeUnit.SECONDS)
+                    .flatMap(new Function<AylaSetupDevice, Observable<Boolean>>() {
                         @Override
                         public Observable<Boolean> apply(AylaSetupDevice aylaSetupDevice) throws Exception {
 
@@ -182,12 +209,12 @@ public class ApNetworkPresenter extends BasePresenter<ApDeviceAddView> {
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(new Consumer<Disposable>() {
+                    .doOnNext(new Consumer<Object>() {
                         @Override
-                        public void accept(Disposable disposable) throws Exception {
-                            mView.step1Start();
+                        public void accept(Object o) throws Exception {
+                            mView.step3Finish();
                         }
-                    })
+                    })//通知网关连接成功
                     .doFinally(new Action() {
                         @Override
                         public void run() throws Exception {
@@ -195,8 +222,6 @@ public class ApNetworkPresenter extends BasePresenter<ApDeviceAddView> {
                                 if (aylaWiFiSetup != null) {
                                     aylaWiFiSetup.exitSetup();
                                 }
-                                mView.step1Finish();
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -217,7 +242,7 @@ public class ApNetworkPresenter extends BasePresenter<ApDeviceAddView> {
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            mView.bindFailed(throwable);
+                            mView.bindFailed(new Throwable("提示“设备连接失败，请重试"));
                         }
                     });
 

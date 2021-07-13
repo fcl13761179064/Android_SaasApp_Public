@@ -39,6 +39,8 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity {
     Button sd_btn_action;
     @BindView(R.id.tv_connect_ap)
     TextView tv_connect_ap;
+    @BindView(R.id.ssid_show)
+    TextView ssid_show;
     private int PHONE_SETTING_SSID = 0X11;
     private String deviceSsid;
 
@@ -99,6 +101,7 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity {
         if (requestCode == PHONE_SETTING_SSID) {
             deviceSsid = WifiUtil.getConnectWifiSsid();
             if (deviceSsid != null && deviceSsid.matches(Constance.DEFAULT_SSID_REGEX)) {
+                ssid_show.setText(deviceSsid);
                 sd_btn_action.setEnabled(true);
             } else {
                 sd_btn_action.setEnabled(false);

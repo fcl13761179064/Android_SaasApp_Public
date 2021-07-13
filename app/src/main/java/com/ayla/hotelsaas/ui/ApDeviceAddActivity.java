@@ -22,6 +22,7 @@ import com.ayla.hotelsaas.mvp.present.ApNetworkPresenter;
 import com.ayla.hotelsaas.mvp.view.ApDeviceAddView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
+import com.ayla.hotelsaas.widget.FastClickUtils;
 import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
 
 import butterknife.BindView;
@@ -103,7 +104,9 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     private String pwd;
     private String dsn;
     private String deviceSsid;
+    private int bindProgress;//记录进度
 
+    private int PHONE_SETTING_SSID = 0X13;
     @Override
     protected ApNetworkPresenter initPresenter() {
         return new ApNetworkPresenter();
@@ -136,10 +139,12 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
         if (requestCode == REQUEST_CODE_ADD_SUCCESS) {
             setResult(RESULT_OK);
             finish();
+        }else if (requestCode == PHONE_SETTING_SSID) {
+           startBind();
         }
     }
 
-    private int bindProgress;//记录进度
+
 
     private void startBind() {
         addInfo = getIntent().getBundleExtra("addInfo");
@@ -162,9 +167,15 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     @OnClick(R.id.bt_bind)
     public void handleButton() {
         if (bindProgress == -1) {
-            startBind();
+            if (FastClickUtils.isDoubleClick()) {
+                return;
+            }
+            Intent intent = new Intent();
+            intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+            startActivityForResult(intent, PHONE_SETTING_SSID);
         }
     }
+
 
     /**
      * 根据bindTag刷新UI
@@ -234,6 +245,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
 
     @Override
     public void bindFailed(Throwable throwable) {
+        CustomToast.makeText(getContext(), throwable.getMessage(), R.drawable.ic_toast_warming);
         Log.d(TAG, "zigBeeDeviceBindFailed: " + throwable);
         switch (bindProgress) {
             case 0:

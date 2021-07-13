@@ -55,7 +55,7 @@ public class ApWifiDistributeActivity extends BasicActivity {
     private boolean isHidden = true;
     private boolean permissionHasAsked;//标记是否已经提示授权位置信息
     private int defIndex = -1;
-    private String locationName="-10000";
+    private String locationName = "-10000";
 
     @Override
     protected int getLayoutId() {
@@ -71,11 +71,35 @@ public class ApWifiDistributeActivity extends BasicActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (!NetworkUtils.isWifiConnected()) {
+            CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
+                @Override
+                public void onDone(CustomAlarmDialog dialog) {
+                    dialog.dismissAllowingStateLoss();
+                    Intent intent = new Intent();
+                    intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onCancel(CustomAlarmDialog dialog) {
+                    dialog.dismissAllowingStateLoss();
+                }
+            }).setTitle("未连接WiFi").setContent("检查到当前手机未连接 Wi-Fi，请进行连接").show(getSupportFragmentManager(), "wifi dialog");
+        }
+    }
+
+    private void enableWiFiNameInput(Boolean isEnable) {
+        mWiFiNameEditText.setEnabled(isEnable);
+    }
+
+
+    @Override
+    protected void initView() {
         try {
             String connectWifiSsid = WifiUtil.getConnectWifiSsid();
             mWiFiNameEditText.setText(connectWifiSsid);
             mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
-
             if (NetworkUtils.isWifiConnected() && TextUtils.isEmpty(connectWifiSsid)) {
                 if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
                     if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
@@ -122,31 +146,6 @@ public class ApWifiDistributeActivity extends BasicActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private void enableWiFiNameInput(Boolean isEnable) {
-        mWiFiNameEditText.setEnabled(isEnable);
-    }
-
-
-    @Override
-    protected void initView() {
-        if (!NetworkUtils.isWifiConnected()) {
-            CustomAlarmDialog.newInstance(new CustomAlarmDialog.Callback() {
-                @Override
-                public void onDone(CustomAlarmDialog dialog) {
-                    dialog.dismissAllowingStateLoss();
-                    Intent intent = new Intent();
-                    intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onCancel(CustomAlarmDialog dialog) {
-                    dialog.dismissAllowingStateLoss();
-                }
-            }).setTitle("未连接WiFi").setContent("检查到当前手机未连接 Wi-Fi，请进行连接").show(getSupportFragmentManager(), "wifi dialog");
         }
 
     }
