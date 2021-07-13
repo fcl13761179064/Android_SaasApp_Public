@@ -164,87 +164,86 @@ public class ApWifiDistributeActivity extends BasicActivity {
                 if (!NetworkUtils.isWifiConnected()) {
                     select_wifi.setVisibility(View.VISIBLE);
                     enableWiFiNameInput(true);
-                }else {
-                  if (is_wifi_more){
-                      try {
-                          String name = mWiFiNameEditText.getText().toString();
-                          if (TextUtils.isEmpty(name)) {
-                              for (int x = 0; x < scanResultList.size(); x++) {
-                                  if (TextUtils.equals(scanResultList.get(x).SSID, "")) {
-                                      defIndex = x;
-                                      break;
-                                  }
-                              }
-                              FilterWifiDialog.newInstance()
-                                      .setSubTitle("Wi_Fi")
-                                      .setTitle("设备位置")
-                                      .setData(scanResultList)
-                                      .setDefaultIndex(defIndex)
-                                      .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
+                    if (is_wifi_more) {
+                        try {
+                            String name = mWiFiNameEditText.getText().toString();
+                            if (TextUtils.isEmpty(name)) {
+                                for (int x = 0; x < scanResultList.size(); x++) {
+                                    if (TextUtils.equals(scanResultList.get(x).SSID, "")) {
+                                        defIndex = x;
+                                        break;
+                                    }
+                                }
+                                FilterWifiDialog.newInstance()
+                                        .setSubTitle("Wi_Fi")
+                                        .setTitle("设备位置")
+                                        .setData(scanResultList)
+                                        .setDefaultIndex(defIndex)
+                                        .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
 
-                                          @Override
-                                          public void onCallback(ScanResult newLocationName) {
-                                              if (newLocationName != null) {
-                                                  locationName = newLocationName.SSID;
-                                                  if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
-                                                      CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
-                                                      return;
-                                                  }
-                                              }
+                                            @Override
+                                            public void onCallback(ScanResult newLocationName) {
+                                                if (newLocationName != null) {
+                                                    locationName = newLocationName.SSID;
+                                                    if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
+                                                        CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
+                                                        return;
+                                                    }
+                                                }
 
-                                              for (int x = 0; x < scanResultList.size(); x++) {
-                                                  if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
-                                                      defIndex = x;
-                                                      break;
-                                                  }
-                                              }
-                                              mWiFiNameEditText.setText(locationName);
-                                          }
-                                      })
-                                      .show(getSupportFragmentManager(), "dialog");
-                              enableWiFiNameInput(false);
-                          } else {
-                              for (int x = 0; x < scanResultList.size(); x++) {
-                                  if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
-                                      defIndex = x;
-                                      break;
-                                  }
-                              }
-                              FilterWifiDialog.newInstance()
-                                      .setSubTitle("Wi_Fi")
-                                      .setTitle("设备位置")
-                                      .setData(scanResultList)
-                                      .setDefaultIndex(defIndex)
-                                      .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
+                                                for (int x = 0; x < scanResultList.size(); x++) {
+                                                    if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
+                                                        defIndex = x;
+                                                        break;
+                                                    }
+                                                }
+                                                mWiFiNameEditText.setText(locationName);
+                                            }
+                                        })
+                                        .show(getSupportFragmentManager(), "dialog");
+                                enableWiFiNameInput(false);
+                            } else {
+                                for (int x = 0; x < scanResultList.size(); x++) {
+                                    if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
+                                        defIndex = x;
+                                        break;
+                                    }
+                                }
+                                FilterWifiDialog.newInstance()
+                                        .setSubTitle("Wi_Fi")
+                                        .setTitle("设备位置")
+                                        .setData(scanResultList)
+                                        .setDefaultIndex(defIndex)
+                                        .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
 
-                                          @Override
-                                          public void onCallback(ScanResult newLocationName) {
-                                              if (newLocationName != null) {
-                                                  locationName = newLocationName.SSID;
-                                                  if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
-                                                      CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
-                                                      return;
-                                                  }
-                                              }
+                                            @Override
+                                            public void onCallback(ScanResult newLocationName) {
+                                                if (newLocationName != null) {
+                                                    locationName = newLocationName.SSID;
+                                                    if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
+                                                        CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
+                                                        return;
+                                                    }
+                                                }
 
-                                              for (int x = 0; x < scanResultList.size(); x++) {
-                                                  if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
-                                                      defIndex = x;
-                                                      break;
-                                                  }
-                                              }
-                                              mWiFiNameEditText.setText(locationName);
-                                          }
-                                      })
-                                      .show(getSupportFragmentManager(), "dialog");
-                              enableWiFiNameInput(false);
-                          }
+                                                for (int x = 0; x < scanResultList.size(); x++) {
+                                                    if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
+                                                        defIndex = x;
+                                                        break;
+                                                    }
+                                                }
+                                                mWiFiNameEditText.setText(locationName);
+                                            }
+                                        })
+                                        .show(getSupportFragmentManager(), "dialog");
+                                enableWiFiNameInput(false);
+                            }
 
 
-                      } catch (Exception e) {
-                          e.printStackTrace();
-                      }
-                  }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
