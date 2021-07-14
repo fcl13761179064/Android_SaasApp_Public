@@ -49,6 +49,7 @@ public class FilterWifiDialog extends DialogFragment {
     private int LocationType;
     private CheckableSupport currentSupport;
     private esss adapter;
+    private List<CheckableSupport> supports;
 
     public static FilterWifiDialog newInstance() {
         Bundle args = new Bundle();
@@ -75,8 +76,7 @@ public class FilterWifiDialog extends DialogFragment {
                 super.setMeasuredDimension(childrenBounds, wSpec, View.MeasureSpec.makeMeasureSpec(SizeUtils.dp2px(300), View.MeasureSpec.AT_MOST));
             }
         });
-
-        List<CheckableSupport> supports = new ArrayList<>();
+        supports = new ArrayList<>();
         for (int i = 0; i < data.size(); i++) {
             currentSupport = new CheckableSupport(data.get(i));
             if (i == defaultIndex) {
@@ -119,18 +119,6 @@ public class FilterWifiDialog extends DialogFragment {
 
         binding.imageView2.setVisibility(View.VISIBLE);
         binding.textView3.setText(subTitle);
-        binding.tvConfire.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (callback != null) {
-                    dismissAllowingStateLoss();
-                    if (defaultIndex == -1) {
-                        return;
-                    }
-                    callback.onCallback(currentSupport.getData());
-                }
-            }
-        });
         binding.SmartRefreshLayout.setEnableLoadMore(false);
         binding.SmartRefreshLayout.setEnableRefresh(true);
         binding.SmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -139,13 +127,26 @@ public class FilterWifiDialog extends DialogFragment {
                 setRefreshData();
             }
         });
+        binding.tvConfire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    dismissAllowingStateLoss();
+                    if (defaultIndex == -1) {
+                        return;
+                    }
+                    ScanResult data = (ScanResult) supports.get(defaultIndex).getData();
+                    callback.onCallback(data);
+                }
+            }
+        });
     }
 
 
     private void setRefreshData() {
         WifiUtils wifiUtil = WifiUtils.getInstance(getContext());
         List<ScanResult> scanResultList = wifiUtil.getWifiScanResult();
-        List<CheckableSupport> supports = new ArrayList<>();
+        supports = new ArrayList<>();
         for (int i = 0; i < scanResultList.size(); i++) {
             currentSupport = new CheckableSupport(scanResultList.get(i));
             supports.add(currentSupport);
@@ -154,7 +155,7 @@ public class FilterWifiDialog extends DialogFragment {
             adapter.getData().clear();
             adapter.setNewData(supports);
             adapter.loadMoreComplete();
-            if ( binding.SmartRefreshLayout.isRefreshing()) {
+            if (binding.SmartRefreshLayout.isRefreshing()) {
                 binding.SmartRefreshLayout.finishRefresh();
             }
         }

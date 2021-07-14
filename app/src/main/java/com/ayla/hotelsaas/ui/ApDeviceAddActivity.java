@@ -22,6 +22,7 @@ import com.ayla.hotelsaas.mvp.present.ApNetworkPresenter;
 import com.ayla.hotelsaas.mvp.view.ApDeviceAddView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
+import com.ayla.hotelsaas.utils.WifiUtil;
 import com.ayla.hotelsaas.widget.FastClickUtils;
 import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
 
@@ -107,6 +108,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     private int bindProgress;//记录进度
 
     private int PHONE_SETTING_SSID = 0X13;
+
     @Override
     protected ApNetworkPresenter initPresenter() {
         return new ApNetworkPresenter();
@@ -139,11 +141,11 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
         if (requestCode == REQUEST_CODE_ADD_SUCCESS) {
             setResult(RESULT_OK);
             finish();
-        }else if (requestCode == PHONE_SETTING_SSID) {
-           startBind();
+        } else if (requestCode == PHONE_SETTING_SSID) {
+            deviceSsid = WifiUtil.getConnectWifiSsid();
+            mPresenter.connectToApDevice(ApDeviceAddActivity.this, dsn, ssid, pwd, deviceSsid, addInfo.getString("deviceId"), cuId);
         }
     }
-
 
 
     private void startBind() {
@@ -161,7 +163,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
         pwd = getIntent().getStringExtra("pwd");
         dsn = getIntent().getStringExtra("deviceId");
         deviceSsid = getIntent().getStringExtra("deviceSsid");
-        mPresenter.connectToApDevice(ApDeviceAddActivity.this, dsn, ssid, pwd, deviceSsid, addInfo.getString("deviceId"),cuId);
+        mPresenter.connectToApDevice(ApDeviceAddActivity.this, dsn, ssid, pwd, deviceSsid, addInfo.getString("deviceId"), cuId);
     }
 
     @OnClick(R.id.bt_bind)
@@ -226,7 +228,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     }
 
     @Override
-    public void confireApStatus(Boolean b,String randomNum) {
+    public void confireApStatus(Boolean b, String randomNum) {
         mPresenter.bindAylaNode(
                 addInfo.getString("deviceId"),
                 cuId,
@@ -271,7 +273,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     public void bindSuccess(DeviceListBean.DevicesBean devicesBean) {
         String ap_choose = SharePreferenceUtils.getString(getContext(), Constance.AP_NET_SELECT, null);
         startActivityForResult(new Intent(this, DeviceAddSuccessActivity.class)
-                        .putExtra("device", devicesBean).putExtra("is_ap_normal",ap_choose),
+                        .putExtra("device", devicesBean).putExtra("is_ap_normal", ap_choose),
                 REQUEST_CODE_ADD_SUCCESS);
     }
 

@@ -105,6 +105,7 @@ public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity {
                 sd_btn_action.setEnabled(true);
             } else {
                 sd_btn_action.setEnabled(false);
+                ssid_show.setText("ayla-xxxxxxxxxx");
             }
         }
     }

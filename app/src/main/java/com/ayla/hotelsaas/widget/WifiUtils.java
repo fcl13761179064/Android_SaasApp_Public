@@ -29,6 +29,12 @@ public class WifiUtils {
     }
 
     /***
+     * 判断wifi是否打开
+     */
+    public Boolean mIsopenWifi() {
+       return mWifiManager.isWifiEnabled();
+    }
+    /***
      * 打开wifi
      */
     public void openWifi() {
