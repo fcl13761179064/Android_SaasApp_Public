@@ -48,7 +48,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
     @BindView(R.id.bt_start_add)
     public Button bt_start_add;
     private int defIndex = -1;
-    private String locationName="-10000";
+    private String locationName = "-10000";
     private List<ScanResult> scanResultList;
     private Boolean is_wifi_more;
 
@@ -104,11 +104,9 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
                 if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
                     if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
                         CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning);
-                        enableWiFiNameInput(false);
                     } else {
                         if (is_wifi_more) {
                             try {
-                                enableWiFiNameInput(false);
                                 String name = mWiFiNameEditText.getText().toString();
                                 if (TextUtils.isEmpty(name)) {
                                     for (int x = 0; x < scanResultList.size(); x++) {
@@ -145,7 +143,6 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
                                                 }
                                             })
                                             .show(getSupportFragmentManager(), "dialog");
-                                    enableWiFiNameInput(false);
                                 } else {
                                     for (int x = 0; x < scanResultList.size(); x++) {
                                         if (TextUtils.equals(scanResultList.get(x).SSID, name)) {
@@ -181,7 +178,6 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
                                                 }
                                             })
                                             .show(getSupportFragmentManager(), "dialog");
-                                    enableWiFiNameInput(false);
                                 }
 
 
@@ -190,9 +186,10 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
                             }
                         } else {
                             if (NetworkUtils.isWifiConnected()) {//1.联网
-                                enableWiFiNameInput(false);
                                 mWiFiNameEditText.setText(connectWifiSsid);
                                 mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
+                            }else {
+
                             }
                         }
                     }
@@ -208,7 +205,6 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
                                             String connectWifiSsid = WifiUtil.getConnectWifiSsid();
                                             mWiFiNameEditText.setText(connectWifiSsid);
                                             mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
-                                            enableWiFiNameInput(false);
                                         }
 
                                         @Override
@@ -235,9 +231,6 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
     }
 
 
-    private void enableWiFiNameInput(Boolean isEnable) {
-        mWiFiNameEditText.setEnabled(isEnable);
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

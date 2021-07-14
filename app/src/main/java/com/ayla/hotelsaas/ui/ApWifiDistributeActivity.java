@@ -77,10 +77,6 @@ public class ApWifiDistributeActivity extends BasicActivity {
         super.onResume();
     }
 
-    private void enableWiFiNameInput(Boolean isEnable) {
-        mWiFiNameEditText.setEnabled(isEnable);
-    }
-
 
     @Override
     protected void initView() {
@@ -91,7 +87,6 @@ public class ApWifiDistributeActivity extends BasicActivity {
 
     public void getPermiss() {
         try {
-            select_wifi.setVisibility(View.GONE);
             String connectWifiSsid = WifiUtil.getConnectWifiSsid();
             WifiUtils wifiUtil = WifiUtils.getInstance(this);
             scanResultList = wifiUtil.getWifiScanResult();
@@ -114,12 +109,9 @@ public class ApWifiDistributeActivity extends BasicActivity {
                 if (PermissionUtils.isGranted(PermissionConstants.getPermissions(PermissionConstants.LOCATION))) {
                     if (!LocationUtil.isLocationEnabled(this)) {//位置获取 开关没有打开
                         CustomToast.makeText(this, "打开GPS/位置开关可以自动获取当前连接的WiFi名称", R.drawable.ic_warning);
-                        enableWiFiNameInput(false);
                     } else {
                         if (is_wifi_more) {
                             try {
-                                select_wifi.setVisibility(View.GONE);
-                                enableWiFiNameInput(false);
                                 String name = mWiFiNameEditText.getText().toString();
                                 if (TextUtils.isEmpty(name)) {
                                     for (int x = 0; x < scanResultList.size(); x++) {
@@ -151,12 +143,12 @@ public class ApWifiDistributeActivity extends BasicActivity {
                                                             break;
                                                         }
                                                     }
+                                                    select_wifi.setVisibility(View.GONE);
                                                     mWiFiNameEditText.setText(locationName);
                                                     mWiFiPasswordEditText.setText(getWifiPwd(locationName));
                                                 }
                                             })
                                             .show(getSupportFragmentManager(), "dialog");
-                                    enableWiFiNameInput(false);
                                 } else {
                                     for (int x = 0; x < scanResultList.size(); x++) {
                                         if (TextUtils.equals(scanResultList.get(x).SSID, name)) {
@@ -187,24 +179,23 @@ public class ApWifiDistributeActivity extends BasicActivity {
                                                             break;
                                                         }
                                                     }
+                                                    select_wifi.setVisibility(View.GONE);
                                                     mWiFiNameEditText.setText(locationName);
                                                     mWiFiPasswordEditText.setText(getWifiPwd(locationName));
                                                 }
                                             })
                                             .show(getSupportFragmentManager(), "dialog");
-                                    enableWiFiNameInput(false);
                                 }
-
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         } else {
                             if (NetworkUtils.isWifiConnected()) {//1.联网
                                 select_wifi.setVisibility(View.GONE);
-                                enableWiFiNameInput(false);
                                 mWiFiNameEditText.setText(connectWifiSsid);
                                 mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
+                            } else {
+                                select_wifi.setVisibility(View.VISIBLE);
                             }
                         }
                     }
@@ -220,7 +211,6 @@ public class ApWifiDistributeActivity extends BasicActivity {
                                             String connectWifiSsid = WifiUtil.getConnectWifiSsid();
                                             mWiFiNameEditText.setText(connectWifiSsid);
                                             mWiFiPasswordEditText.setText(getWifiPwd(connectWifiSsid));
-                                            enableWiFiNameInput(false);
                                         }
 
                                         @Override
@@ -306,91 +296,6 @@ public class ApWifiDistributeActivity extends BasicActivity {
         startActivity(intent);
     }
 
-    private void configWiFi() {
-        try {
-
-            String name = mWiFiNameEditText.getText().toString();
-            if (TextUtils.isEmpty(name)) {
-                WifiUtils wifiUtil = WifiUtils.getInstance(this);
-                List<ScanResult> scanResultList = wifiUtil.getWifiScanResult();
-                for (int x = 0; x < scanResultList.size(); x++) {
-                    if (TextUtils.equals(scanResultList.get(x).SSID, "")) {
-                        defIndex = x;
-                        break;
-                    }
-                }
-                FilterWifiDialog.newInstance()
-                        .setSubTitle("Wi_Fi")
-                        .setTitle("设备位置")
-                        .setData(scanResultList)
-                        .setDefaultIndex(defIndex)
-                        .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
-
-                            @Override
-                            public void onCallback(ScanResult newLocationName) {
-                                if (newLocationName != null) {
-                                    locationName = newLocationName.SSID;
-                                    if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
-                                        CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
-                                        return;
-                                    }
-                                }
-
-                                for (int x = 0; x < scanResultList.size(); x++) {
-                                    if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
-                                        defIndex = x;
-                                        break;
-                                    }
-                                }
-                                mWiFiNameEditText.setText(locationName);
-                            }
-                        })
-                        .show(getSupportFragmentManager(), "dialog");
-                enableWiFiNameInput(false);
-            } else {
-                WifiUtils wifiUtil = WifiUtils.getInstance(this);
-                List<ScanResult> scanResultList = wifiUtil.getWifiScanResult();
-                for (int x = 0; x < scanResultList.size(); x++) {
-                    if (TextUtils.equals(scanResultList.get(x).SSID, name)) {
-                        defIndex = x;
-                        break;
-                    }
-                }
-                FilterWifiDialog.newInstance()
-                        .setSubTitle("Wi_Fi")
-                        .setTitle("设备位置")
-                        .setData(scanResultList)
-                        .setDefaultIndex(defIndex)
-                        .setCallback(new FilterWifiDialog.Callback<ScanResult>() {
-
-                            @Override
-                            public void onCallback(ScanResult newLocationName) {
-                                if (newLocationName != null) {
-                                    locationName = newLocationName.SSID;
-                                    if (TextUtils.isEmpty(locationName) || locationName.trim().isEmpty()) {
-                                        CustomToast.makeText(getBaseContext(), "WiFi名称不能为空", R.drawable.ic_toast_warming);
-                                        return;
-                                    }
-                                }
-
-                                for (int x = 0; x < scanResultList.size(); x++) {
-                                    if (TextUtils.equals(scanResultList.get(x).SSID, locationName)) {
-                                        defIndex = x;
-                                        break;
-                                    }
-                                }
-                                mWiFiNameEditText.setText(locationName);
-                            }
-                        })
-                        .show(getSupportFragmentManager(), "dialog");
-                enableWiFiNameInput(false);
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 保存wifi信息

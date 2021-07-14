@@ -185,7 +185,7 @@ public class FilterWifiDialog extends DialogFragment {
         params.gravity = Gravity.CENTER;
         getDialog().getWindow().setAttributes(params);
         getDialog().setCancelable(false);
-        getDialog().setCanceledOnTouchOutside(false);
+        getDialog().setCanceledOnTouchOutside(true);
     }
 
     public FilterWifiDialog setData(List data) {
