@@ -328,4 +328,8 @@ public interface ApiService {
     @GET("/api/v1/build/device/{deviceId}/connected")
     Observable<BaseResult<Boolean>> ApNetwork(@Path("deviceId") String deviceId,@Query("cuId") long cuId, @Query("setupToken") String setupToken);
 
+
+    @GET("api/v1/build/constructbill")
+    Observable<BaseResult<WorkOrderBean>> getHistoryData(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("tradeId") String tradeId, @Query("processStatus") String processStatus);
+
 }

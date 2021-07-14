@@ -1032,4 +1032,19 @@ public class RequestModel {
         });
     }
 
+
+    /**
+     * 获取历史数据
+     *
+     * @param pageNum 页码 从1开始
+     * @param maxNum  每页加载量
+     * @param tradeId
+     * @return
+     */
+    public Observable<WorkOrderBean> getHistoryData(int pageNum, int maxNum, String tradeId, String processStatus) {
+        return getApiService().getHistoryData(pageNum, maxNum,tradeId,processStatus)
+                .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
+                });
+    }
+
 }
