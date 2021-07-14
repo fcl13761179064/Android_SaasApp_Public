@@ -25,7 +25,6 @@ import com.aylanetworks.aylasdk.setup.AylaSetupDevice;
 import com.aylanetworks.aylasdk.setup.AylaWifiStatus;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 
 /**
  * AP配网入口
@@ -38,7 +37,6 @@ import java.lang.reflect.Field;
 public class AylaWiFiSetup {
     private static final String TAG = "AylaWiFiSetup";
     private com.aylanetworks.aylasdk.setup.next.wifi.AylaWiFiSetup aylaWiFiSetup;
-    private AylaAPIRequest aylaAPIRequest;
 
     public AylaWiFiSetup(@NonNull Context context, @NonNull AylaConnectivityManager connectivityManager) throws Exception {
         // TODO: 4/15/21 因为 com.aylanetworks.aylasdk.setup.next.wifi.AylaWiFiSetup 还没有放开构造方法，暂时用反射的方式实例化
@@ -53,17 +51,6 @@ public class AylaWiFiSetup {
         AylaLog.setConsoleLogLevel(AylaLog.LogLevel.Verbose);
     }
 
-    public void setSetupDeviceIp() {
-        //TODO 字段私有，反射获取
-        try {
-            Field field = aylaWiFiSetup.getClass().getDeclaredField("_setupDeviceIp");
-            field.setAccessible(true);
-            field.set(aylaWiFiSetup, "");
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * 扫描手机附近的设备热点
      *
@@ -74,8 +61,7 @@ public class AylaWiFiSetup {
      */
     public AylaDisposable scanDevices(
             int timeoutInSeconds,
-            @NonNull Predicate<ScanResult> filter,
-            @NonNull AylaCallback<ScanResult[]> aylaCallback) {
+            @NonNull Predicate<ScanResult> filter, @NonNull AylaCallback<ScanResult[]> aylaCallback) {
         AylaAPIRequest aylaAPIRequest = aylaWiFiSetup.scanForAccessPoints(timeoutInSeconds, new com.aylanetworks.aylasdk.util.AylaPredicate<ScanResult>() {
             @Override
             public boolean test(ScanResult scanResult) {
@@ -110,7 +96,7 @@ public class AylaWiFiSetup {
      *
      * @param ssid             目标设备的热点名称
      * @param timeoutInSeconds 超时时间，单位 秒
-     * @param aylaCal          lback
+     * @param aylaCallback
      * @return
      */
     public AylaDisposable connectToNewDevice(
@@ -118,25 +104,19 @@ public class AylaWiFiSetup {
             int timeoutInSeconds,
             AylaCallback<com.ayla.ng.lib.bootstrap.AylaSetupDevice> aylaCallback) {
         Log.d(TAG, "connectToNewDevice: ");
-        try {
-            aylaAPIRequest = aylaWiFiSetup.connectToNewDevice(ssid, timeoutInSeconds, new Response.Listener<AylaSetupDevice>() {
-                @Override
-                public void onResponse(AylaSetupDevice response) {
-                    Log.d(TAG, "connectToNewDevice onResponse: ");
-                    aylaCallback.onSuccess(new com.ayla.ng.lib.bootstrap.AylaSetupDevice(response));
-                }
-            }, new ErrorListener() {
-                @Override
-                public void onErrorResponse(AylaError aylaError) {
-                    Log.e(TAG, "connectToNewDevice onErrorResponse: ", aylaError);
-                    aylaCallback.onFailed(aylaError);
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        AylaAPIRequest aylaAPIRequest = aylaWiFiSetup.connectToNewDevice(ssid, timeoutInSeconds, new Response.Listener<AylaSetupDevice>() {
+            @Override
+            public void onResponse(AylaSetupDevice response) {
+                Log.d(TAG, "connectToNewDevice onResponse: ");
+                aylaCallback.onSuccess(new com.ayla.ng.lib.bootstrap.AylaSetupDevice(response));
+            }
+        }, new ErrorListener() {
+            @Override
+            public void onErrorResponse(AylaError aylaError) {
+                Log.e(TAG, "connectToNewDevice onErrorResponse: ", aylaError);
+                aylaCallback.onFailed(aylaError);
+            }
+        });
         return new AylaDisposable() {
             @Override
             public void dispose() {
@@ -167,28 +147,24 @@ public class AylaWiFiSetup {
             int timeoutInSeconds,
             AylaCallback<Object> aylaCallback) {
         Log.d(TAG, "connectDeviceToService: ");
-        try {
-            aylaAPIRequest = aylaWiFiSetup.connectDeviceToService(ssid, password, setupToken, null, null, timeoutInSeconds, new Response.Listener<AylaWifiStatus>() {
-                @Override
-                public void onResponse(AylaWifiStatus response) {
-                    Log.d(TAG, "connectDeviceToService onResponse: " + response.toString());
-                    aylaCallback.onSuccess(response);
-                }
-            }, new ErrorListener() {
-                @Override
-                public void onErrorResponse(AylaError aylaError) {
-                    Log.e(TAG, "connectDeviceToService onErrorResponse: ", aylaError);
-                    if (aylaError instanceof NetworkError || aylaError instanceof TimeoutError) {
-                        aylaCallback.onSuccess(1);
-                    } else {
-                        aylaCallback.onFailed(aylaError);
+        AylaAPIRequest aylaAPIRequest = aylaWiFiSetup.connectDeviceToService(ssid, password, setupToken, null, null, timeoutInSeconds, new Response.Listener<AylaWifiStatus>() {
+            @Override
+            public void onResponse(AylaWifiStatus response) {
+                Log.d(TAG, "connectDeviceToService onResponse: ");
+                aylaCallback.onSuccess(1);
+            }
+        }, new ErrorListener() {
+            @Override
+            public void onErrorResponse(AylaError aylaError) {
+                Log.e(TAG, "connectDeviceToService onErrorResponse: ", aylaError);
+                if(aylaError instanceof NetworkError || aylaError instanceof TimeoutError){
+                    aylaCallback.onSuccess(1);
+                }else{
+                    aylaCallback.onFailed(aylaError);
 
-                    }
                 }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            }
+        });
         return new AylaDisposable() {
             @Override
             public void dispose() {

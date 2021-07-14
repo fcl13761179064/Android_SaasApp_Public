@@ -220,14 +220,18 @@
         <activity
             android:name=".ui.A2GatewayAddStatusActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.ApWifiDistributeActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.ApDistributeGuideActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.ApWifiConnectToA2GagtewayActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.ApDeviceAddActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.ApWifiDistributeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ApDistributeGuideActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ApWifiConnectToA2GagtewayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ApDeviceAddActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"

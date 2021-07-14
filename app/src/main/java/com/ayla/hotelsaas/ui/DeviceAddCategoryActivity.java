@@ -106,7 +106,6 @@ public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategory
                 List<DeviceCategoryBean.SubBean.NodeBean> items = (List<DeviceCategoryBean.SubBean.NodeBean>) adapter.getItem(position);
                 DeviceCategoryBean.SubBean.NodeBean[] nodeBeans = items.toArray(new DeviceCategoryBean.SubBean.NodeBean[]{});
                 deviceCategoryHandler.handleAddJump(nodeBeans);
-                ApWifiConnectToA2GagtewayActivity.is_relatation_success=false;
             }
         });
     }

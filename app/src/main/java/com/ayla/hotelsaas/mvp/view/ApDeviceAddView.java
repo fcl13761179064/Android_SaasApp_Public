@@ -2,13 +2,14 @@ package com.ayla.hotelsaas.mvp.view;
 
 import com.ayla.hotelsaas.base.BaseView;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
 
 public interface ApDeviceAddView extends BaseView {
     /**
      * 判断ap配网是否成功
      */
 
-    void confireApStatus(Boolean b);
+    void confireApStatus(Boolean b, String randomString);
 
 
     /**
@@ -53,4 +54,5 @@ public interface ApDeviceAddView extends BaseView {
      */
     void step1Start();
 
+    void onFailed(Throwable throwable);
 }

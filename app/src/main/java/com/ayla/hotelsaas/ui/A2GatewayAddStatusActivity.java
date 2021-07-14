@@ -98,8 +98,10 @@ public class A2GatewayAddStatusActivity extends BaseMvpActivity<A2DeviceBindView
     public void getBindInfoSuccess(A2BindInfoBean o) {
         if (o.getBindStatus()){
             tv_gateway_bind_status.setVisibility(View.VISIBLE);
+            button.setVisibility(View.GONE);
         }else {
             tv_gateway_bind_status.setVisibility(View.GONE);
+
         }
     }
 

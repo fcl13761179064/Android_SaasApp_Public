@@ -22,6 +22,9 @@ import com.ayla.hotelsaas.mvp.present.ApNetworkPresenter;
 import com.ayla.hotelsaas.mvp.view.ApDeviceAddView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
+import com.ayla.hotelsaas.utils.WifiUtil;
+import com.ayla.hotelsaas.widget.FastClickUtils;
+import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -98,7 +101,13 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     private String waitBindDeviceId;
     private String replaceDeviceId;
     private Bundle addInfo;
-    private String randomNum;
+    private String ssid;
+    private String pwd;
+    private String dsn;
+    private String deviceSsid;
+    private int bindProgress;//记录进度
+
+    private int PHONE_SETTING_SSID = 0X13;
 
     @Override
     protected ApNetworkPresenter initPresenter() {
@@ -132,13 +141,14 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
         if (requestCode == REQUEST_CODE_ADD_SUCCESS) {
             setResult(RESULT_OK);
             finish();
+        } else if (requestCode == PHONE_SETTING_SSID) {
+            deviceSsid = WifiUtil.getConnectWifiSsid();
+            mPresenter.connectToApDevice(ApDeviceAddActivity.this, dsn, ssid, pwd, deviceSsid, addInfo.getString("deviceId"), cuId);
         }
     }
 
-    private int bindProgress;//记录进度
 
     private void startBind() {
-        randomNum = getIntent().getStringExtra("randomNum");
         addInfo = getIntent().getBundleExtra("addInfo");
         int networkType = addInfo.getInt("networkType");
         cuId = addInfo.getInt("cuId");
@@ -149,19 +159,25 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
         nickname = addInfo.getString("nickname");
         waitBindDeviceId = addInfo.getString("waitBindDeviceId");
         replaceDeviceId = addInfo.getString("replaceDeviceId");
-
-        mPresenter.Apnetwork(
-                addInfo.getString("deviceId"),
-                cuId,
-                randomNum);
+        ssid = getIntent().getStringExtra("ssid");
+        pwd = getIntent().getStringExtra("pwd");
+        dsn = getIntent().getStringExtra("deviceId");
+        deviceSsid = getIntent().getStringExtra("deviceSsid");
+        mPresenter.connectToApDevice(ApDeviceAddActivity.this, dsn, ssid, pwd, deviceSsid, addInfo.getString("deviceId"), cuId);
     }
 
     @OnClick(R.id.bt_bind)
     public void handleButton() {
         if (bindProgress == -1) {
-            startBind();
+            if (FastClickUtils.isDoubleClick()) {
+                return;
+            }
+            Intent intent = new Intent();
+            intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+            startActivityForResult(intent, PHONE_SETTING_SSID);
         }
     }
+
 
     /**
      * 根据bindTag刷新UI
@@ -212,7 +228,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     }
 
     @Override
-    public void confireApStatus(Boolean b) {
+    public void confireApStatus(Boolean b, String randomNum) {
         mPresenter.bindAylaNode(
                 addInfo.getString("deviceId"),
                 cuId,
@@ -231,6 +247,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
 
     @Override
     public void bindFailed(Throwable throwable) {
+        CustomToast.makeText(getContext(), throwable.getMessage(), R.drawable.ic_toast_warming);
         Log.d(TAG, "zigBeeDeviceBindFailed: " + throwable);
         switch (bindProgress) {
             case 0:
@@ -256,7 +273,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     public void bindSuccess(DeviceListBean.DevicesBean devicesBean) {
         String ap_choose = SharePreferenceUtils.getString(getContext(), Constance.AP_NET_SELECT, null);
         startActivityForResult(new Intent(this, DeviceAddSuccessActivity.class)
-                        .putExtra("device", devicesBean).putExtra("is_ap_normal",ap_choose),
+                        .putExtra("device", devicesBean).putExtra("is_ap_normal", ap_choose),
                 REQUEST_CODE_ADD_SUCCESS);
     }
 
@@ -301,6 +318,12 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
         Log.d(TAG, "gatewayConnectStart: " + Thread.currentThread().getName());
         bindProgress = 0;
         refreshBindShow();
+    }
+
+
+    @Override
+    public void onFailed(Throwable throwable) {
+        CustomToast.makeText(getContext(), throwable.getMessage(), R.drawable.ic_toast_warming);
     }
 
 }

@@ -48,12 +48,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="43dp"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="1"
-                android:text="网关Wi-Fi名称：Ayla-xxxxxxxxxxx"
+                android:text="网关Wi-Fi名称："
+                android:singleLine="true"
+                android:textColor="@color/color_3C3C3C"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/ssid_show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ayla-xxxxxxxxxx"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="@color/color_3C3C3C"
                 android:textSize="14sp" />
 
@@ -73,7 +82,7 @@
                 android:layout_marginStart="43dp"
                 android:layout_marginEnd="20dp"
                 android:layout_weight="1"
-                android:text="网关Wi-Fi密码：xxxxxxxxxxx"
+                android:text="网关Wi-Fi密码：xxxxxxxxxx"
                 android:textColor="@color/color_3C3C3C"
                 android:textSize="14sp" />
 
