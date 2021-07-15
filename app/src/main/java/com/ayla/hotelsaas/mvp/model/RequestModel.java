@@ -144,19 +144,6 @@ public class RequestModel {
         });
     }
 
-    /**
-     * 获取工作订单的条数
-     *
-     * @param pageNum 页码 从1开始
-     * @param maxNum  每页加载量
-     * @param tradeId
-     * @return
-     */
-    public Observable<WorkOrderBean> getWorkOrderList(int pageNum, int maxNum, String tradeId) {
-        return getApiService().getWorkOrders(pageNum, maxNum,tradeId)
-                .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
-                });
-    }
 
 
     /**
@@ -1042,9 +1029,24 @@ public class RequestModel {
      * @return
      */
     public Observable<WorkOrderBean> getHistoryData(int pageNum, int maxNum, String tradeId, String processStatus) {
-        return getApiService().getHistoryData(pageNum, maxNum,tradeId,processStatus)
+        return getApiService().getWorkOrders(pageNum, maxNum,tradeId,processStatus)
                 .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
                 });
     }
+
+    /**
+     * 获取工作订单的条数
+     *
+     * @param pageNum 页码 从1开始
+     * @param maxNum  每页加载量
+     * @param tradeId
+     * @return
+     */
+    public Observable<WorkOrderBean> getWorkOrderList(int pageNum, int maxNum, String tradeId, String processStatus) {
+        return getApiService().getWorkOrders(pageNum, maxNum,tradeId,processStatus)
+                .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
+                });
+    }
+
 
 }

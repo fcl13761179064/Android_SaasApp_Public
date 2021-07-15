@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -122,11 +123,11 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
             @NonNull
             @Override
-            public ProjectListFragment getItem(int position) {
+            public Fragment getItem(int position) {
                 if (position == 0) {
                     return new ProjectListFragment();
                 } else {
-                    return new ProjectListFragment();
+                    return new HistroyProjectListFragment();
                 }
             }
 

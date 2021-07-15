@@ -102,9 +102,6 @@ public interface ApiService {
     @POST("/api/v3/build/device/getDeviceActionOrCondition/{pid}")
     Observable<BaseResult<DeviceCategoryDetailBean>> fetchDeviceCategoryDetail(@Path("pid") String pid);
 
-    @GET("api/v1/build/constructbill")
-    Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("tradeId") String tradeId);
-
     /**
      * 创建项目单
      *
@@ -330,6 +327,5 @@ public interface ApiService {
 
 
     @GET("api/v1/build/constructbill")
-    Observable<BaseResult<WorkOrderBean>> getHistoryData(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("tradeId") String tradeId, @Query("processStatus") String processStatus);
-
+    Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("tradeId") String tradeId, @Query("processStatus") String processStatus);
 }

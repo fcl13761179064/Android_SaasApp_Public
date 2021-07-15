@@ -20,10 +20,12 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.mvp.present.ProjectRoomsPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectRoomsView;
+import com.ayla.hotelsaas.utils.DateUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.internal.$Gson$Preconditions;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -174,6 +176,14 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
         try {
             List<TreeListBean> children = treeListBean.getChildren();
             if (children == null || children.isEmpty()) {//如果没有叶子节点了，就进入主页面
+                String currentDate = DateUtils.getThisDate();
+                if (bean.getEndDate() != null) {
+                    boolean compare = DateUtils.compare(currentDate,bean.getEndDate());
+                    if (compare) {
+                        CustomToast.makeText(getContext(), "历史项目无法操作，请联系艾拉客服部进行开通", R.drawable.ic_toast_warming);
+                        return;
+                    }
+                }
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 long roomId = Long.parseLong(treeListBean.getId());
                 String roomName = treeListBean.getContentName();
