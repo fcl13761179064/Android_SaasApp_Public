@@ -83,10 +83,10 @@ public class RetrofitHelper {
             public void log(String message) {
                 LogUtils.dTag("okhttp", message);
             }
-        }).setLevel(Constance.isNetworkDebug() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.BASIC));
+        }).setLevel(Constance.isOpenLog()? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE));
         builder.retryOnConnectionFailure(true);
 
-        if(BuildConfig.DEBUG){
+        if(Constance.isOpenLog()){
             builder.sslSocketFactory(SSLUtil.getSslSocketFactory().sSLSocketFactory, SSLUtil.getSslSocketFactory().trustManager)
                     .hostnameVerifier(SSLUtil.UnSafeHostnameVerifier);
         }
