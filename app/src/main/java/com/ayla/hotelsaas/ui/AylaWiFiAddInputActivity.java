@@ -222,7 +222,7 @@ public class AylaWiFiAddInputActivity extends BaseMvpActivity {
                         public void onCancel(CustomAlarmDialog dialog) {
                             dialog.dismissAllowingStateLoss();
                         }
-                    }).setTitle("获取位置权限").setContent("添加网关需要使用位置权限，用以扫描Wi-Fi热点").setEnsureText("设置").show(getSupportFragmentManager(), "wifi dialog");
+                    }).setTitle("获取位置权限").setContent("检查到当前App未开启定位权限，请前往系统设置页进行开启").setEnsureText("设置").show(getSupportFragmentManager(), "wifi dialog");
                 }
             }
         } catch (Exception e) {
