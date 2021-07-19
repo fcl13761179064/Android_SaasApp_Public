@@ -7,10 +7,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListTabAdapter;
 import com.ayla.hotelsaas.application.Constance;
@@ -20,6 +23,7 @@ import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
+
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
@@ -91,6 +95,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         roomBeans = new ArrayList<>();
         for (int x = 0; x < 1; x++) {
             roomBeans.add("施工中");
+            roomBeans.add("历史项目");
         }
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdjustMode(false);
@@ -118,8 +123,12 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
             @NonNull
             @Override
-            public ProjectListFragment getItem(int position) {
-                return new ProjectListFragment();
+            public Fragment getItem(int position) {
+                if (position == 0) {
+                    return new ProjectListFragment();
+                } else {
+                    return new HistroyProjectListFragment();
+                }
             }
 
             @Override
@@ -142,8 +151,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             }
         });
     }
-
-
 
 
     @Override

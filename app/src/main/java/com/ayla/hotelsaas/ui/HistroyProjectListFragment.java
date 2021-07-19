@@ -1,13 +1,11 @@
 package com.ayla.hotelsaas.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 
@@ -48,7 +46,7 @@ import butterknife.OnClick;
 /**
  * 我的项目页面
  */
-public class ProjectListFragment extends BaseMvpFragment<ProjectListView, ProjectListPresenter> implements ProjectListView {
+public class HistroyProjectListFragment extends BaseMvpFragment<ProjectListView, ProjectListPresenter> implements ProjectListView {
     private final int REQUEST_CODE_CREATE_PROJECT = 0x10;
     private static final int USER_SEARCH = 0;
     private static final int USER_ADD = 1;
@@ -103,7 +101,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                                 return;
                             }
                             SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "1");
-                            mPresenter.refresh("1","1");
+                            mPresenter.refreshHistryData("1","2");
                             restartApp(getContext());
                             break;
                         case USER_ADD:
@@ -111,7 +109,7 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                                 return;
                             }
                             SharePreferenceUtils.saveString(getActivity(), Constance.SP_SAAS, "2");
-                            mPresenter.refresh("2","1");
+                            mPresenter.refreshHistryData("2","2");
                             restartApp(getContext());
                             break;
                     }
@@ -131,12 +129,6 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
      *
      * @param context
      */
-   /* public static void restartApp(Context context) {
-
-        final Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.ayla.hotelsaas");
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
-    }*/
     public static void restartApp(Context context) {
         String title_type = SharePreferenceUtils.getString(context, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
@@ -154,15 +146,6 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
         }, 1000);// 1秒钟后重启应用
-
-       /* // 获取启动的intent
-        Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-        PendingIntent restartIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-        // 设置杀死应用后2秒重启
-        AlarmManager mgr = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis()+2000, restartIntent);
-        android.os.Process.killProcess(android.os.Process.myPid());*/
-
     }
 
     @Override
@@ -278,18 +261,18 @@ public class ProjectListFragment extends BaseMvpFragment<ProjectListView, Projec
     public void setLoadData() {
         saas_saft_img = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(saas_saft_img)) {
-            mPresenter.loadData("1","1");
+            mPresenter.loadHistroyData("1","2");
         } else {
-            mPresenter.loadData("2","1");
+            mPresenter.loadHistroyData("2","2");
         }
     }
 
     public void setRefreshData() {
         saas_saft_img = SharePreferenceUtils.getString(getActivity(), Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(saas_saft_img)) {
-            mPresenter.refresh("1","1");
+            mPresenter.refreshHistryData("1","2");
         } else {
-            mPresenter.refresh("2","1");
+            mPresenter.refreshHistryData("2","2");
         }
     }
 

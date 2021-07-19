@@ -13,8 +13,8 @@ import io.reactivex.schedulers.Schedulers;
 public class ProjectListPresenter extends BasePresenter<ProjectListView> {
     private int currentPage = 1;
 
-    public void loadData(String tradeId) {
-        Disposable subscribe = RequestModel.getInstance().getWorkOrderList(currentPage, 50,tradeId)
+    public void loadData(String tradeId,String processStatus) {
+        Disposable subscribe = RequestModel.getInstance().getWorkOrderList(currentPage, 50,tradeId,processStatus)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<WorkOrderBean>() {
@@ -32,8 +32,33 @@ public class ProjectListPresenter extends BasePresenter<ProjectListView> {
         addSubscrebe(subscribe);
     }
 
-    public void refresh(String tradeId) {
+    public void refresh(String tradeId,String processStatus) {
         currentPage = 1;
-        loadData(tradeId);
+        loadData(tradeId,processStatus);
     }
+
+
+    public void loadHistroyData(String tradeId,String processStatus) {
+        Disposable subscribe = RequestModel.getInstance().getHistoryData(currentPage, 50,tradeId,processStatus)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<WorkOrderBean>() {
+                    @Override
+                    public void accept(WorkOrderBean constructionBillListBean) throws Exception {
+                        currentPage++;
+                        mView.showData(constructionBillListBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.onRequestFailed(throwable);
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
+    public void refreshHistryData(String tradeId,String processStatus) {
+        currentPage = 1;
+        loadHistroyData(tradeId,processStatus);
+    }
+
 }
