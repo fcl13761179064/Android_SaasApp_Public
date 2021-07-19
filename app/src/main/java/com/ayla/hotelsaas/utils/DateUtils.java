@@ -641,7 +641,7 @@ public class DateUtils {
      * @return 日期
      */
     public static String getThisDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date curDate = new Date(System.currentTimeMillis());//获取当前时间
         return formatter.format(curDate);
     }
@@ -661,6 +661,16 @@ public class DateUtils {
             return true;
         else
             return false;
+    }
+
+    public static String formatTimeEight(String time) throws Exception {
+        Date d = null;
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        d = sd.parse(time);
+        long rightTime = (long) (d.getTime() + 8 * 60 * 60 * 1000);  //把当前得到的时间用date.getTime()的方法写成时间戳的形式，再加上8小时对应的毫秒数
+        String newtime = sd.format(rightTime); //把得到的新的时间戳再次格式化成时间的格式
+        return newtime;
+
     }
 
     /**

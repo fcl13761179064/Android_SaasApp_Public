@@ -178,7 +178,8 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
             if (children == null || children.isEmpty()) {//如果没有叶子节点了，就进入主页面
                 String currentDate = DateUtils.getThisDate();
                 if (bean.getEndDate() != null) {
-                    boolean compare = DateUtils.compare(currentDate,bean.getEndDate());
+                    String shigong_time = DateUtils.formatTimeEight(bean.getEndDate());
+                    boolean compare = DateUtils.compare(currentDate,shigong_time);
                     if (compare) {
                         CustomToast.makeText(getContext(), "历史项目无法操作，请联系艾拉客服部进行开通", R.drawable.ic_toast_warming);
                         return;
