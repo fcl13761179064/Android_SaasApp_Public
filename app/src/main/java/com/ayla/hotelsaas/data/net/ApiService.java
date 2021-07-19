@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.data.net;
 
+import com.ayla.hotelsaas.bean.A2BindInfoBean;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -100,9 +101,6 @@ public interface ApiService {
 
     @POST("/api/v3/build/device/getDeviceActionOrCondition/{pid}")
     Observable<BaseResult<DeviceCategoryDetailBean>> fetchDeviceCategoryDetail(@Path("pid") String pid);
-
-    @GET("api/v1/build/constructbill")
-    Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("tradeId") String tradeId);
 
     /**
      * 创建项目单
@@ -320,4 +318,14 @@ public interface ApiService {
     @GET("/api/v1/build/billrooms/region/{roomId}")
     Observable<BaseResult<List<DeviceLocationBean>>> getAllDeviceLocation(@Path("roomId") long roomId);
 
+
+    @GET("/api/v1/build/device/getDeviceBindStatus/{deviceId}")
+    Observable<BaseResult<A2BindInfoBean>> getA2BindInfo(@Path("deviceId") String pid);
+
+    @GET("/api/v1/build/device/{deviceId}/connected")
+    Observable<BaseResult<Boolean>> ApNetwork(@Path("deviceId") String deviceId,@Query("cuId") long cuId, @Query("setupToken") String setupToken);
+
+
+    @GET("api/v1/build/constructbill")
+    Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("tradeId") String tradeId, @Query("processStatus") String processStatus);
 }

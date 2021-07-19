@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListContainerView, DeviceListContainerPresenter> implements DeviceListContainerView {
@@ -47,7 +48,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments()!=null){
-            room_id = getArguments().getLong("room_id");
+            room_id = getArguments().getLong("room_id",0);
         }
         EventBus.getDefault().register(this);
     }
@@ -139,7 +140,17 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
             @NonNull
             @Override
             public DeviceListFragmentNew getItem(int position) {
-                return new DeviceListFragmentNew(room_id, deviceListBean.getDevices(), LocationBeans.get(position).getRegionId(),position);
+                DeviceListFragmentNew deviceListFragmentNew = new DeviceListFragmentNew();
+                Bundle bundle = new Bundle();
+                //存入数据到Bundle对象中
+                bundle.putLong("mRoomId", room_id);
+                bundle.putSerializable("mDevices", (Serializable) deviceListBean.getDevices());
+                bundle.putLong("mRegionId", LocationBeans.get(position).getRegionId());
+                bundle.putInt("mPosition", position);
+                //调用Fragment的setArguments方法，传入Bundle对象
+                deviceListFragmentNew.setArguments(bundle);
+
+                return deviceListFragmentNew;
             }
 
             @Override

@@ -6,7 +6,7 @@
 ext {
     compileSdkVersion = 30
     buildToolsVersion = "30.0.0"
-    minSdkVersion = 19
+    minSdkVersion = 23
     targetSdkVersion = 30
 
     //supprt支持版本

@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.ayla.hotelsaas.R;
+import com.blankj.utilcode.util.ToastUtils;
 
 
 public class AppBar extends FrameLayout {
@@ -34,7 +35,6 @@ public class AppBar extends FrameLayout {
     public TextView rightTextView;
     private TextView titleTextView;
     private LinearLayout leftLinearLayout;
-    private LinearLayout rightLinearLayout;
     private View bottom_line;
 
     public AppBar(@NonNull Context context) {
@@ -65,7 +65,6 @@ public class AppBar extends FrameLayout {
         rightTextView = findViewById(R.id.tv_right);
         titleTextView = findViewById(R.id.tv_title);
         leftLinearLayout = findViewById(R.id.left_ll);
-        rightLinearLayout = findViewById(R.id.right_ll);
         bottom_line = findViewById(R.id.bottom_line);
 
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AppBar, defStyleAttr, 0);
@@ -91,7 +90,6 @@ public class AppBar extends FrameLayout {
         int width, height;
 
         measureChildren(widthMeasureSpec, heightMeasureSpec);
-        sss();
         if (getChildCount() == 2) {
             final View appBarView = getChildAt(0);
             final View contentView = getChildAt(1);
@@ -112,13 +110,6 @@ public class AppBar extends FrameLayout {
         super.onLayout(changed, left, top, right, bottom);
     }
 
-    private void sss() {
-        final int leftLLWidth = leftLinearLayout.getMeasuredWidth();
-        final int rightLLWidth = rightLinearLayout.getMeasuredWidth();
-        final int minWidth = Math.max(leftLLWidth, rightLLWidth);
-        leftLinearLayout.setMinimumWidth(minWidth);
-        rightLinearLayout.setMinimumWidth(minWidth);
-    }
 
     private void adjustContent() {
         Log.d(TAG, "adjustContent: ");
@@ -141,7 +132,7 @@ public class AppBar extends FrameLayout {
             rightImageView.setImageResource(right_iv);
         }
         if (TextUtils.isEmpty(right_tv)) {
-            rightTextView.setVisibility(GONE);
+            rightTextView.setVisibility(INVISIBLE);
         } else {
             rightTextView.setVisibility(VISIBLE);
             rightTextView.setText(right_tv);
@@ -175,5 +166,12 @@ public class AppBar extends FrameLayout {
         center_tv = text;
         adjustContent();
     }
+
+
+    public void setLeftImageView(int leftiv) {
+        left_iv = leftiv;
+        adjustContent();
+    }
+
 }
 

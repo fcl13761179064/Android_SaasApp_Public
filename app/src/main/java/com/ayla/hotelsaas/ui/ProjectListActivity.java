@@ -1,34 +1,28 @@
 package com.ayla.hotelsaas.ui;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.aliyun.iot.aep.sdk.IoTSmart;
-import com.aliyun.iot.aep.sdk.framework.config.GlobalConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.ProjectListTabAdapter;
 import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
-import com.ayla.hotelsaas.widget.Programe_change_AppBar;
-import com.blankj.utilcode.util.ProcessUtils;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -38,22 +32,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.OnClick;
-
-import static android.icu.text.UnicodeSet.from;
 
 /**
  * 我的项目页面
  */
 public class ProjectListActivity extends BaseMvpActivity<ProjectListView, ProjectListPresenter> implements ProjectListView {
 
-    @BindView(R.id.appBar)
-    Programe_change_AppBar appBar;
+
     @Nullable
     @BindView(R.id.magic_inditator)
     MagicIndicator magic_inditator;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
+    @BindView(R.id.change_left_ll)
+    LinearLayout change_left_ll;
+    @BindView(R.id.change_iv_left)
+    ImageView change_iv_left;
+    @BindView(R.id.tv_title)
+    TextView tv_title;
+    @BindView(R.id.change_center_title)
+    LinearLayout change_center_title;
 
     private List<String> roomBeans;
     private FragmentStatePagerAdapter mAdapter;
@@ -76,14 +74,15 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     @Override
     protected void onResume() {
         super.onResume();
-        ImageView imageView = appBar.findViewById(R.id.iv_left);
-        VersionUpgradeBean versionUpgradeInfo = Constance.getVersionUpgradeInfo();
-        if (versionUpgradeInfo != null) {
-            imageView.setImageResource(R.drawable.person_center_tip);
-        } else {
-            imageView.setImageResource(R.drawable.person_center);
+        if (change_iv_left != null) {
+            VersionUpgradeBean versionUpgradeInfo = Constance.getVersionUpgradeInfo();
+            if (versionUpgradeInfo != null) {
+                change_iv_left.setImageResource(R.drawable.person_center_tip);
+            } else {
+                change_iv_left.setImageResource(R.drawable.person_center);
+            }
+            Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
         }
-        Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
     }
 
     @Override
@@ -96,6 +95,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         roomBeans = new ArrayList<>();
         for (int x = 0; x < 1; x++) {
             roomBeans.add("施工中");
+            roomBeans.add("历史项目");
         }
         CommonNavigator commonNavigator = new CommonNavigator(this);
         commonNavigator.setAdjustMode(false);
@@ -106,9 +106,9 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         viewPager.setCurrentItem(0, false);
         String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
-            appBar.setCenterText("智慧酒店");
+            tv_title.setText("智慧酒店");
         } else {
-            appBar.setCenterText("地产行业");
+            tv_title.setText("地产行业");
         }
     }
 
@@ -123,8 +123,12 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
             @NonNull
             @Override
-            public ProjectListFragment getItem(int position) {
-                return new ProjectListFragment();
+            public Fragment getItem(int position) {
+                if (position == 0) {
+                    return new ProjectListFragment();
+                } else {
+                    return new HistroyProjectListFragment();
+                }
             }
 
             @Override
@@ -139,11 +143,13 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             }
         };
         viewPager.setAdapter(mAdapter);
-    }
 
-
-    protected void appBarLeftIvClicked() {
-        startActivity(new Intent(this, PersonCenterActivity.class));
+        change_left_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProjectListActivity.this, PersonCenterActivity.class));
+            }
+        });
     }
 
 
@@ -161,4 +167,5 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     public void onRequestFailed(Throwable throwable) {
 
     }
+
 }

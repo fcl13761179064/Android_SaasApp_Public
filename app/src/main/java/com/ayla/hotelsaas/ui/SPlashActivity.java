@@ -8,10 +8,12 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.mvp.present.SplashPresenter;
 import com.ayla.hotelsaas.mvp.view.SplashView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.UpgradeUnifiedCode;
+import com.ayla.hotelsaas.widget.CustomSheet;
 
 public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter> implements SplashView {
     @Override
@@ -27,7 +29,7 @@ public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter>
 
     @Override
     protected void initView() {
-
+      
     }
 
     @Override

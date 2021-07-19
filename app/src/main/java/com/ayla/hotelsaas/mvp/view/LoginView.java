@@ -12,7 +12,7 @@ import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 public interface LoginView extends BaseView {
 
     //登录成功
-    void loginSuccess(User data);
+    void loginSuccess(User data, String account);
 
     void loginFailed(Throwable msg);
 

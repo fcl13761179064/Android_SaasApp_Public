@@ -69,9 +69,13 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/ll_01"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -97,7 +101,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="invisible">
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/cb_02"
@@ -109,23 +113,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="家装"
+                    android:text="地产"
                     android:textColor="#ff282828"
                     android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/ll_03"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="invisible">
+                android:visibility="visible"
+                >
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/cb_03"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
+                    android:checked="true"
                     android:button="@drawable/ic_project_industry_property" />
 
                 <TextView
@@ -143,7 +153,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="invisible">
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/cb_04"
@@ -184,9 +194,12 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -207,9 +220,12 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_marginStart="25dp"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                android:layout_marginEnd="25dp"
                 android:gravity="center"
                 android:orientation="vertical">
 

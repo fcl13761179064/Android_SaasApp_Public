@@ -30,6 +30,7 @@ public class PopupWindowUtil {
         window = new PopupWindow(context);
         //ViewGroup.LayoutParams.WRAP_CONTENT，自动包裹所有的内容
         window.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        window.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setFocusable(true);
         //点击 back 键的时候，窗口会自动消失
         window.setBackgroundDrawable(new BitmapDrawable());
@@ -39,6 +40,7 @@ public class PopupWindowUtil {
 
         listView.setAdapter(new MyAdapter(context, datas));
         listView.setTag(window);
+
         //设置显示的视图
         window.setContentView(localView);
     }
@@ -65,7 +67,7 @@ public class PopupWindowUtil {
      */
     public void show(View paramView, int count) {
         //该count 是手动调整窗口的宽度
-        window.setWidth(360);
+        window.setWidth(count);
         //设置窗口显示位置, 后面两个0 是表示偏移量，可以自由设置
         window.showAsDropDown(paramView, xOff, yOff);
         //更新窗口状态

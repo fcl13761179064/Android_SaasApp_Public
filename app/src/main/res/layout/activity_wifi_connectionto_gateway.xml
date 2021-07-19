@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv="连接到网关 Wi-Fi"
+        app:left_iv="@mipmap/icon_back_black"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:text="请按以下步骤将手机连接到网关Wi-Fi以完成配网："
+        android:textColor="@color/color_3C3C3C"
+        android:textSize="@dimen/text_middle_size"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:text="01. 进入手机设置页，连接设备Wi-Fi"
+        android:textColor="@color/color_3C3C3C"
+        android:textSize="@dimen/text_middle_size"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/wifi_name"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="43dp"
+                android:text="网关Wi-Fi名称："
+                android:singleLine="true"
+                android:textColor="@color/color_3C3C3C"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/ssid_show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ayla-xxxxxxxxxx"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="@color/color_3C3C3C"
+                android:textSize="14sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/wifi_name"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="43dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:text="网关Wi-Fi密码：xxxxxxxxxx"
+                android:textColor="@color/color_3C3C3C"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_connect_ap"
+            android:layout_width="60dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="43dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/round_green_shape"
+            android:textColor="@color/common_green"
+            android:gravity="center"
+            android:text="去连接"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="02. 连接成功后，返回【艾拉工程】"
+        android:textColor="@color/color_3C3C3C"
+        android:textSize="@dimen/text_middle_size"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/sd_btn_action"
+        style="@style/ApEnableButtonStyle"
+        android:layout_marginTop="30dp"
+        android:enabled="false"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:text="下一步"
+        android:textAllCaps="false"
+        android:textStyle="normal" />
+</LinearLayout>

@@ -33,33 +33,38 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, DeviceListPresenter> implements DeviceListView {
 
-    private final long regionId;
-    private List<DeviceListBean.DevicesBean> devices;
-    private int position;
+
+    private List<DeviceListBean.DevicesBean> mDevices;
+
     FragmentDeviceListNewBinding binding;
 
     private DeviceListAdapter mAdapter;
 
     DeviceCategoryHandler deviceCategoryHandler;
 
-    private long room_id;
+    private long mRoomId;
+    private int mPosition;
+    private long mRegionId;
 
-    public DeviceListFragmentNew(long room_id, List<DeviceListBean.DevicesBean> deviceListBean, long regionId, int position) {
-        this.room_id = room_id;
-        this.regionId = regionId;
-        this.position = position;
-        this.devices = deviceListBean;
+    public DeviceListFragmentNew() {
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        Bundle b = getArguments();
+        mRoomId = b.getLong("mRoomId", 0);
+        mRegionId = b.getLong("mRegionId", 0);
+        mDevices = (List<DeviceListBean.DevicesBean>) b.getSerializable("mDevices");
+        mPosition = b.getInt("mPosition",0);
     }
 
     @Override
@@ -86,7 +91,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     @Override
     protected void initView(View view) {
-        deviceCategoryHandler = new DeviceCategoryHandler(this, room_id);
+        deviceCategoryHandler = new DeviceCategoryHandler(this, mRoomId);
 
         binding.deviceRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.deviceRecyclerview.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -119,7 +124,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
                         intent = new Intent(getContext(), DeviceMoreActivity.class);
                     }
                     intent.putExtra("deviceId", devicesBean.getDeviceId());
-                    intent.putExtra("scopeId", room_id);
+                    intent.putExtra("scopeId", mRoomId);
                     startActivity(intent);
                 } else {//待绑定的设备
                     if (devicesBean.getDeviceUseType() == 1) {//如果是用途设备，跳过
@@ -133,15 +138,15 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     @Override
     protected void initData() {
-        if (devices != null && position == 0) {
+        if (mDevices != null && mPosition == 0) {
             List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
-            for (DeviceListBean.DevicesBean devicesBean : devices) {
+            for (DeviceListBean.DevicesBean devicesBean : mDevices) {
                 DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
                 deviceItems.add(deviceItem);
             }
             mAdapter.setNewData(deviceItems);
         } else {
-            mPresenter.loadData(room_id, regionId);
+            mPresenter.loadData(mRoomId, mRegionId);
         }
     }
 

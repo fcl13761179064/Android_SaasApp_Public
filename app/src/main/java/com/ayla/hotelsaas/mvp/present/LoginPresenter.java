@@ -41,7 +41,7 @@ public class LoginPresenter extends BasePresenter<LoginView> {
                 .subscribe(new Consumer<User>() {
                     @Override
                     public void accept(User user) throws Exception {
-                        mView.loginSuccess(user);
+                        mView.loginSuccess(user,account);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

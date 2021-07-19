@@ -54,6 +54,7 @@
                 android:paddingRight="20dp">
 
                 <TextView
+                    android:id="@+id/tv_start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="账号"
@@ -63,18 +64,28 @@
 
                 <EditText
                     android:id="@+id/et_wifi"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="right|center_vertical"
-                    android:hint="输入设备WiFi名称"
+                    android:hint="选择设备WiFi"
                     android:inputType="text"
                     android:maxLines="1"
+                    android:clickable="false"
+                    android:enabled="false"
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp"
                     android:textColor="#ff333333"
                     android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/iv_airkiss_wifi_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@mipmap/wifi_list_change"/>
             </LinearLayout>
 
             <LinearLayout

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
+import com.ayla.hotelsaas.bean.A2BindInfoBean;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -143,19 +144,6 @@ public class RequestModel {
         });
     }
 
-    /**
-     * 获取工作订单的条数
-     *
-     * @param pageNum 页码 从1开始
-     * @param maxNum  每页加载量
-     * @param tradeId
-     * @return
-     */
-    public Observable<WorkOrderBean> getWorkOrderList(int pageNum, int maxNum, String tradeId) {
-        return getApiService().getWorkOrders(pageNum, maxNum,tradeId)
-                .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
-                });
-    }
 
 
     /**
@@ -1010,4 +998,55 @@ public class RequestModel {
                 .compose(new BaseResultTransformer<BaseResult<List<DeviceLocationBean>>,List<DeviceLocationBean>>() {
                 });
     }
+
+    /**
+     * A2网关绑定情况信息返回
+     * @return
+     */
+    public Observable<A2BindInfoBean> getA2BindInfo(String deviceId) {
+        return getApiService().getA2BindInfo(deviceId).compose(new BaseResultTransformer<BaseResult<A2BindInfoBean>, A2BindInfoBean>() {
+        });
+    }
+
+
+    /**
+     * ap配网
+     *
+     * @return
+     */
+    public Observable<Boolean> Apnetwork(String deviceId, long cuId,String setupToken) {
+        return getApiService().ApNetwork(deviceId,cuId,setupToken).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+        });
+    }
+
+
+    /**
+     * 获取历史数据
+     *
+     * @param pageNum 页码 从1开始
+     * @param maxNum  每页加载量
+     * @param tradeId
+     * @return
+     */
+    public Observable<WorkOrderBean> getHistoryData(int pageNum, int maxNum, String tradeId, String processStatus) {
+        return getApiService().getWorkOrders(pageNum, maxNum,tradeId,processStatus)
+                .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
+                });
+    }
+
+    /**
+     * 获取工作订单的条数
+     *
+     * @param pageNum 页码 从1开始
+     * @param maxNum  每页加载量
+     * @param tradeId
+     * @return
+     */
+    public Observable<WorkOrderBean> getWorkOrderList(int pageNum, int maxNum, String tradeId, String processStatus) {
+        return getApiService().getWorkOrders(pageNum, maxNum,tradeId,processStatus)
+                .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
+                });
+    }
+
+
 }

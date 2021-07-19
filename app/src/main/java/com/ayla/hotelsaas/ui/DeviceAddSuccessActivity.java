@@ -56,10 +56,14 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
     @Override
     protected void initView() {
         device = (DeviceListBean.DevicesBean) getIntent().getSerializableExtra("device");
+        String is_ap_normals = getIntent().getStringExtra("is_ap_normal");
         roomId = SharePreferenceUtils.getLong(this, Constance.SP_ROOM_ID, 0);
         binding.etInput.setText(device.getNickname());
         binding.tvLocationPoint.setText(device.getRegionName());
         binding.tvLocationName.setText(device.getPointName());
+        if (!TextUtils.isEmpty(is_ap_normals)){
+            binding.appBar.setLeftImageView(0);
+        }
     }
 
     @Override
@@ -173,7 +177,8 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
                     return;
                 }
                 if (TextUtils.equals(newNickname, nickname) && TextUtils.equals(newLocationName, pointName) && TextUtils.equals(tv_location_name, device.getRegionName())) {
-                    finish();
+                    Intent mainActivity = new Intent(DeviceAddSuccessActivity.this, MainActivity.class);
+                    startActivity(mainActivity);
                 } else {
                     if (regionId==-1l){
                         mPresenter.deviceRenameMethod(device.getDeviceId(), newNickname, newLocationName, device.getRegionId(), device.getRegionName());
@@ -187,7 +192,8 @@ public class DeviceAddSuccessActivity extends BaseMvpActivity<DeviceAddSuccessVi
 
     @Override
     public void renameSuccess(String nickName) {
-        finish();
+        Intent mainActivity = new Intent(DeviceAddSuccessActivity.this, MainActivity.class);
+        startActivity(mainActivity);
     }
 
     @Override
