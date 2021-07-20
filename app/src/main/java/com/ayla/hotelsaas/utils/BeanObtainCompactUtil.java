@@ -185,7 +185,11 @@ public class BeanObtainCompactUtil {
                 RuleEngineBean.Condition.ConditionItem conditionItem = _condition.getItems().get(i);
                 sb.append(conditionItem.getJoinType() == 1 ? " && " : conditionItem.getJoinType() == 2 ? " || " : "");
                 if (conditionItem.getBit() == null && conditionItem.getCompareValue() == null) {
-                    sb.append(String.format("func.get('%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
+                    if(conditionItem.getLeftValue().endsWith(".")){//event事件A.类型
+                        sb.append(String.format("func.get('%s','%s','%s')", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue()));
+                    }else {
+                        sb.append(String.format("func.get('%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
+                    }
                 } else {
                     sb.append(String.format("func.bit('%s','%s','%s','%s','%s') %s %s", conditionItem.getSourceDeviceType(), conditionItem.getSourceDeviceId(), conditionItem.getLeftValue(), conditionItem.getBit(), conditionItem.getCompareValue(), conditionItem.getOperator(), conditionItem.getRightValue()));
                 }

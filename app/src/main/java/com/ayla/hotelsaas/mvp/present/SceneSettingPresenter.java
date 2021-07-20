@@ -235,6 +235,17 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                             }
                                         }
                                     }
+                                    for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getEvents()) {
+                                        if (TextUtils.equals(devicesBean.getDeviceId(), deviceTemplateBean.getDeviceId())) {//找出了设备和物模型
+                                            if (conditionItem.getLeftValue().endsWith(".")){
+                                                String[] leftvalue = conditionItem.getLeftValue().split("\\.");
+                                                if (TextUtils.equals(attribute.getCode(), leftvalue[0])) {
+                                                    conditionItem.setFunctionName(attribute.getDisplayName());
+                                                    conditionItem.setValueName("");
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

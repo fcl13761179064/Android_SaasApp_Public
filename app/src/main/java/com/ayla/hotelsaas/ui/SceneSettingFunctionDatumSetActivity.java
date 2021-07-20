@@ -105,9 +105,9 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneS
         this.attributesBean = attributesBean;
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if (attributesBean.getValue() != null) {
+        if (attributesBean!=null && attributesBean.getValue() != null) {
             fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(attributesBean), "content");
-        } else if (attributesBean.getSetup() != null) {
+        } else if (attributesBean!=null && attributesBean.getSetup() != null) {
             int type = getIntent().getIntExtra("type", 0);//0:条件
 
             Double max = attributesBean.getSetup().getMax();
@@ -127,8 +127,10 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneS
                     fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeFragment.newInstance(attributesBean), "content");
                 }
             }
-        } else if (attributesBean.getBitValue() != null) {
+        } else if (attributesBean!=null && attributesBean.getBitValue() != null) {
             fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(attributesBean), "content");
+        }else {
+            fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionEventSingleChooseFragment.newInstance(attributesBean), "content");
         }
         fragmentTransaction.commitNowAllowingStateLoss();
     }

@@ -63,11 +63,12 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
                          * 2.A.B事件情况
                          */
                         for (String property : properties) {
-                            if (property != Constance.SCENE_TEMPLATE_CODE && property.contains(".")) {//event事件类型
+                            if (!property.equals(Constance.SCENE_TEMPLATE_CODE) && property.contains(".")) {//event事件类型
                                 if (property.endsWith(".")) {//A.情况
                                     String[] spiltCode = property.split("\\.");
                                     for (DeviceTemplateBean.EventbutesBean eventbuesBean : deviceTemplateBean.getEvents()) {
                                         if (eventbuesBean.getCode().equals(spiltCode[0])) {
+                                            eventbuesBean.setCode(property);
                                             data.add(eventbuesBean);
                                         }
                                     }
