@@ -901,6 +901,9 @@ public class RequestModel {
                                         }
                                     }
                                 }
+                                if ( attributesBeans.getAttributes().size()==0 && attributesBeans.getEvents().size()>0){
+                                    attributesBeans.setDeviceId(deviceId);
+                                }
                                 return attributesBeans;
                             }
                         });
