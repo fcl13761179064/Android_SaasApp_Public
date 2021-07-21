@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.mvp.present;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
@@ -235,25 +236,29 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                             }
                                         }
                                     }
-                                    for (DeviceTemplateBean.EventbutesBean attribute : deviceTemplateBean.getEvents()) {
-                                        if (TextUtils.equals(devicesBean.getDeviceId(), deviceTemplateBean.getDeviceId())) {//找出了设备和物模型
-                                            if (conditionItem.getLeftValue().endsWith(".")){
-                                                String[] leftvalue = conditionItem.getLeftValue().split("\\.");
-                                                if (TextUtils.equals(attribute.getCode(), leftvalue[0])) {
-                                                    conditionItem.setFunctionName(attribute.getDisplayName());
-                                                    conditionItem.setValueName("");
-                                                }
-                                            }else {
-                                                  //A.B
-                                                String[] leftCode = conditionItem.getLeftValue().split("\\.");
-                                                if (TextUtils.equals(attribute.getCode(), leftCode[0])) {
-                                                    for (DeviceTemplateBean.AttributesBean outparam : attribute.getOutParams()) {
-                                                        if (TextUtils.equals(outparam.getCode(), leftCode[1])) {
-                                                            String parentName = attribute.getDisplayName();
-                                                            for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : outparam.getValue()) {
-                                                                if (TextUtils.equals(valueBean.getValue(), conditionItem.getRightValue())) {
-                                                                    conditionItem.setFunctionName(parentName + "-" + outparam.getDisplayName());
-                                                                    conditionItem.setValueName(valueBean.getDisplayName());
+                                    if (!conditionItem.getLeftValue().equals(Constance.SCENE_TEMPLATE_CODE)) {//event事件类型
+                                        for (DeviceTemplateBean.EventbutesBean attribute : deviceTemplateBean.getEvents()) {
+                                            if (TextUtils.equals(devicesBean.getDeviceId(), deviceTemplateBean.getDeviceId())) {//找出了设备和物模型
+                                                if (conditionItem.getLeftValue().endsWith(".")) {
+                                                    String[] leftvalue = conditionItem.getLeftValue().split("\\.");
+                                                    if (TextUtils.equals(attribute.getCode(), leftvalue[0])) {
+                                                        conditionItem.setFunctionName(attribute.getDisplayName());
+                                                        conditionItem.setValueName("");
+                                                    }
+                                                } else {
+                                                    //A.B
+                                                    String[] leftCode = conditionItem.getLeftValue().split("\\.");
+                                                    if (TextUtils.equals(attribute.getCode(), leftCode[0])) {
+                                                        for (DeviceTemplateBean.AttributesBean outparam : attribute.getOutParams()) {
+                                                            if (TextUtils.equals(outparam.getCode(), leftCode[1])) {
+                                                                String parentName = attribute.getDisplayName();
+                                                                if (outparam.getValue() != null) {
+                                                                    for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : outparam.getValue()) {
+                                                                        if (TextUtils.equals(valueBean.getValue(), conditionItem.getRightValue())) {
+                                                                            conditionItem.setFunctionName(parentName + "-" + outparam.getDisplayName());
+                                                                            conditionItem.setValueName(valueBean.getDisplayName());
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
                                                         }
