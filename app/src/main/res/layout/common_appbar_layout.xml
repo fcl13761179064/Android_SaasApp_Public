@@ -36,7 +36,7 @@
                 android:maxWidth="100dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:text="返回登陆"
+                android:text="left"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/color_333333"
                 android:textSize="14sp" />

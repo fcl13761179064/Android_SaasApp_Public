@@ -94,7 +94,7 @@ public class LoginActivity extends BaseMvpActivity<LoginView, LoginPresenter> im
             return;
         }
         if (SoftInputUtil.isOpen()){
-            SoftInputUtil.hideSysSoftInput(submitBtn);
+            SoftInputUtil.hideSysSoftInput(this);
         }
         if (upgradeBean == null) {
             mPresenter.checkVersion();

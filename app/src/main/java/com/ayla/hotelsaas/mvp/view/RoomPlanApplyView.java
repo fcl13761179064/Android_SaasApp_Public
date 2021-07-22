@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.mvp.view;
 
 
 import com.ayla.hotelsaas.base.BaseView;
-import com.ayla.hotelsaas.bean.RoomTypeBean;
 
 
 /**
@@ -12,6 +11,6 @@ import com.ayla.hotelsaas.bean.RoomTypeBean;
  */
 public interface RoomPlanApplyView extends BaseView {
     void importPlanSuccess();
-    void showRoomType(RoomTypeBean o);
+
     void importPlanFailed(Throwable throwable);
 }

@@ -63,7 +63,7 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
                          * 2.A.B事件情况
                          */
                         for (String property : properties) {
-                            if (!property.equals(Constance.SCENE_TEMPLATE_CODE) && property.contains(".") && (deviceTemplateBean!=null && deviceTemplateBean.getEvents()!=null)) {//event事件类型
+                            if (!property.equals(Constance.SCENE_TEMPLATE_CODE) && property.contains(".")) {//event事件类型
                                 if (property.endsWith(".")) {//A.情况
                                     String[] spiltCode = property.split("\\.");
                                     for (DeviceTemplateBean.EventbutesBean eventbuesBean : deviceTemplateBean.getEvents()) {
@@ -91,10 +91,10 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
                                 if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(devicesBean) && !condition) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
                                     data.addAll(deviceTemplateBean.getAttributes());
                                 } else {
-                                    for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                        if (TextUtils.equals(attribute.getCode(), property)) {
-                                            data.add(attribute);
-                                        }
+                                        for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                            if (TextUtils.equals(attribute.getCode(), property)) {
+                                                data.add(attribute);
+                                            }
                                     }
                                 }
                             }
