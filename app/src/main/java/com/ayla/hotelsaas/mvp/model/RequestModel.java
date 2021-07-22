@@ -23,6 +23,7 @@ import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
+import com.ayla.hotelsaas.bean.RoomTypeBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
@@ -1026,6 +1027,14 @@ public class RequestModel {
                 .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
                 });
     }
-
+    /**
+     * 展示当前房型
+     *
+     */
+    public Observable<RoomTypeBean> showCurrentRoom(long roomId) {
+        return getApiService().showCurrentRoom(roomId)
+                .compose(new BaseResultTransformer<BaseResult<RoomTypeBean>, RoomTypeBean>() {
+                });
+    }
 
 }

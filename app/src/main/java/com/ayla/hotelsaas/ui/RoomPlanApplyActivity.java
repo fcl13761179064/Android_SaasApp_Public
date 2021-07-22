@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.RoomTypeBean;
 import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.databinding.ActivityRoomPlanApplyBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
@@ -32,6 +33,7 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         scopeId = getIntent().getLongExtra("roomId", 0);
+        mPresenter.showCurrentRoom(scopeId);
     }
 
     @Override
@@ -52,10 +54,11 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
 
     @Override
     protected void initView() {
-        int roomTypeId = getIntent().getIntExtra("roomTypeId", 0);
+       /* int roomTypeId = getIntent().getIntExtra("roomTypeId", 0);
         if (roomTypeId == 1) {
             binding.tvRoomName.setText("默认房型");
-        }
+        }*/
+
     }
 
     @Override
@@ -97,6 +100,13 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
         setResult(RESULT_OK);
         finish();
     }
+
+    @Override
+    public void showRoomType(RoomTypeBean o) {
+        String typeName = o.getTypeName();
+        binding.tvRoomName.setText(typeName);
+    }
+
 
     @Override
     public void importPlanFailed(Throwable throwable) {

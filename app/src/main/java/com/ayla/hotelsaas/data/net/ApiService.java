@@ -18,6 +18,7 @@ import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
+import com.ayla.hotelsaas.bean.RoomTypeBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
@@ -328,4 +329,7 @@ public interface ApiService {
 
     @GET("api/v1/build/constructbill")
     Observable<BaseResult<WorkOrderBean>> getWorkOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("tradeId") String tradeId, @Query("processStatus") String processStatus);
+
+    @GET("api/v1/build/billrooms/roomtype/mapping/{scopeId}")
+    Observable<BaseResult<RoomTypeBean>> showCurrentRoom(@Path("scopeId") long scopeId);
 }
