@@ -3,7 +3,9 @@ package com.ayla.hotelsaas.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.view.inputmethod.InputMethodManager;
+
 import com.ayla.hotelsaas.application.MyApplication;
 
 
@@ -38,8 +40,12 @@ public class SoftInputUtil {
     /**
      * Activity隐藏系统默认的输入法
      */
-    public static void hideSysSoftInput(Activity activity) {
-        imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    public static void hideSysSoftInput(View activity) {
+        try {
+            imm.hideSoftInputFromWindow(activity.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -64,10 +70,10 @@ public class SoftInputUtil {
      * 点击该控件重新获取焦点并打开键盘（配合hideShow使用）
      *
      * @param view 接受软键盘输入的视图
-     *
-     * 一般是EditText 一般控件xml需要添加属性
-     * android:focusable="false"
-     * android:focusableInTouchMode="false"
+     *             <p>
+     *             一般是EditText 一般控件xml需要添加属性
+     *             android:focusable="false"
+     *             android:focusableInTouchMode="false"
      */
     public static void requstShow(final View view) {
         view.setOnClickListener(new View.OnClickListener() {// 打开键盘
@@ -83,11 +89,10 @@ public class SoftInputUtil {
     }
 
     /**
-     *
      * @param oriview
      * @param destview
      */
-    public static void clearFocus(View oriview, View destview){
+    public static void clearFocus(View oriview, View destview) {
         oriview.clearFocus();
         destview.setFocusable(true);
         destview.setFocusableInTouchMode(true);
