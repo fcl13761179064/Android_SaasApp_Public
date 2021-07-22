@@ -80,7 +80,7 @@ public class RegisterActivity extends BaseMvpActivity<RegisterView, RegisterPres
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE || (event != null && KeyEvent.KEYCODE_ENTER == event.getKeyCode() && KeyEvent.ACTION_DOWN == event.getAction()))) {
                     register();
-                    SoftInputUtil.hideSysSoftInput(RegisterActivity.this);
+                    SoftInputUtil.hideSysSoftInput(registerPass);
                     return true;
                 }
                 return false;
