@@ -622,30 +622,6 @@ public class RequestModel {
                                 }
                             }
                         }
-                        if ("ZBSCN-A000006".equals(pid)) {//紧急按钮设备
-                            DeviceTemplateBean data = deviceTemplateBeanBaseResult.data;
-                            if (data != null) {
-                                List<DeviceTemplateBean.AttributesBean> attributes = data.getAttributes();
-                                if (attributes != null) {
-                                    DeviceTemplateBean.AttributesBean attributesBean = new DeviceTemplateBean.AttributesBean();
-                                    attributesBean.setCode("EmergencyTriggerAlarm.AlarmType");
-                                    attributesBean.setDisplayName("紧急触发报警");
-                                    attributesBean.setDataType(1);
-                                    attributes.add(attributesBean);
-                                    {
-                                        List<DeviceTemplateBean.AttributesBean.ValueBean> valueBeans = new ArrayList<>();
-                                        {
-                                            DeviceTemplateBean.AttributesBean.ValueBean valueBean = new DeviceTemplateBean.AttributesBean.ValueBean();
-                                            valueBean.setDataType(1);
-                                            valueBean.setDisplayName("紧急报警");
-                                            valueBean.setValue("1");
-                                            valueBeans.add(valueBean);
-                                        }
-                                        attributesBean.setValue(valueBeans);
-                                    }
-                                }
-                            }
-                        }
                     }
                 })//特别处理：如果是智镜设备，要强行加上 场景的支持。
                 ;
@@ -924,6 +900,9 @@ public class RequestModel {
                                             }
                                         }
                                     }
+                                }
+                                if ( attributesBeans.getAttributes().size()==0 && attributesBeans.getEvents().size()>0){
+                                    attributesBeans.setDeviceId(deviceId);
                                 }
                                 return attributesBeans;
                             }

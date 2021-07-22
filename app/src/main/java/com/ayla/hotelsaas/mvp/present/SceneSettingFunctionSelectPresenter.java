@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.mvp.present;
 
 import android.text.TextUtils;
 
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
@@ -55,13 +56,45 @@ public class SceneSettingFunctionSelectPresenter extends BasePresenter<SceneSett
                     public List<DeviceTemplateBean.AttributesBean> apply(@NonNull List<String> properties, @NonNull DeviceTemplateBean deviceTemplateBean) throws Exception {
                         DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(deviceId);
                         List<DeviceTemplateBean.AttributesBean> data = new ArrayList<>();
-                        if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(devicesBean) && !condition) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
-                            data.addAll(deviceTemplateBean.getAttributes());
-                        } else {
-                            for (String property : properties) {
-                                for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
-                                    if (TextUtils.equals(attribute.getCode(), property)) {
-                                        data.add(attribute);
+
+                        /**
+                         * @update 2021年6月8日 新增支持event类型
+                         * 1.A.事件情况
+                         * 2.A.B事件情况
+                         */
+                        for (String property : properties) {
+                            if (!property.equals(Constance.SCENE_TEMPLATE_CODE) && property.contains(".")) {//event事件类型
+                                if (property.endsWith(".")) {//A.情况
+                                    String[] spiltCode = property.split("\\.");
+                                    for (DeviceTemplateBean.EventbutesBean eventbuesBean : deviceTemplateBean.getEvents()) {
+                                        if (eventbuesBean.getCode().equals(spiltCode[0])) {
+                                            eventbuesBean.setCode(property);
+                                            data.add(eventbuesBean);
+                                        }
+                                    }
+                                } else {//A.B情况
+                                    String[] spiltCode = property.split("\\.");
+                                    for (DeviceTemplateBean.EventbutesBean eventbuesBean : deviceTemplateBean.getEvents()) {
+                                        if (eventbuesBean.getCode().equals(spiltCode[0])) {
+                                            String parentName = eventbuesBean.getDisplayName();
+                                            for (DeviceTemplateBean.AttributesBean outparam : eventbuesBean.getOutParams()) {
+                                                if (TextUtils.equals(outparam.getCode(), spiltCode[1])) {
+                                                    outparam.setDisplayName(parentName + "-" + outparam.getDisplayName());
+                                                    outparam.setCode(property);
+                                                    data.add(outparam);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(devicesBean) && !condition) {//如果是用途设备(红外遥控家电)，就直接套用物模型作为联动动作，不走品类中心过滤
+                                    data.addAll(deviceTemplateBean.getAttributes());
+                                } else {
+                                        for (DeviceTemplateBean.AttributesBean attribute : deviceTemplateBean.getAttributes()) {
+                                            if (TextUtils.equals(attribute.getCode(), property)) {
+                                                data.add(attribute);
+                                            }
                                     }
                                 }
                             }

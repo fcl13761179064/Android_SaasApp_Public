@@ -133,6 +133,8 @@ public class Constance {
         }
     }
 
+    //场景物模板属性code
+    public static  String SCENE_TEMPLATE_CODE = "KeyValueNotification.KeyValue";
     //艾拉wifi SSId正则
     public static String DEFAULT_SSID_REGEX = "Ayla-([0-9a-zA-Z]+|DevKit)";
 

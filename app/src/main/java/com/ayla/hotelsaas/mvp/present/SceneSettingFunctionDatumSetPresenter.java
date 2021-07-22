@@ -10,6 +10,8 @@ import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SceneSettingFunctionDatumSetView;
 
+import java.util.List;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -38,6 +40,30 @@ public class SceneSettingFunctionDatumSetPresenter extends BasePresenter<SceneSe
                                 return attribute;
                             }
                         }
+
+                        for (DeviceTemplateBean.EventbutesBean attribute : deviceTemplateBean.getEvents()) {
+                            if (property.endsWith(".")){
+                                String[] split = property.split("\\.");
+                                if (TextUtils.equals(attribute.getCode(), split[0])) {
+                                    attribute.setCode(property);
+                                    return attribute;
+                                }
+                            }else {
+                                DeviceTemplateBean.AttributesBean attributesBean = new DeviceTemplateBean.AttributesBean();
+                                String[] spiltCode = property.split("\\.");
+                                    if (attribute.getCode().equals(spiltCode[0])) {
+                                        String parentName = attribute.getDisplayName();
+                                        for (DeviceTemplateBean.AttributesBean outparam : attribute.getOutParams()) {
+                                            if (TextUtils.equals(outparam.getCode(), spiltCode[1])) {
+                                                outparam.setDisplayName(parentName + "-" + outparam.getDisplayName());
+                                                outparam.setCode(property);
+                                                return outparam;
+                                            }
+                                        }
+                                }
+                            }
+                        }
+
                         return null;
                     }
                 })

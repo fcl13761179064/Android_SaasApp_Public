@@ -766,6 +766,27 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             conditionItem.setFunctionName(attributesBean.getDisplayName());
             conditionItem.setValueName(((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getTargetValue() + ((ISceneSettingFunctionDatumSet.SetupCallBackBean) datumBean).getSetupBean().getUnit());
         }
+
+        if (datumBean instanceof ISceneSettingFunctionDatumSet.EventCallBackBean) {
+            conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
+            if(attributesBean.getCode().endsWith(".")){//event事件类型，A.无value情况，此时跳过选择value层级
+                if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
+                    conditionItem.setSourceDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
+                } else if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
+                    conditionItem.setSourceDeviceType(DeviceType.INFRARED_VIRTUAL_SUB_DEVICE);
+                } else if (deviceBean.getCuId() == 0) {
+                    conditionItem.setSourceDeviceType(DeviceType.AYLA_DEVICE_ID);
+                } else if (deviceBean.getCuId() == 1) {
+                    conditionItem.setSourceDeviceType(DeviceType.ALI_DEVICE_ID);
+                }
+                conditionItem.setRightValue(null);
+                conditionItem.setLeftValue(attributesBean.getCode());
+                conditionItem.setOperator("");
+                conditionItem.setFunctionName(attributesBean.getDisplayName());
+                conditionItem.setValueName("");
+            }
+
+        }
     }
 
     private void mergeDeviceActionItem(BaseSceneBean.DeviceAction

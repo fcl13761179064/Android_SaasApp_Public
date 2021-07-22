@@ -47,6 +47,20 @@ public interface ISceneSettingFunctionDatumSet {
         }
     }
 
+    class EventCallBackBean extends CallBackBean {
+
+        private final DeviceTemplateBean.AttributesBean eventBean;
+
+        public EventCallBackBean(DeviceTemplateBean.AttributesBean eventBean) {
+            super("==");
+            this.eventBean = eventBean;
+        }
+
+        public DeviceTemplateBean.AttributesBean getEvnetBean() {
+            return eventBean;
+        }
+    }
+
     class SetupCallBackBean extends CallBackBean {
         private String targetValue;
         private DeviceTemplateBean.AttributesBean.SetupBean setupBean;
