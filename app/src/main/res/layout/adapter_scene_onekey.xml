@@ -27,19 +27,6 @@
         android:textSize="14sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tv_local_remove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:ellipsize="end"
-        android:lines="1"
-        android:layout_alignParentRight="true"
-        android:text="云端"
-        android:layout_marginEnd="86dp"
-        android:layout_alignBaseline="@+id/tv_device_name"
-        android:textColor="@color/color_666666"
-        android:textSize="14sp" />
 
     <LinearLayout
         android:id="@+id/ll_enable_state"
@@ -80,6 +67,7 @@
         android:textSize="13sp"
         android:visibility="invisible" />
 
+
     <ImageView
         android:id="@+id/iv_more"
         android:layout_width="40dp"
@@ -89,4 +77,21 @@
         android:layout_marginRight="8dp"
         android:padding="8dp"
         android:src="@drawable/ic_more" />
+
+
+    <TextView
+        android:id="@+id/tv_local_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:background="@drawable/bg_scene_green_corner"
+        android:layout_below="@id/tv_device_name"
+        android:text="云端"
+        android:layout_toRightOf="@+id/tv_sub_1"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="26dp"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
 </RelativeLayout>
