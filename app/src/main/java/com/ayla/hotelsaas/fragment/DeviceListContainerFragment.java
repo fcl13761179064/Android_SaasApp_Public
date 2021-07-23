@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.ayla.hotelsaas.events.RegionChangeEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListContainerPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
+import com.ayla.hotelsaas.ui.MainActivity;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -43,7 +45,6 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     private List<DeviceLocationBean> LocationBeans;
     private long room_id;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +53,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         }
         EventBus.getDefault().register(this);
     }
+
 
     @Override
     public void onDestroy() {

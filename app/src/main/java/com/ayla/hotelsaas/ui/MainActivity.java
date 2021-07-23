@@ -35,7 +35,7 @@ import io.sentry.Sentry;
  * @时间 2020/7/20
  * removeEnable ,标记是否支持删除
  */
-public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements MainView {
+public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements MainView{
     private static final int REQUEST_CODE_TO_MORE = 0x10;
 
     public static final int RESULT_CODE_REMOVED = 0X20;
@@ -59,6 +59,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     public final static int GO_HOME_TYPE = 0;
     public final static int GO_THREE_TYPE = 2;
     public final static int GO_SECOND_TYPE = 1;
+    private String mRoom_name;
 
     @Override
     protected int getLayoutId() {
@@ -69,7 +70,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     protected void initView() {
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
         SharePreferenceUtils.saveLong(this, Constance.SP_ROOM_ID, mRoom_ID);
-        String mRoom_name = getIntent().getStringExtra("roomName");
+        mRoom_name = getIntent().getStringExtra("roomName");
         appBar.setCenterText(mRoom_name);
         appBar.setRightText("更多");
 
@@ -140,11 +141,13 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         try {
             switch (type) {
                 case GO_HOME_TYPE: {
+                    appBar.setCenterText(mRoom_name);
                     changeState(main_device);
                     showBaseFragment("main", type);
                     break;
                 }
                 case GO_SECOND_TYPE: {
+                    appBar.setCenterText(mRoom_name);
                     changeState(main_likeage);
                     showBaseFragment("linkage", type);
                     break;
@@ -152,6 +155,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
                 case GO_THREE_TYPE: {
                     changeState(main_test);
                     showBaseFragment("test", type);
+                    appBar.setCenterText("wifi信号测试");
                     break;
                 }
             }
@@ -227,4 +231,5 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
             }
         }
     }
+
 }
