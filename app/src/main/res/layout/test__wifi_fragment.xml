@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white">
+
+    <View
+        android:id="@+id/strut"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerVertical="true" />
+
+    <RelativeLayout
+        android:id="@+id/rl_top_wifi"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/strut"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+
+        <com.ayla.hotelsaas.widget.MaskProgress
+            android:id="@+id/maskView"
+            android:layout_width="360dp"
+            android:layout_height="260dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            app:anim_time="20"
+            app:max="360"
+            app:progress="0"
+            app:progress_background="@mipmap/wifi_test_no_network"
+            app:progress_content="@mipmap/wifi_progress_tree_test"
+            app:start_angle="130" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/strut"
+        android:layout_alignParentBottom="true"
+        android:background="@mipmap/wifi_network_check_status"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@mipmap/wifi_show_img"
+            android:layout_marginTop="55dp"
+            android:padding="@dimen/dp_10">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/wifi_show_inner_img" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/wifi_no_relation_text" />
+</RelativeLayout>

@@ -19,4 +19,16 @@
         <attr name="loadSpeedRound" format="integer" />
     </declare-styleable>
 
+
+        <declare-styleable name="maskProgressBar">
+            <attr name="max" format="float" />
+            <attr name="progress" format="float" />
+            <attr name="start_angle" format="float" />
+            <attr name="progress_background" format="reference" />
+            <attr name="progress_content" format="reference" />
+            <attr name="anim_time" format="float" />
+        </declare-styleable>
+
+        <attr name="maskProgressStyle" format="reference" />
+
 </resources>
