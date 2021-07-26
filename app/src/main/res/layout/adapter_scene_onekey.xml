@@ -16,17 +16,17 @@
 
     <TextView
         android:id="@+id/tv_device_name"
-        android:layout_width="match_parent"
+        android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
-        android:layout_toLeftOf="@id/iv_more"
         android:ellipsize="end"
         android:maxLines="1"
         tools:text="单路开关 AZB-SW0-001"
         android:textColor="#ff333333"
         android:textSize="14sp"
         android:textStyle="bold" />
+
 
     <LinearLayout
         android:id="@+id/ll_enable_state"
@@ -67,6 +67,7 @@
         android:textSize="13sp"
         android:visibility="invisible" />
 
+
     <ImageView
         android:id="@+id/iv_more"
         android:layout_width="40dp"
@@ -76,4 +77,21 @@
         android:layout_marginRight="8dp"
         android:padding="8dp"
         android:src="@drawable/ic_more" />
+
+
+    <TextView
+        android:id="@+id/tv_local_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:background="@drawable/bg_scene_green_corner"
+        android:layout_below="@id/tv_device_name"
+        android:text="云端"
+        android:layout_toRightOf="@+id/tv_sub_1"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="26dp"
+        android:textColor="@color/white"
+        android:textSize="13sp" />
 </RelativeLayout>

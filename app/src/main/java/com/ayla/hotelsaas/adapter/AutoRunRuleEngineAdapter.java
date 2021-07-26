@@ -30,7 +30,11 @@ public class AutoRunRuleEngineAdapter extends BaseQuickAdapter<BaseSceneBean, Ba
     @Override
     protected void convert(BaseViewHolder helper, BaseSceneBean ruleEngineBeans) {
         helper.setText(R.id.tv_device_name, ruleEngineBeans.getRuleName());
-
+        if (ruleEngineBeans.getSiteType() == 1) {
+            helper.setText( R.id.tv_local_remove,"本地");
+        } else {
+            helper.setText( R.id.tv_local_remove,"远端");
+        }
         if (helper.getAdapterPosition() % 2 == 0) {
             helper.setImageResource(R.id.iv_bg, R.drawable.bg_scene_autorun_a);
         } else {
