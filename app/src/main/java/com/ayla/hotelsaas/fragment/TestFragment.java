@@ -44,6 +44,7 @@ public class TestFragment extends BaseMvpFragment {
         //设置最大值
         maskProgress.setMax(360);
         //初始填充量为一半
+        maskProgress.setBackgroundResId(R.mipmap.wifi_progress_gray_bg);
         //初始化填充progress时的填充动画时间,越大越慢
         maskProgress.setTotaltime(10);
         //Progress开始的填充的位置360和0为圆最右、90圆最下、180为圆最右、270为圆最上(顺时针方向为正)
@@ -88,6 +89,7 @@ public class TestFragment extends BaseMvpFragment {
 
         @Override
         public void onAnimateFinish() {
+            start.setEnabled(true);
             handler.sendEmptyMessageDelayed(0, 5000);
         }
     };
@@ -102,6 +104,7 @@ public class TestFragment extends BaseMvpFragment {
                     //progress背景图
                     maskView.setBackgroundResId(R.mipmap.wifi_network_error);
                 } else {
+                    start.setEnabled(false);
                     initialProgress(maskView);
                     maskView.initial();
                 }
