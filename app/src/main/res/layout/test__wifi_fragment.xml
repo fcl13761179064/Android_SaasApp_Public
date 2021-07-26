@@ -29,7 +29,7 @@
             app:anim_time="20"
             app:max="360"
             app:progress="0"
-            app:progress_background="@mipmap/wifi_test_no_network"
+            app:progress_background="@mipmap/wifi_progress_gray_bg"
             app:progress_content="@mipmap/wifi_progress_tree_test"
             app:start_angle="130" />
     </RelativeLayout>
@@ -40,6 +40,9 @@
         android:layout_height="match_parent"
         android:layout_alignTop="@+id/strut"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="62dp"
         android:background="@mipmap/wifi_network_check_status"
         android:orientation="vertical">
 
@@ -58,9 +61,32 @@
             android:src="@mipmap/wifi_show_inner_img" />
         </RelativeLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="当前网络未进行检测"
+            android:layout_gravity="center"
+            android:textSize="@dimen/sp_16"
+            android:layout_marginTop="@dimen/dp_16"/>
+
+        <Button
+            android:id="@+id/start"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="135dp"
+            android:layout_height="44dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/green_btn_bg_small_corner"
+            android:text="开始检测"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/relation_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

@@ -6,12 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -154,7 +152,7 @@ public class RoundProgressBar extends View {
         int xPoint = getWidth() / 2;//获取圆心x的坐标
         int radius = xPoint - mCircleWidth;//获取圆心的半径
         // 指定图片绘制区域(左上角的四分之一)
-        Bitmap mBitmap = BitmapFactory.decodeResource(getContext().getResources(),R.mipmap.wifi_progress_bg);
+        Bitmap mBitmap = BitmapFactory.decodeResource(getContext().getResources(),R.mipmap.wifi_progress_gray_bg);
         // 指定图片绘制区域(左上角的四分之一)
         Rect src = new Rect(0,0,mBitmap.getWidth()/2,mBitmap.getHeight()/2);
         // 指定图片在屏幕上显示的区域(原图大小)

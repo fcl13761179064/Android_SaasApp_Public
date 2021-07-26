@@ -162,7 +162,7 @@ public class MaskProgress extends View{
                 setProgress(typedArray.getFloat(R.styleable.maskProgressBar_progress, destProgress));
                 setTotaltime(typedArray.getFloat(R.styleable.maskProgressBar_anim_time, totalTime));
                 setStartAngle(typedArray.getFloat(R.styleable.maskProgressBar_start_angle, startAngle));
-                setContentResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_content, R.mipmap.wifi_progress_bg));
+                setContentResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_content, R.mipmap.wifi_progress_gray_bg));
                 setBackgroundResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_background, R.mipmap.wifi_progress_tree_test));
             } finally {
                 typedArray.recycle();
