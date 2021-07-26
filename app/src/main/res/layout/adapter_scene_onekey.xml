@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_device_name"
         android:layout_alignStart="@id/tv_device_name"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -65,7 +65,7 @@
         android:text="异常"
         android:textColor="@color/white"
         android:textSize="13sp"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
 
     <ImageView
@@ -83,12 +83,12 @@
         android:id="@+id/tv_local_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:ellipsize="end"
         android:lines="1"
-        android:background="@drawable/bg_scene_green_corner"
         android:layout_below="@id/tv_device_name"
+        android:background="@drawable/bg_scene_green_corner"
         android:text="云端"
+        android:layout_marginStart="20dp"
         android:layout_toRightOf="@+id/tv_sub_1"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="26dp"

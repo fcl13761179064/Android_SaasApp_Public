@@ -43,7 +43,7 @@ public class AutoRunRuleEngineAdapter extends BaseQuickAdapter<BaseSceneBean, Ba
 
         if (ruleEngineBeans.getStatus() == 0 || ruleEngineBeans.getStatus() == 1) {
             helper.setVisible(R.id.sc_enable, true);
-            helper.setVisible(R.id.tv_sub_1, false);
+            helper.setGone(R.id.tv_sub_1, false);
             helper.setVisible(R.id.iv_ill_state, false);
             helper.setChecked(R.id.sc_enable, ruleEngineBeans.getStatus() == 1);
             helper.setOnCheckedChangeListener(R.id.sc_enable, new CompoundButton.OnCheckedChangeListener() {
@@ -58,7 +58,7 @@ public class AutoRunRuleEngineAdapter extends BaseQuickAdapter<BaseSceneBean, Ba
             });
         } else {
             helper.setVisible(R.id.sc_enable, false);
-            helper.setVisible(R.id.tv_sub_1, true);
+            helper.setGone(R.id.tv_sub_1, true);
             helper.setVisible(R.id.iv_ill_state, true);
         }
     }
