@@ -17,6 +17,7 @@ import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.events.SwitchRenameEvent;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.localBean.DeviceType;
 import com.ayla.hotelsaas.localBean.RemoteSceneBean;
@@ -554,5 +555,10 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceChangedEvent(DeviceChangedEvent event) {
         miya_native_dataShare_init();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void SwitchRename(SwitchRenameEvent event) {
+        mWebView.callHandler("miya.native.event.deviceProperties", new Object[1]);
     }
 }

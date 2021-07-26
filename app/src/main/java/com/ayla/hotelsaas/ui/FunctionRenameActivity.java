@@ -16,6 +16,8 @@ import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
+import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.events.SwitchRenameEvent;
 import com.ayla.hotelsaas.mvp.present.FunctionRenamePresenter;
 import com.ayla.hotelsaas.mvp.view.FunctionRenameView;
 import com.ayla.hotelsaas.utils.TempUtils;
@@ -130,7 +132,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
             data.add(bean);
         }
         mAdapter.setNewData(data);
-        EventBus.getDefault().post(new DeviceAddEvent());
+        EventBus.getDefault().post(new SwitchRenameEvent());
     }
 
     @Override
