@@ -66,10 +66,11 @@ public class TestFragment extends BaseMvpFragment {
             tv_net_text.setText("网络极差");
             maskProgress.setProgress(level);
         } else if (level < -50 && level > -70) {
-            tv_net_text.setText("网络极差");
+            tv_net_text.setText("网络偏差");
+            int value = Math.abs(level);
             maskProgress.setProgress(level);
         } else {
-            tv_net_text.setText("网络极好");
+        tv_net_text.setText("网络极好");
             maskProgress.setProgress(360);
         }
     }
