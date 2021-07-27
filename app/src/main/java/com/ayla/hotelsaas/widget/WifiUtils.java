@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.widget;
 
 import android.content.Context;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 
@@ -32,8 +33,9 @@ public class WifiUtils {
      * 判断wifi是否打开
      */
     public Boolean mIsopenWifi() {
-       return mWifiManager.isWifiEnabled();
+        return mWifiManager.isWifiEnabled();
     }
+
     /***
      * 打开wifi
      */
@@ -69,6 +71,21 @@ public class WifiUtils {
             }
         }
         return mScanResultList;
+    }
+
+    /**
+     * 获取当前wifi信息
+     */
+    public   int getCurrentWifiInfoLevel() {
+        try {
+            WifiInfo connectionInfo = mWifiManager.getConnectionInfo();
+            int rssi = connectionInfo.getRssi();
+            return rssi;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
     /**

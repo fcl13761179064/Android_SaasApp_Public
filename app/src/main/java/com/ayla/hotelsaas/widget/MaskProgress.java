@@ -25,8 +25,9 @@ public class MaskProgress extends View{
      * 该接口用于监听动画的完成，你应该设置监听器监听到动画完成后，才再一次调用
      * setProgress方法
      * */
-    public static interface AnimateListener{
-        public void onAnimateFinish();
+    public  interface AnimateListener{
+        void onAnimateFinish();
+        void NetError();
     }
 
     private float totalTime = 5;//s
@@ -162,8 +163,8 @@ public class MaskProgress extends View{
                 setProgress(typedArray.getFloat(R.styleable.maskProgressBar_progress, destProgress));
                 setTotaltime(typedArray.getFloat(R.styleable.maskProgressBar_anim_time, totalTime));
                 setStartAngle(typedArray.getFloat(R.styleable.maskProgressBar_start_angle, startAngle));
-                setContentResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_content, R.mipmap.wifi_progress_gray_bg));
-                setBackgroundResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_background, R.mipmap.wifi_progress_tree_test));
+                setContentResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_content, R.mipmap.wifi_progress_tree_test));
+                setBackgroundResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_background, R.mipmap.wifi_progress_gray_bg));
             } finally {
                 typedArray.recycle();
             }
@@ -279,6 +280,10 @@ public class MaskProgress extends View{
                     currentProgress += step * rate;
                     if(currentProgress > realProgress)
                         currentProgress = realProgress;
+                    if (!WifiUtils.getInstance(getContext()).mIsopenWifi()) {//如果没有打开wifi
+                        //progress背景图
+                        animateListener.NetError();
+                    }
                 }else{
                     // new Thread(new Runnable() {
                     //
