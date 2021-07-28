@@ -80,10 +80,10 @@ public class MyApplication extends AApplication {
                     IoTSmart.setAuthCode("prod_miya");
                 }
             }
-         /*   IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
+            IoTSmart.init(MyApplication.getInstance(), new IoTSmart.InitConfig().setDebug(Constance.isNetworkDebug()));
             Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCodesss():" + GlobalConfig.getInstance().getAuthCode());
             Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCode():" + GlobalConfig.getInstance().getAuthCode());
-            Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());*/
+            Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
         }
     }
 
