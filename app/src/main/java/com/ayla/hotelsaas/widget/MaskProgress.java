@@ -13,21 +13,30 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
 import com.ayla.hotelsaas.R;
 
 /**
  * @author huangxin
  */
-public class MaskProgress extends View{
+public class MaskProgress extends View {
 
 
-    /** 每次setProgress时进度条前进或者回退到所设的值时都会有一段动画。
+    private int circleResId;
+    private Bitmap cr;
+    public CirculateUpdateThread circulateUpdateThread;
+
+    /**
+     * 每次setProgress时进度条前进或者回退到所设的值时都会有一段动画。
      * 该接口用于监听动画的完成，你应该设置监听器监听到动画完成后，才再一次调用
      * setProgress方法
-     * */
-    public  interface AnimateListener{
+     */
+    public interface AnimateListener {
         void onAnimateFinish();
+
         void NetError();
+
+        void progressNum(float currentProgress);
     }
 
     private float totalTime = 5;//s
@@ -48,7 +57,7 @@ public class MaskProgress extends View{
     private int backgroundResId;
     private int contentResId;
 
-    private float startAngle = 130;
+    private float startAngle = 0;
 
     private Bitmap bg;
     private Bitmap ct;
@@ -69,7 +78,7 @@ public class MaskProgress extends View{
 
     private double rate;
 
-    boolean initialing = false;
+    public boolean initialing = false;
 
     AnimateListener animateListener;
 
@@ -92,7 +101,7 @@ public class MaskProgress extends View{
     }
 
     public void setProgress(float destProgress) {
-        if(destProgress > max)
+        if (destProgress > max)
             try {
                 throw new Exception("progress can biger than max");
             } catch (Exception e) {
@@ -104,7 +113,7 @@ public class MaskProgress extends View{
         realProgress = (float) (destProgress * rate);
     }
 
-    public float getProgress(){
+    public float getProgress() {
         return destProgress;
     }
 
@@ -137,23 +146,30 @@ public class MaskProgress extends View{
         ct = BitmapFactory.decodeResource(getResources(), contentResId);
     }
 
-    public void updateProgress(){
+    private void setCircleResId(int circleResId) {
+        this.circleResId = circleResId;
+        cr = BitmapFactory.decodeResource(getResources(), circleResId);
+    }
+
+    public void updateProgress() {
         invalidate();
     }
 
-    /** 初始化,第一次给MaskProgress设值时,从没有填充到,填充到给定的值时
+    /**
+     * 初始化,第一次给MaskProgress设值时,从没有填充到,填充到给定的值时
      * 有一段动画
-     * */
-    public void initial(){
+     */
+    public void initial() {
         initialing = true;
-        new CirculateUpdateThread().start();
+        circulateUpdateThread = new CirculateUpdateThread();
+        circulateUpdateThread.start();
     }
 
     public float getMax() {
         return max;
     }
 
-    private void init(Context context, AttributeSet attrs, int defStyle){
+    private void init(Context context, AttributeSet attrs, int defStyle) {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.maskProgressBar, defStyle, 0);
 
@@ -165,6 +181,7 @@ public class MaskProgress extends View{
                 setStartAngle(typedArray.getFloat(R.styleable.maskProgressBar_start_angle, startAngle));
                 setContentResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_content, R.mipmap.wifi_progress_tree_test));
                 setBackgroundResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_background, R.mipmap.wifi_progress_gray_bg));
+                setCircleResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_circle, R.mipmap.wifi_cicle_yellow));
             } finally {
                 typedArray.recycle();
             }
@@ -182,42 +199,47 @@ public class MaskProgress extends View{
 
         bg = BitmapFactory.decodeResource(getResources(), backgroundResId);
         ct = BitmapFactory.decodeResource(getResources(), contentResId);
+        cr = BitmapFactory.decodeResource(getResources(), circleResId);
 
-        Log.w("init", "max: " + max + "\n" + "destProgress: " + destProgress +"\n"+"totalTime: "+ totalTime+"\n"+"startAngle: "+ startAngle);
+        Log.w("init", "max: " + max + "\n" + "destProgress: " + destProgress + "\n" + "totalTime: " + totalTime + "\n" + "startAngle: " + startAngle);
 
         initialing = true;
-        new CirculateUpdateThread().start();
+        circulateUpdateThread = new CirculateUpdateThread();
+        circulateUpdateThread.start();
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         canvas.drawBitmap(bg, 0, (getHeight() - bg.getHeight()) / 2, paint);
-        int rc = canvas.saveLayer(0, (getHeight() - bg.getHeight()) / 2, bg.getWidth(), (getHeight() + bg.getHeight()) / 2, null, Canvas.ALL_SAVE_FLAG);
+        int rc = canvas.saveLayer(0, (getHeight() - bg.getHeight()) / 2, bg.getWidth()+100, (getHeight() + bg.getHeight()) / 2, null, Canvas.ALL_SAVE_FLAG);
 
         paint.setFilterBitmap(false);
-        if(initialing){
+        if (initialing) {
             canvas.drawArc(rectF, startAngle, currentProgress, true, paint);
-        }else{
+        } else {
             canvas.drawArc(rectF, startAngle, realProgress, true, paint);
         }
         paint.setXfermode(srcIn);
+        canvas.drawBitmap(cr, 0, (getHeight() - ct.getHeight()) / 2, paint);
         canvas.drawBitmap(ct, 0, (getHeight() - ct.getHeight()) / 2, paint);
+
 
         paint.setXfermode(null);
         canvas.restoreToCount(rc);
     }
 
-    public int[] getRectPosition(int progress){
+    public int[] getRectPosition(int progress) {
         int[] rect = new int[4];
 
         rect[0] = beginX;
         rect[1] = beginY;
-        rect[2] = (int)(centerX + radius * Math.cos(progress * Math.PI /180));
-        rect[3] = (int)(centerY + radius * Math.sin(progress * Math.PI /180));
+        rect[2] = (int) (centerX + radius * Math.cos(progress * Math.PI / 180));
+        rect[3] = (int) (centerY + radius * Math.sin(progress * Math.PI / 180));
 
-        Log.w("getRectPosition", "30: " + Math.sin(30 * Math.PI /180));
+        Log.w("getRectPosition", "30: " + Math.sin(30 * Math.PI / 180));
 
         Log.w("getRectPosition", "X: " + rect[2] + " " + "Y: " + rect[3]);
 
@@ -237,24 +259,27 @@ public class MaskProgress extends View{
         int tmp = w >= h ? h : w;
 
         radius = w / 2;
-        beginX = w ;
+        beginX = w;
         beginY = 0;
         centerX = w / 2;
         centerY = w / 2;
 
         Bitmap bg_ = resizeBitmap(bg, w, h);
         Bitmap ct_ = resizeBitmap(ct, w, h);
+        Bitmap cr_ = resizeBitmap(cr, w, h);
 
         rectF = new RectF(0, (getHeight() - bg_.getHeight()) / 2, bg_.getWidth(), (getHeight() + bg_.getHeight()) / 2);
 
         bg.recycle();
         ct.recycle();
+        cr.recycle();
 
         bg = bg_;
         ct = ct_;
+        cr = cr_;
     }
 
-    private Bitmap resizeBitmap(Bitmap src, int w, int h){
+    private Bitmap resizeBitmap(Bitmap src, int w, int h) {
 
         int width = src.getWidth();
         int height = src.getHeight();
@@ -270,21 +295,22 @@ public class MaskProgress extends View{
         return result;
     }
 
-    class CirculateUpdateThread extends Thread{
+    class CirculateUpdateThread extends Thread {
 
         @Override
         public void run() {
-            while(initialing){
+            while (initialing) {
                 postInvalidate();
-                if(currentProgress < realProgress){
+                if (currentProgress < realProgress) {
                     currentProgress += step * rate;
-                    if(currentProgress > realProgress)
+                    if (currentProgress > realProgress)
                         currentProgress = realProgress;
+                    animateListener.progressNum(currentProgress);
                     if (!WifiUtils.getInstance(getContext()).mIsopenWifi()) {//如果没有打开wifi
                         //progress背景图
                         animateListener.NetError();
                     }
-                }else{
+                } else {
                     // new Thread(new Runnable() {
                     //
                     // @Override
@@ -308,16 +334,17 @@ public class MaskProgress extends View{
                     // }).start();
                     currentProgress = 0;
                     initialing = false;
-                    if(animateListener != null)
+                    if (animateListener != null)
                         animateListener.onAnimateFinish();
                 }
-                try{
+                try {
                     Thread.sleep(REFRESH);
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
 
     }
+
 }

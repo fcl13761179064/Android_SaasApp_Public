@@ -23,15 +23,16 @@
         <com.ayla.hotelsaas.widget.MaskProgress
             android:id="@+id/maskView"
             android:layout_width="360dp"
-            android:layout_height="260dp"
+            android:layout_height="270dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            app:anim_time="20"
+            app:anim_time="10"
             app:max="360"
             app:progress="0"
             app:progress_background="@mipmap/wifi_progress_gray_bg"
             app:progress_content="@mipmap/wifi_progress_green_bg"
-            app:start_angle="130" />
+            app:progress_circle="@mipmap/wifi_cicle_yellow"
+            app:start_angle="125" />
 
         <TextView
             android:id="@+id/tv_net_num"
@@ -40,14 +41,17 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="15dp"
             android:text="0"
+            android:textStyle="bold"
             android:layout_above="@+id/iv_star"
             android:textColor="#C8CCD8"
-            android:textSize="48dp" />
+            android:textSize="40dp" />
 
         <TextView
+            android:id="@+id/tv_dbm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="dbm"
+            android:textStyle="bold"
             android:layout_marginStart="5dp"
             android:layout_toRightOf="@+id/tv_net_num"
             android:layout_alignBaseline="@+id/tv_net_num"
