@@ -15,7 +15,10 @@ import com.ayla.hotelsaas.widget.WifiUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 
+import java.lang.reflect.Field;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import butterknife.BindView;
@@ -62,7 +65,7 @@ public class TestFragment extends BaseMvpFragment {
     private void initialProgress(MaskProgress maskProgress) {
         try {
             tv_dbm.setVisibility(View.VISIBLE);
-            start.setText("重新检测");
+            start.setText("取消检测");
             relation_status.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_yes_relation_test));
             tv_net_num.setTextColor(getResources().getColor(R.color.color_333333));
             tv_net_text.setText("测试中");
@@ -133,6 +136,7 @@ public class TestFragment extends BaseMvpFragment {
 
         @Override
         public void onAnimateFinish() {
+            start.setText("重新检测");
             handler.sendEmptyMessageDelayed(0, 5000);
         }
 
@@ -158,14 +162,14 @@ public class TestFragment extends BaseMvpFragment {
         @Override
         public void progressNum(float currentProgress) {
             try {
-                if (getActivity()!=null){
+                if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (tv_net_num != null && type !=null){
+                            if (tv_net_num != null && type != null) {
                                 if ("很差".equals(type)) {
                                     int current_Progress = (int) currentProgress;
-                                    tv_net_num.setText("-" + (int)(current_Progress / 3.5));
+                                    tv_net_num.setText("-" + (int) (current_Progress / 3.5));
                                 } else {
                                     int current_Progress = (int) currentProgress;
                                     tv_net_num.setText("-" + current_Progress / 4);
@@ -197,9 +201,43 @@ public class TestFragment extends BaseMvpFragment {
                     tv_net_num.setTextColor(getResources().getColor(R.color.color_gray));
                     maskView.updateProgress();
                 } else {
-                    start.setText("取消检测");
-                    initialProgress(maskView);
-                    maskView.initial();
+                    if (start.getText().equals("取消检测")) {
+                        tv_net_text.setText("未检测网络");
+                        start.setText("重新检测");
+                        relation_status.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_no_relation_text));
+                        tv_net_text.setTextColor(getResources().getColor(R.color.color_gray));
+                        tv_dbm.setVisibility(View.GONE);
+                        tv_net_num.setTextColor(getResources().getColor(R.color.color_gray));
+                        maskView.setProgress(0);
+                        maskView.updateProgress();
+                        try {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+
+                                @Override
+
+                                public void run() {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            tv_net_num.setText("0");
+                                        }
+                                    });
+
+                                }
+
+                            }, 100);//3秒后执行Runnable中的run方法
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                    } else {
+                        initialProgress(maskView);
+                        maskView.initial();
+                    }
+
                 }
             }
         });
