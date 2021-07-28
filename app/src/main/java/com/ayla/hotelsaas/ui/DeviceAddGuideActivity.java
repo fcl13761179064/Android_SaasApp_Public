@@ -7,41 +7,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatCheckBox;
-
-import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
-import com.ayla.hotelsaas.databinding.ActivityDeviceAddGuideBinding;
-import com.ayla.hotelsaas.databinding.ActivityDeviceAddSuccessBinding;
 import com.ayla.hotelsaas.mvp.present.DeviceAddGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceAddGuideView;
-import com.ayla.hotelsaas.popmenu.ApNetpopupWindowUtil;
-import com.ayla.hotelsaas.popmenu.PopupWindowUtil;
 import com.ayla.hotelsaas.utils.ImageLoader;
-import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.AppBar;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.ayla.hotelsaas.application.MyApplication.getContext;
 
 /**
  * wifi设备、节点设备 配网引导页面
