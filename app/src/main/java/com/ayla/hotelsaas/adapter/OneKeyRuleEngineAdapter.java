@@ -24,7 +24,7 @@ public class OneKeyRuleEngineAdapter extends BaseQuickAdapter<BaseSceneBean, Bas
         if (ruleEngineBeans.getSiteType() == 1) {
             helper.setText(R.id.tv_local_remove, "本地");
         } else {
-            helper.setText(R.id.tv_local_remove, "远端");
+            helper.setText(R.id.tv_local_remove, "云端");
         }
         if (ruleEngineBeans.getStatus() == 1) {
             helper.setImageResource(R.id.iv_bg, R.drawable.bg_scene_onekey_enable);

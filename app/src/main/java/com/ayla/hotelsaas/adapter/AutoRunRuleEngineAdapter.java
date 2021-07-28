@@ -33,7 +33,7 @@ public class AutoRunRuleEngineAdapter extends BaseQuickAdapter<BaseSceneBean, Ba
         if (ruleEngineBeans.getSiteType() == 1) {
             helper.setText( R.id.tv_local_remove,"本地");
         } else {
-            helper.setText( R.id.tv_local_remove,"远端");
+            helper.setText( R.id.tv_local_remove,"云端");
         }
         if (helper.getAdapterPosition() % 2 == 0) {
             helper.setImageResource(R.id.iv_bg, R.drawable.bg_scene_autorun_a);
