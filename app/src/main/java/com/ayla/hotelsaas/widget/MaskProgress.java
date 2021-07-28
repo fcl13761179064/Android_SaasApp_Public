@@ -214,7 +214,7 @@ public class MaskProgress extends View {
         super.onDraw(canvas);
 
         canvas.drawBitmap(bg, 0, (getHeight() - bg.getHeight()) / 2, paint);
-        int rc = canvas.saveLayer(0, (getHeight() - bg.getHeight()) / 2, bg.getWidth()+100, (getHeight() + bg.getHeight()) / 2, null, Canvas.ALL_SAVE_FLAG);
+        int rc = canvas.saveLayer(0, (getHeight() - bg.getHeight()) / 2, bg.getWidth(), (getHeight() + bg.getHeight()) / 2, null, Canvas.ALL_SAVE_FLAG);
 
         paint.setFilterBitmap(false);
         if (initialing) {

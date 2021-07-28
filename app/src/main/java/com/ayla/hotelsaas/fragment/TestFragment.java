@@ -78,8 +78,8 @@ public class TestFragment extends BaseMvpFragment {
             int level = WifiUtils.getInstance(getContext()).getCurrentWifiInfoLevel();
             if (level < -70) {
                 type = "很差";
-                int x = 330; // 下界。
-                int y = 360; // 上界
+                int x = 300; // 下界。
+                int y = 330; // 上界
                 float rn = new Random().nextInt(y - x + 1) + x;
                 tv_net_text.setText("网络极差");
                 tv_net_text.setTextColor(getResources().getColor(R.color.login_error_show));
@@ -87,8 +87,8 @@ public class TestFragment extends BaseMvpFragment {
             } else if (level <= -50 && level > -70) {
                 type = "一般";
                 tv_net_text.setText("网络一般");
-                int x = 180; // 下界。
-                int y = 270; // 上界
+                int x = 160; // 下界。
+                int y = 220; // 上界
                 float rn = new Random().nextInt(y - x + 1) + x;
                 maskProgress.setProgress(rn);
                 tv_net_text.setTextColor(getResources().getColor(R.color.color_yellow));
@@ -104,6 +104,7 @@ public class TestFragment extends BaseMvpFragment {
             e.printStackTrace();
             tv_net_text.setText("网络错误");
             start.setText("重新检测");
+            tv_dbm.setVisibility(View.GONE);
             relation_status.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_no_relation_text));
             tv_net_text.setTextColor(getResources().getColor(R.color.login_error_show));
             maskView.setProgress(0);
@@ -141,9 +142,13 @@ public class TestFragment extends BaseMvpFragment {
                 @Override
                 public void run() {
                     tv_net_text.setText("网络错误");
+                    start.setText("重新检测");
+                    relation_status.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_no_relation_text));
                     tv_net_text.setTextColor(getResources().getColor(R.color.login_error_show));
                     maskView.setProgress(0);
                     tv_net_num.setText(0 + "");
+                    tv_dbm.setVisibility(View.GONE);
+                    tv_net_num.setTextColor(getResources().getColor(R.color.color_gray));
                     maskView.updateProgress();
                 }
             });
