@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
-
 import com.aliyun.iot.aep.sdk.IoTSmart;
 import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.aliyun.iot.aep.sdk.framework.config.GlobalConfig;

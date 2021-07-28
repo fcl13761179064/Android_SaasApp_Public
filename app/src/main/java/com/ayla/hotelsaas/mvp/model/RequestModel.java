@@ -23,6 +23,7 @@ import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
+import com.ayla.hotelsaas.bean.RoomTypeShowBean;
 import com.ayla.hotelsaas.bean.RuleEngineBean;
 import com.ayla.hotelsaas.bean.TransferRoomListBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
@@ -1024,6 +1025,15 @@ public class RequestModel {
     public Observable<WorkOrderBean> getWorkOrderList(int pageNum, int maxNum, String tradeId, String processStatus) {
         return getApiService().getWorkOrders(pageNum, maxNum,tradeId,processStatus)
                 .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
+                });
+    }
+    /**
+     * 方案导入时，展示房型
+     * @return
+     */
+    public Observable<RoomTypeShowBean> showRoomType(long roomId) {
+        return getApiService().showRoomType(roomId)
+                .compose(new BaseResultTransformer<BaseResult<RoomTypeShowBean>, RoomTypeShowBean>() {
                 });
     }
 

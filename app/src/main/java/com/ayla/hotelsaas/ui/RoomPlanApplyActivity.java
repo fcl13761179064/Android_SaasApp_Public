@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.RoomTypeShowBean;
 import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.databinding.ActivityRoomPlanApplyBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
@@ -32,6 +33,7 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         scopeId = getIntent().getLongExtra("roomId", 0);
+        mPresenter.showRoomType(scopeId);
     }
 
     @Override
@@ -53,9 +55,9 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
     @Override
     protected void initView() {
         int roomTypeId = getIntent().getIntExtra("roomTypeId", 0);
-        if (roomTypeId == 1) {
+        /*if (roomTypeId == 1) {
             binding.tvRoomName.setText("默认房型");
-        }
+        }*/
     }
 
     @Override
@@ -121,5 +123,10 @@ public class RoomPlanApplyActivity extends BaseMvpActivity<RoomPlanApplyView, Ro
             }
         }
         CustomToast.makeText(this, TempUtils.getLocalErrorMsg(throwable), R.drawable.ic_toast_warming);
+    }
+
+    @Override
+    public void showRoomTypeSuccess(RoomTypeShowBean bean) {
+        binding.tvRoomName.setText(bean.getTypeName());
     }
 }

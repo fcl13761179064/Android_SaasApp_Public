@@ -91,16 +91,19 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
 
     private void jumpNext(boolean autoJump, DeviceTemplateBean.AttributesBean attributesBean) {
 
-        boolean nest = true;
+       // boolean nest = true;
         int type = getIntent().getIntExtra("type", 0);//选择的功能作为条件还是动作。
         if (type == 0) {//条件
             int ruleSetMode = (int) getIntent().getIntExtra("ruleSetMode", BaseSceneBean.RULE_SET_MODE.ANY);//选择的功能作为条件还是动作。
             if (ruleSetMode == BaseSceneBean.RULE_SET_MODE.ANY) {//满足任意
-                nest = false;
+               // nest = false;
             }
         }
 
-        if (nest) {//满足所有时，不可以重复添加
+        /*
+        * 不可重复添加关闭
+        */
+     /*   if (nest) {//满足所有时，不可以重复添加
             ArrayList<String> selectedDatum = getIntent().getStringArrayListExtra("selectedDatum");
             String editProperty = getIntent().getStringExtra("property");//编辑时 ，原来的属性名。
             if (selectedDatum != null) {
@@ -121,7 +124,7 @@ public class SceneSettingFunctionSelectActivity extends BaseMvpActivity<SceneSet
                     }
                 }
             }
-        }
+        }*/
 
         Intent mainActivity = new Intent(SceneSettingFunctionSelectActivity.this, SceneSettingFunctionDatumSetActivity.class);
         mainActivity.putExtras(getIntent());
