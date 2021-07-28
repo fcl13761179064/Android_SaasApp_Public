@@ -4,6 +4,7 @@ package com.ayla.hotelsaas.mvp.present;
 import android.text.TextUtils;
 
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.RoomTypeShowBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.RoomPlanApplyView;
 
@@ -40,6 +41,38 @@ public class RoomPlanApplyPresenter extends BasePresenter<RoomPlanApplyView> {
                     @Override
                     public void accept(Object o) throws Exception {
                         mView.importPlanSuccess();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.importPlanFailed(throwable);
+                    }
+                });
+        addSubscrebe(subscribe);
+
+    }
+
+    public void showRoomType(long scopeId) {
+        Disposable subscribe = RequestModel.getInstance()
+                .showRoomType(scopeId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<RoomTypeShowBean>() {
+                    @Override
+                    public void accept(RoomTypeShowBean o) throws Exception {
+                        mView.showRoomTypeSuccess(o);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
