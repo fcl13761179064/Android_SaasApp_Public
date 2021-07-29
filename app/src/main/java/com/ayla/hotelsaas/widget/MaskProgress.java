@@ -249,7 +249,6 @@ public class MaskProgress extends View {
         super.onSizeChanged(w, h, oldw, oldh);
 
         int tmp = w >= h ? h : w;
-
         radius = w / 2;
         beginX = w;
         beginY = 0;
