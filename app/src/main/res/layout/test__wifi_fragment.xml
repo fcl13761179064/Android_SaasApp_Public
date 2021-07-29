@@ -11,6 +11,7 @@
         android:layout_height="0dp"
         android:layout_centerVertical="true" />
 
+
     <RelativeLayout
         android:id="@+id/rl_top_wifi"
         android:layout_width="match_parent"
@@ -27,8 +28,7 @@
             android:layout_marginStart="130dp"
             android:layout_marginTop="110dp"
             android:background="@mipmap/wifi_info_arrow"
-            android:visibility="visible"/>
-
+            android:visibility="gone" />
 
         <com.ayla.hotelsaas.widget.MaskProgress
             android:id="@+id/maskView"
@@ -43,6 +43,36 @@
             app:progress_content="@mipmap/wifi_progress_green_bg"
             app:start_angle="125" />
 
+        <ImageView
+            android:id="@+id/point_weizhi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="100dp"
+            android:background="@mipmap/wifi_cicle_yellow"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/point_weizhi_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="38dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="45dp"
+            android:background="@mipmap/wifi_cicle_yellow"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/point_weizhi_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="180dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:background="@mipmap/wifi_cicle_yellow"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_net_num"

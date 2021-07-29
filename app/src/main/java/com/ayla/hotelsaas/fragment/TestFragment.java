@@ -41,6 +41,12 @@ public class TestFragment extends BaseMvpFragment {
     TextView tv_dbm;
     @BindView(R.id.wifi_arrow)
     ImageView wifi_arrow;
+    @BindView(R.id.point_weizhi)
+    ImageView point_weizhi;
+    @BindView(R.id.point_weizhi_two)
+    ImageView point_weizhi_two;
+    @BindView(R.id.point_weizhi_three)
+    ImageView point_weizhi_three;
     private String type;
 
     @Override
@@ -67,9 +73,12 @@ public class TestFragment extends BaseMvpFragment {
     private void initialProgress(MaskProgress maskProgress) {
         try {
             wifi_arrow.setVisibility(View.GONE);
+            point_weizhi.setVisibility(View.GONE);
+            point_weizhi_two.setVisibility(View.GONE);
+            point_weizhi_three.setVisibility(View.GONE);
             tv_dbm.setVisibility(View.VISIBLE);
-            start.setText("取消检测");
             relation_status.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_yes_relation_test));
+            start.setText("取消检测");
             tv_net_num.setTextColor(getResources().getColor(R.color.color_333333));
             tv_net_text.setText("测试中");
             tv_net_text.setTextColor(getResources().getColor(R.color.common_green));
@@ -116,6 +125,7 @@ public class TestFragment extends BaseMvpFragment {
             maskView.setProgress(0);
             tv_net_num.setText(0 + "");
             tv_dbm.setVisibility(View.GONE);
+
             tv_net_num.setTextColor(getResources().getColor(R.color.color_gray));
             maskView.updateProgress();
         }
@@ -132,7 +142,13 @@ public class TestFragment extends BaseMvpFragment {
             float newProgress = maskView.getProgress();
             maskView.setProgress(newProgress);
             maskView.updateProgress();
-
+            if ("很差".equals(type)) {
+                point_weizhi_three.setVisibility(View.VISIBLE);
+            } else if ("一般".equals(type)) {
+                point_weizhi_two.setVisibility(View.VISIBLE);
+            } else {
+                point_weizhi.setVisibility(View.VISIBLE);
+            }
         }
     };
 
@@ -141,7 +157,7 @@ public class TestFragment extends BaseMvpFragment {
         @Override
         public void onAnimateFinish() {
             start.setText("重新检测");
-            handler.sendEmptyMessageDelayed(0, 5000);
+            handler.sendEmptyMessageDelayed(0, 100);
         }
 
         @Override
@@ -164,10 +180,13 @@ public class TestFragment extends BaseMvpFragment {
                         @Override
 
                         public void run() {
+                            point_weizhi.setVisibility(View.GONE);
+                            point_weizhi_two.setVisibility(View.GONE);
+                            point_weizhi_three.setVisibility(View.GONE);
                             iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_progress_gray_five_star));
                         }
 
-                    }, 80);//3秒后执行Runnable中的run方法
+                    }, 200);//3秒后执行Runnable中的run方法
                 }
             });
 
@@ -185,7 +204,7 @@ public class TestFragment extends BaseMvpFragment {
                                 if ("很差".equals(type)) {
                                     int current_Progress = (int) currentProgress;
                                     tv_net_num.setText("-" + (int) (current_Progress / 3.5));
-                                    if (current_Progress == 60) {
+                                    if (current_Progress == 80) {
                                         iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_weak));
                                         wifi_arrow.setVisibility(View.VISIBLE);
                                     }
@@ -261,6 +280,7 @@ public class TestFragment extends BaseMvpFragment {
                                                     @Override
                                                     public void run() {
                                                         wifi_arrow.setVisibility(View.VISIBLE);
+
                                                         iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_middle_weak));
                                                     }
                                                 });
@@ -322,6 +342,9 @@ public class TestFragment extends BaseMvpFragment {
                         @Override
 
                         public void run() {
+                            point_weizhi.setVisibility(View.GONE);
+                            point_weizhi_two.setVisibility(View.GONE);
+                            point_weizhi_three.setVisibility(View.GONE);
                             wifi_arrow.setVisibility(View.GONE);
                             iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_progress_gray_five_star));
                         }
@@ -348,6 +371,9 @@ public class TestFragment extends BaseMvpFragment {
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                            point_weizhi.setVisibility(View.GONE);
+                                            point_weizhi_two.setVisibility(View.GONE);
+                                            point_weizhi_three.setVisibility(View.GONE);
                                             wifi_arrow.setVisibility(View.GONE);
                                             iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_progress_gray_five_star));
                                             tv_net_num.setText("0");
