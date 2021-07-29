@@ -87,13 +87,13 @@ public class TestFragment extends BaseMvpFragment {
             int level = WifiUtils.getInstance(getContext()).getCurrentWifiInfoLevel();
             if (level < -70) {
                 type = "很差";
-                int x = 300; // 下界。
-                int y = 330; // 上界
+                int x = 310; // 下界。
+                int y = 324; // 上界
                 float rn = new Random().nextInt(y - x + 1) + x;
                 tv_net_text.setText("网络极差");
                 tv_net_text.setTextColor(getResources().getColor(R.color.login_error_show));
                 maskProgress.setProgress(rn);
-                rotateAnim(rn-110,7000l);
+                rotateAnim(320-110,7000l);
             } else if (level <= -50 && level > -70) {
                 type = "一般";
                 tv_net_text.setText("网络一般");
