@@ -39,6 +39,8 @@ public class TestFragment extends BaseMvpFragment {
     TextView tv_net_text;
     @BindView(R.id.tv_dbm)
     TextView tv_dbm;
+    @BindView(R.id.wifi_arrow)
+    ImageView wifi_arrow;
     private String type;
 
     @Override
@@ -64,6 +66,7 @@ public class TestFragment extends BaseMvpFragment {
 
     private void initialProgress(MaskProgress maskProgress) {
         try {
+            wifi_arrow.setVisibility(View.GONE);
             tv_dbm.setVisibility(View.VISIBLE);
             start.setText("取消检测");
             relation_status.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_yes_relation_test));
@@ -153,6 +156,7 @@ public class TestFragment extends BaseMvpFragment {
                     maskView.setProgress(0);
                     tv_net_num.setText(0 + "");
                     tv_dbm.setVisibility(View.GONE);
+                    wifi_arrow.setVisibility(View.GONE);
                     tv_net_num.setTextColor(getResources().getColor(R.color.color_gray));
                     maskView.updateProgress();
                     handler.postDelayed(new Runnable() {
@@ -181,8 +185,9 @@ public class TestFragment extends BaseMvpFragment {
                                 if ("很差".equals(type)) {
                                     int current_Progress = (int) currentProgress;
                                     tv_net_num.setText("-" + (int) (current_Progress / 3.5));
-                                    if (current_Progress == 50) {
+                                    if (current_Progress == 60) {
                                         iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_weak));
+                                        wifi_arrow.setVisibility(View.VISIBLE);
                                     }
                                 } else if ("一般".equals(type)) {
                                     int current_Progress = (int) currentProgress;
@@ -197,6 +202,7 @@ public class TestFragment extends BaseMvpFragment {
                                                 getActivity().runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
+                                                        wifi_arrow.setVisibility(View.VISIBLE);
                                                         iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_weak));
                                                     }
                                                 });
@@ -254,6 +260,7 @@ public class TestFragment extends BaseMvpFragment {
                                                 getActivity().runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
+                                                        wifi_arrow.setVisibility(View.VISIBLE);
                                                         iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_middle_weak));
                                                     }
                                                 });
@@ -315,6 +322,7 @@ public class TestFragment extends BaseMvpFragment {
                         @Override
 
                         public void run() {
+                            wifi_arrow.setVisibility(View.GONE);
                             iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_progress_gray_five_star));
                         }
 
@@ -340,6 +348,7 @@ public class TestFragment extends BaseMvpFragment {
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                            wifi_arrow.setVisibility(View.GONE);
                                             iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_progress_gray_five_star));
                                             tv_net_num.setText("0");
                                         }
