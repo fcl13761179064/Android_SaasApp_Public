@@ -23,11 +23,13 @@
 
         <ImageView
             android:id="@+id/wifi_arrow"
-            android:layout_width="wrap_content"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="130dp"
-            android:layout_above="@+id/tv_net_num"
+            android:layout_alignParentBottom="true"
             android:background="@mipmap/wifi_info_arrow"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="100dp"
+            android:indeterminateDrawable="@anim/wifi_test_rotatea_animation"
             android:visibility="visible" />
 
         <com.ayla.hotelsaas.widget.MaskProgress
@@ -43,36 +45,37 @@
             app:progress_content="@mipmap/wifi_progress_green_bg"
             app:start_angle="125" />
 
-      <!--  <ImageView
-            android:id="@+id/point_weizhi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="100dp"
-            android:background="@mipmap/wifi_cicle_yellow"
-            android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/point_weizhi_two"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="38dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="45dp"
-            android:background="@mipmap/wifi_cicle_yellow"
-            android:visibility="gone" />
+        <!--  <ImageView
+              android:id="@+id/point_weizhi"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="25dp"
+              android:layout_alignParentBottom="true"
+              android:layout_marginBottom="100dp"
+              android:background="@mipmap/wifi_cicle_yellow"
+              android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/point_weizhi_three"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
-            android:layout_marginBottom="180dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:background="@mipmap/wifi_cicle_yellow"
-            android:visibility="gone" />-->
+          <ImageView
+              android:id="@+id/point_weizhi_two"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="38dp"
+              android:layout_centerHorizontal="true"
+              android:layout_marginTop="45dp"
+              android:background="@mipmap/wifi_cicle_yellow"
+              android:visibility="gone" />
+
+          <ImageView
+              android:id="@+id/point_weizhi_three"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginEnd="40dp"
+              android:layout_marginBottom="180dp"
+              android:layout_alignParentRight="true"
+              android:layout_alignParentBottom="true"
+              android:background="@mipmap/wifi_cicle_yellow"
+              android:visibility="gone" />-->
 
         <TextView
             android:id="@+id/tv_net_num"
