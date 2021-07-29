@@ -22,8 +22,6 @@ import com.ayla.hotelsaas.R;
 public class MaskProgress extends View {
 
 
-    private int circleResId;
-    private Bitmap cr;
     public CirculateUpdateThread circulateUpdateThread;
 
     /**
@@ -146,10 +144,7 @@ public class MaskProgress extends View {
         ct = BitmapFactory.decodeResource(getResources(), contentResId);
     }
 
-    private void setCircleResId(int circleResId) {
-        this.circleResId = circleResId;
-        cr = BitmapFactory.decodeResource(getResources(), circleResId);
-    }
+
 
     public void updateProgress() {
         invalidate();
@@ -179,9 +174,8 @@ public class MaskProgress extends View {
                 setProgress(typedArray.getFloat(R.styleable.maskProgressBar_progress, destProgress));
                 setTotaltime(typedArray.getFloat(R.styleable.maskProgressBar_anim_time, totalTime));
                 setStartAngle(typedArray.getFloat(R.styleable.maskProgressBar_start_angle, startAngle));
-                setContentResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_content, R.mipmap.wifi_progress_tree_test));
+                setContentResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_content, R.mipmap.wifi_progress_green_bg));
                 setBackgroundResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_background, R.mipmap.wifi_progress_gray_bg));
-                setCircleResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_circle, R.mipmap.wifi_cicle_yellow));
             } finally {
                 typedArray.recycle();
             }
@@ -199,7 +193,6 @@ public class MaskProgress extends View {
 
         bg = BitmapFactory.decodeResource(getResources(), backgroundResId);
         ct = BitmapFactory.decodeResource(getResources(), contentResId);
-        cr = BitmapFactory.decodeResource(getResources(), circleResId);
 
         Log.w("init", "max: " + max + "\n" + "destProgress: " + destProgress + "\n" + "totalTime: " + totalTime + "\n" + "startAngle: " + startAngle);
 
@@ -223,7 +216,6 @@ public class MaskProgress extends View {
             canvas.drawArc(rectF, startAngle, realProgress, true, paint);
         }
         paint.setXfermode(srcIn);
-        canvas.drawBitmap(cr, 0, (getHeight() - ct.getHeight()) / 2, paint);
         canvas.drawBitmap(ct, 0, (getHeight() - ct.getHeight()) / 2, paint);
 
 
@@ -266,17 +258,14 @@ public class MaskProgress extends View {
 
         Bitmap bg_ = resizeBitmap(bg, w, h);
         Bitmap ct_ = resizeBitmap(ct, w, h);
-        Bitmap cr_ = resizeBitmap(cr, w, h);
 
         rectF = new RectF(0, (getHeight() - bg_.getHeight()) / 2, bg_.getWidth(), (getHeight() + bg_.getHeight()) / 2);
 
         bg.recycle();
         ct.recycle();
-        cr.recycle();
 
         bg = bg_;
         ct = ct_;
-        cr = cr_;
     }
 
     private Bitmap resizeBitmap(Bitmap src, int w, int h) {

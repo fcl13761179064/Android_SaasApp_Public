@@ -129,6 +129,7 @@ public class TestFragment extends BaseMvpFragment {
             float newProgress = maskView.getProgress();
             maskView.setProgress(newProgress);
             maskView.updateProgress();
+
         }
     };
 
@@ -154,6 +155,15 @@ public class TestFragment extends BaseMvpFragment {
                     tv_dbm.setVisibility(View.GONE);
                     tv_net_num.setTextColor(getResources().getColor(R.color.color_gray));
                     maskView.updateProgress();
+                    handler.postDelayed(new Runnable() {
+
+                        @Override
+
+                        public void run() {
+                            iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_progress_gray_five_star));
+                        }
+
+                    }, 80);//3秒后执行Runnable中的run方法
                 }
             });
 
@@ -161,6 +171,7 @@ public class TestFragment extends BaseMvpFragment {
 
         @Override
         public void progressNum(float currentProgress) {
+
             try {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
@@ -170,15 +181,113 @@ public class TestFragment extends BaseMvpFragment {
                                 if ("很差".equals(type)) {
                                     int current_Progress = (int) currentProgress;
                                     tv_net_num.setText("-" + (int) (current_Progress / 3.5));
+                                    if (current_Progress == 50) {
+                                        iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_weak));
+                                    }
+                                } else if ("一般".equals(type)) {
+                                    int current_Progress = (int) currentProgress;
+                                    tv_net_num.setText("-" + current_Progress / 4);
+                                    if (current_Progress == 20) {
+                                        Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+
+                                            @Override
+
+                                            public void run() {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_weak));
+                                                    }
+                                                });
+
+                                            }
+
+                                        }, 50);//3秒后执行Runnable中的run方法
+
+                                    } else if (current_Progress == 40) {
+                                        Handler handlers = new Handler();
+                                        handlers.postDelayed(new Runnable() {
+
+                                            @Override
+
+                                            public void run() {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_middle_weak));
+                                                    }
+                                                });
+
+                                            }
+
+                                        }, 200);//3秒后执行Runnable中的run方法
+                                    }
                                 } else {
                                     int current_Progress = (int) currentProgress;
                                     tv_net_num.setText("-" + current_Progress / 4);
+                                    if (current_Progress == 8) {
+                                        Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+
+                                            @Override
+
+                                            public void run() {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_weak));
+                                                    }
+                                                });
+
+                                            }
+
+                                        }, 100);//3秒后执行Runnable中的run方法
+
+                                    } else if (current_Progress == 13) {
+                                        Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+
+                                            @Override
+
+                                            public void run() {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_middle_weak));
+                                                    }
+                                                });
+
+                                            }
+
+                                        }, 200);//3秒后执行Runnable中的run方法
+
+                                    } else if (current_Progress > 15) {
+                                        Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+
+                                            @Override
+
+                                            public void run() {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_grood));
+                                                    }
+                                                });
+
+                                            }
+
+                                        }, 300);//3秒后执行Runnable中的run方法
+
+                                    }
                                 }
                             }
                         }
                     });
                 }
-            } catch (Exception e) {
+            } catch (
+                    Exception e) {
                 e.printStackTrace();
             }
         }
@@ -200,6 +309,17 @@ public class TestFragment extends BaseMvpFragment {
                     tv_dbm.setVisibility(View.GONE);
                     tv_net_num.setTextColor(getResources().getColor(R.color.color_gray));
                     maskView.updateProgress();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+
+                        @Override
+
+                        public void run() {
+                            iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_progress_gray_five_star));
+                        }
+
+                    }, 80);//3秒后执行Runnable中的run方法
+
                 } else {
                     if (start.getText().equals("取消检测")) {
                         tv_net_text.setText("未检测网络");
@@ -220,13 +340,14 @@ public class TestFragment extends BaseMvpFragment {
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                            iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_progress_gray_five_star));
                                             tv_net_num.setText("0");
                                         }
                                     });
 
                                 }
 
-                            }, 100);//3秒后执行Runnable中的run方法
+                            }, 350);//3秒后执行Runnable中的run方法
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -256,6 +377,5 @@ public class TestFragment extends BaseMvpFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LogUtils.d("4pppppp", "4pppppppppppp");
     }
 }

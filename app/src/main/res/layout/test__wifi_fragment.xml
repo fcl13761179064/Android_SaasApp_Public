@@ -20,6 +20,7 @@
         android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
+
         <com.ayla.hotelsaas.widget.MaskProgress
             android:id="@+id/maskView"
             android:layout_width="360dp"
@@ -31,32 +32,32 @@
             app:progress="0"
             app:progress_background="@mipmap/wifi_progress_gray_bg"
             app:progress_content="@mipmap/wifi_progress_green_bg"
-            app:progress_circle="@mipmap/wifi_cicle_yellow"
             app:start_angle="125" />
+
 
         <TextView
             android:id="@+id/tv_net_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/iv_star"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="15dp"
             android:text="0"
-            android:textStyle="bold"
-            android:layout_above="@+id/iv_star"
             android:textColor="#C8CCD8"
-            android:textSize="40dp" />
+            android:textSize="40dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_dbm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="dbm"
-            android:textStyle="bold"
+            android:layout_alignBaseline="@+id/tv_net_num"
             android:layout_marginStart="5dp"
             android:layout_toRightOf="@+id/tv_net_num"
-            android:layout_alignBaseline="@+id/tv_net_num"
+            android:text="dbm"
             android:textColor="#2D3142"
-            android:textSize="12dp" />
+            android:textSize="12dp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/iv_star"
@@ -77,6 +78,8 @@
             android:text="未检测到网络"
             android:textColor="#C8CCD8"
             android:textSize="@dimen/sp_14" />
+
+
     </RelativeLayout>
 
 

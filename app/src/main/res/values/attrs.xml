@@ -25,7 +25,6 @@
             <attr name="progress" format="float" />
             <attr name="start_angle" format="float" />
             <attr name="progress_background" format="reference" />
-            <attr name="progress_circle" format="reference" />
             <attr name="progress_content" format="reference" />
             <attr name="anim_time" format="float" />
         </declare-styleable>
