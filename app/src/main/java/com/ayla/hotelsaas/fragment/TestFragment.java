@@ -3,8 +3,11 @@ package com.ayla.hotelsaas.fragment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -311,7 +314,7 @@ public class TestFragment extends BaseMvpFragment {
         Animation anim = new RotateAnimation(-27f, toDegress, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         anim.setFillAfter(true); // 设置保持动画最后的状态
         anim.setDuration(duation); // 设置动画时间
-        anim.setInterpolator(new AccelerateInterpolator()); // 设置插入器
+        anim.setInterpolator(new LinearInterpolator()); // 设置插入器
         wifi_arrow.startAnimation(anim);
     }
 
