@@ -15,14 +15,8 @@ import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.widget.MaskProgress;
 import com.ayla.hotelsaas.widget.WifiUtils;
-import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.ToastUtils;
 
-import java.lang.reflect.Field;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Logger;
 
 import butterknife.BindView;
 
@@ -98,8 +92,8 @@ public class TestFragment extends BaseMvpFragment {
                 float rn = new Random().nextInt(y - x + 1) + x;
                 tv_net_text.setText("网络极差");
                 tv_net_text.setTextColor(getResources().getColor(R.color.login_error_show));
-                maskProgress.setProgress(rn/3.5f);
-                rotateAnim(300f);
+                maskProgress.setProgress(rn);
+                rotateAnim(rn-110,7000l);
             } else if (level <= -50 && level > -70) {
                 type = "一般";
                 tv_net_text.setText("网络一般");
@@ -108,7 +102,7 @@ public class TestFragment extends BaseMvpFragment {
                 float rn = new Random().nextInt(y - x + 1) + x;
                 maskProgress.setProgress(rn);
                 tv_net_text.setTextColor(getResources().getColor(R.color.color_yellow));
-                rotateAnim(rn/4f);
+                rotateAnim(rn - 60, 5000l);
             } else {
                 type = "极好";
                 tv_net_text.setText("网络极好");
@@ -116,7 +110,7 @@ public class TestFragment extends BaseMvpFragment {
                 int y = 140; // 上界
                 float rn = new Random().nextInt(y - x + 1) + x;
                 maskProgress.setProgress(rn);
-                rotateAnim(rn/4f);
+                rotateAnim(rn - 60, 3000l);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -313,10 +307,10 @@ public class TestFragment extends BaseMvpFragment {
         }
     };
 
-    public void rotateAnim(float toDegress) {
+    public void rotateAnim(float toDegress, long duation) {
         Animation anim = new RotateAnimation(-27f, toDegress, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         anim.setFillAfter(true); // 设置保持动画最后的状态
-        anim.setDuration(3000); // 设置动画时间
+        anim.setDuration(duation); // 设置动画时间
         anim.setInterpolator(new AccelerateInterpolator()); // 设置插入器
         wifi_arrow.startAnimation(anim);
     }

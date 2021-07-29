@@ -21,21 +21,11 @@
         android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/wifi_arrow"
-            android:layout_width="230dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@mipmap/wifi_info_arrow"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="100dp"
-            android:indeterminateDrawable="@anim/wifi_test_rotatea_animation"
-            android:visibility="visible" />
 
         <com.ayla.hotelsaas.widget.MaskProgress
             android:id="@+id/maskView"
             android:layout_width="327dp"
-            android:layout_height="265dp"
+            android:layout_height="255dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             app:anim_time="10"
@@ -45,6 +35,16 @@
             app:progress_content="@mipmap/wifi_progress_green_bg"
             app:start_angle="125" />
 
+        <ImageView
+            android:id="@+id/wifi_arrow"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="100dp"
+            android:background="@mipmap/wifi_info_arrow"
+            android:indeterminateDrawable="@anim/wifi_test_rotatea_animation"
+            android:visibility="invisible" />
 
         <!--  <ImageView
               android:id="@+id/point_weizhi"
