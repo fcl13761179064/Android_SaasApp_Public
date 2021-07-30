@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -143,12 +144,14 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
                 case GO_HOME_TYPE: {
                     appBar.setCenterText(mRoom_name);
                     changeState(main_device);
+                    appBar.setRightText("更多");
                     showBaseFragment("main", type);
                     break;
                 }
                 case GO_SECOND_TYPE: {
                     appBar.setCenterText(mRoom_name);
                     changeState(main_likeage);
+                    appBar.setRightText("");
                     showBaseFragment("linkage", type);
                     break;
                 }
@@ -156,6 +159,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
                     changeState(main_test);
                     showBaseFragment("test", type);
                     appBar.setCenterText("wifi信号测试");
+                    appBar.setRightText("");
                     break;
                 }
             }

@@ -24,7 +24,7 @@
 
         <com.ayla.hotelsaas.widget.MaskProgress
             android:id="@+id/maskView"
-            android:layout_width="327dp"
+            android:layout_width="315dp"
             android:layout_height="255dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
@@ -126,21 +126,23 @@
 
 
     <LinearLayout
+        android:id="@+id/ll_bottom_page"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignTop="@+id/strut"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="62dp"
+        android:layout_marginBottom="40dp"
         android:background="@mipmap/wifi_network_check_status"
+        android:visibility="visible"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="55dp"
+            android:layout_marginTop="40dp"
             android:background="@mipmap/wifi_show_img"
             android:padding="@dimen/dp_10">
 
@@ -152,10 +154,12 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tv_wifi_test_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
             android:text="当前网络未进行检测"
             android:textSize="@dimen/sp_16" />
 
@@ -166,13 +170,25 @@
             android:layout_height="44dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/green_btn_bg_small_corner"
             android:gravity="center"
             android:text="开始检测"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/tv_wifi_status_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:text="清空结果"
+            android:textColor="#648C1B"
+            android:padding="@dimen/dp_10"
+            android:textSize="@dimen/sp_16"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <ImageView
@@ -181,4 +197,20 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:src="@mipmap/wifi_no_relation_text" />
+
+    <Button
+        android:id="@+id/tv_error_btn"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="135dp"
+        android:layout_height="44dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/relation_status"
+        android:background="@drawable/green_btn_bg_small_corner"
+        android:gravity="center"
+        android:text="重新检查"
+        android:visibility="gone"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
 </RelativeLayout>
