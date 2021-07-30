@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -77,7 +78,9 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         super.onCreate(savedInstanceState);
         mCompositeDisposable = new CompositeDisposable();
         EventBus.getDefault().register(this);
-        mWebView.loadUrl(Constance.getDeviceControlBaseUrl());
+        Random random = new Random(100);
+        int num = random.nextInt(100);
+        mWebView.loadUrl(Constance.getDeviceControlBaseUrl()+"#/"+num);
     }
 
     @Override

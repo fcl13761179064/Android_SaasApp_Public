@@ -10,6 +10,7 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.tencent.smtt.export.external.extension.interfaces.IX5WebViewExtension;
 import com.tencent.smtt.export.external.interfaces.WebResourceError;
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
+import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
@@ -31,6 +32,11 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
         mWebView.getSettings().setCacheMode(Constance.isNetworkDebug() ? WebSettings.LOAD_NO_CACHE : WebSettings.LOAD_DEFAULT);
         mWebView.getSettings().setDomStorageEnabled(true);
         mWebView.getSettings().setMediaPlaybackRequiresUserGesture(false);
+        try {
+            QbSdk.clearAllWebViewCache(getApplicationContext(), true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             // 加载主框架出错时会被回调的方法 API<23
@@ -76,7 +82,7 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
             }
         });
         IX5WebViewExtension x5WebViewExtension = mWebView.getX5WebViewExtension();
-        Log.d(TAG, "onCreate: "+x5WebViewExtension);
+        Log.d(TAG, "onCreate: " + x5WebViewExtension);
         WebView.setWebContentsDebuggingEnabled(Constance.isNetworkDebug());
     }
 
