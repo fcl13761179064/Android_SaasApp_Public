@@ -158,7 +158,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
                 case GO_THREE_TYPE: {
                     changeState(main_test);
                     showBaseFragment("test", type);
-                    appBar.setCenterText("wifi信号测试");
+                    appBar.setCenterText("WiFi 信号测试");
                     appBar.setRightText("");
                     break;
                 }

@@ -19,6 +19,7 @@ import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.widget.MaskProgress;
 import com.ayla.hotelsaas.widget.WifiUtils;
 import com.blankj.utilcode.util.NetworkUtils;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.Random;
 
@@ -355,7 +356,7 @@ public class TestFragment extends BaseMvpFragment {
 
     public void setPermiss() {
         if (!WifiUtils.getInstance(getActivity()).mIsopenWifi() && !NetworkUtils.isWifiConnected()) {//如果没有打开wifi
-            CustomToast.makeText(getActivity(), "请先连接WIFI", R.drawable.ic_toast_warming);
+            CustomToast.makeText(getActivity(), "请连接 Wi-Fi 后才能开始检测", R.drawable.ic_toast_warming);
             NetErrorMethod();
             return;
         } else {
