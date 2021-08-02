@@ -78,8 +78,8 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         super.onCreate(savedInstanceState);
         mCompositeDisposable = new CompositeDisposable();
         EventBus.getDefault().register(this);
-        Random random = new Random(100);
-        int num = random.nextInt(100);
+        Random random = new Random();
+        int num = random.nextInt(10000);
         mWebView.loadUrl(Constance.getDeviceControlBaseUrl()+"#/"+num);
     }
 
