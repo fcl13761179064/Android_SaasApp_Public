@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.fragment;
 
+import android.content.Context;
 import android.opengl.Visibility;
 import android.os.Handler;
 import android.os.Message;
@@ -12,10 +13,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.ui.CustomToast;
+import com.ayla.hotelsaas.ui.MainActivity;
 import com.ayla.hotelsaas.widget.MaskProgress;
 import com.ayla.hotelsaas.widget.WifiUtils;
 import com.blankj.utilcode.util.NetworkUtils;
@@ -64,6 +68,7 @@ public class TestFragment extends BaseMvpFragment {
     protected int getLayoutId() {
         return R.layout.test_wifi_fragment;
     }
+
 
     @Override
     protected void initView(View view) {
@@ -355,7 +360,7 @@ public class TestFragment extends BaseMvpFragment {
 
 
     public void setPermiss() {
-        if (!WifiUtils.getInstance(getActivity()).mIsopenWifi() && !NetworkUtils.isWifiConnected()) {//如果没有打开wifi
+        if (!WifiUtils.getInstance(getActivity()).mIsopenWifi() || !NetworkUtils.isWifiConnected()) {//如果没有打开wifi
             CustomToast.makeText(getActivity(), "请连接 Wi-Fi 后才能开始检测", R.drawable.ic_toast_warming);
             NetErrorMethod();
             return;
@@ -368,6 +373,11 @@ public class TestFragment extends BaseMvpFragment {
             }
 
         }
+    }
+
+    public void setShut() {
+        if (maskView != null)
+            maskView.initialing = false;
     }
 
     public void clearData() {
@@ -435,4 +445,5 @@ public class TestFragment extends BaseMvpFragment {
     public void onDestroy() {
         super.onDestroy();
     }
+
 }

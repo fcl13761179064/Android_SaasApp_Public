@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.MyApplication;
 
 /**
  * @author huangxin
@@ -143,7 +144,6 @@ public class MaskProgress extends View {
         this.contentResId = contentResId;
         ct = BitmapFactory.decodeResource(getResources(), contentResId);
     }
-
 
 
     public void updateProgress() {
@@ -288,12 +288,15 @@ public class MaskProgress extends View {
         @Override
         public void run() {
             while (initialing) {
+                Log.d("1111111",initialing+"");
                 postInvalidate();
                 if (currentProgress < realProgress) {
                     currentProgress += step * rate;
                     if (currentProgress > realProgress)
                         currentProgress = realProgress;
-                    animateListener.progressNum(currentProgress);
+                    if (animateListener != null) {
+                        animateListener.progressNum(currentProgress);
+                    }
                     if (!WifiUtils.getInstance(getContext()).mIsopenWifi()) {//如果没有打开wifi
                         //progress背景图
                         animateListener.NetError();

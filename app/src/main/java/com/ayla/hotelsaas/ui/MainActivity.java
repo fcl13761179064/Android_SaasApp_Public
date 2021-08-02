@@ -111,6 +111,15 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     }
 
     @Override
+    protected void appBarLeftIvClicked() {
+        super.appBarLeftIvClicked();
+       if (currentFragment instanceof  TestFragment){
+        ((TestFragment) currentFragment).setShut();
+       }
+       finish();
+    }
+
+    @Override
     protected void initListener() {
         rgIndicators.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
