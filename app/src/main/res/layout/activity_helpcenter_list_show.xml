@@ -12,8 +12,6 @@
         app:appbar_bottom_line="true"
         app:left_iv="@mipmap/icon_back_black" />
 
-    <?xml version="1.0" encoding="utf-8"?>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/device_recyclerview"
         android:layout_width="match_parent"
