@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:background="@drawable/bg_device_item">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
 
     <RelativeLayout
         android:id="@+id/rl_device_detail"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:background="@drawable/room_num_shape">
+       >
 
         <TextView
+            android:id="@+id/tv_help_desc"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:paddingLeft="16dp"
-            android:text=""
+            android:text="创建订单"
             android:textColor="#000000"
             android:textSize="17sp" />
 
