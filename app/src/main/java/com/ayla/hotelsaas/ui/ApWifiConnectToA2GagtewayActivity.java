@@ -1,36 +1,16 @@
 package com.ayla.hotelsaas.ui;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.wifi.ScanResult;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.mvp.present.APWifiToGateWayPresenter;
-import com.ayla.hotelsaas.mvp.view.APwifiToGateWayView;
-import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.WifiUtil;
 import com.ayla.hotelsaas.widget.FastClickUtils;
-import com.ayla.hotelsaas.widget.FilterWifiDialog;
-import com.ayla.hotelsaas.widget.WifiUtils;
-import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
-import com.scwang.smart.refresh.layout.SmartRefreshLayout;
-import com.scwang.smart.refresh.layout.api.RefreshLayout;
-import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener;
-
-
-import java.lang.ref.PhantomReference;
-import java.util.List;
-
 import butterknife.BindView;
 
 public class ApWifiConnectToA2GagtewayActivity extends BaseMvpActivity {

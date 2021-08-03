@@ -44,4 +44,6 @@
     <color name="gray_6">#666666</color>
     <color name="common_green">#00B648</color>
     <color name="color_3C3C3C">#3C3C3C</color>
+    <color name="color_yellow">#FACB3E</color>
+    <color name="color_gray">#C8CCD8</color>
 </resources>

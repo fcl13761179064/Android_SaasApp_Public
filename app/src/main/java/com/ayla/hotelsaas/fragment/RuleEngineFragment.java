@@ -29,6 +29,7 @@ import com.ayla.hotelsaas.mvp.present.RuleEnginePresenter;
 import com.ayla.hotelsaas.mvp.view.RuleEngineView;
 import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.GatewaySelectActivity;
+import com.ayla.hotelsaas.ui.MainActivity;
 import com.ayla.hotelsaas.ui.SceneSettingActivity;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
@@ -68,7 +69,6 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
     private RuleEnginePagerAdapter mAdapter;
     private long mRoom_id;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +76,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
         if (getArguments()!=null){
             mRoom_id = getArguments().getLong("room_id",0);
         }
+
     }
 
     @Override

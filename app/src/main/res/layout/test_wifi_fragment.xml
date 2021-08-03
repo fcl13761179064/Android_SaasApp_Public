@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white">
+
+    <View
+        android:id="@+id/strut"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerVertical="true" />
+
+
+    <RelativeLayout
+        android:id="@+id/rl_top_wifi"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/strut"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+
+
+        <com.ayla.hotelsaas.widget.MaskProgress
+            android:id="@+id/maskView"
+            android:layout_width="315dp"
+            android:layout_height="255dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            app:anim_time="10"
+            app:max="360"
+            app:progress="0"
+            app:progress_background="@mipmap/wifi_no_cicle_gray_bg"
+            app:progress_content="@mipmap/wifi_progress_green_bg"
+            app:start_angle="125" />
+
+        <ImageView
+            android:id="@+id/wifi_arrow"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="100dp"
+            android:background="@mipmap/wifi_info_arrow"
+            android:indeterminateDrawable="@anim/wifi_test_rotatea_animation"
+            android:visibility="invisible" />
+
+        <!--  <ImageView
+              android:id="@+id/point_weizhi"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="25dp"
+              android:layout_alignParentBottom="true"
+              android:layout_marginBottom="100dp"
+              android:background="@mipmap/wifi_cicle_yellow"
+              android:visibility="gone" />
+
+          <ImageView
+              android:id="@+id/point_weizhi_two"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="38dp"
+              android:layout_centerHorizontal="true"
+              android:layout_marginTop="45dp"
+              android:background="@mipmap/wifi_cicle_yellow"
+              android:visibility="gone" />
+
+          <ImageView
+              android:id="@+id/point_weizhi_three"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginEnd="40dp"
+              android:layout_marginBottom="180dp"
+              android:layout_alignParentRight="true"
+              android:layout_alignParentBottom="true"
+              android:background="@mipmap/wifi_cicle_yellow"
+              android:visibility="gone" />-->
+
+        <TextView
+            android:id="@+id/tv_net_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/iv_star"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:text="0"
+            android:textColor="#C8CCD8"
+            android:textSize="40dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_dbm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tv_net_num"
+            android:layout_marginStart="5dp"
+            android:layout_toRightOf="@+id/tv_net_num"
+            android:text="dbm"
+            android:textColor="#2D3142"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_net_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dp_16"
+            android:background="@mipmap/wifi_progress_gray_five_star" />
+
+        <TextView
+            android:id="@+id/tv_net_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="55dp"
+            android:text="未检测网络"
+            android:textColor="#C8CCD8"
+            android:textSize="@dimen/sp_14" />
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_bottom_page"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/strut"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="25dp"
+        android:background="@mipmap/wifi_network_check_status"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:background="@mipmap/wifi_show_img"
+            android:padding="@dimen/dp_10">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/wifi_show_inner_img" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_wifi_test_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="当前网络未进行检测"
+            android:textSize="@dimen/sp_16" />
+
+        <Button
+            android:id="@+id/start"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="105dp"
+            android:layout_height="36dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/green_btn_bg_small_corner"
+            android:gravity="center"
+            android:text="开始检测"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_wifi_status_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="清空结果"
+            android:textColor="#648C1B"
+            android:padding="@dimen/dp_10"
+            android:textSize="@dimen/sp_16"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/relation_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/wifi_no_relation_text" />
+
+    <Button
+        android:id="@+id/tv_error_btn"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="135dp"
+        android:layout_height="44dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/relation_status"
+        android:background="@drawable/green_btn_bg_small_corner"
+        android:gravity="center"
+        android:text="重新检查"
+        android:visibility="gone"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+</RelativeLayout>
