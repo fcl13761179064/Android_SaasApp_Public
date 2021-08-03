@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
@@ -26,6 +27,7 @@ import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.CustomSheet;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import io.sentry.Sentry;
@@ -110,14 +112,16 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         startActivityForResult(intent, REQUEST_CODE_TO_MORE);
     }
 
+
     @Override
-    protected void appBarLeftIvClicked() {
-        super.appBarLeftIvClicked();
-       if (currentFragment instanceof  TestFragment){
-        ((TestFragment) currentFragment).setShut();
-       }
-       finish();
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (currentFragment instanceof  TestFragment){
+            ((TestFragment) currentFragment).setShut();
+        }
+        finish();
     }
+
 
     @Override
     protected void initListener() {

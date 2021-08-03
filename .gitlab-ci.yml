@@ -68,9 +68,6 @@ job_assemble:
 
 job_publish:
   stage: publish
-  only:
-    refs:
-      - prod
     changes:
       - CHANGELOG.MD
   script:
