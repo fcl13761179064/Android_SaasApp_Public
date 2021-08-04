@@ -1,10 +1,12 @@
 package com.ayla.hotelsaas.ui;
 
+import android.content.Intent;
 import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.HelpCenterAdapter;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.utils.RecycleViewDivider;
@@ -58,7 +60,10 @@ public class HelpCenterActivity extends BaseMvpActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+                Intent intent = new Intent(HelpCenterActivity.this, H5BaseActivity.class);
+                intent.putExtra("pageTitle", "帮助中心");
+                intent.putExtra("url", Constance.getAssistantBaseUrl() + "/trainingPage.html");
+                startActivity(intent);
             }
         });
     }
