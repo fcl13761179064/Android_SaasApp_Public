@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 
@@ -35,17 +36,12 @@ public class H5BaseActivity extends BaseWebViewActivity {
 
     @Override
     protected void initView() {
-        WebView.setWebContentsDebuggingEnabled(true);
-        mAppBar.setCenterText(getIntent().getStringExtra("pageTitle"));
+        WebView.setWebContentsDebuggingEnabled(Constance.isOpenLog());
         mWebView.loadUrl(getIntent().getStringExtra("url"));
-
     }
 
     @Override
     protected void initListener() {
-
-
-
     }
 
     @Override

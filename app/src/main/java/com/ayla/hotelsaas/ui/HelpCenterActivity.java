@@ -61,8 +61,8 @@ public class HelpCenterActivity extends BaseMvpActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(HelpCenterActivity.this, H5BaseActivity.class);
-                intent.putExtra("pageTitle", "帮助中心");
-                intent.putExtra("url", Constance.getAssistantBaseUrl() + "constructionPage");
+                int current_positon= position + 1;
+                intent.putExtra("url", Constance.getAssistantBaseUrl() + "/constructionPage#/details/"+current_positon);
                 startActivity(intent);
             }
         });

@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:appbar_bottom_line="true"
+        app:center_tv="帮助中心-详情"
         app:left_iv="@mipmap/icon_back_black" />
 
     <FrameLayout
