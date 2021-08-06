@@ -39,13 +39,13 @@ public class HelpCenterActivity extends BaseMvpActivity {
     protected void initView() {
         List<String> list = new ArrayList<>();
         list.add("在清晖上怎么管理施工单？");
-        list.add("施工 APP 在哪里下载登录？？");
+        list.add("施工 APP 在哪里下载登录？");
         list.add("怎么选择施工单？");
         list.add("怎么添加设备？");
         list.add("设备信息怎么编辑？");
         list.add("一键联动怎么创建？");
         list.add("双控联动怎么创建？");
-        list.add("怎么编辑联动？？");
+        list.add("怎么编辑联动？");
         list.add("展厅/展箱施工单怎么创建？");
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new RecycleViewDivider(this, LinearLayoutManager.VERTICAL, 3, R.color.all_bg_color));
