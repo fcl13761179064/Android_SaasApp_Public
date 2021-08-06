@@ -63,8 +63,8 @@ public class H5BaseActivity extends BaseWebViewActivity {
     @Override
     public void handleRefreshClick() {
         super.handleRefreshClick();
+        mWebView.loadUrl(getIntent().getStringExtra("url"));
     }
-
 
 }
 
