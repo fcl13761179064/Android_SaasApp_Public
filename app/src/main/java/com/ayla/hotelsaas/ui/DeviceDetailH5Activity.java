@@ -561,7 +561,7 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void SwitchRename(SwitchRenameEvent event) {
+    public void SwitchRename(SwitchRenameEvent event) {//双路和四路窗帘开关重命名
         mWebView.callHandler("miya.native.event.deviceProperties", new Object[1]);
     }
 }

@@ -1,10 +1,13 @@
 package com.ayla.hotelsaas.ui;
 
 import android.view.View;
+import android.webkit.JavascriptInterface;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.widget.AppBar;
+import com.tencent.smtt.sdk.WebView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -32,12 +35,16 @@ public class H5BaseActivity extends BaseWebViewActivity {
 
     @Override
     protected void initView() {
+        WebView.setWebContentsDebuggingEnabled(true);
         mAppBar.setCenterText(getIntent().getStringExtra("pageTitle"));
         mWebView.loadUrl(getIntent().getStringExtra("url"));
+
     }
 
     @Override
     protected void initListener() {
+
+
 
     }
 
@@ -61,6 +68,8 @@ public class H5BaseActivity extends BaseWebViewActivity {
     public void handleRefreshClick() {
         super.handleRefreshClick();
     }
+
+
 }
 
 

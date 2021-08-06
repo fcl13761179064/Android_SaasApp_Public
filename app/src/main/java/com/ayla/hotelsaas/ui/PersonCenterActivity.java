@@ -75,9 +75,9 @@ public class PersonCenterActivity extends BaseMvpActivity<PersonCenterView, Pers
         rl_help_center.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PersonCenterActivity.this, HelpCenterActivity.class);
+                Intent intent = new Intent(PersonCenterActivity.this, H5BaseActivity.class);
                 intent.putExtra("pageTitle", "帮助中心");
-                intent.putExtra("url", Constance.getAssistantBaseUrl() + "/trainingPage.html");
+                intent.putExtra("url", Constance.getAssistantBaseUrl() + "/constructionPage");
                 startActivity(intent);
             }
         });
