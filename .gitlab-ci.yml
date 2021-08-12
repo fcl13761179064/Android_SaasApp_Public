@@ -13,7 +13,6 @@ before_script:
 
 stages:
   - lint
-  - signing_prepare
   - assemble
   - publish
 
@@ -54,20 +53,6 @@ job_signing_prepare:
   tags:
     - iOS
 
-job_assemble:
-  stage: assemble
-  only:
-    refs:
-      - master
-  script:
-    - echo "开始打包"
-    - ./gradlew :app:assembleRelease
-    - echo "打包结束"
-  artifacts:
-    paths:
-      - app/build/outputs/apk/
-  tags:
-    - iOS
 
 job_publish:
   stage: publish
