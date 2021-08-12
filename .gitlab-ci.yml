@@ -57,7 +57,8 @@ job_signing_prepare:
 job_assemble:
   stage: assemble
   only:
-    - master
+    refs:
+      - master
   script:
     - echo "开始打包"
     - ./gradlew :app:assembleRelease
