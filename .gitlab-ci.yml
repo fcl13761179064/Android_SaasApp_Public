@@ -13,7 +13,7 @@ before_script:
 
 stages:
   - lint
-  - assemble
+  - signing_prepare
   - publish
 
 job_lint:
