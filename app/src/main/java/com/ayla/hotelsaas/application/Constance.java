@@ -134,7 +134,7 @@ public class Constance {
     }
 
     //场景物模板属性code
-    public static  String SCENE_TEMPLATE_CODE = "KeyValueNotification.KeyValue";
+    public static String SCENE_TEMPLATE_CODE = "KeyValueNotification.KeyValue";
     //艾拉wifi SSId正则
     public static String DEFAULT_SSID_REGEX = "Ayla-([0-9a-zA-Z]+|DevKit)";
 
@@ -153,4 +153,11 @@ public class Constance {
         return sb.toString();
     }
 
+    public static boolean is_double_four_curtain(String pid) {
+        if ("ZBSW0-A000021".equals(pid) || "ZBSCN-A000010".equals(pid)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

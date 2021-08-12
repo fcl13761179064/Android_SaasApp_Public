@@ -5,7 +5,10 @@ variables:
 
 before_script:
   - chmod +x gradlew
+  - chmod +x ./QARobot.sh
   - export ANDROID_HOME=/Users/ayla/Library/Android/sdk
+  - export VERSION_NAME=`egrep '^[[:blank:]]+versionName[[:blank:]]'  app/build.gradle | awk '{print $2}' | sed s/\"//g`
+  - echo "App version name ${VERSION_NAME}"
 
 
 stages:
@@ -55,7 +58,6 @@ job_assemble:
   stage: assemble
   only:
     - master
-    - prod
   script:
     - echo "开始打包"
     - ./gradlew :app:assembleRelease
@@ -70,7 +72,7 @@ job_publish:
   stage: publish
   only:
     refs:
-      - prod
+      - master
     changes:
       - CHANGELOG.MD
   script:
@@ -80,5 +82,9 @@ job_publish:
     - echo "buildUpdateDescription=$buildUpdateDescription"
     - curl -F 'file=@app/build/outputs/apk/prod/release/app-prod-release.apk' -F "_api_key=$pgyer_api_key" -F "buildUpdateDescription=$buildUpdateDescription"  https://www.pgyer.com/apiv2/app/upload
     - echo "上传APP到蒲公英结束"
+    - echo "开始发布版本更新提示"
+    - echo "VERSION_NAME ${VERSION_NAME}"
+    - ./QARobot.sh "${VERSION_NAME}" //执行脚本并传参，格式为xx.sh+空格+参数，sh脚本通过$1,$2获取参数，以此类推
+    - echo "结束发布版本更新提示"
   tags:
     - iOS

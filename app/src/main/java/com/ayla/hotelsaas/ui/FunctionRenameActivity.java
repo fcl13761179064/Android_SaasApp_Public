@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.FunctionRenameListAdapter;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -132,12 +133,14 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
             data.add(bean);
         }
         mAdapter.setNewData(data);
-        EventBus.getDefault().post(new SwitchRenameEvent());
     }
 
     @Override
     public void renameSuccess() {
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
+        if (Constance.is_double_four_curtain(mDevicesBean.getPid())) {
+            EventBus.getDefault().post(new SwitchRenameEvent());
+        }
         loadData();
     }
 
