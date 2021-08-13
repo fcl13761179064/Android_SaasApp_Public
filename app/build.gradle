@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-aspectjx'
 // Create a variable called keystorePropertiesFile, and initialize it to your
 // keystore.properties file, in the rootProject folder.
-/*
-def keystorePropertiesFile = rootProject.file("siging.properties")
+
+/*def keystorePropertiesFile = rootProject.file("signing.properties")
 // Initialize a new Properties() object called keystoreProperties.
 def keystoreProperties = new Properties()
 // Load your keystore.properties file into the keystoreProperties object.
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-*/
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))*/
+
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -33,91 +33,81 @@ android {
             checkReleaseBuilds false
             abortOnError false
         }
-    }
 
-/*
-    signingConfigs {
-        config {
-            v1SigningEnabled true
-            v2SigningEnabled true
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-        }
-    }
-*/
 
-    signingConfigs {
-        config {
-            file("../signing.properties").with { propFile ->
-                if (propFile.canRead()) {
-                    println 'signing.properties found, reading signing.properties'
-                    def keystoreProperties = new Properties()
-                    keystoreProperties.load(new FileInputStream(propFile))
+        signingConfigs {
+            config {
+                file("../signing.properties").with { propFile ->
+                    if (propFile.canRead()) {
+                        println 'signing.properties found, reading signing.properties'
+                        def keystoreProperties = new Properties()
+                        keystoreProperties.load(new FileInputStream(propFile))
 
-                    v1SigningEnabled true
-                    v2SigningEnabled true
-                    keyAlias keystoreProperties['keyAlias']
-                    keyPassword keystoreProperties['keyPassword']
-                    storePassword keystoreProperties['storePassword']
-                    storeFile rootProject.file("./ayla_test.jks")
-                } else {
-                    println 'Unable to read signing.properties'
+                        v1SigningEnabled true
+                        v2SigningEnabled true
+                        keyAlias keystoreProperties['keyAlias']
+                        keyPassword keystoreProperties['keyPassword']
+                        storePassword keystoreProperties['storePassword']
+                        storeFile rootProject.file("./ayla_test.jks")
+                    } else {
+                        println 'Unable to read signing.properties'
+                    }
                 }
             }
         }
-    }
 
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    flavorDimensions "server_domain"
-
-    productFlavors {
-        dev {//开发服务地址
-            buildConfigField("String", "server_domain", "\"dev\"")
-            dimension "server_domain"
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
         }
-        qa {//测试服务地址
-            buildConfigField("String", "server_domain", "\"qa\"")
-            dimension "server_domain"
-        }
-        prod {//量产服务地址
-            buildConfigField("String", "server_domain", "\"prod\"")
-            dimension "server_domain"
-        }
-    }
 
-    buildTypes {
-        release {
-            zipAlignEnabled true
-            shrinkResources true  // 移除无用的resource文件
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
-        }
-        debug {
-            signingConfig signingConfigs.config
-        }
-    }
-    testOptions {
-        unitTests.returnDefaultValues = true
-    }
 
-    viewBinding {
-        enabled = true
-    }
+        buildTypes {
+            release {
+                zipAlignEnabled true
+                shrinkResources true  // 移除无用的resource文件
+                minifyEnabled true
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                signingConfig signingConfigs.config
+            }
+            debug {
+                signingConfig signingConfigs.config
+            }
+        }
 
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
+        flavorDimensions "server_domain"
+
+        productFlavors {
+            dev {//开发服务地址
+                buildConfigField("String", "server_domain", "\"dev\"")
+                dimension "server_domain"
+            }
+            qa {//测试服务地址
+                buildConfigField("String", "server_domain", "\"qa\"")
+                dimension "server_domain"
+            }
+            prod {//量产服务地址
+                buildConfigField("String", "server_domain", "\"prod\"")
+                dimension "server_domain"
+            }
+        }
+
+
+        testOptions {
+            unitTests.returnDefaultValues = true
+        }
+
+        viewBinding {
+            enabled = true
+        }
+
+        repositories {
+            flatDir {
+                dirs 'libs'
+            }
         }
     }
-
 }
 
 /*
@@ -149,36 +139,36 @@ task replaceAliPicture() {
 }*/
 
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    implementation project(path: ':lib_ap_distribute')
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.7'
-    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    implementation rootProject.libraries.butterknife
-    annotationProcessor rootProject.libraries.butterknife_compiler
-    implementation rootProject.libraries.rxjava
-    implementation rootProject.libraries.rxandroid
-    implementation rootProject.libraries.retrofit
-    implementation rootProject.libraries.converter_gson
-    implementation rootProject.libraries.logging_interceptor
-    implementation rootProject.libraries.adapter_rxjava
-    implementation rootProject.libraries.autosize
-    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
-    implementation 'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
-    implementation 'com.scwang.smart:refresh-footer-classics:2.0.1'    //经典加载
-    implementation rootProject.libraries.BaseRyViewAdapHelper
-    implementation rootProject.libraries.utilcode
-    implementation rootProject.libraries.eventbus
-    implementation 'com.xw.repo:bubbleseekbar:3.20'
-    implementation 'io.sentry:sentry-android:4.3.0'
-    implementation project(':dsbridge')
+    dependencies {
+        implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+        implementation 'com.github.bumptech.glide:glide:4.9.0'
+        implementation project(path: ':lib_ap_distribute')
+        annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+        implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.7'
+        implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+        testImplementation 'junit:junit:4.12'
+        androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+        androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+        implementation rootProject.libraries.butterknife
+        annotationProcessor rootProject.libraries.butterknife_compiler
+        implementation rootProject.libraries.rxjava
+        implementation rootProject.libraries.rxandroid
+        implementation rootProject.libraries.retrofit
+        implementation rootProject.libraries.converter_gson
+        implementation rootProject.libraries.logging_interceptor
+        implementation rootProject.libraries.adapter_rxjava
+        implementation rootProject.libraries.autosize
+        implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
+        implementation 'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
+        implementation 'com.scwang.smart:refresh-footer-classics:2.0.1'    //经典加载
+        implementation rootProject.libraries.BaseRyViewAdapHelper
+        implementation rootProject.libraries.utilcode
+        implementation rootProject.libraries.eventbus
+        implementation 'com.xw.repo:bubbleseekbar:3.20'
+        implementation 'io.sentry:sentry-android:4.3.0'
+        implementation project(':dsbridge')
 
-    implementation 'com.github.AylaAsia:HongYanConfigLib:0.0.10'
-    //MagicIndicator
-    api 'com.github.hackware1993:MagicIndicator:1.6.0'
+        implementation 'com.github.AylaAsia:HongYanConfigLib:0.0.10'
+        //MagicIndicator
+        api 'com.github.hackware1993:MagicIndicator:1.6.0'
 }
