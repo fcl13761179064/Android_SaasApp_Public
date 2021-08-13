@@ -83,7 +83,7 @@ job_publish:
     - echo "pgyer_api_key=$pgyer_api_key"
     - buildUpdateDescription=$(cat CHANGELOG.MD)
     - echo "buildUpdateDescription=$buildUpdateDescription"
-    - curl -F 'file=@app/build/outputs/apk/debug/app-qa-debug.apk' -F "_api_key=$pgyer_api_key" -F "buildUpdateDescription=$buildUpdateDescription"  https://www.pgyer.com/apiv2/app/upload
+    - curl -F 'file=@app/build/outputs/apk/qa/debug/app-qa-debug.apk' -F "_api_key=$pgyer_api_key" -F "buildUpdateDescription=$buildUpdateDescription"  https://www.pgyer.com/apiv2/app/upload
     - echo "上传APP到蒲公英结束"
     - echo "开始发布版本更新提示"
     - echo "VERSION_NAME ${VERSION_NAME}"
