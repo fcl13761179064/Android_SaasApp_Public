@@ -108,7 +108,6 @@ android {
             }
         }
     }
-}
 
 /*
 task replaceAliPicture() {
@@ -171,4 +170,6 @@ task replaceAliPicture() {
         implementation 'com.github.AylaAsia:HongYanConfigLib:0.0.10'
         //MagicIndicator
         api 'com.github.hackware1993:MagicIndicator:1.6.0'
+        implementation(name: 'Android_AylaSDK', ext: 'aar')
+    }
 }
