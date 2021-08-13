@@ -1,5 +1,5 @@
 # 机器人地址
-# 智家QA发布
+# 艾拉工程QA发布
 
 RobotURL="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=053f21b8-5c5d-4445-8c06-e790cf1375b8"
 

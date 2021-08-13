@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-aspectjx'
 // Create a variable called keystorePropertiesFile, and initialize it to your
 // keystore.properties file, in the rootProject folder.
+/*
 def keystorePropertiesFile = rootProject.file("siging.properties")
-
 // Initialize a new Properties() object called keystoreProperties.
 def keystoreProperties = new Properties()
-
 // Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+*/
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -35,6 +35,7 @@ android {
         }
     }
 
+/*
     signingConfigs {
         config {
             v1SigningEnabled true
@@ -45,6 +46,29 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+*/
+
+    signingConfigs {
+        config {
+            file("../signing.properties").with { propFile ->
+                if (propFile.canRead()) {
+                    println 'signing.properties found, reading signing.properties'
+                    def keystoreProperties = new Properties()
+                    keystoreProperties.load(new FileInputStream(propFile))
+
+                    v1SigningEnabled true
+                    v2SigningEnabled true
+                    keyAlias keystoreProperties['keyAlias']
+                    keyPassword keystoreProperties['keyPassword']
+                    storePassword keystoreProperties['storePassword']
+                    storeFile rootProject.file("./ayla_test.jks")
+                } else {
+                    println 'Unable to read signing.properties'
+                }
+            }
+        }
+    }
+
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
