@@ -1,4 +1,3 @@
-include ':Android_AylaSDK'
 include ':app'
 include ':dsbridge'
 include ':lib_ap_distribute'
