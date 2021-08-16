@@ -9,10 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.GlideApp;
@@ -24,11 +22,8 @@ import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.utils.WifiUtil;
 import com.ayla.hotelsaas.widget.FastClickUtils;
-import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
-
 import butterknife.BindView;
 import butterknife.OnClick;
-
 import static com.ayla.hotelsaas.application.MyApplication.getContext;
 
 /**
