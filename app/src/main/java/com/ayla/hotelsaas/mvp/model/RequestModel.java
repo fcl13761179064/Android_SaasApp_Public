@@ -146,7 +146,6 @@ public class RequestModel {
     }
 
 
-
     /**
      * 创建房间订单
      *
@@ -265,6 +264,7 @@ public class RequestModel {
         return getApiService().getDevicePid(pid).compose(new BaseResultTransformer<BaseResult<DeviceCategoryBean.SubBean.NodeBean>, DeviceCategoryBean.SubBean.NodeBean>() {
         });
     }
+
     /**
      * 获取品类支持的条件、功能 项目 详情
      *
@@ -451,12 +451,10 @@ public class RequestModel {
                         DeviceTemplateBean deviceTemplateBean = deviceTemplateBeanBaseResult.data;
                         List<DeviceTemplateBean.AttributesBean> extendAttributes = deviceTemplateBean.getExtendAttributes();
                         List<DeviceTemplateBean.AttributesBean> attributes = deviceTemplateBean.getAttributes();
-                        if (extendAttributes != null) {
-                            if (attributes == null) {
-                                attributes = new ArrayList<>();
-                                deviceTemplateBean.setAttributes(attributes);
-                            }
-                            attributes.addAll(extendAttributes);
+                        if (attributes != null) {
+                            deviceTemplateBean.setAttributes(attributes);
+                        }else {
+                            deviceTemplateBean.setAttributes(extendAttributes);
                         }
                     }
                 })//特别处理：红外家电设备自学习的功能在物模板里面定义在extendAttributes 字段中，需要把它融合到字段attributes 里面。
@@ -881,33 +879,33 @@ public class RequestModel {
             @Override
             public ObservableSource<DeviceTemplateBean> apply(@NonNull Observable<DeviceTemplateBean> upstream) {
                 return upstream.zipWith(RequestModel.getInstance().fetchPropertyNickname(devicesBean.getCuId(), deviceId), new BiFunction<DeviceTemplateBean, List<PropertyNicknameBean>, DeviceTemplateBean>() {
-                            @Override
-                            public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<PropertyNicknameBean> propertyNicknameBeans) throws Exception {
-                                for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans.getAttributes()) {
-                                    attributesBeans.setDeviceId(deviceId);
-                                    for (PropertyNicknameBean propertyNicknameBean : propertyNicknameBeans) {
-                                        if ("nickName".equals(propertyNicknameBean.getPropertyType()) && TextUtils.equals(attributesBean.getCode(), propertyNicknameBean.getPropertyName())) {
-                                            attributesBean.setDisplayName(propertyNicknameBean.getPropertyValue());
-                                        }
-                                        if ("Words".equals(propertyNicknameBean.getPropertyType())) {
-                                            if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
-                                                if (attributesBean.getValue() != null) {
-                                                    for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
-                                                        if (TextUtils.equals(valueBean.getValue(), propertyNicknameBean.getPropertyName())) {
-                                                            valueBean.setDisplayName(propertyNicknameBean.getPropertyValue());
-                                                        }
-                                                    }
+                    @Override
+                    public DeviceTemplateBean apply(DeviceTemplateBean attributesBeans, List<PropertyNicknameBean> propertyNicknameBeans) throws Exception {
+                        for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans.getAttributes()) {
+                            attributesBeans.setDeviceId(deviceId);
+                            for (PropertyNicknameBean propertyNicknameBean : propertyNicknameBeans) {
+                                if ("nickName".equals(propertyNicknameBean.getPropertyType()) && TextUtils.equals(attributesBean.getCode(), propertyNicknameBean.getPropertyName())) {
+                                    attributesBean.setDisplayName(propertyNicknameBean.getPropertyValue());
+                                }
+                                if ("Words".equals(propertyNicknameBean.getPropertyType())) {
+                                    if ("KeyValueNotification.KeyValue".equals(attributesBean.getCode())) {//如果是触控面板的按键名称
+                                        if (attributesBean.getValue() != null) {
+                                            for (DeviceTemplateBean.AttributesBean.ValueBean valueBean : attributesBean.getValue()) {
+                                                if (TextUtils.equals(valueBean.getValue(), propertyNicknameBean.getPropertyName())) {
+                                                    valueBean.setDisplayName(propertyNicknameBean.getPropertyValue());
                                                 }
                                             }
                                         }
                                     }
                                 }
-                                if ( attributesBeans.getAttributes().size()==0 && attributesBeans.getEvents().size()>0){
-                                    attributesBeans.setDeviceId(deviceId);
-                                }
-                                return attributesBeans;
                             }
-                        });
+                        }
+                        if (attributesBeans.getAttributes().size() == 0 && attributesBeans.getEvents().size() > 0) {
+                            attributesBeans.setDeviceId(deviceId);
+                        }
+                        return attributesBeans;
+                    }
+                });
             }
         };
     }
@@ -970,17 +968,18 @@ public class RequestModel {
     /**
      * 获取所有设备位置，全屋还是 卧室
      *
-     * @return
      * @param room_id
+     * @return
      */
     public Observable<List<DeviceLocationBean>> getAllDeviceLocation(Long room_id) {
         return getApiService().getAllDeviceLocation(room_id)
-                .compose(new BaseResultTransformer<BaseResult<List<DeviceLocationBean>>,List<DeviceLocationBean>>() {
+                .compose(new BaseResultTransformer<BaseResult<List<DeviceLocationBean>>, List<DeviceLocationBean>>() {
                 });
     }
 
     /**
      * A2网关绑定情况信息返回
+     *
      * @return
      */
     public Observable<A2BindInfoBean> getA2BindInfo(String deviceId) {
@@ -994,8 +993,8 @@ public class RequestModel {
      *
      * @return
      */
-    public Observable<Boolean> Apnetwork(String deviceId, long cuId,String setupToken) {
-        return getApiService().ApNetwork(deviceId,cuId,setupToken).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+    public Observable<Boolean> Apnetwork(String deviceId, long cuId, String setupToken) {
+        return getApiService().ApNetwork(deviceId, cuId, setupToken).compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
         });
     }
 
@@ -1009,7 +1008,7 @@ public class RequestModel {
      * @return
      */
     public Observable<WorkOrderBean> getHistoryData(int pageNum, int maxNum, String tradeId, String processStatus) {
-        return getApiService().getWorkOrders(pageNum, maxNum,tradeId,processStatus)
+        return getApiService().getWorkOrders(pageNum, maxNum, tradeId, processStatus)
                 .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
                 });
     }
@@ -1023,12 +1022,14 @@ public class RequestModel {
      * @return
      */
     public Observable<WorkOrderBean> getWorkOrderList(int pageNum, int maxNum, String tradeId, String processStatus) {
-        return getApiService().getWorkOrders(pageNum, maxNum,tradeId,processStatus)
+        return getApiService().getWorkOrders(pageNum, maxNum, tradeId, processStatus)
                 .compose(new BaseResultTransformer<BaseResult<WorkOrderBean>, WorkOrderBean>() {
                 });
     }
+
     /**
      * 方案导入时，展示房型
+     *
      * @return
      */
     public Observable<RoomTypeShowBean> showRoomType(long roomId) {
