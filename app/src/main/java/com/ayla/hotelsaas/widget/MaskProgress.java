@@ -151,7 +151,7 @@ public class MaskProgress extends View {
 
     public void setArrowResId(int arrowResId) {
         this.arrowResId = arrowResId;
-        ar = BitmapFactory.decodeResource(getResources(), contentResId);
+        ar = BitmapFactory.decodeResource(getResources(), arrowResId);
     }
 
     public void updateProgress() {
@@ -214,7 +214,7 @@ public class MaskProgress extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawBitmap(bg, 0, (mHight- bg.getHeight()) / 2, paint);
+        canvas.drawBitmap(bg, 0, (mHight - bg.getHeight()) / 2, paint);
         int rc = canvas.saveLayer(0, (mHight - bg.getHeight()) / 2, bg.getWidth(), (mHight + bg.getHeight()) / 2, null, Canvas.ALL_SAVE_FLAG);
         paint.setFilterBitmap(false);
         if (initialing) {
@@ -226,7 +226,40 @@ public class MaskProgress extends View {
         canvas.drawBitmap(ct, 0, (mHight - ct.getHeight()) / 2, paint);
         paint.setXfermode(null);
         canvas.restoreToCount(rc);
-        canvas.drawBitmap(ar, (mWidth-ar.getWidth())/2, (mHight-ar.getHeight()) / 2, paint);
+        if (initialing) {
+            if (currentProgress>=25){
+                drawRotateBitmap(canvas, paint, ar, currentProgress/1.2f - 30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
+            }else {
+                drawRotateBitmap(canvas, paint, ar, currentProgress - 30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
+            }
+        } else {
+            if (realProgress != 0) {
+                drawRotateBitmap(canvas, paint, ar, realProgress/1.2f- 30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
+            }
+        }
+
+    }
+
+    /**
+     * 绘制自旋转位图
+     *
+     * @param canvas
+     * @param paint
+     * @param bitmap   位图对象
+     * @param rotation 旋转度数
+     * @param posX     在canvas的位置坐标
+     * @param posY
+     */
+    private void drawRotateBitmap(Canvas canvas, Paint paint, Bitmap bitmap, float rotation, float posX, float posY) {
+        Matrix matrix = new Matrix();
+        int offsetX = bitmap.getWidth() / 2;
+        int offsetY = bitmap.getHeight() / 2;
+        matrix.postTranslate(-offsetX, -offsetY);
+        matrix.postRotate(rotation);
+        matrix.postTranslate(posX + offsetX, posY + offsetY);
+        canvas.save();
+        canvas.drawBitmap(bitmap, matrix, paint);
+        canvas.restore();
     }
 
     public int[] getRectPosition(int progress) {
@@ -243,6 +276,7 @@ public class MaskProgress extends View {
 
         return rect;
     }
+
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -269,30 +303,6 @@ public class MaskProgress extends View {
     }
 
 
-    /**
-     * 绘制自旋转位图
-     *
-     * @param canvas
-     * @param paint
-     * @param bitmap   位图对象
-     * @param rotation 旋转度数
-     * @param posX     在canvas的位置坐标
-     * @param posY
-     */
-    private void drawRotateBitmap(Canvas canvas, Paint paint, Bitmap bitmap,
-                                  float rotation, float posX, float posY) {
-        Matrix matrix = new Matrix();
-        int offsetX = bitmap.getWidth() / 2;
-        int offsetY = bitmap.getHeight() / 2;
-        matrix.postTranslate(-offsetX, -offsetY);
-        matrix.postRotate(rotation);
-        matrix.postTranslate(posX + offsetX, posY + offsetY);
-        canvas.save();
-        canvas.drawBitmap(bitmap, matrix, paint);
-        canvas.restore();
-    }
-
-
     private Bitmap resizeBitmap(Bitmap src, int w, int h) {
 
         int width = src.getWidth();
@@ -314,7 +324,7 @@ public class MaskProgress extends View {
         @Override
         public void run() {
             while (initialing) {
-                Log.d("1111111",initialing+"");
+                Log.d("1111111", initialing + "");
                 postInvalidate();
                 if (currentProgress < realProgress) {
                     currentProgress += step * rate;

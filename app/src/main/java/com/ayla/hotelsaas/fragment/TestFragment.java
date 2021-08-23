@@ -98,9 +98,9 @@ public class TestFragment extends BaseMvpFragment {
             //设置最大值
             maskProgress.setMax(360);
             //初始化填充progress时的填充动画时间,越大越慢
-            maskProgress.setTotaltime(10);
+            maskProgress.setTotaltime(8);
             //Progress开始的填充的位置360和0为圆最右、90圆最下、180为圆最右、270为圆最上(顺时针方向为正)
-            maskProgress.setStartAngle(135);
+            maskProgress.setStartAngle(137);
             maskProgress.setAnimateListener(animateListener);
             //初始化时必须在setMax设置之后再设置setProgress
             int level = WifiUtils.getInstance(getContext()).getCurrentWifiInfoLevel();
@@ -418,8 +418,8 @@ public class TestFragment extends BaseMvpFragment {
         tv_dbm.setVisibility(View.GONE);
         tv_net_num.setTextColor(getResources().getColor(R.color.color_gray));
         maskView.updateProgress();
-      //  wifi_arrow.setVisibility(View.INVISIBLE);
-       // wifi_arrow.clearAnimation();
+        /*wifi_arrow.setVisibility(View.INVISIBLE);
+        wifi_arrow.clearAnimation();*/
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
 
