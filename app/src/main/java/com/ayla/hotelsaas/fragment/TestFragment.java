@@ -45,8 +45,8 @@ public class TestFragment extends BaseMvpFragment {
     TextView tv_net_text;
     @BindView(R.id.tv_dbm)
     TextView tv_dbm;
-  /*  @BindView(R.id.wifi_arrow)
-    ImageView wifi_arrow;*/
+    /*  @BindView(R.id.wifi_arrow)
+      ImageView wifi_arrow;*/
     @BindView(R.id.tv_wifi_test_status)
     TextView tv_wifi_test_status;
     @BindView(R.id.tv_wifi_status_clear)
@@ -81,7 +81,7 @@ public class TestFragment extends BaseMvpFragment {
 
     private void initialProgress(MaskProgress maskProgress) {
         try {
-         //   wifi_arrow.setVisibility(View.GONE);
+            //   wifi_arrow.setVisibility(View.GONE);
             tv_dbm.setVisibility(View.VISIBLE);
             tv_wifi_test_status.setText("当前网络未进行检测");
             tv_wifi_status_clear.setVisibility(View.GONE);
@@ -107,14 +107,14 @@ public class TestFragment extends BaseMvpFragment {
             if (level < -70) {
                 type = "很差";
                 int x = 260; // 下界。
-                int y = 265; // 上界
+                int y = 264; // 上界
                 float rn = new Random().nextInt(y - x + 1) + x;
                 tv_net_text.setText("网络极差");
                 tv_net_text.setTextColor(getResources().getColor(R.color.login_error_show));
                 maskProgress.setProgress(rn);
                 rotateAnim(320 - 115, 7500l);
             } else if (level <= -50 && level > -70) {
-                type = "很差";
+                type = "一般";
                 tv_net_text.setText("网络一般");
                 int x = 175; // 下界。
                 int y = 180; // 上界
@@ -327,7 +327,7 @@ public class TestFragment extends BaseMvpFragment {
         anim.setFillAfter(true); // 设置保持动画最后的状态
         anim.setDuration(duation); // 设置动画时间
         anim.setInterpolator(new LinearInterpolator()); // 设置插入器
-       // wifi_arrow.startAnimation(anim);
+        // wifi_arrow.startAnimation(anim);
     }
 
     @Override
@@ -381,8 +381,8 @@ public class TestFragment extends BaseMvpFragment {
     }
 
     public void clearData() {
-       // wifi_arrow.setVisibility(View.INVISIBLE);
-       // wifi_arrow.clearAnimation();
+        // wifi_arrow.setVisibility(View.INVISIBLE);
+        // wifi_arrow.clearAnimation();
         tv_net_text.setText("未检测网络");
         start.setText("开始检测");
         relation_status.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_yes_relation_test));
