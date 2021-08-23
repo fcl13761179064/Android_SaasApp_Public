@@ -20,6 +20,7 @@ import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
+import com.ayla.hotelsaas.fragment.TestFragment;
 import com.ayla.hotelsaas.mvp.present.ProjectListPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectListView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
@@ -127,7 +128,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
                 if (position == 0) {
                     return new ProjectListFragment();
                 } else {
-                    return new HistroyProjectListFragment();
+                    return new TestFragment();
                 }
             }
 

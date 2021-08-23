@@ -24,6 +24,9 @@ public class MaskProgress extends View {
 
 
     public CirculateUpdateThread circulateUpdateThread;
+    private int mWidth;
+    private int mHight;
+    private int arrowResId;
 
     /**
      * 每次setProgress时进度条前进或者回退到所设的值时都会有一段动画。
@@ -60,6 +63,7 @@ public class MaskProgress extends View {
 
     private Bitmap bg;
     private Bitmap ct;
+    private Bitmap ar;
 
     private Paint paint;
 
@@ -145,6 +149,10 @@ public class MaskProgress extends View {
         ct = BitmapFactory.decodeResource(getResources(), contentResId);
     }
 
+    public void setArrowResId(int arrowResId) {
+        this.arrowResId = arrowResId;
+        ar = BitmapFactory.decodeResource(getResources(), contentResId);
+    }
 
     public void updateProgress() {
         invalidate();
@@ -176,6 +184,7 @@ public class MaskProgress extends View {
                 setStartAngle(typedArray.getFloat(R.styleable.maskProgressBar_start_angle, startAngle));
                 setContentResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_content, R.mipmap.wifi_progress_green_bg));
                 setBackgroundResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_background, R.mipmap.wifi_progress_gray_bg));
+                setArrowResId(typedArray.getResourceId(R.styleable.maskProgressBar_progress_arrow, R.mipmap.wifi_info_arrow));
             } finally {
                 typedArray.recycle();
             }
@@ -205,10 +214,8 @@ public class MaskProgress extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        canvas.drawBitmap(bg, 0, (getHeight() - bg.getHeight()) / 2, paint);
-        int rc = canvas.saveLayer(0, (getHeight() - bg.getHeight()) / 2, bg.getWidth(), (getHeight() + bg.getHeight()) / 2, null, Canvas.ALL_SAVE_FLAG);
-
+        canvas.drawBitmap(bg, 0, (mHight- bg.getHeight()) / 2, paint);
+        int rc = canvas.saveLayer(0, (mHight - bg.getHeight()) / 2, bg.getWidth(), (mHight + bg.getHeight()) / 2, null, Canvas.ALL_SAVE_FLAG);
         paint.setFilterBitmap(false);
         if (initialing) {
             canvas.drawArc(rectF, startAngle, currentProgress, true, paint);
@@ -216,11 +223,10 @@ public class MaskProgress extends View {
             canvas.drawArc(rectF, startAngle, realProgress, true, paint);
         }
         paint.setXfermode(srcIn);
-        canvas.drawBitmap(ct, 0, (getHeight() - ct.getHeight()) / 2, paint);
-
-
+        canvas.drawBitmap(ct, 0, (mHight - ct.getHeight()) / 2, paint);
         paint.setXfermode(null);
         canvas.restoreToCount(rc);
+        canvas.drawBitmap(ar, (mWidth-ar.getWidth())/2, (mHight-ar.getHeight()) / 2, paint);
     }
 
     public int[] getRectPosition(int progress) {
@@ -247,25 +253,45 @@ public class MaskProgress extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        mWidth = w;
+        mHight = h;
+        centerX = mWidth / 2;
+        centerY = mHight / 2;
 
-        int tmp = w >= h ? h : w;
-        radius = w / 2;
-        beginX = w;
-        beginY = 0;
-        centerX = w / 2;
-        centerY = w / 2;
-
-        Bitmap bg_ = resizeBitmap(bg, w, h);
-        Bitmap ct_ = resizeBitmap(ct, w, h);
-
-        rectF = new RectF(0, (getHeight() - bg_.getHeight()) / 2, bg_.getWidth(), (getHeight() + bg_.getHeight()) / 2);
-
+        Bitmap bg_ = resizeBitmap(bg, mWidth, mHight);
+        Bitmap ct_ = resizeBitmap(ct, mWidth, mHight);
+        rectF = new RectF(0, (mHight - bg_.getHeight()) / 2, bg_.getWidth(), (mHight + bg_.getHeight()) / 2);
         bg.recycle();
         ct.recycle();
 
         bg = bg_;
         ct = ct_;
     }
+
+
+    /**
+     * 绘制自旋转位图
+     *
+     * @param canvas
+     * @param paint
+     * @param bitmap   位图对象
+     * @param rotation 旋转度数
+     * @param posX     在canvas的位置坐标
+     * @param posY
+     */
+    private void drawRotateBitmap(Canvas canvas, Paint paint, Bitmap bitmap,
+                                  float rotation, float posX, float posY) {
+        Matrix matrix = new Matrix();
+        int offsetX = bitmap.getWidth() / 2;
+        int offsetY = bitmap.getHeight() / 2;
+        matrix.postTranslate(-offsetX, -offsetY);
+        matrix.postRotate(rotation);
+        matrix.postTranslate(posX + offsetX, posY + offsetY);
+        canvas.save();
+        canvas.drawBitmap(bitmap, matrix, paint);
+        canvas.restore();
+    }
+
 
     private Bitmap resizeBitmap(Bitmap src, int w, int h) {
 
