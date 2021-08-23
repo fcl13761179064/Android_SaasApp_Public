@@ -128,7 +128,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
                 if (position == 0) {
                     return new ProjectListFragment();
                 } else {
-                    return new TestFragment();
+                    return new HistroyProjectListFragment();
                 }
             }
 
