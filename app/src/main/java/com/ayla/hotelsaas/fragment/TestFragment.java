@@ -106,8 +106,8 @@ public class TestFragment extends BaseMvpFragment {
             int level = WifiUtils.getInstance(getContext()).getCurrentWifiInfoLevel();
             if (level < -70) {
                 type = "很差";
-                int x = 310; // 下界。
-                int y = 324; // 上界
+                int x = 305; // 下界。
+                int y = 310; // 上界
                 float rn = new Random().nextInt(y - x + 1) + x;
                 tv_net_text.setText("网络极差");
                 tv_net_text.setTextColor(getResources().getColor(R.color.login_error_show));
@@ -116,8 +116,8 @@ public class TestFragment extends BaseMvpFragment {
             } else if (level <= -50 && level > -70) {
                 type = "一般";
                 tv_net_text.setText("网络一般");
-                int x = 160; // 下界。
-                int y = 220; // 上界
+                int x = 175; // 下界。
+                int y = 180; // 上界
                 float rn = new Random().nextInt(y - x + 1) + x;
                 maskProgress.setProgress(rn);
                 tv_net_text.setTextColor(getResources().getColor(R.color.color_yellow));
@@ -125,8 +125,8 @@ public class TestFragment extends BaseMvpFragment {
             } else {
                 type = "极好";
                 tv_net_text.setText("网络极好");
-                int x = 60; // 下界。
-                int y = 140; // 上界
+                int x = 102; // 下界。
+                int y = 106; // 上界
                 float rn = new Random().nextInt(y - x + 1) + x;
                 maskProgress.setProgress(rn);
                 rotateAnim(rn - 58, 3000l);
