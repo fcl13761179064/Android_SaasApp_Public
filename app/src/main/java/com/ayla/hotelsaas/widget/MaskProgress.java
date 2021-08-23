@@ -231,11 +231,15 @@ public class MaskProgress extends View {
                 drawRotateBitmap(canvas, paint, ar, currentProgress/1.2f - 30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
             }else if (realProgress>110 && realProgress<190){
                 drawRotateBitmap(canvas, paint, ar, currentProgress/1.1f-30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
+            }else if ( realProgress>190){
+                drawRotateBitmap(canvas, paint, ar, currentProgress/1.1f-30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
             }
         } else {
             if (realProgress>25 && realProgress<110){
                 drawRotateBitmap(canvas, paint, ar, realProgress/1.2f - 30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
             }else if (realProgress>110 && realProgress<190){
+                drawRotateBitmap(canvas, paint, ar, realProgress/1.1f-30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
+            }else if (realProgress>190){
                 drawRotateBitmap(canvas, paint, ar, realProgress/1.1f-30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
             }
         }

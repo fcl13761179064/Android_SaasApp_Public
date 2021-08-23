@@ -106,8 +106,8 @@ public class TestFragment extends BaseMvpFragment {
             int level = WifiUtils.getInstance(getContext()).getCurrentWifiInfoLevel();
             if (level < -70) {
                 type = "很差";
-                int x = 305; // 下界。
-                int y = 310; // 上界
+                int x = 265; // 下界。
+                int y = 260; // 上界
                 float rn = new Random().nextInt(y - x + 1) + x;
                 tv_net_text.setText("网络极差");
                 tv_net_text.setTextColor(getResources().getColor(R.color.login_error_show));
