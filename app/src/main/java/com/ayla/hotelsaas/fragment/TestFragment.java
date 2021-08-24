@@ -209,7 +209,7 @@ public class TestFragment extends BaseMvpFragment {
                             if (tv_net_num != null && type != null) {
                                 if ("很差".equals(type)) {
                                     int current_Progress = (int) currentProgress;
-                                    tv_net_num.setText("-" + (int) (current_Progress / 2.5));
+                                    tv_net_num.setText("-" + current_Progress /2);
                                     if (current_Progress == 80) {
                                         iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_weak));
                                     }
