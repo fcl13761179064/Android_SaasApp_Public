@@ -83,10 +83,10 @@ public class RetrofitHelper {
             public void log(String message) {
                 LogUtils.dTag("okhttp", message);
             }
-        }).setLevel(Constance.isOpenLog()? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE));
+        }).setLevel(Constance.isOpenLog() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE));
         builder.retryOnConnectionFailure(true);
 
-        if(Constance.isOpenLog()){
+        if (Constance.isOpenLog()) {
             builder.sslSocketFactory(SSLUtil.getSslSocketFactory().sSLSocketFactory, SSLUtil.getSslSocketFactory().trustManager)
                     .hostnameVerifier(SSLUtil.UnSafeHostnameVerifier);
         }
@@ -103,6 +103,7 @@ public class RetrofitHelper {
         public Response intercept(Chain chain) throws IOException {
             Request.Builder requestBuilder = chain.request().newBuilder();
             requestBuilder.header("serviceId", "3");
+            requestBuilder.header("n-d-env", "canary");
             if (MyApplication.getInstance() != null) {
                 final String save_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
                 if (save_token != null) {
