@@ -48,7 +48,7 @@ public class MaskProgress extends View {
 
     private float step;
 
-    private float max = 360;
+    private float max = 350;
 
 
     private float currentProgress;
@@ -214,8 +214,8 @@ public class MaskProgress extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawBitmap(bg, 0, (mHight - bg.getHeight()) / 2, paint);
-        int rc = canvas.saveLayer(0, (mHight - bg.getHeight()) / 2, bg.getWidth(), (mHight + bg.getHeight()) / 2, null, Canvas.ALL_SAVE_FLAG);
+        canvas.drawBitmap(bg, 0, (mHight-bg.getHeight())/2, paint);
+        int rc = canvas.saveLayer(0, (mHight-bg.getHeight())/2, bg.getWidth(), (mHight + bg.getHeight()) / 2, null, Canvas.ALL_SAVE_FLAG);
         paint.setFilterBitmap(false);
         if (initialing) {
             canvas.drawArc(rectF, startAngle, currentProgress, true, paint);
@@ -228,19 +228,19 @@ public class MaskProgress extends View {
         canvas.restoreToCount(rc);
         if (initialing) {
             if (realProgress>25 && realProgress<110){
-                drawRotateBitmap(canvas, paint, ar, currentProgress/1.2f - 30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
+                drawRotateBitmap(canvas, paint, ar, currentProgress/1.2f -26, (mWidth - ar.getWidth()) / 2.1f, mHight / 1.75f);
             }else if (realProgress>110 && realProgress<190){
-                drawRotateBitmap(canvas, paint, ar, currentProgress/1.1f-30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
+                drawRotateBitmap(canvas, paint, ar, currentProgress/1.1f-26, (mWidth - ar.getWidth()) / 2.1f, mHight / 1.75f);
             }else if ( realProgress>190){
-                drawRotateBitmap(canvas, paint, ar, currentProgress/1.1f-30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
+                drawRotateBitmap(canvas, paint, ar, currentProgress/1.1f-36, (mWidth - ar.getWidth()) / 2f, mHight / 1.75f);
             }
         } else {
             if (realProgress>25 && realProgress<110){
-                drawRotateBitmap(canvas, paint, ar, realProgress/1.2f - 30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
+                drawRotateBitmap(canvas, paint, ar, realProgress/1.2f-26, (mWidth - ar.getWidth()) / 2.1f, mHight /  1.75f);
             }else if (realProgress>110 && realProgress<190){
-                drawRotateBitmap(canvas, paint, ar, realProgress/1.1f-30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
+                drawRotateBitmap(canvas, paint, ar, realProgress /1.1f-26, (mWidth - ar.getWidth()) / 2.1f, mHight /  1.75f);
             }else if (realProgress>190){
-                drawRotateBitmap(canvas, paint, ar, realProgress/1.1f-30, (mHight - ar.getHeight()) / 6.5f, mHight / 1.8f);
+                drawRotateBitmap(canvas, paint, ar, realProgress/1.1f-36, (mWidth - ar.getWidth()) /2f, mHight /  1.75f);
             }
         }
 
@@ -300,7 +300,7 @@ public class MaskProgress extends View {
 
         Bitmap bg_ = resizeBitmap(bg, mWidth, mHight);
         Bitmap ct_ = resizeBitmap(ct, mWidth, mHight);
-        rectF = new RectF(0, (mHight - bg_.getHeight()) / 2, bg_.getWidth(), (mHight + bg_.getHeight()) / 2);
+        rectF = new RectF(-2, (mHight-bg_.getHeight())/2, bg_.getWidth(), (mHight + bg_.getHeight()) / 2);
         bg.recycle();
         ct.recycle();
 

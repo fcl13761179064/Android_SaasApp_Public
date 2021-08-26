@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.Visibility;
 import android.os.Handler;
 import android.os.Message;
+import android.view.VerifiedInputEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -11,6 +12,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,12 +57,17 @@ public class TestFragment extends BaseMvpFragment {
     LinearLayout ll_bottom_page;
     @BindView(R.id.tv_error_btn)
     Button tv_error_btn;
+    @BindView(R.id.tv_wifi_status_img)
+    RelativeLayout tv_wifi_status_img;
+    @BindView(R.id.view)
+    View view;
     /*@BindView(R.id.point_weizhi)
         ImageView point_weizhi;
         @BindView(R.id.point_weizhi_two)
         ImageView point_weizhi_two;
         @BindView(R.id.point_weizhi_three)
-        ImageView point_weizhi_three;*/
+        ImageView point_weizhi_three;
+     */
     private String type;
     private Animation anim;
 
@@ -83,7 +90,9 @@ public class TestFragment extends BaseMvpFragment {
         try {
             //   wifi_arrow.setVisibility(View.GONE);
             tv_dbm.setVisibility(View.VISIBLE);
-            tv_wifi_test_status.setText("当前网络未进行检测");
+            tv_wifi_status_img.setVisibility(View.GONE);
+            tv_wifi_test_status.setVisibility(View.GONE);
+            view.setVisibility(View.VISIBLE);
             tv_wifi_status_clear.setVisibility(View.GONE);
             relation_status.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_yes_relation_test));
             start.setText("取消检测");
@@ -106,8 +115,8 @@ public class TestFragment extends BaseMvpFragment {
             int level = WifiUtils.getInstance(getContext()).getCurrentWifiInfoLevel();
             if (level < -70) {
                 type = "很差";
-                int x = 260; // 下界。
-                int y = 264; // 上界
+                int x = 263; // 下界。
+                int y = 265; // 上界
                 float rn = new Random().nextInt(y - x + 1) + x;
                 tv_net_text.setText("网络极差");
                 tv_net_text.setTextColor(getResources().getColor(R.color.login_error_show));
@@ -123,7 +132,7 @@ public class TestFragment extends BaseMvpFragment {
                 tv_net_text.setTextColor(getResources().getColor(R.color.color_yellow));
                 rotateAnim(rn - 58, 5700l);
             } else {
-                type = "很差";
+                type =  "极好";
                 tv_net_text.setText("网络极好");
                 int x = 102; // 下界。
                 int y = 106; // 上界
@@ -173,6 +182,9 @@ public class TestFragment extends BaseMvpFragment {
                                 tv_wifi_test_status.setText("当前网络环境良好\n" +
                                         "能顺畅执行各种复杂的场景");
                             }
+                            tv_wifi_status_img.setVisibility(View.VISIBLE);
+                            tv_wifi_test_status.setVisibility(View.VISIBLE);
+                            view.setVisibility(View.GONE);
                             Message msg = new Message();
                             msg.what = 0;
                             handler.sendMessage(msg);
@@ -209,7 +221,7 @@ public class TestFragment extends BaseMvpFragment {
                             if (tv_net_num != null && type != null) {
                                 if ("很差".equals(type)) {
                                     int current_Progress = (int) currentProgress;
-                                    tv_net_num.setText("-" + current_Progress /2);
+                                    tv_net_num.setText("-" + current_Progress / 2);
                                     if (current_Progress == 80) {
                                         iv_star.setImageDrawable(getResources().getDrawable(R.mipmap.wifi_info_weak));
                                     }
