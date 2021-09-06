@@ -335,7 +335,7 @@ public class TestFragment extends BaseMvpFragment {
     };
 
     public void rotateAnim(float toDegress, long duation) {
-        anim = new RotateAnimation(-27f, toDegress, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.4f);
+        anim = new RotateAnimation(-27f, toDegress, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         anim.setFillAfter(true); // 设置保持动画最后的状态
         anim.setDuration(duation); // 设置动画时间
         anim.setInterpolator(new LinearInterpolator()); // 设置插入器
