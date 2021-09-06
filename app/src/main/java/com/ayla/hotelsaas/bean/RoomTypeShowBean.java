@@ -1,8 +1,10 @@
 package com.ayla.hotelsaas.bean;
 
+import androidx.annotation.Nullable;
+
 public class RoomTypeShowBean {
 
-        private int id;
+        private long id;
         private String typeName;
         private long scopeId;
         private int tradeId;
@@ -12,11 +14,11 @@ public class RoomTypeShowBean {
         private String updateName;
         private String updateTime;
 
-        public int getId() {
+        public long getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(long id) {
             this.id = id;
         }
 

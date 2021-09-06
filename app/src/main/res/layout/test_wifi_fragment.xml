@@ -17,15 +17,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignBottom="@+id/strut"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="20dp"
+        android:layout_centerHorizontal="true"
         android:orientation="vertical">
 
 
         <com.ayla.hotelsaas.widget.MaskProgress
             android:id="@+id/maskView"
-            android:layout_width="315dp"
-            android:layout_height="255dp"
+            android:layout_width="325dp"
+            android:layout_height="265dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             app:anim_time="10"
@@ -33,18 +32,19 @@
             app:progress="0"
             app:progress_background="@mipmap/wifi_no_cicle_gray_bg"
             app:progress_content="@mipmap/wifi_progress_green_bg"
+            app:progress_arrow="@mipmap/wifi_info_arrow"
             app:start_angle="125" />
-
+<!--
         <ImageView
             android:id="@+id/wifi_arrow"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
-            android:layout_marginBottom="100dp"
+            android:layout_marginBottom="112.5dp"
             android:background="@mipmap/wifi_info_arrow"
             android:indeterminateDrawable="@anim/wifi_test_rotatea_animation"
-            android:visibility="invisible" />
+            android:visibility="invisible" />-->
 
         <!--  <ImageView
               android:id="@+id/point_weizhi"
@@ -133,16 +133,16 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="10dp"
         android:background="@mipmap/wifi_network_check_status"
-        android:visibility="visible"
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/tv_wifi_status_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:background="@mipmap/wifi_show_img"
             android:padding="@dimen/dp_10">
 
@@ -158,19 +158,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="当前网络未进行检测"
             android:textSize="@dimen/sp_16" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="40dp"/>
 
         <Button
             android:id="@+id/start"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="105dp"
             android:layout_height="36dp"
+            android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
             android:background="@drawable/green_btn_bg_small_corner"
             android:gravity="center"
             android:text="开始检测"
@@ -182,7 +188,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="清空结果"
             android:textColor="#648C1B"

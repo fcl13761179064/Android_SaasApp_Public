@@ -16,6 +16,11 @@ public class SceneSettingFunctionEventSetAdapter extends BaseQuickAdapter<Checka
     @Override
     protected void convert(BaseViewHolder helper, CheckableSupport<DeviceTemplateBean.EventbutesBean> item) {
         helper.setChecked(R.id.cb_function_checked, item.isChecked());
-        helper.setText(R.id.tv_function_name, item.getData().getDisplayName());
+        if (item!=null && item.getData()!=null && item.getData().getDisplayName() !=null){
+            helper.setText(R.id.tv_function_name, item.getData().getDisplayName());
+        }else {
+            helper.setText(R.id.tv_function_name, "未知");
+        }
+
     }
 }
