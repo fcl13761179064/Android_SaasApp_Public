@@ -3,23 +3,19 @@ package com.ayla.hotelsaas.data.net;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.ayla.hotelsaas.BuildConfig;
-import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.adapter.StringNullAdapter;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.LogUtils;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.concurrent.Future;
-
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
@@ -52,6 +48,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitHelper {
     private static ApiService apiService;
+    private static Gson gson;
 
     private RetrofitHelper() {
     }
@@ -60,13 +57,25 @@ public class RetrofitHelper {
         if (apiService == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .client(getOkHttpClient())
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(buildGson()))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .baseUrl(Constance.getBaseUrl())
                     .build();
             apiService = retrofit.create(ApiService.class);
         }
         return apiService;
+    }
+   /*
+   *
+   */
+    public static Gson buildGson() {
+        if (gson == null) {
+            gson = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                    .registerTypeAdapter(String.class, new StringNullAdapter())
+                    .create();
+        }
+        return gson;
     }
 
     /**
