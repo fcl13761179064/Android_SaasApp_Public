@@ -94,16 +94,19 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="left"
+                android:visibility="gone"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/color_333333"
                 android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/change_iv_right"
-                android:layout_width="@dimen/appbar_height"
-                android:layout_height="@dimen/appbar_height"
-                android:gravity="center_vertical"
-                android:padding="16dp" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/dp_16"
+                android:src="@mipmap/qr_code"
+                 />
 
         </LinearLayout>
 

@@ -53,6 +53,10 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     TextView tv_title;
     @BindView(R.id.change_center_title)
     LinearLayout change_center_title;
+    @BindView(R.id.change_iv_right)
+    ImageView change_iv_right;
+    @BindView(R.id.change_right_ll)
+    LinearLayout change_right_ll;
 
     private List<String> roomBeans;
     private FragmentStatePagerAdapter mAdapter;
@@ -108,8 +112,11 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
             tv_title.setText("智慧酒店");
+            change_right_ll.setVisibility(View.INVISIBLE);
         } else {
             tv_title.setText("地产行业");
+            change_right_ll.setVisibility(View.VISIBLE);
+            change_iv_right.setBackgroundResource(R.mipmap.qr_code);
         }
     }
 
