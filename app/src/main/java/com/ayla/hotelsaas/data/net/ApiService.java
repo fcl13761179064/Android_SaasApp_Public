@@ -114,7 +114,7 @@ public interface ApiService {
     @GET("api/v1/build/billrooms")
     Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("billId") String billId);
 
-    @POST("/api/v3/build/device/list")
+    @POST("/api/v3/build/device/list")//获取所有设备列表
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
     @POST("api/v1/build/device/bind")
@@ -316,7 +316,7 @@ public interface ApiService {
     @POST("/api/v1/build/scene/getRuleListByUniqListFunction")
     Observable<BaseResult<List<RuleEngineBean>>> getRuleListByUniqListFunction(@Body RequestBody body);
 
-    @GET("/api/v1/build/billrooms/region/{roomId}")
+    @GET("/api/v1/build/billrooms/region/{roomId}")//获取设备位置
     Observable<BaseResult<List<DeviceLocationBean>>> getAllDeviceLocation(@Path("roomId") long roomId);
 
 

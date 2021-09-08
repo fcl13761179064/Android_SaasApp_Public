@@ -1,7 +1,5 @@
 package com.ayla.hotelsaas.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +22,6 @@ import com.ayla.hotelsaas.events.RegionChangeEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListContainerPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
-import com.ayla.hotelsaas.ui.MainActivity;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -32,10 +29,13 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigat
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.io.Serializable;
 import java.util.List;
 
+/*
+ * 设备列表页面
+ * @auth fanchunlei
+ */
 public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListContainerView, DeviceListContainerPresenter> implements DeviceListContainerView {
 
 
