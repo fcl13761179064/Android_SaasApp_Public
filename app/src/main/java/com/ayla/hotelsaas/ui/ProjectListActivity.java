@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -61,6 +62,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     private List<String> roomBeans;
     private FragmentStatePagerAdapter mAdapter;
     private WorkOrderBean data;
+    private final int REQUEST_CODE_FOR_DSN_SCAN = 0X12;
 
     @Override
     protected ProjectListPresenter initPresenter() {
@@ -116,7 +118,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         } else {
             tv_title.setText("地产行业");
             change_right_ll.setVisibility(View.VISIBLE);
-            change_iv_right.setBackgroundResource(R.mipmap.qr_code);
+            change_iv_right.setImageDrawable(getResources().getDrawable(R.mipmap.qr_code));
         }
     }
 
@@ -158,6 +160,13 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
                 startActivity(new Intent(ProjectListActivity.this, PersonCenterActivity.class));
             }
         });
+        change_iv_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainActivity = new Intent(ProjectListActivity.this, ScanActivity.class);
+                startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_SCAN);
+            }
+        });
     }
 
 
@@ -174,6 +183,26 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     @Override
     public void onRequestFailed(Throwable throwable) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_FOR_DSN_SCAN) {//获取到了DSN
+            if (data != null) {
+                String deviceId = data.getStringExtra("result").trim();
+                if (!TextUtils.isEmpty(deviceId)) {
+                    if (deviceId.startsWith("Lark_DSN:") && deviceId.endsWith("##")) {
+                        deviceId = deviceId.substring(9, deviceId.length() - 2).trim();
+                    }
+                    if (!TextUtils.isEmpty(deviceId)) {
+                        Intent mainActivity = new Intent(this, MainActivity.class);
+                        startActivity(mainActivity);
+                        return;
+                    }
+                }
+            }
+        }
     }
 
 }
