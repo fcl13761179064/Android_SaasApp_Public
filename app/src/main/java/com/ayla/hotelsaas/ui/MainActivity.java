@@ -102,6 +102,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
 
         //默认选择加载首页
         changeFragment(GO_HOME_TYPE);
+        appBar.setLeftText("A单元 101");
     }
 
     @Override

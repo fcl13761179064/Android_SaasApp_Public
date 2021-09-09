@@ -163,7 +163,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         change_iv_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mainActivity = new Intent(ProjectListActivity.this, ScanActivity.class);
+                Intent mainActivity = new Intent(ProjectListActivity.this, MoveExhibitionWallScanActivity.class);
                 startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_SCAN);
             }
         });

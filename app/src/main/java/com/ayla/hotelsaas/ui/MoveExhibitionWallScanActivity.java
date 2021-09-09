@@ -133,7 +133,7 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity implements Q
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_scan_share;
+        return R.layout.activity_move_wallo_scan_share;
     }
 
     @Override
