@@ -3,8 +3,8 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -25,12 +25,7 @@ import com.ayla.hotelsaas.mvp.present.MainPresenter;
 import com.ayla.hotelsaas.mvp.view.MainView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.AppBar;
-import com.ayla.hotelsaas.widget.CustomAlarmDialog;
-import com.ayla.hotelsaas.widget.CustomSheet;
-import com.blankj.utilcode.util.ToastUtils;
-
 import butterknife.BindView;
-import io.sentry.Sentry;
 
 /**
  * @描述 首页
@@ -38,7 +33,7 @@ import io.sentry.Sentry;
  * @时间 2020/7/20
  * removeEnable ,标记是否支持删除
  */
-public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements MainView{
+public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements MainView {
     private static final int REQUEST_CODE_TO_MORE = 0x10;
 
     public static final int RESULT_CODE_REMOVED = 0X20;
@@ -63,6 +58,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     public final static int GO_THREE_TYPE = 2;
     public final static int GO_SECOND_TYPE = 1;
     private String mRoom_name;
+    private Button allBtn, bufenBtn;
 
     @Override
     protected int getLayoutId() {
@@ -74,9 +70,18 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
         SharePreferenceUtils.saveLong(this, Constance.SP_ROOM_ID, mRoom_ID);
         mRoom_name = getIntent().getStringExtra("roomName");
-        appBar.setCenterText(mRoom_name);
-        appBar.setRightText("更多");
 
+        if (true) {
+            appBar.setShowHiddenCenterTitle(true);
+            appBar.setLeftText("A单元 101");
+            appBar.setRightText("");
+        } else {
+            appBar.setShowHiddenCenterTitle(false);
+            appBar.setCenterText(mRoom_name);
+            appBar.setRightText("更多");
+        }
+         allBtn = appBar.getAllBtn();
+         bufenBtn = appBar.getAllBtn();
         rgIndicators.check(R.id.rb_main_fragment_device);
 
         //定义底部标签图片大小和位置
@@ -102,7 +107,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
 
         //默认选择加载首页
         changeFragment(GO_HOME_TYPE);
-        appBar.setLeftText("A单元 101");
+
     }
 
     @Override
@@ -113,11 +118,31 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         startActivityForResult(intent, REQUEST_CODE_TO_MORE);
     }
 
+    @Override
+    protected void appBarAllDataClicked(View v) {
+        super.appBarAllDataClicked(v);
+        allBtn = (Button) v;
+        allBtn.setSelected(true);
+        if (bufenBtn !=null){
+            bufenBtn.setSelected(false);
+        }
+    }
+
+
+    @Override
+    protected void appBarBufenDataClicked(View v) {
+        super.appBarBufenDataClicked(v);
+        bufenBtn = (Button) v;
+        bufenBtn.setSelected(true);
+        if (allBtn !=null){
+            allBtn.setSelected(false);
+        }
+    }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (currentFragment instanceof  TestFragment){
+        if (currentFragment instanceof TestFragment) {
             ((TestFragment) currentFragment).setShut();
         }
         finish();
@@ -158,7 +183,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
                 case GO_HOME_TYPE: {
                     appBar.setCenterText(mRoom_name);
                     changeState(main_device);
-                    appBar.setRightText("更多");
                     showBaseFragment("main", type);
                     break;
                 }
@@ -208,14 +232,14 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         switch (type) {
             case GO_HOME_TYPE: {
                 Bundle bundle = new Bundle();
-                bundle.putLong("room_id",mRoom_ID);
+                bundle.putLong("room_id", mRoom_ID);
                 DeviceListContainerFragment deviceListContainerFragment = new DeviceListContainerFragment();
                 deviceListContainerFragment.setArguments(bundle);
                 return deviceListContainerFragment;
             }
             case GO_SECOND_TYPE: {
                 Bundle bundle = new Bundle();
-                bundle.putLong("room_id",mRoom_ID);
+                bundle.putLong("room_id", mRoom_ID);
                 RuleEngineFragment ruleEngineFragment = new RuleEngineFragment();
                 ruleEngineFragment.setArguments(bundle);
                 return ruleEngineFragment;

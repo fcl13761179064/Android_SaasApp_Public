@@ -85,6 +85,7 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity implements Q
                                         @Override
                                         public void onCancel(CustomAlarmDialog dialog) {
                                             dialog.dismissAllowingStateLoss();
+                                            finish();
                                         }
                                     })
                                     .setTitle("获取相机权限")
@@ -111,6 +112,7 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity implements Q
                         }
                     }
                 });
+
     }
 
     @Override
@@ -236,11 +238,6 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity implements Q
         adjustFlashLight(!flashLightState);
     }
 
-    @OnClick(R.id.ll_write)
-    public void jumpWritePage() {
-        setResult(RESULT_FOR_INPUT);
-        finish();
-    }
 
     private void adjustFlashLight(boolean open) {
         if (open) {
