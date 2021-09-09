@@ -11,6 +11,7 @@ import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
+import com.ayla.hotelsaas.bean.MoveWallBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.PropertyDataPointBean;
@@ -332,4 +333,7 @@ public interface ApiService {
 
     @GET("api/v1/build/billrooms/roomtype/mapping/{scopeId}")
     Observable<BaseResult<RoomTypeShowBean>> showRoomType(@Path("scopeId") long scopeId);
+
+    @GET("api/v1/build/constructbill/{billId}")
+    Observable<BaseResult<MoveWallBean>> getMoveWallData(@Path("billId") String billId);
 }

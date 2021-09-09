@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -18,6 +19,9 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.events.MoveAllDataEvent;
+import com.ayla.hotelsaas.events.MoveBufenDataEvent;
 import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
 import com.ayla.hotelsaas.fragment.RuleEngineFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
@@ -25,6 +29,9 @@ import com.ayla.hotelsaas.mvp.present.MainPresenter;
 import com.ayla.hotelsaas.mvp.view.MainView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.AppBar;
+
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 
 /**
@@ -59,6 +66,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     public final static int GO_SECOND_TYPE = 1;
     private String mRoom_name;
     private Button allBtn, bufenBtn;
+    private String move_wall_type;
+    private DeviceListContainerFragment deviceListContainerFragment;
 
     @Override
     protected int getLayoutId() {
@@ -70,18 +79,12 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
         SharePreferenceUtils.saveLong(this, Constance.SP_ROOM_ID, mRoom_ID);
         mRoom_name = getIntent().getStringExtra("roomName");
-
-        if (true) {
-            appBar.setShowHiddenCenterTitle(true);
-            appBar.setLeftText("A单元 101");
-            appBar.setRightText("");
-        } else {
-            appBar.setShowHiddenCenterTitle(false);
-            appBar.setCenterText(mRoom_name);
-            appBar.setRightText("更多");
+        move_wall_type = getIntent().getStringExtra("move_wall_type");
+        allBtn = appBar.getAllBtn();
+        bufenBtn = appBar.getBufenBtn();
+        if (allBtn !=null){
+            allBtn.setSelected(true);
         }
-         allBtn = appBar.getAllBtn();
-         bufenBtn = appBar.getAllBtn();
         rgIndicators.check(R.id.rb_main_fragment_device);
 
         //定义底部标签图片大小和位置
@@ -122,10 +125,13 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     protected void appBarAllDataClicked(View v) {
         super.appBarAllDataClicked(v);
         allBtn = (Button) v;
-        allBtn.setSelected(true);
-        if (bufenBtn !=null){
+        if (bufenBtn != null) {
             bufenBtn.setSelected(false);
         }
+         if (allBtn.isSelected()){
+             EventBus.getDefault().post(new MoveAllDataEvent());
+         }
+        allBtn.setSelected(true);
     }
 
 
@@ -133,10 +139,14 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     protected void appBarBufenDataClicked(View v) {
         super.appBarBufenDataClicked(v);
         bufenBtn = (Button) v;
-        bufenBtn.setSelected(true);
-        if (allBtn !=null){
+
+        if (allBtn != null) {
             allBtn.setSelected(false);
         }
+        if (bufenBtn.isSelected()){
+            EventBus.getDefault().post(new MoveBufenDataEvent());
+        }
+        bufenBtn.setSelected(true);
     }
 
     @Override
@@ -184,9 +194,20 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
                     appBar.setCenterText(mRoom_name);
                     changeState(main_device);
                     showBaseFragment("main", type);
+                    if (!TextUtils.isEmpty(move_wall_type) && "3".equals(move_wall_type)) {
+                        appBar.setShowHiddenCenterTitle(true);
+                        appBar.setLeftText("A单元 101");
+                        appBar.setRightText("");
+                    } else {
+                        appBar.setRightText("更多");
+                        appBar.setShowHiddenCenterTitle(false);
+                        appBar.setCenterText(mRoom_name);
+
+                    }
                     break;
                 }
                 case GO_SECOND_TYPE: {
+                    appBar.setShowHiddenCenterTitle(false);
                     appBar.setCenterText(mRoom_name);
                     changeState(main_likeage);
                     appBar.setRightText("");
@@ -195,9 +216,10 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
                 }
                 case GO_THREE_TYPE: {
                     changeState(main_test);
-                    showBaseFragment("test", type);
-                    appBar.setCenterText("WiFi 信号测试");
                     appBar.setRightText("");
+                    showBaseFragment("test", type);
+                    appBar.setShowHiddenCenterTitle(false);
+                    appBar.setCenterText("WiFi 信号测试");
                     break;
                 }
             }
@@ -233,7 +255,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
             case GO_HOME_TYPE: {
                 Bundle bundle = new Bundle();
                 bundle.putLong("room_id", mRoom_ID);
-                DeviceListContainerFragment deviceListContainerFragment = new DeviceListContainerFragment();
+                bundle.putString("move_wall_type", move_wall_type);
+                deviceListContainerFragment = new DeviceListContainerFragment();
                 deviceListContainerFragment.setArguments(bundle);
                 return deviceListContainerFragment;
             }
@@ -274,4 +297,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

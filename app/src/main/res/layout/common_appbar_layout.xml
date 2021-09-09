@@ -14,7 +14,7 @@
 
         <LinearLayout
             android:id="@+id/left_ll"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
@@ -34,8 +34,6 @@
                 android:gravity="center"
                 android:lines="1"
                 android:maxWidth="100dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
                 android:text="left"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/color_333333"
@@ -54,10 +52,10 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:lines="1"
-                android:layout_gravity="center"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="title"
@@ -70,21 +68,21 @@
             android:id="@+id/ll_tab"
             android:layout_width="122dp"
             android:layout_height="32dp"
-            android:layout_toStartOf="@id/common_right_ll"
-            android:orientation="horizontal"
             android:layout_centerInParent="true"
-            android:visibility="gone"
+            android:layout_toStartOf="@id/common_right_ll"
+            android:layout_toEndOf="@id/left_ll"
             android:background="@drawable/round_gray_bg"
-            >
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/btn_all"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:background="@drawable/bar_move_wall_selector"
+                android:gravity="center"
                 android:text="全部"
                 android:textColor="@color/color_333333"
                 android:textSize="13sp" />
@@ -94,20 +92,20 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:background="@drawable/bar_move_wall_selector"
-                android:textColor="@color/color_333333"
+                android:gravity="center"
                 android:text="待添加"
+                android:textColor="@color/color_333333"
                 android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/common_right_ll"
-            android:layout_width="100dp"
+            android:layout_width="104dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:gravity="right"
             android:layout_marginRight="14dp"
+            android:gravity="right"
             android:orientation="horizontal">
 
             <TextView
@@ -129,8 +127,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="14dp"
                 android:paddingBottom="14dp"
-                android:src="@mipmap/function_change_pic"
-                />
+                android:src="@mipmap/function_change_pic" />
 
         </LinearLayout>
 

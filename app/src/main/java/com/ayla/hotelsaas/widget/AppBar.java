@@ -37,8 +37,8 @@ public class AppBar extends FrameLayout {
     private TextView titleTextView;
     private LinearLayout leftLinearLayout;
     private View bottom_line;
-    private Boolean isSHowHidden =false;
-    private Button btn_all,btn_bufen;
+    private Boolean isSHowHidden = false;
+    private Button btn_all, btn_bufen;
 
     public AppBar(@NonNull Context context) {
         this(context, null);
@@ -59,6 +59,7 @@ public class AppBar extends FrameLayout {
     private int right_tv_color;
     private boolean bottom_line_visibility;
     private LinearLayout ll_tab;
+
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         inflate(getContext(), R.layout.common_appbar_layout, this);
 
@@ -126,7 +127,7 @@ public class AppBar extends FrameLayout {
             leftImageView.setImageResource(left_iv);
         }
         if (TextUtils.isEmpty(left_tv)) {
-            leftTextView.setVisibility(GONE);
+            leftTextView.setVisibility(INVISIBLE);
         } else {
             leftTextView.setVisibility(VISIBLE);
             leftTextView.setText(left_tv);
@@ -144,12 +145,7 @@ public class AppBar extends FrameLayout {
             rightTextView.setText(right_tv);
             rightTextView.setTextColor(right_tv_color);
         }
-        if (TextUtils.isEmpty(center_tv)) {
-            titleTextView.setVisibility(GONE);
-        } else {
-            titleTextView.setVisibility(VISIBLE);
-            titleTextView.setText(center_tv);
-        }
+
         if (getBackground() == null) {
             setBackgroundColor(Color.WHITE);
         }
@@ -157,10 +153,12 @@ public class AppBar extends FrameLayout {
             bottom_line.setVisibility(GONE);
         }
 
-        if (isSHowHidden){
-            btn_all.setSelected(true);
+        if (isSHowHidden) {
             ll_tab.setVisibility(VISIBLE);
-        }else {
+            titleTextView.setVisibility(GONE);
+        } else {
+            titleTextView.setVisibility(VISIBLE);
+            titleTextView.setText(center_tv);
             ll_tab.setVisibility(GONE);
         }
     }
@@ -188,18 +186,16 @@ public class AppBar extends FrameLayout {
 
     public void setShowHiddenCenterTitle(Boolean b) {
         isSHowHidden = b;
-        adjustContent();
     }
 
 
     public Button getAllBtn() {
-       return btn_all;
+        return btn_all;
     }
 
     public Button getBufenBtn() {
-       return btn_bufen;
+        return btn_bufen;
     }
-
 
 
 }

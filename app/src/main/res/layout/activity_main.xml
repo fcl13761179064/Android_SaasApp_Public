@@ -9,6 +9,7 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:center_tv=""
         app:left_iv="@mipmap/icon_back_black" />
 
     <FrameLayout
