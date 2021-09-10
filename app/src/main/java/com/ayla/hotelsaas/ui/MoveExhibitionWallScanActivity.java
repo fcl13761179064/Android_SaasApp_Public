@@ -221,6 +221,29 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
 
         } catch (Exception e) {
             e.printStackTrace();
+            CustomAlarmDialog.newInstance().setTitle("信息错误")
+                    .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
+                    .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                    .setEnsureText("重试")
+                    .setDoneCallback(new CustomAlarmDialog.Callback() {
+                        @Override
+                        public void onDone(CustomAlarmDialog dialog) {
+                            dialog.dismissAllowingStateLoss();
+                            mZXingView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancel(CustomAlarmDialog dialog) {
+
+                        }
+                    })
+                    .show(getSupportFragmentManager(), "dialog");
+            return;
         }
         vibrate();
         if (TextUtils.isEmpty(result)) {
