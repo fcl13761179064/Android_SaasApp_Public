@@ -22,7 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MoveWallPresenter extends BasePresenter<MoveWallView> {
     public void getNetworkConfigGuide(String id, ZxingMoveWallBean jsonObject) {
         Disposable subscribe = RequestModel.getInstance()
-                .getMoveWallData("754")
+                .getMoveWallData(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

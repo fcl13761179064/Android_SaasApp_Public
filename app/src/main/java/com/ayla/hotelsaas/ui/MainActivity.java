@@ -80,11 +80,11 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         SharePreferenceUtils.saveLong(this, Constance.SP_ROOM_ID, mRoom_ID);
         mRoom_name = getIntent().getStringExtra("roomName");
         move_wall_type = getIntent().getStringExtra("move_wall_type");
-        allBtn = appBar.getAllBtn();
+      /*  allBtn = appBar.getAllBtn();
         bufenBtn = appBar.getBufenBtn();
-        if (allBtn !=null){
+        if (allBtn != null) {
             allBtn.setSelected(true);
-        }
+        }*/
         rgIndicators.check(R.id.rb_main_fragment_device);
 
         //定义底部标签图片大小和位置
@@ -120,7 +120,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         intent.putExtras(getIntent());
         startActivityForResult(intent, REQUEST_CODE_TO_MORE);
     }
-
+/*
     @Override
     protected void appBarAllDataClicked(View v) {
         super.appBarAllDataClicked(v);
@@ -128,10 +128,11 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         if (bufenBtn != null) {
             bufenBtn.setSelected(false);
         }
-         if (allBtn.isSelected()){
-             EventBus.getDefault().post(new MoveAllDataEvent());
-         }
         allBtn.setSelected(true);
+        if (allBtn.isSelected()) {
+            EventBus.getDefault().post(new MoveAllDataEvent());
+        }
+
     }
 
 
@@ -143,11 +144,12 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         if (allBtn != null) {
             allBtn.setSelected(false);
         }
-        if (bufenBtn.isSelected()){
+        bufenBtn.setSelected(true);
+        if (bufenBtn.isSelected()) {
             EventBus.getDefault().post(new MoveBufenDataEvent());
         }
-        bufenBtn.setSelected(true);
-    }
+
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -191,35 +193,38 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         try {
             switch (type) {
                 case GO_HOME_TYPE: {
-                    appBar.setCenterText(mRoom_name);
-                    changeState(main_device);
-                    showBaseFragment("main", type);
-                    if (!TextUtils.isEmpty(move_wall_type) && "3".equals(move_wall_type)) {
-                        appBar.setShowHiddenCenterTitle(true);
+                    /*if (!TextUtils.isEmpty(move_wall_type) && "3".equals(move_wall_type)) {
+                        appBar.setCenterText(mRoom_name);
                         appBar.setLeftText("A单元 101");
+                        appBar.setRightText("");
+                        appBar.setShowHiddenCenterTitle(true);
+                    } else {*/
+                    if (!TextUtils.isEmpty(move_wall_type) && "3".equals(move_wall_type)) {
                         appBar.setRightText("");
                     } else {
                         appBar.setRightText("更多");
-                        appBar.setShowHiddenCenterTitle(false);
-                        appBar.setCenterText(mRoom_name);
-
                     }
+
+                    appBar.setCenterText(mRoom_name);
+                    appBar.setShowHiddenCenterTitle(false);
+                    changeState(main_device);
+                    showBaseFragment("main", type);
                     break;
                 }
                 case GO_SECOND_TYPE: {
-                    appBar.setShowHiddenCenterTitle(false);
                     appBar.setCenterText(mRoom_name);
                     changeState(main_likeage);
                     appBar.setRightText("");
                     showBaseFragment("linkage", type);
+                    appBar.setShowHiddenCenterTitle(false);
                     break;
                 }
                 case GO_THREE_TYPE: {
                     changeState(main_test);
                     appBar.setRightText("");
                     showBaseFragment("test", type);
-                    appBar.setShowHiddenCenterTitle(false);
                     appBar.setCenterText("WiFi 信号测试");
+                    appBar.setShowHiddenCenterTitle(false);
                     break;
                 }
             }
@@ -255,7 +260,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
             case GO_HOME_TYPE: {
                 Bundle bundle = new Bundle();
                 bundle.putLong("room_id", mRoom_ID);
-                bundle.putString("move_wall_type", move_wall_type);
                 deviceListContainerFragment = new DeviceListContainerFragment();
                 deviceListContainerFragment.setArguments(bundle);
                 return deviceListContainerFragment;
@@ -291,7 +295,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
             }
             if (resultCode == RoomMoreActivity.RESULT_CODE_REMOVED) {
                 setResult(RESULT_CODE_REMOVED, new Intent().putExtra("roomId", mRoom_ID));
-
                 finish();
             }
         }

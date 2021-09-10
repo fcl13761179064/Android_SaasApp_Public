@@ -153,14 +153,21 @@ public class AppBar extends FrameLayout {
             bottom_line.setVisibility(GONE);
         }
 
-        if (isSHowHidden) {
+        if (TextUtils.isEmpty(center_tv)) {
+            titleTextView.setVisibility(GONE);
+        } else {
+            titleTextView.setVisibility(VISIBLE);
+            titleTextView.setText(center_tv);
+        }
+
+      /*  if (isSHowHidden) {
             ll_tab.setVisibility(VISIBLE);
             titleTextView.setVisibility(GONE);
         } else {
             titleTextView.setVisibility(VISIBLE);
             titleTextView.setText(center_tv);
             ll_tab.setVisibility(GONE);
-        }
+        }*/
     }
 
     public void setLeftText(String text) {

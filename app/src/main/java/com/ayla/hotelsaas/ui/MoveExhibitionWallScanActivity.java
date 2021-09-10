@@ -308,8 +308,8 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
             startActivityForResult(intent, RESULT_CODE_RENAMED);
             finish();
         } else {
-            CustomAlarmDialog.newInstance().setTitle("历史项目")
-                    .setContent(String.format("历史项目无法操作，请联系艾拉客服部进行开通"))
+            CustomAlarmDialog.newInstance().setTitle("信息错误")
+                    .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
                     .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
                     .setEnsureText("重试")
                     .setDoneCallback(new CustomAlarmDialog.Callback() {

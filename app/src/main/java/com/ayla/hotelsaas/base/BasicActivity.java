@@ -102,7 +102,7 @@ public abstract class BasicActivity extends AppCompatActivity {
                 });
             }
 
-
+/*
             Button btn_all = appbarRoot.findViewById(R.id.btn_all);
             if (btn_all != null && !btn_all.hasOnClickListeners()) {
                 btn_all.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +121,7 @@ public abstract class BasicActivity extends AppCompatActivity {
                         appBarBufenDataClicked(v);
                     }
                 });
-            }
+            }*/
         }
     }
 

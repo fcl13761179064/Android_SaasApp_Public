@@ -251,6 +251,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     }
 
 
+/*
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getAllData(MoveAllDataEvent event) {
         loadData();
@@ -269,6 +270,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         }
 
     }
+*/
 
 
     private void loadData() {
