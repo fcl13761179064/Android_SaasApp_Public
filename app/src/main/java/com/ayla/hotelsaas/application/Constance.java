@@ -83,7 +83,8 @@ public class Constance {
                 url = "https://miya-h5-test.ayla.com.cn";
                 break;
             default:
-                url = "https://miya-h5-canary.ayla.com.cn";
+                //url = "https://miya-h5-canary.ayla.com.cn";//canary环境
+                url = "https://miya-h5.ayla.com.cn";
         }
         return url;
     }
