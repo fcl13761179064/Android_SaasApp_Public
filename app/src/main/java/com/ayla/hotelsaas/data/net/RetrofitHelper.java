@@ -112,7 +112,7 @@ public class RetrofitHelper {
         public Response intercept(Chain chain) throws IOException {
             Request.Builder requestBuilder = chain.request().newBuilder();
             requestBuilder.header("serviceId", "3");
-            requestBuilder.header("n-d-env", "canary");
+            //requestBuilder.header("n-d-env", "canary");
             if (MyApplication.getInstance() != null) {
                 final String save_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
                 if (save_token != null) {
