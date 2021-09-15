@@ -165,7 +165,7 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
             }.getType();
             ZxingMoveWallBean obj = GsonUtils.fromJson(result, type);
             if (obj != null) {
-                if (!TextUtils.isEmpty(obj.getId())&&!TextUtils.isEmpty(obj.getName())&&!TextUtils.isEmpty(obj.getRoomId())) {
+                if (!TextUtils.isEmpty(obj.getId())&&!TextUtils.isEmpty(obj.getName())&&!TextUtils.isEmpty(obj.getRoomId())&&!TextUtils.isEmpty(obj.getType())&&!TextUtils.isEmpty(obj.getParam())) {
                     mPresenter.getNetworkConfigGuide(obj.getId(), obj);
                 } else {
                     CustomAlarmDialog.newInstance().setTitle("信息错误")
