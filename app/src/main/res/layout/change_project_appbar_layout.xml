@@ -61,7 +61,7 @@
                 android:gravity="center"
                 android:lines="1"
                 android:paddingLeft="8dp"
-                android:paddingRight="8dp"
+                android:paddingRight="3dp"
                 android:text="title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/color_333333"

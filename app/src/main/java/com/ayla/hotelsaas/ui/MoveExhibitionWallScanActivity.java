@@ -6,6 +6,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Vibrator;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.aes.AESEncrypt;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.MoveWallBean;
 import com.ayla.hotelsaas.bean.ZxingMoveWallBean;
@@ -32,6 +34,9 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -169,8 +174,8 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
             ZxingMoveWallBean obj = GsonUtils.fromJson(result, type);
             if (obj != null) {
                 if (!TextUtils.isEmpty(obj.getType())&&!TextUtils.isEmpty(obj.getParam())) {
-                    ZxingMoveWallBean zxingMoveWallBean = setDecrypt(obj.getParam());
-                    mPresenter.getNetworkConfigGuide(s, obj);
+                    ZxingMoveWallBean zxingMoveWallBean = setDecrypt(obj.getParam(),type);
+                    mPresenter.getNetworkConfigGuide(zxingMoveWallBean.getId(), obj);
                 } else {
                     CustomAlarmDialog.newInstance().setTitle("信息错误")
                             .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
@@ -259,13 +264,13 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
      * 解密
      * encodeWord：加密后的文字/比如密码
      */
-    public ZxingMoveWallBean setDecrypt(String encodeWord){
+    public ZxingMoveWallBean setDecrypt(String encodeWord, Type type){
 
         try {
             String decodeWord = new String(Base64.decode(encodeWord.getBytes(), Base64.DEFAULT));
             String decodeWordtwo = Uri.decode(decodeWord);
-            Type type = new TypeToken<ZxingMoveWallBean>() {}.getType();
             ZxingMoveWallBean obj = GsonUtils.fromJson(decodeWordtwo, type);
+            AESEncrypt.decrypt(obj.getId(),"SHOWWALL");
             return obj;
         } catch (Exception e) {
             e.printStackTrace();
@@ -273,6 +278,9 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
        return null;
     }
 
+
+
+    @SuppressLint("MissingPermission")
     private void vibrate() {
         Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         vibrator.vibrate(200);

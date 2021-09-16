@@ -179,7 +179,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ProjectListActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ProjectMainActivity"
