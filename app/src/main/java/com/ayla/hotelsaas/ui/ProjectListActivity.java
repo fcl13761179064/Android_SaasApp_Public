@@ -62,7 +62,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     private List<String> roomBeans;
     private FragmentStatePagerAdapter mAdapter;
     private WorkOrderBean data;
-    private final int REQUEST_CODE_FOR_DSN_SCAN = 0X12;
 
     @Override
     protected ProjectListPresenter initPresenter() {
@@ -164,7 +163,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             @Override
             public void onClick(View v) {
                 Intent mainActivity = new Intent(ProjectListActivity.this, MoveExhibitionWallScanActivity.class);
-                startActivityForResult(mainActivity, REQUEST_CODE_FOR_DSN_SCAN);
+                startActivity(mainActivity);
             }
         });
     }
@@ -188,21 +187,7 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_FOR_DSN_SCAN) {//获取到了DSN
-            if (data != null) {
-                String deviceId = data.getStringExtra("result").trim();
-                if (!TextUtils.isEmpty(deviceId)) {
-                    if (deviceId.startsWith("Lark_DSN:") && deviceId.endsWith("##")) {
-                        deviceId = deviceId.substring(9, deviceId.length() - 2).trim();
-                    }
-                    if (!TextUtils.isEmpty(deviceId)) {
-                        Intent mainActivity = new Intent(this, MainActivity.class);
-                        startActivity(mainActivity);
-                        return;
-                    }
-                }
-            }
-        }
+
     }
 
 }

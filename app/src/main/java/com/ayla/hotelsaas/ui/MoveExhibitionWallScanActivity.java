@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Vibrator;
 import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 
 import butterknife.BindView;
@@ -165,8 +168,9 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
             }.getType();
             ZxingMoveWallBean obj = GsonUtils.fromJson(result, type);
             if (obj != null) {
-                if (!TextUtils.isEmpty(obj.getId())&&!TextUtils.isEmpty(obj.getName())&&!TextUtils.isEmpty(obj.getRoomId())&&!TextUtils.isEmpty(obj.getType())&&!TextUtils.isEmpty(obj.getParam())) {
-                    mPresenter.getNetworkConfigGuide(obj.getId(), obj);
+                if (!TextUtils.isEmpty(obj.getType())&&!TextUtils.isEmpty(obj.getParam())) {
+                    ZxingMoveWallBean zxingMoveWallBean = setDecrypt(obj.getParam());
+                    mPresenter.getNetworkConfigGuide(s, obj);
                 } else {
                     CustomAlarmDialog.newInstance().setTitle("信息错误")
                             .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
@@ -249,6 +253,24 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
             return;
         }
 
+    }
+
+    /**
+     * 解密
+     * encodeWord：加密后的文字/比如密码
+     */
+    public ZxingMoveWallBean setDecrypt(String encodeWord){
+
+        try {
+            String decodeWord = new String(Base64.decode(encodeWord.getBytes(), Base64.DEFAULT));
+            String decodeWordtwo = Uri.decode(decodeWord);
+            Type type = new TypeToken<ZxingMoveWallBean>() {}.getType();
+            ZxingMoveWallBean obj = GsonUtils.fromJson(decodeWordtwo, type);
+            return obj;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       return null;
     }
 
     private void vibrate() {
