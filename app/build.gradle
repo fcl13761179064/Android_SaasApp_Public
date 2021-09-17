@@ -172,7 +172,6 @@ task replaceAliPicture() {
         implementation 'com.xw.repo:bubbleseekbar:3.20'
         implementation 'io.sentry:sentry-android:4.3.0'
         implementation project(':dsbridge')
-
         implementation 'com.github.AylaAsia:HongYanConfigLib:0.0.10'
         //MagicIndicator
         api 'com.github.hackware1993:MagicIndicator:1.6.0'

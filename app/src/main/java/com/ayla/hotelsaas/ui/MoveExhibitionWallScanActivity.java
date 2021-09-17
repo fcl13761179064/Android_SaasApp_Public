@@ -12,10 +12,8 @@ import android.net.Uri;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.aes.AESEncrypt;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -25,17 +23,14 @@ import com.ayla.hotelsaas.mvp.present.MoveWallPresenter;
 import com.ayla.hotelsaas.mvp.view.MoveWallView;
 import com.ayla.hotelsaas.utils.DateUtils;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
+import com.blankj.utilcode.util.EncryptUtils;
 import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.PermissionUtils;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 
-import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 import butterknife.BindView;
@@ -44,14 +39,12 @@ import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zbar.ZBarView;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-
 import static com.ayla.hotelsaas.ui.MainActivity.RESULT_CODE_RENAMED;
 
 /**
  *
  */
 public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView, MoveWallPresenter> implements QRCodeView.Delegate, MoveWallView {
-    public static final int RESULT_FOR_INPUT = -2;
     @BindView(R.id.zxingview)
     ZBarView mZXingView;
     @BindView(R.id.iv_flash_light)
@@ -166,41 +159,18 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
 
     }
 
+
     @Override
     public void onScanQRCodeSuccess(String result) {
         try {
-            Type type = new TypeToken<ZxingMoveWallBean>() {
-            }.getType();
-            ZxingMoveWallBean obj = GsonUtils.fromJson(result, type);
-            if (obj != null) {
-                if (!TextUtils.isEmpty(obj.getType())&&!TextUtils.isEmpty(obj.getParam())) {
-                    ZxingMoveWallBean zxingMoveWallBean = setDecrypt(obj.getParam(),type);
-                    mPresenter.getNetworkConfigGuide(zxingMoveWallBean.getId(), obj);
-                } else {
-                    CustomAlarmDialog.newInstance().setTitle("信息错误")
-                            .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
-                            .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
-                            .setEnsureText("重试")
-                            .setDoneCallback(new CustomAlarmDialog.Callback() {
-                                @Override
-                                public void onDone(CustomAlarmDialog dialog) {
-                                    dialog.dismissAllowingStateLoss();
-                                    mZXingView.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onCancel(CustomAlarmDialog dialog) {
-
-                                }
-                            })
-                            .show(getSupportFragmentManager(), "dialog");
-                    return;
+            if (result != null) {
+                String zxingMoveWallBean = setDecrypt(result);
+                Type type = new TypeToken<ZxingMoveWallBean>() {}.getType();
+                ZxingMoveWallBean obj = GsonUtils.fromJson(zxingMoveWallBean, type);
+                if (!TextUtils.isEmpty(obj.getId())&&!TextUtils.isEmpty(obj.getRoomId())&&!TextUtils.isEmpty(obj.getName())) {
+                    mPresenter.getNetworkConfigGuide(obj);
                 }
+
 
             } else {
                 CustomAlarmDialog.newInstance().setTitle("信息错误")
@@ -264,20 +234,20 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
      * 解密
      * encodeWord：加密后的文字/比如密码
      */
-    public ZxingMoveWallBean setDecrypt(String encodeWord, Type type){
+    public String setDecrypt(String encodeWord) {
 
         try {
             String decodeWord = new String(Base64.decode(encodeWord.getBytes(), Base64.DEFAULT));
             String decodeWordtwo = Uri.decode(decodeWord);
+            Type type = new TypeToken<ZxingMoveWallBean>() {}.getType();
             ZxingMoveWallBean obj = GsonUtils.fromJson(decodeWordtwo, type);
-            AESEncrypt.decrypt(obj.getId(),"SHOWWALL");
-            return obj;
+            byte[] bytes = EncryptUtils.decryptHexStringAES(obj.getParam(), "SHOWWALLSHOWWALL".getBytes(), "AES/ECB/PKCS5Padding", null);
+            return new String(bytes);
         } catch (Exception e) {
             e.printStackTrace();
         }
-       return null;
+        return null;
     }
-
 
 
     @SuppressLint("MissingPermission")

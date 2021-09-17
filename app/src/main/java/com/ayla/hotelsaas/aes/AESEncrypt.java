@@ -1,12 +1,19 @@
 package com.ayla.hotelsaas.aes;
 
 import android.util.Base64;
-import android.util.Log;
-
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+
+/**
+ * Created by free宇  2017/7/27. 11:44
+ * author:free宇
+ * describe: AES加密算法
+ */
+
+import android.util.Log;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
  * AES 对称加密算法，加解密工具类
  */
@@ -80,6 +87,8 @@ public class AESEncrypt {
         }
         return null;
     }
+
+
 
     /**
      * 使用密码获取 AES 秘钥

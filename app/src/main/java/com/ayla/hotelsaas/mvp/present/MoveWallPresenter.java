@@ -20,9 +20,9 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class MoveWallPresenter extends BasePresenter<MoveWallView> {
-    public void getNetworkConfigGuide(String id, ZxingMoveWallBean jsonObject) {
+    public void getNetworkConfigGuide(ZxingMoveWallBean zxingMoveWallBean) {
         Disposable subscribe = RequestModel.getInstance()
-                .getMoveWallData(id)
+                .getMoveWallData(zxingMoveWallBean.getId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -40,7 +40,7 @@ public class MoveWallPresenter extends BasePresenter<MoveWallView> {
                 .subscribe(new Consumer<MoveWallBean>() {
                     @Override
                     public void accept(MoveWallBean moveWallBean) throws Exception {
-                        mView.getMoveWallDataSuccess(moveWallBean,jsonObject);
+                        mView.getMoveWallDataSuccess(moveWallBean,zxingMoveWallBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
