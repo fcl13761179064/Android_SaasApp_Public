@@ -17,7 +17,6 @@ public class MoveWallBean {
         private long updateId;
         private int isDeleted;
         private String type;
-        private List<ResourceListDTO> resourceList;
         private List<UserListDTO> userList;
 
         public int getId() {
@@ -122,14 +121,6 @@ public class MoveWallBean {
 
         public void setType(String type) {
             this.type = type;
-        }
-
-        public List<ResourceListDTO> getResourceList() {
-            return resourceList;
-        }
-
-        public void setResourceList(List<ResourceListDTO> resourceList) {
-            this.resourceList = resourceList;
         }
 
         public List<UserListDTO> getUserList() {

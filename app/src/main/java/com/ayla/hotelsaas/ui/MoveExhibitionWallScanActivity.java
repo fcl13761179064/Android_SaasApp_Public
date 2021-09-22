@@ -171,7 +171,7 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
                 Type type = new TypeToken<ZxingMoveWallBean>() {
                 }.getType();
                 ZxingMoveWallBean obj = GsonUtils.fromJson(zxingMoveWallBean, type);
-                if (!TextUtils.isEmpty(obj.getId()) && !TextUtils.isEmpty(obj.getRoomId()) && !TextUtils.isEmpty(obj.getName())) {
+                if (!TextUtils.isEmpty(obj.getId()) && obj.getRoomId()!=0 && !TextUtils.isEmpty(obj.getName())) {
                     mPresenter.getNetworkConfigGuide(obj);
                 } else {
                     CustomAlarmDialog.newInstance().setTitle("信息错误")
@@ -384,27 +384,75 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
 
     @Override
     public void getMoveWallDataFail(String o) {
-        CustomAlarmDialog.newInstance().setTitle("无施工权限")
-                .setContent(String.format("您没有当前房间的施工权限，请联系艾拉客服部进行开通"))
-                .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
-                .setEnsureText("重试")
-                .setDoneCallback(new CustomAlarmDialog.Callback() {
-                    @Override
-                    public void onDone(CustomAlarmDialog dialog) {
-                        dialog.dismissAllowingStateLoss();
-                        mZXingView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
-                            }
-                        });
-                    }
+        if (o.equals("null")) {
+            CustomAlarmDialog.newInstance().setTitle("无施工权限")
+                    .setContent(String.format("您没有当前房间的施工权限，请联系艾拉客服部进行开通"))
+                    .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                    .setEnsureText("重试")
+                    .setDoneCallback(new CustomAlarmDialog.Callback() {
+                        @Override
+                        public void onDone(CustomAlarmDialog dialog) {
+                            dialog.dismissAllowingStateLoss();
+                            mZXingView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                }
+                            });
+                        }
 
-                    @Override
-                    public void onCancel(CustomAlarmDialog dialog) {
+                        @Override
+                        public void onCancel(CustomAlarmDialog dialog) {
 
-                    }
-                })
-                .show(getSupportFragmentManager(), "dialog");
+                        }
+                    })
+                    .show(getSupportFragmentManager(), "dialog");
+        } else if (o.equals("timeout")) {
+            CustomAlarmDialog.newInstance().setTitle("时间超时")
+                    .setContent(String.format("二维码时间超时"))
+                    .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                    .setEnsureText("重试")
+                    .setDoneCallback(new CustomAlarmDialog.Callback() {
+                        @Override
+                        public void onDone(CustomAlarmDialog dialog) {
+                            dialog.dismissAllowingStateLoss();
+                            mZXingView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancel(CustomAlarmDialog dialog) {
+
+                        }
+                    })
+                    .show(getSupportFragmentManager(), "dialog");
+        } else {
+            CustomAlarmDialog.newInstance().setTitle("信息错误")
+                    .setContent(String.format("二维码信息错误，请检查信息正确后再扫描二维码"))
+                    .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)
+                    .setEnsureText("重试")
+                    .setDoneCallback(new CustomAlarmDialog.Callback() {
+                        @Override
+                        public void onDone(CustomAlarmDialog dialog) {
+                            dialog.dismissAllowingStateLoss();
+                            mZXingView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mZXingView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancel(CustomAlarmDialog dialog) {
+
+                        }
+                    })
+                    .show(getSupportFragmentManager(), "dialog");
+        }
     }
 }

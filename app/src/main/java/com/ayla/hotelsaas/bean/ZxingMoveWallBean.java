@@ -3,7 +3,7 @@ package com.ayla.hotelsaas.bean;
 public class ZxingMoveWallBean {
     private String id;
     private String name;
-    private String roomId;
+    private Long roomId;
     private String type;
     private String param;
 
@@ -23,11 +23,11 @@ public class ZxingMoveWallBean {
         this.name = name;
     }
 
-    public String getRoomId() {
+    public Long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(String roomId) {
+    public void setRoomId(Long roomId) {
         this.roomId = roomId;
     }
 
