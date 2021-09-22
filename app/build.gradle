@@ -91,6 +91,10 @@ android {
                 buildConfigField("String", "server_domain", "\"prod\"")
                 dimension "server_domain"
             }
+            canary {//canary
+                buildConfigField("String", "server_domain", "\"canary\"")
+                dimension "server_domain"
+            }
         }
 
 

@@ -3,6 +3,8 @@ package com.ayla.hotelsaas.data.net;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.adapter.StringNullAdapter;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -13,9 +15,12 @@ import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.concurrent.Future;
+
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
@@ -65,9 +70,10 @@ public class RetrofitHelper {
         }
         return apiService;
     }
-   /*
-   *
-   */
+
+    /*
+     *
+     */
     public static Gson buildGson() {
         if (gson == null) {
             gson = new GsonBuilder()
@@ -112,7 +118,9 @@ public class RetrofitHelper {
         public Response intercept(Chain chain) throws IOException {
             Request.Builder requestBuilder = chain.request().newBuilder();
             requestBuilder.header("serviceId", "3");
-            //requestBuilder.header("n-d-env", "canary");
+            if (BuildConfig.server_domain.equals("canary")) {
+                requestBuilder.addHeader("n-d-env", "canary");
+            }
             if (MyApplication.getInstance() != null) {
                 final String save_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Login_Token, null);
                 if (save_token != null) {

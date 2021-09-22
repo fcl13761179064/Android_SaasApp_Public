@@ -6,6 +6,7 @@ import com.ayla.hotelsaas.bean.MoveWallBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.RoomTypeShowBean;
 import com.ayla.hotelsaas.bean.ZxingMoveWallBean;
+import com.ayla.hotelsaas.data.net.ServerBadException;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.A2DeviceBindView;
 import com.ayla.hotelsaas.mvp.view.MoveWallView;
@@ -45,7 +46,12 @@ public class MoveWallPresenter extends BasePresenter<MoveWallView> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.getMoveWallDataFail(throwable.getMessage());
+                        if (throwable instanceof ServerBadException && ((ServerBadException) throwable).isSuccess()) {
+                            mView.getMoveWallDataFail(true ,throwable.getMessage());
+                        } else {
+                            mView.getMoveWallDataFail(false ,throwable.getMessage());
+                        }
+
                     }
                 });
         addSubscrebe(subscribe);

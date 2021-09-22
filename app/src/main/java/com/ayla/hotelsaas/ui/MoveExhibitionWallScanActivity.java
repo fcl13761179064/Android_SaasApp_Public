@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.aes.AESEncrypt;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.MoveWallBean;
 import com.ayla.hotelsaas.bean.ZxingMoveWallBean;
@@ -32,8 +31,6 @@ import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.lang.reflect.Type;
-
-import javax.crypto.spec.SecretKeySpec;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -383,8 +380,8 @@ public class MoveExhibitionWallScanActivity extends BaseMvpActivity<MoveWallView
     }
 
     @Override
-    public void getMoveWallDataFail(String o) {
-        if (o.equals("null")) {
+    public void getMoveWallDataFail(boolean b, String o) {
+        if (b==true) {
             CustomAlarmDialog.newInstance().setTitle("无施工权限")
                     .setContent(String.format("您没有当前房间的施工权限，请联系艾拉客服部进行开通"))
                     .setStyle(CustomAlarmDialog.Style.STYLE_SINGLE_BUTTON)

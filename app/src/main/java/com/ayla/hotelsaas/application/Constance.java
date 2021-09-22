@@ -25,6 +25,7 @@ public class Constance {
         switch (BuildConfig.server_domain) {
             case "qa":
             case "dev":
+            case "canary":
                 networkDebug = true;
                 break;
             default:
@@ -82,8 +83,10 @@ public class Constance {
             case "dev":
                 url = "https://miya-h5-test.ayla.com.cn";
                 break;
+            case "canary":
+                url = "https://miya-h5-canary.ayla.com.cn";//canary环境;
+                break;
             default:
-                //url = "https://miya-h5-canary.ayla.com.cn";//canary环境
                 url = "https://miya-h5.ayla.com.cn";
         }
         return url;
