@@ -3,8 +3,9 @@ package com.ayla.hotelsaas.ui;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -18,6 +19,9 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.events.MoveAllDataEvent;
+import com.ayla.hotelsaas.events.MoveBufenDataEvent;
 import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
 import com.ayla.hotelsaas.fragment.RuleEngineFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
@@ -25,12 +29,10 @@ import com.ayla.hotelsaas.mvp.present.MainPresenter;
 import com.ayla.hotelsaas.mvp.view.MainView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.AppBar;
-import com.ayla.hotelsaas.widget.CustomAlarmDialog;
-import com.ayla.hotelsaas.widget.CustomSheet;
-import com.blankj.utilcode.util.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
-import io.sentry.Sentry;
 
 /**
  * @描述 首页
@@ -38,7 +40,7 @@ import io.sentry.Sentry;
  * @时间 2020/7/20
  * removeEnable ,标记是否支持删除
  */
-public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements MainView{
+public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> implements MainView {
     private static final int REQUEST_CODE_TO_MORE = 0x10;
 
     public static final int RESULT_CODE_REMOVED = 0X20;
@@ -63,6 +65,9 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     public final static int GO_THREE_TYPE = 2;
     public final static int GO_SECOND_TYPE = 1;
     private String mRoom_name;
+    private Button allBtn, bufenBtn;
+    private String move_wall_type;
+    private DeviceListContainerFragment deviceListContainerFragment;
 
     @Override
     protected int getLayoutId() {
@@ -74,9 +79,12 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
         SharePreferenceUtils.saveLong(this, Constance.SP_ROOM_ID, mRoom_ID);
         mRoom_name = getIntent().getStringExtra("roomName");
-        appBar.setCenterText(mRoom_name);
-        appBar.setRightText("更多");
-
+        move_wall_type = getIntent().getStringExtra("move_wall_type");
+      /*  allBtn = appBar.getAllBtn();
+        bufenBtn = appBar.getBufenBtn();
+        if (allBtn != null) {
+            allBtn.setSelected(true);
+        }*/
         rgIndicators.check(R.id.rb_main_fragment_device);
 
         //定义底部标签图片大小和位置
@@ -102,6 +110,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
 
         //默认选择加载首页
         changeFragment(GO_HOME_TYPE);
+
     }
 
     @Override
@@ -111,12 +120,41 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         intent.putExtras(getIntent());
         startActivityForResult(intent, REQUEST_CODE_TO_MORE);
     }
+/*
+    @Override
+    protected void appBarAllDataClicked(View v) {
+        super.appBarAllDataClicked(v);
+        allBtn = (Button) v;
+        if (bufenBtn != null) {
+            bufenBtn.setSelected(false);
+        }
+        allBtn.setSelected(true);
+        if (allBtn.isSelected()) {
+            EventBus.getDefault().post(new MoveAllDataEvent());
+        }
 
+    }
+
+
+    @Override
+    protected void appBarBufenDataClicked(View v) {
+        super.appBarBufenDataClicked(v);
+        bufenBtn = (Button) v;
+
+        if (allBtn != null) {
+            allBtn.setSelected(false);
+        }
+        bufenBtn.setSelected(true);
+        if (bufenBtn.isSelected()) {
+            EventBus.getDefault().post(new MoveBufenDataEvent());
+        }
+
+    }*/
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (currentFragment instanceof  TestFragment){
+        if (currentFragment instanceof TestFragment) {
             ((TestFragment) currentFragment).setShut();
         }
         finish();
@@ -155,9 +193,21 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         try {
             switch (type) {
                 case GO_HOME_TYPE: {
+                    /*if (!TextUtils.isEmpty(move_wall_type) && "3".equals(move_wall_type)) {
+                        appBar.setCenterText(mRoom_name);
+                        appBar.setLeftText("A单元 101");
+                        appBar.setRightText("");
+                        appBar.setShowHiddenCenterTitle(true);
+                    } else {*/
+                    if (!TextUtils.isEmpty(move_wall_type) && "3".equals(move_wall_type)) {
+                        appBar.setRightText("");
+                    } else {
+                        appBar.setRightText("更多");
+                    }
+
                     appBar.setCenterText(mRoom_name);
+                    appBar.setShowHiddenCenterTitle(false);
                     changeState(main_device);
-                    appBar.setRightText("更多");
                     showBaseFragment("main", type);
                     break;
                 }
@@ -166,13 +216,15 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
                     changeState(main_likeage);
                     appBar.setRightText("");
                     showBaseFragment("linkage", type);
+                    appBar.setShowHiddenCenterTitle(false);
                     break;
                 }
                 case GO_THREE_TYPE: {
                     changeState(main_test);
+                    appBar.setRightText("");
                     showBaseFragment("test", type);
                     appBar.setCenterText("WiFi 信号测试");
-                    appBar.setRightText("");
+                    appBar.setShowHiddenCenterTitle(false);
                     break;
                 }
             }
@@ -207,14 +259,14 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         switch (type) {
             case GO_HOME_TYPE: {
                 Bundle bundle = new Bundle();
-                bundle.putLong("room_id",mRoom_ID);
-                DeviceListContainerFragment deviceListContainerFragment = new DeviceListContainerFragment();
+                bundle.putLong("room_id", mRoom_ID);
+                deviceListContainerFragment = new DeviceListContainerFragment();
                 deviceListContainerFragment.setArguments(bundle);
                 return deviceListContainerFragment;
             }
             case GO_SECOND_TYPE: {
                 Bundle bundle = new Bundle();
-                bundle.putLong("room_id",mRoom_ID);
+                bundle.putLong("room_id", mRoom_ID);
                 RuleEngineFragment ruleEngineFragment = new RuleEngineFragment();
                 ruleEngineFragment.setArguments(bundle);
                 return ruleEngineFragment;
@@ -243,10 +295,13 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
             }
             if (resultCode == RoomMoreActivity.RESULT_CODE_REMOVED) {
                 setResult(RESULT_CODE_REMOVED, new Intent().putExtra("roomId", mRoom_ID));
-
                 finish();
             }
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

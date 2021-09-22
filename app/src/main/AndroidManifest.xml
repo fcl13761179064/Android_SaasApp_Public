@@ -179,7 +179,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ProjectListActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ProjectMainActivity"
@@ -235,6 +235,10 @@
 
         <activity
             android:name=".ui.HelpCenterActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.MoveExhibitionWallScanActivity"
             android:screenOrientation="portrait" />
 
         <service

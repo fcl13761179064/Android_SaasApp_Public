@@ -5,11 +5,13 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.widget.AppBar;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 
@@ -99,8 +101,37 @@ public abstract class BasicActivity extends AppCompatActivity {
                     }
                 });
             }
+
+/*
+            Button btn_all = appbarRoot.findViewById(R.id.btn_all);
+            if (btn_all != null && !btn_all.hasOnClickListeners()) {
+                btn_all.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        appBarAllDataClicked(v);
+                    }
+                });
+            }
+
+            Button btn_bufen = appbarRoot.findViewById(R.id.btn_bufen);
+            if (btn_bufen != null && !btn_bufen.hasOnClickListeners()) {
+                btn_bufen.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        appBarBufenDataClicked(v);
+                    }
+                });
+            }*/
         }
     }
+
+    protected void appBarBufenDataClicked(View v) {
+    }
+
+
+    protected void appBarAllDataClicked(View v) {
+    }
+
 
     /**
      * appbar左侧图标点击事件

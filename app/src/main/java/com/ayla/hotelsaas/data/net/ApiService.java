@@ -11,6 +11,7 @@ import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
+import com.ayla.hotelsaas.bean.MoveWallBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.PropertyDataPointBean;
@@ -114,7 +115,7 @@ public interface ApiService {
     @GET("api/v1/build/billrooms")
     Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("billId") String billId);
 
-    @POST("/api/v3/build/device/list")
+    @POST("/api/v3/build/device/list")//获取所有设备列表
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
     @POST("api/v1/build/device/bind")
@@ -316,7 +317,7 @@ public interface ApiService {
     @POST("/api/v1/build/scene/getRuleListByUniqListFunction")
     Observable<BaseResult<List<RuleEngineBean>>> getRuleListByUniqListFunction(@Body RequestBody body);
 
-    @GET("/api/v1/build/billrooms/region/{roomId}")
+    @GET("/api/v1/build/billrooms/region/{roomId}")//获取设备位置
     Observable<BaseResult<List<DeviceLocationBean>>> getAllDeviceLocation(@Path("roomId") long roomId);
 
 
@@ -332,4 +333,7 @@ public interface ApiService {
 
     @GET("api/v1/build/billrooms/roomtype/mapping/{scopeId}")
     Observable<BaseResult<RoomTypeShowBean>> showRoomType(@Path("scopeId") long scopeId);
+
+    @GET("api/v1/build/constructbill/{billId}")
+    Observable<BaseResult<MoveWallBean>> getMoveWallData(@Path("billId") String billId);
 }

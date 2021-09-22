@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
+import com.ayla.hotelsaas.bean.MoveWallBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.PropertyDataPointBean;
@@ -1035,6 +1036,16 @@ public class RequestModel {
     public Observable<RoomTypeShowBean> showRoomType(long roomId) {
         return getApiService().showRoomType(roomId)
                 .compose(new BaseResultTransformer<BaseResult<RoomTypeShowBean>, RoomTypeShowBean>() {
+                });
+    }
+    /**
+     * 移动展墙数据获取
+     *
+     * @return
+     */
+    public Observable<MoveWallBean> getMoveWallData(String roomId) {
+        return getApiService().getMoveWallData(roomId)
+                .compose(new BaseResultTransformer<BaseResult<MoveWallBean>, MoveWallBean>() {
                 });
     }
 
