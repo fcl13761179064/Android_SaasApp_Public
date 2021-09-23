@@ -2,6 +2,7 @@
 
 apply from: "config.gradle"
 buildscript {
+    ext.kotlin_version = "1.4.32"
     repositories {
         //修改成国内阿里云的maven地址，否则某些地方下载不下来
         maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
@@ -12,6 +13,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.2'
         classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
