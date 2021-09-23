@@ -15,6 +15,7 @@
         android:src="@mipmap/add_device_btn"
         app:backgroundTint="@color/colorAccent"
         app:fabSize="mini"
+        android:elevation="0dp"
         app:maxImageSize="16dp" />
 
     <ViewStub

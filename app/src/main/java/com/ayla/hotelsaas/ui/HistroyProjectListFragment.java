@@ -120,7 +120,8 @@ public class HistroyProjectListFragment extends BaseMvpFragment<ProjectListView,
             //根据后面的数字 手动调节窗口的宽度
             Display display = getActivity().getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
-            popupWindow.show(view, width/2);
+            popupWindow.setOff(190,0);
+            popupWindow.show(view, width/3);
         } catch (Exception e) {
             e.printStackTrace();
         }
