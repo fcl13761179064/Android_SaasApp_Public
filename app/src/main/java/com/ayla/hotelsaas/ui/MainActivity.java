@@ -193,12 +193,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         try {
             switch (type) {
                 case GO_HOME_TYPE: {
-                    /*if (!TextUtils.isEmpty(move_wall_type) && "3".equals(move_wall_type)) {
-                        appBar.setCenterText(mRoom_name);
-                        appBar.setLeftText("A单元 101");
-                        appBar.setRightText("");
-                        appBar.setShowHiddenCenterTitle(true);
-                    } else {*/
                     if (!TextUtils.isEmpty(move_wall_type) && "3".equals(move_wall_type)) {
                         appBar.setRightText("");
                     } else {
