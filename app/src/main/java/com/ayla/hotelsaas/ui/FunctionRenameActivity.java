@@ -43,6 +43,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     RecyclerView mRecyclerView;
     private FunctionRenameListAdapter mAdapter;
     private DeviceListBean.DevicesBean mDevicesBean;
+    private boolean is_curtain_switch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +106,12 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
                                             }
                                         }
                                         mAdapter.notifyItemChanged(position);
+                                        is_curtain_switch = false;
+                                        if (Constance.is_double_four_curtain(mDevicesBean.getDeviceCategory())) {
+                                            is_curtain_switch = true;
+                                        }
                                         mPresenter.renameFunction(mDevicesBean.getCuId(), mDevicesBean.getDeviceId(),
-                                                attributesBean.getNickNameId(), attributesBean.getPropertyCode(), txt);
+                                                attributesBean.getNickNameId(), attributesBean.getPropertyCode(), txt, is_curtain_switch, (position + 1));
                                     }
                                 }
                                 dialog.dismissAllowingStateLoss();
@@ -138,7 +143,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     @Override
     public void renameSuccess() {
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
-        if (Constance.is_double_four_curtain(mDevicesBean.getPid())) {
+        if (Constance.is_double_four_curtain(mDevicesBean.getDeviceCategory())) {
             EventBus.getDefault().post(new SwitchRenameEvent());
         }
         loadData();
@@ -150,6 +155,6 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     }
 
     private void loadData() {
-        mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getPid(), mDevicesBean.getDeviceId());
+        mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getPid(), mDevicesBean.getDeviceId(),mDevicesBean.getDeviceCategory());
     }
 }

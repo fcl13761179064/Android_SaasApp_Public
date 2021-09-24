@@ -157,8 +157,8 @@ public class Constance {
         return sb.toString();
     }
 
-    public static boolean is_double_four_curtain(String pid) {
-        if ("ZBSW0-A000021".equals(pid) || "ZBSCN-A000010".equals(pid)) {
+    public static boolean is_double_four_curtain(String deviceCategory) {
+        if ("ZB-NODE-WC4-001".equals(deviceCategory) || "ZB-NODE-WC2-001".equals(deviceCategory)) {
             return true;
         } else {
             return false;

@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.mvp.present;
 
 import android.text.TextUtils;
 
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
@@ -28,7 +29,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
 
-    public void getRenameAbleFunctions(int cuId, String pid, String deviceId) {
+    public void getRenameAbleFunctions(int cuId, String pid, String deviceId, String deviceCategory) {
         Disposable subscribe = RequestModel.getInstance()
                 .getDeviceCategoryDetail(pid)//首先查询出改设备的品类支持功能详情。
                 .flatMap(new Function<DeviceCategoryDetailBean, ObservableSource<List<DeviceTemplateBean.AttributesBean>>>() {
@@ -66,18 +67,27 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                     @Override
                     public List<Map<String, String>> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<PropertyNicknameBean> touchPanelDataBeans) throws Exception {
                         List<Map<String, String>> result = new ArrayList<>();
+                        Map<String, String> bean = new HashMap<>();
+                        result.add(bean);
                         for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans) {
-                            Map<String, String> bean = new HashMap<>();
-                            result.add(bean);
                             String code = attributesBean.getCode();
                             bean.put("propertyCode", attributesBean.getCode());
                             bean.put("propertyName", attributesBean.getDisplayName());
-                            for (PropertyNicknameBean touchPanelDataBean : touchPanelDataBeans) {
-                                if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
-                                        TextUtils.equals(code, touchPanelDataBean.getPropertyName())) {
-                                    bean.put("propertyNickname", touchPanelDataBean.getPropertyValue());
-                                    bean.put("nickNameId", String.valueOf(touchPanelDataBean.getId()));
-                                    break;
+                            if (Constance.is_double_four_curtain(deviceCategory)) {//假如这个是2路和4路窗帘开关，重命名这里需要做处理
+                                for (int x = 0; x < 2; x++) {
+                                    for (PropertyNicknameBean touchPanelDataBean : touchPanelDataBeans) {
+                                        bean.put("propertyNickname", touchPanelDataBean.getPropertyValue());
+                                        bean.put("nickNameId", String.valueOf(touchPanelDataBean.getId()));
+                                    }
+                                }
+                            } else {
+                                for (PropertyNicknameBean touchPanelDataBean : touchPanelDataBeans) {
+                                    if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
+                                            TextUtils.equals(code, touchPanelDataBean.getPropertyName())) {
+                                        bean.put("propertyNickname", touchPanelDataBean.getPropertyValue());
+                                        bean.put("nickNameId", String.valueOf(touchPanelDataBean.getId()));
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -113,9 +123,9 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
 
     }
 
-    public void renameFunction(int cuId, String deviceId, String nickNameId, String property, String propertyNickName) {
+    public void renameFunction(int cuId, String deviceId, String nickNameId, String property, String propertyNickName, boolean is_curtain_switch, int position) {
         Disposable subscribe = RequestModel.getInstance()
-                .updatePropertyNickName(nickNameId, deviceId, cuId, property, propertyNickName)
+                .updatePropertyNickName(nickNameId, deviceId, cuId, property, propertyNickName, is_curtain_switch, position)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

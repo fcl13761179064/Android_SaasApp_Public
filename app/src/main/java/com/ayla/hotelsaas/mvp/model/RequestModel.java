@@ -651,9 +651,11 @@ public class RequestModel {
      * @param deviceId
      * @param cuId
      * @param propertyName
+     * @param is_curtain_switch
+     * @param position
      * @return
      */
-    public Observable<Boolean> updatePropertyNickName(String nickNameId, String deviceId, int cuId, String propertyName, String propertyNickName) {
+    public Observable<Boolean> updatePropertyNickName(String nickNameId, String deviceId, int cuId, String propertyName, String propertyNickName, boolean is_curtain_switch, int position) {
         return Observable
                 .fromCallable(new Callable<RequestBody>() {
                     @Override
@@ -668,7 +670,11 @@ public class RequestModel {
                         jsonObject.put("deviceId", deviceId);
                         jsonObject.put("cuId", cuId);
                         jsonObject.put("propertyType", "nickName");
-                        jsonObject.put("propertyName", propertyName);
+                        if (is_curtain_switch){
+                            jsonObject.put("propertyName", "CurtainOperation_"+position);
+                        }else {
+                            jsonObject.put("propertyName", propertyName);
+                        }
                         jsonObject.put("propertyValue", propertyNickName);
                         list.put(jsonObject);
                         uploadParams.put("propertyList", list);
