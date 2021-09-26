@@ -75,17 +75,17 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                                 String displayName = attributesBeans.get(x).getDisplayName();
                                 bean.put("propertyCode", code);
                                 bean.put("propertyName", displayName);
-                                    for (PropertyNicknameBean touchPanelDataBean : touchPanelDataBeans) {
-                                        String propertyType = touchPanelDataBean.getPropertyType();
-                                        String propertyValue = touchPanelDataBean.getPropertyValue();
-                                        String propertyName = touchPanelDataBean.getPropertyName();
-                                        int nickNameId = touchPanelDataBean.getId();
-                                        if ("nickName".equals(propertyType) && propertyName.equals("CurtainOperation_" + (x + 1))) {
-                                            bean.put("propertyNickname", propertyValue);
-                                            bean.put("nickNameId", String.valueOf(nickNameId));
-                                            break;
-                                        }
+                                for (PropertyNicknameBean touchPanelDataBean : touchPanelDataBeans) {
+                                    String propertyType = touchPanelDataBean.getPropertyType();
+                                    String propertyValue = touchPanelDataBean.getPropertyValue();
+                                    String propertyName = touchPanelDataBean.getPropertyName();
+                                    int nickNameId = touchPanelDataBean.getId();
+                                    if ("nickName".equals(propertyType) && propertyName.equals("CurtainOperation_" + (x + 1))) {
+                                        bean.put("propertyNickname", propertyValue);
+                                        bean.put("nickNameId", String.valueOf(nickNameId));
+                                        break;
                                     }
+                                }
                                 if (result.size() == 2) {
                                     break;
                                 }
@@ -109,41 +109,31 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                         return result;
                     }
                 })//查出设置的别名、别名id，方便后面的更新使用。
-                .
-
-                        subscribeOn(Schedulers.io())
-                .
-
-                        observeOn(AndroidSchedulers.mainThread())
-                .
-
-                        doOnSubscribe(new Consumer<Disposable>() {
-                            @Override
-                            public void accept(Disposable disposable) throws Exception {
-                                mView.showProgress("加载中...");
-                            }
-                        })
-                .
-
-                        doFinally(new Action() {
-                            @Override
-                            public void run() throws Exception {
-                                mView.hideProgress();
-                            }
-                        })
-                .
-
-                        subscribe(new Consumer<List<Map<String, String>>>() {
-                            @Override
-                            public void accept(List<Map<String, String>> beans) throws Exception {
-                                mView.showFunctions(beans);
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                mView.showError(throwable);
-                            }
-                        });
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress("加载中...");
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<List<Map<String, String>>>() {
+                    @Override
+                    public void accept(List<Map<String, String>> beans) throws Exception {
+                        mView.showFunctions(beans);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.showError(throwable);
+                    }
+                });
 
         addSubscrebe(subscribe);
 
