@@ -67,23 +67,38 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                     @Override
                     public List<Map<String, String>> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<PropertyNicknameBean> touchPanelDataBeans) throws Exception {
                         List<Map<String, String>> result = new ArrayList<>();
-                        Map<String, String> bean = new HashMap<>();
-                        result.add(bean);
-                        for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans) {
-                            String code = attributesBean.getCode();
-                            bean.put("propertyCode", attributesBean.getCode());
-                            bean.put("propertyName", attributesBean.getDisplayName());
-                            if (Constance.is_double_four_curtain(deviceCategory)) {//假如这个是2路和4路窗帘开关，重命名这里需要做处理
-                                for (int x = 0; x < 2; x++) {
+                        if (Constance.is_double_four_curtain(deviceCategory)) {//假如这个是2路和4路窗帘开关，重命名这里需要做处理
+                            for (int x = 0; x < attributesBeans.size(); x++) {
+                                Map<String, String> bean = new HashMap<>();
+                                result.add(bean);
+                                String code = attributesBeans.get(x).getCode();
+                                String displayName = attributesBeans.get(x).getDisplayName();
+                                bean.put("propertyCode", code);
+                                bean.put("propertyName", displayName);
                                     for (PropertyNicknameBean touchPanelDataBean : touchPanelDataBeans) {
-                                        bean.put("propertyNickname", touchPanelDataBean.getPropertyValue());
-                                        bean.put("nickNameId", String.valueOf(touchPanelDataBean.getId()));
+                                        String propertyType = touchPanelDataBean.getPropertyType();
+                                        String propertyValue = touchPanelDataBean.getPropertyValue();
+                                        String propertyName = touchPanelDataBean.getPropertyName();
+                                        int nickNameId = touchPanelDataBean.getId();
+                                        if ("nickName".equals(propertyType) && propertyName.equals("CurtainOperation_" + (x + 1))) {
+                                            bean.put("propertyNickname", propertyValue);
+                                            bean.put("nickNameId", String.valueOf(nickNameId));
+                                            break;
+                                        }
                                     }
+                                if (result.size() == 2) {
+                                    break;
                                 }
-                            } else {
+                            }
+                        } else {
+                            for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans) {
+                                Map<String, String> bean = new HashMap<>();
+                                result.add(bean);
+                                String code = attributesBean.getCode();
+                                bean.put("propertyCode", attributesBean.getCode());
+                                bean.put("propertyName", attributesBean.getDisplayName());
                                 for (PropertyNicknameBean touchPanelDataBean : touchPanelDataBeans) {
-                                    if ("nickName".equals(touchPanelDataBean.getPropertyType()) &&
-                                            TextUtils.equals(code, touchPanelDataBean.getPropertyName())) {
+                                    if ("nickName".equals(touchPanelDataBean.getPropertyType()) && TextUtils.equals(code, touchPanelDataBean.getPropertyName())) {
                                         bean.put("propertyNickname", touchPanelDataBean.getPropertyValue());
                                         bean.put("nickNameId", String.valueOf(touchPanelDataBean.getId()));
                                         break;
@@ -94,31 +109,42 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                         return result;
                     }
                 })//查出设置的别名、别名id，方便后面的更新使用。
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        mView.showProgress("加载中...");
-                    }
-                })
-                .doFinally(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        mView.hideProgress();
-                    }
-                })
-                .subscribe(new Consumer<List<Map<String, String>>>() {
-                    @Override
-                    public void accept(List<Map<String, String>> beans) throws Exception {
-                        mView.showFunctions(beans);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        mView.showError(throwable);
-                    }
-                });
+                .
+
+                        subscribeOn(Schedulers.io())
+                .
+
+                        observeOn(AndroidSchedulers.mainThread())
+                .
+
+                        doOnSubscribe(new Consumer<Disposable>() {
+                            @Override
+                            public void accept(Disposable disposable) throws Exception {
+                                mView.showProgress("加载中...");
+                            }
+                        })
+                .
+
+                        doFinally(new Action() {
+                            @Override
+                            public void run() throws Exception {
+                                mView.hideProgress();
+                            }
+                        })
+                .
+
+                        subscribe(new Consumer<List<Map<String, String>>>() {
+                            @Override
+                            public void accept(List<Map<String, String>> beans) throws Exception {
+                                mView.showFunctions(beans);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                mView.showError(throwable);
+                            }
+                        });
+
         addSubscrebe(subscribe);
 
     }
