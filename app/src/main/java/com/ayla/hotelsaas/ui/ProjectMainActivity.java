@@ -45,7 +45,9 @@ public class ProjectMainActivity extends BaseMvpActivity {
     protected void initView() {
         WorkOrderBean.ResultListBean bean = (WorkOrderBean.ResultListBean) getIntent().getSerializableExtra("bean");
 
-        mAppBar.setCenterText(bean.getTitle());
+        if(bean != null){
+            mAppBar.setCenterText(bean.getTitle());
+        }
 
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             @NonNull
