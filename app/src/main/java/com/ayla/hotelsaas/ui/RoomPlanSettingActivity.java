@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.databinding.ActivityRoomPlanSettingBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.mvp.present.RoomPlanSettingPresenter;
@@ -92,7 +93,8 @@ public class RoomPlanSettingActivity extends BaseMvpActivity<RoomPlanSettingView
 
     @Override
     public void planExportSuccess(String s) {
-        ShareRoomPlanDialog.newInstance(s).show(getSupportFragmentManager(), null);
+        WorkOrderBean.ResultListBean resultListBean = (WorkOrderBean.ResultListBean) getIntent().getSerializableExtra("bean");
+        ShareRoomPlanDialog.newInstance(s,resultListBean).show(getSupportFragmentManager(), null);
     }
 
     @Override

@@ -25,6 +25,7 @@ public class Constance {
         switch (BuildConfig.server_domain) {
             case "qa":
             case "dev":
+            case "canary":
                 networkDebug = true;
                 break;
             default:
@@ -82,8 +83,10 @@ public class Constance {
             case "dev":
                 url = "https://miya-h5-test.ayla.com.cn";
                 break;
+            case "canary":
+                url = "https://miya-h5-canary.ayla.com.cn";//canary环境;
+                break;
             default:
-                //url = "https://miya-h5-canary.ayla.com.cn";//canary环境
                 url = "https://miya-h5.ayla.com.cn";
         }
         return url;
@@ -154,8 +157,8 @@ public class Constance {
         return sb.toString();
     }
 
-    public static boolean is_double_four_curtain(String pid) {
-        if ("ZBSW0-A000021".equals(pid) || "ZBSCN-A000010".equals(pid)) {
+    public static boolean is_double_four_curtain(String deviceCategory) {
+        if ("ZB-NODE-WC4-001".equals(deviceCategory) || "ZB-NODE-WC2-001".equals(deviceCategory)) {
             return true;
         } else {
             return false;

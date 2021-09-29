@@ -6,10 +6,14 @@ import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
+import com.ayla.hotelsaas.bean.ZxingMoveWallBean;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.SwitchUsageSettingView;
+import com.blankj.utilcode.util.GsonUtils;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -98,9 +102,9 @@ public class SwitchUsageSettingPresenter extends BasePresenter<SwitchUsageSettin
                 });//查询出需要设置的 String[] purposeId
 
         Disposable subscribe = purposeIdObservable
-                .flatMap(new Function<String[], ObservableSource<?>>() {
+                .flatMap(new Function<String[], ObservableSource<BaseResult>>() {
                     @Override
-                    public ObservableSource<?> apply(@NonNull String[] purposeId) throws Exception {
+                    public ObservableSource<BaseResult> apply(@NonNull String[] purposeId) throws Exception {
                         int[] purposeCategory = new int[selfNames.length];
                         for (int i = 0; i < selfPurposeCategories.length; i++) {
                             purposeCategory[i] = selfPurposeCategories[i].getId();
@@ -122,10 +126,14 @@ public class SwitchUsageSettingPresenter extends BasePresenter<SwitchUsageSettin
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<Object>() {
+                .subscribe(new Consumer<BaseResult>() {
                     @Override
-                    public void accept(Object o) throws Exception {
-                        mView.saveSuccess();
+                    public void accept(BaseResult result) throws Exception {
+                        if ("140001".equals(result.code)) {
+                            mView.renameFail("名称重复");
+                        } else {
+                            mView.saveSuccess();
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override

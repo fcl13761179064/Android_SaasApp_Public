@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -53,6 +54,10 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
     TextView tv_title;
     @BindView(R.id.change_center_title)
     LinearLayout change_center_title;
+    @BindView(R.id.change_iv_right)
+    ImageView change_iv_right;
+    @BindView(R.id.change_right_ll)
+    LinearLayout change_right_ll;
 
     private List<String> roomBeans;
     private FragmentStatePagerAdapter mAdapter;
@@ -108,8 +113,11 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
         String title_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
         if ("1".equalsIgnoreCase(title_type)) {
             tv_title.setText("智慧酒店");
+            change_right_ll.setVisibility(View.INVISIBLE);
         } else {
             tv_title.setText("地产行业");
+            change_right_ll.setVisibility(View.VISIBLE);
+            change_iv_right.setImageDrawable(getResources().getDrawable(R.mipmap.qr_code));
         }
     }
 
@@ -151,6 +159,13 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
                 startActivity(new Intent(ProjectListActivity.this, PersonCenterActivity.class));
             }
         });
+        change_iv_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainActivity = new Intent(ProjectListActivity.this, MoveExhibitionWallScanActivity.class);
+                startActivity(mainActivity);
+            }
+        });
     }
 
 
@@ -166,6 +181,12 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @Override
     public void onRequestFailed(Throwable throwable) {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
     }
 

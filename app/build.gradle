@@ -19,7 +19,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode Integer.parseInt(new Date().format("yyyyMMdd"))
-        versionName "2.9.3"
+        versionName "2.9.4"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -89,6 +89,10 @@ android {
             }
             prod {//量产服务地址
                 buildConfigField("String", "server_domain", "\"prod\"")
+                dimension "server_domain"
+            }
+            canary {//canary
+                buildConfigField("String", "server_domain", "\"canary\"")
                 dimension "server_domain"
             }
         }
@@ -172,7 +176,6 @@ task replaceAliPicture() {
         implementation 'com.xw.repo:bubbleseekbar:3.20'
         implementation 'io.sentry:sentry-android:4.3.0'
         implementation project(':dsbridge')
-
         implementation 'com.github.AylaAsia:HongYanConfigLib:0.0.10'
         //MagicIndicator
         api 'com.github.hackware1993:MagicIndicator:1.6.0'

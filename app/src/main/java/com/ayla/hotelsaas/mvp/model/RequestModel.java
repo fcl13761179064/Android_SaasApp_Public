@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
+import com.ayla.hotelsaas.bean.MoveWallBean;
 import com.ayla.hotelsaas.bean.NetworkConfigGuideBean;
 import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.PropertyDataPointBean;
@@ -650,9 +651,11 @@ public class RequestModel {
      * @param deviceId
      * @param cuId
      * @param propertyName
+     * @param is_curtain_switch
+     * @param position
      * @return
      */
-    public Observable<Boolean> updatePropertyNickName(String nickNameId, String deviceId, int cuId, String propertyName, String propertyNickName) {
+    public Observable<Boolean> updatePropertyNickName(String nickNameId, String deviceId, int cuId, String propertyName, String propertyNickName, boolean is_curtain_switch, int position) {
         return Observable
                 .fromCallable(new Callable<RequestBody>() {
                     @Override
@@ -667,7 +670,11 @@ public class RequestModel {
                         jsonObject.put("deviceId", deviceId);
                         jsonObject.put("cuId", cuId);
                         jsonObject.put("propertyType", "nickName");
-                        jsonObject.put("propertyName", propertyName);
+                        if (is_curtain_switch){
+                            jsonObject.put("propertyName", "CurtainOperation_"+position);
+                        }else {
+                            jsonObject.put("propertyName", propertyName);
+                        }
                         jsonObject.put("propertyValue", propertyNickName);
                         list.put(jsonObject);
                         uploadParams.put("propertyList", list);
@@ -1035,6 +1042,16 @@ public class RequestModel {
     public Observable<RoomTypeShowBean> showRoomType(long roomId) {
         return getApiService().showRoomType(roomId)
                 .compose(new BaseResultTransformer<BaseResult<RoomTypeShowBean>, RoomTypeShowBean>() {
+                });
+    }
+    /**
+     * 移动展墙数据获取
+     *
+     * @return
+     */
+    public Observable<MoveWallBean> getMoveWallData(String roomId) {
+        return getApiService().getMoveWallData(roomId)
+                .compose(new BaseResultTransformer<BaseResult<MoveWallBean>, MoveWallBean>() {
                 });
     }
 

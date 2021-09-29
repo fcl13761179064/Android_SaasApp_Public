@@ -244,6 +244,11 @@ public class SwitchUsageSettingActivity extends BaseMvpActivity<SwitchUsageSetti
     }
 
     @Override
+    public void renameFail(String throwable) {
+        CustomToast.makeText(getApplicationContext(), throwable, R.drawable.ic_toast_warming);
+    }
+
+    @Override
     public void saveSuccess() {
         CustomToast.makeText(getApplicationContext(), "保存成功", R.drawable.ic_toast_warming);
         setResult(RESULT_OK);

@@ -1,7 +1,5 @@
 package com.ayla.hotelsaas.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,11 +18,12 @@ import com.ayla.hotelsaas.databinding.ViewStubDeviceListContainerBinding;
 import com.ayla.hotelsaas.databinding.WidgetEmptyViewBinding;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.events.MoveAllDataEvent;
+import com.ayla.hotelsaas.events.MoveBufenDataEvent;
 import com.ayla.hotelsaas.events.RegionChangeEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListContainerPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
-import com.ayla.hotelsaas.ui.MainActivity;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -32,10 +31,13 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigat
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import java.io.Serializable;
 import java.util.List;
 
+/*
+ * 设备列表页面
+ * @auth fanchunlei
+ */
 public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListContainerView, DeviceListContainerPresenter> implements DeviceListContainerView {
 
 
@@ -247,6 +249,29 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     public void handleDeviceRemoved(RegionChangeEvent event) {
         loadData();
     }
+
+
+/*
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getAllData(MoveAllDataEvent event) {
+        loadData();
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getBufenData(MoveBufenDataEvent event) {
+        if (deviceListBean!=null){
+            for (int x= 0; x<deviceListBean.getDevices().size();x++){
+                DeviceListBean.DevicesBean devicesBean = deviceListBean.getDevices().get(x);
+                if (devicesBean.getBindType() != 0) {//待绑定设备
+                    deviceListBean.getDevices().remove(x);
+                }
+            }
+        }
+
+    }
+*/
+
 
     private void loadData() {
         if (deviceListContainerBinding != null) {

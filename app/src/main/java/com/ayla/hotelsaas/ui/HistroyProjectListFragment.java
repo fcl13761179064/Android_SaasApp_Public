@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -117,8 +118,10 @@ public class HistroyProjectListFragment extends BaseMvpFragment<ProjectListView,
                 }
             });
             //根据后面的数字 手动调节窗口的宽度
-            popupWindow.setOff(150, 0);
-            popupWindow.show(view, 350);
+            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            int width = display.getWidth();
+            popupWindow.setOff(190,0);
+            popupWindow.show(view, width/3);
         } catch (Exception e) {
             e.printStackTrace();
         }
