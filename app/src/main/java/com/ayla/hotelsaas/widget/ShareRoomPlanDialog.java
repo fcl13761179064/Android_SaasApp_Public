@@ -17,16 +17,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.databinding.DialogRoomPlanShareBinding;
 import com.ayla.hotelsaas.ui.ProjectMainActivity;
 
 public class ShareRoomPlanDialog extends DialogFragment {
     DialogRoomPlanShareBinding binding;
 
-    public static ShareRoomPlanDialog newInstance(String msg) {
+    public static ShareRoomPlanDialog newInstance(String msg, WorkOrderBean.ResultListBean bean) {
 
         Bundle args = new Bundle();
         args.putString("msg", msg);
+        args.putSerializable("bean",bean);
         ShareRoomPlanDialog fragment = new ShareRoomPlanDialog();
         fragment.setArguments(args);
         return fragment;
@@ -59,10 +61,11 @@ public class ShareRoomPlanDialog extends DialogFragment {
             }
         });
         binding.vDone.setOnClickListener(new View.OnClickListener() {
+            @SuppressWarnings("ConstantConditions")
             @Override
             public void onClick(View v) {
                 dismissAllowingStateLoss();
-                startActivity(new Intent(getContext(), ProjectMainActivity.class));
+                startActivity(new Intent(getContext(), ProjectMainActivity.class).putExtra("bean",getArguments().getSerializable("bean")));
             }
         });
         binding.tvContent.setText(getArguments().getString("msg"));
