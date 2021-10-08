@@ -34,7 +34,6 @@ public class PopupWindowUtil {
         window.setFocusable(true);
         //点击 back 键的时候，窗口会自动消失
         window.setBackgroundDrawable(new BitmapDrawable());
-
         View localView = LayoutInflater.from(context).inflate(R.layout.lv_pw_menu, null);
         listView = (ListView) localView.findViewById(R.id.lv_pop_list);
 

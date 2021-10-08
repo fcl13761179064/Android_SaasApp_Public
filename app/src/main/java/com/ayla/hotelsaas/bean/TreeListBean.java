@@ -12,7 +12,7 @@ public class TreeListBean implements Serializable {
      * children : [{"id":"1302801490792013892","parentId":"1302801433778839601","contentName":"天狗大厦","children":[]},{"id":"1302801538808406093","parentId":"1302801433778839601","contentName":"麻瓜大厦","children":[{"id":"1302801612745596988","parentId":"1302801538808406093","contentName":"7L","children":[{"id":"1302848635435868189","parentId":"1302801612745596988","contentName":"0702主题房","children":[]},{"id":"1302848748094873642","parentId":"1302801612745596988","contentName":"0703商务房","children":[]}]},{"id":"1302801706798669862","parentId":"1302801538808406093","contentName":"6L","children":[]}]}]
      */
 
-    private String id;
+    private String id;//business
     private String parentId;
     private String contentName;
     private long roomTypeId;//房型

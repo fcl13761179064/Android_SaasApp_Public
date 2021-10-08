@@ -11,11 +11,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.ayla.hotelsaas.mvp.present.RoomMorePresenter;
 import com.ayla.hotelsaas.mvp.view.RoomMoreView;
+import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
@@ -44,8 +47,12 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
     TextView tv_room_name;
     @BindView(R.id.btn_remove_room)
     Button btn_remove_room;
+    @BindView(R.id.relation_xiaodu)
+    Button relation_xiaodu;
     private long mRoom_ID;
     private String mRoom_name;
+    private String mHotel_id;
+    private String saas_dichan_type;
 
 
     @Override
@@ -61,19 +68,29 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
     @Override
     protected void initView() {
         appBar.setCenterText("更多");
-
+        saas_dichan_type = SharePreferenceUtils.getString(this, Constance.SP_SAAS, "1");
         mRoom_ID = getIntent().getLongExtra("roomId", 0);
+        //这个是hotelId
+        mHotel_id = getIntent().getStringExtra("hotelId");
         mRoom_name = getIntent().getStringExtra("roomName");
         tv_room_name.setText(mRoom_name);
         boolean removeEnable = getIntent().getBooleanExtra("removeEnable", false);
         btn_remove_room.setVisibility(removeEnable ? View.VISIBLE : View.GONE);
         //暂时没有这个需求，屏蔽入口
 //        rl_room_distribution.setVisibility(removeEnable ? View.VISIBLE : View.GONE);
+        if ("1".equals(saas_dichan_type)) {
+            relation_xiaodu.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     protected void initListener() {
-
+        relation_xiaodu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.releation_xiaodu(mRoom_ID, mRoom_name, mHotel_id);
+            }
+        });
         btn_remove_room.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,6 +181,20 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
         intent.putExtras(getIntent());
         intent.putExtra("hasPlan", s);
         startActivityForResult(intent, REQUEST_CODE_ROOM_PLAN_SETTING);
+    }
+
+    @Override
+    public void relationIdSuccess(BaseResult s) {
+        if ("0".equals(s.code)){
+            CustomToast.makeText(this, "关联小度音响成功", R.drawable.ic_success);
+        }else {
+            CustomToast.makeText(this, "请确保小度音响与所在房间一致", R.drawable.ic_toast_warming);
+        }
+    }
+
+    @Override
+    public void relationIdFail(String s) {
+        CustomToast.makeText(this, "请确保小度音响与所在房间一致", R.drawable.ic_toast_warming);
     }
 
     @Override
