@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
+import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.events.RoomChangedEvent;
 import com.ayla.hotelsaas.mvp.present.RoomMorePresenter;
@@ -180,6 +181,20 @@ public class RoomMoreActivity extends BaseMvpActivity<RoomMoreView, RoomMorePres
         intent.putExtras(getIntent());
         intent.putExtra("hasPlan", s);
         startActivityForResult(intent, REQUEST_CODE_ROOM_PLAN_SETTING);
+    }
+
+    @Override
+    public void relationIdSuccess(BaseResult s) {
+        if ("0".equals(s.code)){
+            CustomToast.makeText(this, "关联小度音响成功", R.drawable.ic_success);
+        }else {
+            CustomToast.makeText(this, "请确保小度音响与所在房间一致", R.drawable.ic_toast_warming);
+        }
+    }
+
+    @Override
+    public void relationIdFail(String s) {
+        CustomToast.makeText(this, "请确保小度音响与所在房间一致", R.drawable.ic_toast_warming);
     }
 
     @Override

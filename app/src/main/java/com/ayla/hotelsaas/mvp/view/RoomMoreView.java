@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.mvp.view;
 
 
 import com.ayla.hotelsaas.base.BaseView;
+import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 
 
@@ -25,4 +26,10 @@ public interface RoomMoreView extends BaseView {
     void removeFailed(String code, String msg);
 
     void planCheckResult(boolean s);
+
+    void relationIdSuccess(BaseResult s);
+
+    void relationIdFail(String s);
+
+
 }

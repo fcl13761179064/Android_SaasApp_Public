@@ -338,5 +338,5 @@ public interface ApiService {
     Observable<BaseResult<MoveWallBean>> getMoveWallData(@Path("billId") String billId);
 
     @POST("api/v1/build/content/linkroom")
-    Observable<BaseResult<MoveWallBean>> getRelationXiaodu(@Body RequestBody body);
+    Observable<BaseResult> getRelationXiaodu(@Body RequestBody body);
 }

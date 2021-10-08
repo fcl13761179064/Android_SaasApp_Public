@@ -1066,8 +1066,7 @@ public class RequestModel {
         jsonObject.addProperty("roomName", roomName);
         jsonObject.addProperty("hotelId", hotelId);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
-        return getApiService().getRelationXiaodu(body111)
-                .compose(new BaseResultTransformer<BaseResult<MoveWallBean>, MoveWallBean>() {
-                });
+        return getApiService().getRelationXiaodu(body111);
+
     }
 }

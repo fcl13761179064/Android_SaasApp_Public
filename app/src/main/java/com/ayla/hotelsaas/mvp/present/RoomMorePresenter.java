@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.mvp.present;
 
 
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.MoveWallBean;
 import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
@@ -136,14 +137,16 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
                         mView.hideProgress();
                     }
                 })
-                .subscribe(new Consumer<MoveWallBean>() {
+                .subscribe(new Consumer<BaseResult>() {
                     @Override
-                    public void accept(MoveWallBean moveWallBean) throws Exception {
+                    public void accept(BaseResult baseResult) throws Exception {
+                        mView.relationIdSuccess(baseResult);
 
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        mView.relationIdFail(throwable.getMessage());
 
                     }
                 });
