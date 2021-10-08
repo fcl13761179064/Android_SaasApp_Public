@@ -16,6 +16,7 @@ import java.util.Random;
 public class Constance {
     public static String SP_SAAS = "saas";
     public static String AP_NET_SELECT = "net";
+    public static String HotelId;
     /**
      * 是否处于开发状态。
      */

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
@@ -139,6 +140,7 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
             if (bean != null) {
                 treeListBean.setContentName(bean.getTitle());
                 treeListBean.setId(bean.getBusinessId());
+                Constance.HotelId =bean.getBusinessId();
             }
             handleSelect(treeListBean);
         } catch (Exception e) {
@@ -189,6 +191,7 @@ public class ProjectRoomsFragment extends BaseMvpFragment<ProjectRoomsView, Proj
                 long roomId = Long.parseLong(treeListBean.getId());
                 String roomName = treeListBean.getContentName();
                 intent.putExtra("roomId", roomId);
+                intent.putExtra("hotelId", Constance.HotelId);
                 intent.putExtra("roomName", roomName);
                 intent.putExtra("roomTypeId", treeListBean.getRoomTypeId());
                 if (bean != null) {

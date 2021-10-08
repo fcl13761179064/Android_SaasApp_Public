@@ -1055,5 +1055,19 @@ public class RequestModel {
                 });
     }
 
-
+    /**
+     * 移动展墙数据获取
+     *
+     * @return
+     */
+    public Observable<BaseResult> getRelationXiaodu(long roomId,String roomName,String hotelId) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("roomId", roomId);
+        jsonObject.addProperty("roomName", roomName);
+        jsonObject.addProperty("hotelId", hotelId);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().getRelationXiaodu(body111)
+                .compose(new BaseResultTransformer<BaseResult<MoveWallBean>, MoveWallBean>() {
+                });
+    }
 }
