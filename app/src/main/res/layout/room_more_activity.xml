@@ -123,7 +123,7 @@
             android:layout_marginLeft="107.5dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="62dp"
-            android:text="关联小肚音箱"
+            android:text="关联小度音箱"
             android:visibility="gone"
             android:textColor="@color/white"
             android:background="@drawable/green_btn_bg_small_corner"
