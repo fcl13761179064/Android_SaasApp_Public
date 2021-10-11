@@ -2,6 +2,8 @@ package com.ayla.hotelsaas.mvp.present;
 
 
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.BaseResult;
+import com.ayla.hotelsaas.bean.MoveWallBean;
 import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.RoomMoreView;
@@ -113,6 +115,38 @@ public class RoomMorePresenter extends BasePresenter<RoomMoreView> {
                 }, new UnifiedErrorConsumer() {
                     @Override
                     public void handle(Throwable throwable) throws Exception {
+
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
+    public void releation_xiaodu(long roomId,String roomName,String hotelId) {
+        Disposable subscribe = RequestModel.getInstance()
+                .getRelationXiaodu(roomId,roomName,hotelId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer<BaseResult>() {
+                    @Override
+                    public void accept(BaseResult baseResult) throws Exception {
+                        mView.relationIdSuccess(baseResult);
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.relationIdFail(throwable.getMessage());
 
                     }
                 });

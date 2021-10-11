@@ -114,6 +114,22 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_menu_item_arrow_right" />
         </RelativeLayout>
+
+        <Button
+            android:id="@+id/relation_xiaodu"
+            android:layout_width="160dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="107.5dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="62dp"
+            android:text="关联小度音箱"
+            android:visibility="gone"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:background="@drawable/green_btn_bg_small_corner"
+            />
+
     </LinearLayout>
 
     <Button
