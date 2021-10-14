@@ -83,6 +83,7 @@ public class Constance {
             case "qa":
             case "dev":
                 url = "https://miya-h5-test.ayla.com.cn";
+               // url = "http://192.168.1.10:8080";
                 break;
             case "canary":
                 url = "https://miya-h5-canary.ayla.com.cn";//canary环境;
