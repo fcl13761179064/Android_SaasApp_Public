@@ -980,6 +980,6 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @Override
     public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-        Collections.swap(mActionAdapter.getData(),fromPos,pos);
+        Collections.swap(mRuleEngineBean.getActions(),fromPos,pos);
     }
 }
