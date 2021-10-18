@@ -127,7 +127,7 @@ public class SceneSettingActionItemAdapter extends BaseItemDraggableAdapter<Scen
         helper.addOnClickListener(R.id.iv_delete);
     }
 
-    public static class ActionItem implements MultiItemEntity {
+    public static class ActionItem extends BaseSceneBean.Action implements MultiItemEntity {
         private static final int item_device_normal = 0;
         private static final int item_device_removed = 1;
         private static final int item_device_wait_add = 2;

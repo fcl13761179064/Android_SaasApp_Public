@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -969,9 +970,11 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
         this.fromPos =pos;
+
     }
 
     @Override
@@ -980,6 +983,13 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @Override
     public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-        Collections.swap(mRuleEngineBean.getActions(),fromPos,pos);
+       // Collections.swap(mRuleEngineBean.getActions(),fromPos,pos);
+        try {
+            BaseSceneBean.Action action = mRuleEngineBean.getActions().get(fromPos);
+            mRuleEngineBean.getActions().remove(fromPos);
+            mRuleEngineBean.getActions().add(pos,action);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
