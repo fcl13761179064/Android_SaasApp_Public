@@ -26,7 +26,6 @@ public class Constance {
         switch (BuildConfig.server_domain) {
             case "qa":
             case "dev":
-            case "canary":
                 networkDebug = true;
                 break;
             default:
