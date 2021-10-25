@@ -3,14 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:paddingLeft="@dimen/dp_16"
+    android:paddingRight="@dimen/dp_16"
+    android:paddingTop="16dp"
+    android:paddingBottom="18dp"
+    >
+
+    <ImageView
+        android:id="@+id/tuozhuai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/tuozhuai_img"
+        android:layout_centerVertical="true"
+      />
 
     <ImageView
         android:id="@+id/left_iv"
         android:layout_width="32dp"
         android:alpha="0.7"
         android:layout_height="32dp"
+        android:layout_centerVertical="true"
         android:layout_margin="9dp"
+        android:layout_toRightOf="@+id/tuozhuai"
         tools:src="@drawable/ic_empty_device" />
 
     <TextView
