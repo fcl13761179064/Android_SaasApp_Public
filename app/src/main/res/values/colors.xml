@@ -46,4 +46,11 @@
     <color name="color_3C3C3C">#3C3C3C</color>
     <color name="color_yellow">#FACB3E</color>
     <color name="color_gray">#C8CCD8</color>
+
+
+    <color name="seekbar_k_left">#64D0FF</color>
+    <color name="seekbar_k_end">#FFCA43</color>
+    <color name="seekbar_left">#FF436CFF</color>
+    <color name="seekbar_sat_left">#c4c4c4</color>
+    <color name="seekbar_sat_end">#648C1A</color>
 </resources>

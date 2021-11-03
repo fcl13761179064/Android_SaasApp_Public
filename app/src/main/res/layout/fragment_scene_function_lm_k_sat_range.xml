@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_function_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="50dp"
+        android:text="温度"
+        android:textColor="#993C3C43"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_k_sat_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tv_k_name_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:text="较冷"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_k_name_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/sp_12"
+                android:text="较暖"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:gravity="center"
+                android:paddingRight="15sp"
+                android:text="50"
+                android:textColor="#000000" />
+
+            <com.xw.repo.BubbleSeekBar
+                android:id="@+id/sb_value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone"
+                app:bsb_max="100"
+                app:bsb_min="1"
+                app:bsb_progress="10"
+                app:bsb_second_track_color="@color/colorAccent"
+                app:bsb_thumb_color="@color/colorBackground"
+                app:bsb_thumb_radius="10dp"
+                app:bsb_track_color="@color/color_gray"
+                app:bsb_track_size="3dp" />
+
+            <com.ayla.hotelsaas.gradientseekbar.GradientSeekBar
+                android:id="@+id/gradientseekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxHeight="3dp"
+                android:minHeight="3dp"
+                android:progress="0"
+                android:max="100"
+                android:min="1"
+                android:progressDrawable="@drawable/seekbar_gradient"
+                android:splitTrack="false"
+                android:thumb="@drawable/progress_thumb_img"
+                android:visibility="visible"
+                android:thumbOffset="10dp" />
+
+
+            <ImageView
+                android:id="@+id/iv_lm_light"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="10dp"
+                android:src="@mipmap/action_light_img"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

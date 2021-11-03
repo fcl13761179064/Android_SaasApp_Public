@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -105,21 +106,26 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneS
         this.attributesBean = attributesBean;
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if (attributesBean!=null && attributesBean.getValue() != null) {
+        if (attributesBean != null && attributesBean.getValue() != null) {
             fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(attributesBean), "content");
-        } else if (attributesBean!=null && attributesBean.getSetup() != null) {
-            int type = getIntent().getIntExtra("type", 0);//0:条件
+        } else if (attributesBean != null && attributesBean.getSetup() != null) {
+            int type = getIntent().getIntExtra("type", 0);//0:条件1动作
 
             Double max = attributesBean.getSetup().getMax();
             Double min = attributesBean.getSetup().getMin();
             Double step = attributesBean.getSetup().getStep();
+            String unit = attributesBean.getSetup().getUnit();
 
             int count = 0;
             for (double i = min; i <= max; i += step) {
                 count++;
             }
             if (count > 20) {//大于20个选项范围，使用手动填写
-                fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetBigValueSelectFragment.newInstance(type == 0, attributesBean), "content");
+                if (!TextUtils.isEmpty(unit) && ("k".equalsIgnoreCase(unit) || "lm".equalsIgnoreCase(unit) || "SAT".equalsIgnoreCase(unit))) {
+                    fragmentTransaction.replace(R.id.fl_container, SceneSettingLmKSatSetRangeFragment.newInstance(attributesBean),"content");
+                } else {
+                    fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetBigValueSelectFragment.newInstance(type == 0, attributesBean), "content");
+                }
             } else {
                 if (type == 0) {
                     fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeWithOptionFragment.newInstance(attributesBean), "content");
@@ -127,9 +133,9 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneS
                     fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetRangeFragment.newInstance(attributesBean), "content");
                 }
             }
-        } else if (attributesBean!=null && attributesBean.getBitValue() != null) {
+        } else if (attributesBean != null && attributesBean.getBitValue() != null) {
             fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionDatumSetSingleChooseFragment.newInstance(attributesBean), "content");
-        }else {
+        } else {
             fragmentTransaction.replace(R.id.fl_container, SceneSettingFunctionEventSingleChooseFragment.newInstance(attributesBean), "content");
         }
         fragmentTransaction.commitNowAllowingStateLoss();
