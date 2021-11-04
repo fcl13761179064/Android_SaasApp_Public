@@ -67,12 +67,10 @@
 
             <TextView
                 android:id="@+id/tv_value"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
                 android:gravity="center"
-                android:paddingRight="15sp"
-                android:text="50"
+                android:text="500"
                 android:textColor="#000000" />
 
             <com.xw.repo.BubbleSeekBar
@@ -90,13 +88,12 @@
                 app:bsb_track_color="@color/color_gray"
                 app:bsb_track_size="3dp" />
 
-            <com.ayla.hotelsaas.gradientseekbar.GradientSeekBar
+            <SeekBar
                 android:id="@+id/gradientseekbar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:maxHeight="3dp"
-                android:minHeight="3dp"
                 android:progress="0"
                 android:max="100"
                 android:min="1"

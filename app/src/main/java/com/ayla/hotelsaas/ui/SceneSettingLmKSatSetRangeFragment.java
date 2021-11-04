@@ -43,7 +43,7 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
     @BindView(R.id.tv_k_name_two)
     TextView tv_k_name_two;
     @BindView(R.id.gradientseekbar)
-    GradientSeekBar gradientseekbar;
+    SeekBar gradientseekbar;
 
     private int[] PICKCOLORBAR_COLORS;
     //每个颜色的位置
@@ -94,7 +94,7 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
             } catch (Exception ignored) {
             }
         }
-        if ("lm".equalsIgnoreCase(unit)){
+        if ("lm".equalsIgnoreCase(unit)) {
             iv_lm_light.setVisibility(View.VISIBLE);
             mAppCompatSeekBar.setVisibility(View.VISIBLE);
             gradientseekbar.setVisibility(View.GONE);
@@ -116,7 +116,7 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
             mAppCompatSeekBar.setProgress(targetValue);
         }
 
-        if ("k".equalsIgnoreCase(unit)){
+        if ("k".equalsIgnoreCase(unit)) {
             iv_lm_light.setVisibility(View.INVISIBLE);
             mAppCompatSeekBar.setVisibility(View.GONE);
             gradientseekbar.setVisibility(View.VISIBLE);
@@ -134,7 +134,7 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
             gradientseekbar.setMax(Integer.valueOf(max_calue));
             gradientseekbar.setMin(Integer.valueOf(min_value));
             gradientseekbar.setProgress((int) targetValue);
-            tv_value.setText(String.format("%s", (int) targetValue)+"");
+            tv_value.setText(String.format("%s", (int) targetValue) + "");
             gradientseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -152,7 +152,7 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
                 }
             });
 
-        } else if ("SAT".equalsIgnoreCase(unit)){
+        } else if ("SAT".equalsIgnoreCase(unit)) {
             iv_lm_light.setVisibility(View.INVISIBLE);
             gradientseekbar.setVisibility(View.VISIBLE);
             PICKCOLORBAR_COLORS = new int[]{
@@ -168,11 +168,11 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
             gradientseekbar.setMax(Integer.valueOf(max_calue));
             gradientseekbar.setMin(Integer.valueOf(min_value));
             gradientseekbar.setProgress((int) targetValue);
-            tv_value.setText(String.format("%s", (int) targetValue)+"");
+            tv_value.setText(String.format("%s", (int) targetValue) + "");
             gradientseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    tv_value.setText(String.format("%s", progress));
+                  tv_value.setText(String.format("%s", progress));
                 }
 
                 @Override
@@ -199,7 +199,14 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
 
     @Override
     public CallBackBean getDatum() {
-        String targetValue = String.valueOf(mAppCompatSeekBar.getProgress());
+        String targetValue = "";
+        String unit = attributesBean.getSetup().getUnit();
+        if ("lm".equalsIgnoreCase(unit)) {
+            targetValue = String.valueOf(mAppCompatSeekBar.getProgress());
+        } else {
+            targetValue = String.valueOf(gradientseekbar.getProgress());
+        }
+
 
         return new SetupCallBackBean("==", targetValue, attributesBean.getSetup());
     }
