@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,9 +35,11 @@ import com.ayla.hotelsaas.mvp.view.SceneSettingView;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.CustomSheet;
+import com.ayla.hotelsaas.widget.HomeItemDragAndSwipeCallback;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemDragListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,6 +49,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -55,7 +60,7 @@ import butterknife.OnClick;
  * 进入时必须带入(创建：scopeId、siteType ,如果是创建本地联动，还要带上网关的deviceId：targetGateway) 或者 更新：sceneBean
  * 如果是要求创建一键联动，可以带上参数 {@link Boolean forceOneKey = true}
  */
-public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, SceneSettingPresenter> implements SceneSettingView {
+public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, SceneSettingPresenter> implements SceneSettingView, OnItemDragListener {
     private final int REQUEST_CODE_SELECT_ICON = 0X12;
     private final int REQUEST_CODE_SELECT_CONDITION_TYPE = 0X13;
     private final int REQUEST_CODE_SELECT_ENABLE_TIME = 0X14;
@@ -93,6 +98,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     private SceneSettingActionItemAdapter mActionAdapter;
 
     private boolean forceOneKey;
+    private int fromPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -303,6 +309,14 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         mActionAdapter = new SceneSettingActionItemAdapter(null);
         mActionAdapter.bindToRecyclerView(mActionRecyclerView);
         mActionAdapter.setEmptyView(R.layout.item_scene_setting_action_empty);
+
+        HomeItemDragAndSwipeCallback itemDragAndSwipeCallback = new HomeItemDragAndSwipeCallback(mActionAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
+        itemTouchHelper.attachToRecyclerView(mActionRecyclerView);
+
+// 开启拖拽
+        mActionAdapter.enableDragItem(itemTouchHelper);
+        mActionAdapter.setOnItemDragListener(this);
     }
 
     @Override
@@ -953,6 +967,29 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             mAddConditionImageView.setImageResource(R.drawable.ic_scene_action_add_enable);
             mAddConditionImageView.setClickable(true);
             rl_enable_time.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
+        this.fromPos =pos;
+
+    }
+
+    @Override
+    public void onItemDragMoving(RecyclerView.ViewHolder source, int from, RecyclerView.ViewHolder target, int to) {
+    }
+
+    @Override
+    public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
+       // Collections.swap(mRuleEngineBean.getActions(),fromPos,pos);
+        try {
+            BaseSceneBean.Action action = mRuleEngineBean.getActions().get(fromPos);
+            mRuleEngineBean.getActions().remove(fromPos);
+            mRuleEngineBean.getActions().add(pos,action);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

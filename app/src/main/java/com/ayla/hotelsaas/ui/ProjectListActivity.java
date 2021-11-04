@@ -89,6 +89,34 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
             }
             Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
         }
+        mAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public int getItemPosition(@NonNull Object object) {
+                return POSITION_NONE;
+            }
+
+            @NonNull
+            @Override
+            public Fragment getItem(int position) {
+                if (position == 0) {
+                    return new ProjectListFragment();
+                } else {
+                    return new HistroyProjectListFragment();
+                }
+            }
+
+            @Override
+            public int getCount() {
+                return roomBeans.size() == 0 ? 0 : roomBeans.size();
+            }
+
+            @Nullable
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return roomBeans.get(position);
+            }
+        };
+        viewPager.setAdapter(mAdapter);
     }
 
     @Override
@@ -124,35 +152,6 @@ public class ProjectListActivity extends BaseMvpActivity<ProjectListView, Projec
 
     @Override
     protected void initListener() {
-        mAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
-            @Override
-            public int getItemPosition(@NonNull Object object) {
-                return POSITION_NONE;
-            }
-
-            @NonNull
-            @Override
-            public Fragment getItem(int position) {
-                if (position == 0) {
-                    return new ProjectListFragment();
-                } else {
-                    return new HistroyProjectListFragment();
-                }
-            }
-
-            @Override
-            public int getCount() {
-                return roomBeans.size() == 0 ? 0 : roomBeans.size();
-            }
-
-            @Nullable
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return roomBeans.get(position);
-            }
-        };
-        viewPager.setAdapter(mAdapter);
-
         change_left_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

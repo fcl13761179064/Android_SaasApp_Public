@@ -1,14 +1,18 @@
 package com.ayla.hotelsaas.adapter;
 
 import android.text.TextUtils;
+import android.util.SparseArray;
+import android.view.ViewGroup;
+
+import androidx.annotation.LayoutRes;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.utils.ImageLoader;
-import com.ayla.hotelsaas.utils.TempUtils;
-import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
+import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
@@ -17,7 +21,20 @@ import java.util.List;
 /**
  * 场景动作项目
  */
-public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<SceneSettingActionItemAdapter.ActionItem, BaseViewHolder> {
+public class SceneSettingActionItemAdapter extends BaseItemDraggableAdapter<SceneSettingActionItemAdapter.ActionItem, BaseViewHolder> {
+
+    private static final int DEFAULT_VIEW_TYPE = -0xff;
+    public static final int TYPE_NOT_FOUND = -404;
+    private SparseArray layouts;
+
+    @Override
+    protected int getDefItemViewType(int position) {
+        Object item = mData.get(position);
+        if (item instanceof MultiItemEntity) {
+            return ((MultiItemEntity) item).getItemType();
+        }
+        return DEFAULT_VIEW_TYPE;
+    }
 
 
     /**
@@ -33,6 +50,43 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
         addItemType(ActionItem.item_device_wait_add, R.layout.item_scene_setting_action_device_wait_add);
         addItemType(ActionItem.item_delay, R.layout.item_scene_setting_action_delay);
         addItemType(ActionItem.item_welcome, R.layout.item_scene_setting_action_welcome);
+    }
+
+
+    @Override
+    protected BaseViewHolder onCreateDefViewHolder(ViewGroup parent, int viewType) {
+        return createBaseViewHolder(parent, getLayoutId(viewType));
+    }
+
+
+    private int getLayoutId(int viewType) {
+        return (int) layouts.get(viewType, TYPE_NOT_FOUND);
+    }
+
+
+    protected void addItemType(int type, @LayoutRes int layoutResId) {
+        if (layouts == null) {
+            layouts = new SparseArray<>();
+        }
+        layouts.put(type, layoutResId);
+    }
+
+
+    /**
+     * 重写BaseItemDraggableAdapter里面的onItemDragMoving方法，判断from Or to 是不是-1，
+     * 当item拖动到头部的时候to是-1,必须判断，否则数组越界
+     *
+     * @param source
+     * @param target
+     */
+    @Override
+    public void onItemDragMoving(RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
+        int from = getViewHolderPosition(source);
+        int to = getViewHolderPosition(target);
+        if (from == -1 || to == -1) {
+            return;
+        }
+        super.onItemDragMoving(source, target);
     }
 
     @Override
@@ -73,7 +127,7 @@ public class SceneSettingActionItemAdapter extends BaseMultiItemQuickAdapter<Sce
         helper.addOnClickListener(R.id.iv_delete);
     }
 
-    public static class ActionItem implements MultiItemEntity {
+    public static class ActionItem extends BaseSceneBean.Action implements MultiItemEntity {
         private static final int item_device_normal = 0;
         private static final int item_device_removed = 1;
         private static final int item_device_wait_add = 2;
