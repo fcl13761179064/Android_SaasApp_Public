@@ -80,11 +80,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         SharePreferenceUtils.saveLong(this, Constance.SP_ROOM_ID, mRoom_ID);
         mRoom_name = getIntent().getStringExtra("roomName");
         move_wall_type = getIntent().getStringExtra("move_wall_type");
-      /*  allBtn = appBar.getAllBtn();
-        bufenBtn = appBar.getBufenBtn();
-        if (allBtn != null) {
-            allBtn.setSelected(true);
-        }*/
         rgIndicators.check(R.id.rb_main_fragment_device);
 
         //定义底部标签图片大小和位置
