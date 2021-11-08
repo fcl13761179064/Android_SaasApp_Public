@@ -32,8 +32,8 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
     BubbleSeekBar mAppCompatSeekBar;
     @BindView(R.id.iv_lm_light)
     ImageView iv_lm_light;
-    @BindView(R.id.tv_function_name)
-    TextView tv_function_name;
+    @BindView(R.id.tv_notice)
+    TextView tv_notice;
     @BindView(R.id.tv_value)
     TextView tv_value;
     @BindView(R.id.rl_k_sat_layout)
@@ -112,8 +112,8 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
                     .sectionTextColor(Color.parseColor("#648C1A"))
                     .trackColor(Color.parseColor("#DFE4EB"))
                     .build();
-            tv_function_name.setText(displayName);
             mAppCompatSeekBar.setProgress(targetValue);
+            tv_notice.setVisibility(View.INVISIBLE);
         }
 
         if ("k".equalsIgnoreCase(unit)) {
@@ -151,7 +151,7 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
 
                 }
             });
-
+            tv_notice.setText("色温调节仅在白光模式下调试");
         } else if ("SAT".equalsIgnoreCase(unit)) {
             iv_lm_light.setVisibility(View.INVISIBLE);
             gradientseekbar.setVisibility(View.VISIBLE);
@@ -185,6 +185,7 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
 
                 }
             });
+            tv_notice.setText("饱和度调节仅在彩光模式下调试");
         }
     }
 
