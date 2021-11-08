@@ -151,7 +151,7 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
 
                 }
             });
-            tv_notice.setText("色温调节仅在白光模式下调试");
+            tv_notice.setText("色温调节仅在白光模式下有效");
         } else if ("SAT".equalsIgnoreCase(unit)) {
             iv_lm_light.setVisibility(View.INVISIBLE);
             gradientseekbar.setVisibility(View.VISIBLE);
@@ -185,7 +185,7 @@ public class SceneSettingLmKSatSetRangeFragment extends BaseMvpFragment implemen
 
                 }
             });
-            tv_notice.setText("饱和度调节仅在彩光模式下调试");
+            tv_notice.setText("饱和度调节仅在彩光模式下有效");
         }
     }
 
