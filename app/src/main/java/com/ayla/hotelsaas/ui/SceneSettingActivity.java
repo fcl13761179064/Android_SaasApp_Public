@@ -558,7 +558,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
         List<SceneSettingActionItemAdapter.ActionItem> actionItems = new ArrayList<>();
         for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
-            actionItems.add(new SceneSettingActionItemAdapter.ActionItem(action));
+                actionItems.add(new SceneSettingActionItemAdapter.ActionItem(action));
         }
         mActionAdapter.setNewData(actionItems);
     }
@@ -787,7 +787,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
         if (datumBean instanceof ISceneSettingFunctionDatumSet.EventCallBackBean) {
             conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
-            if(attributesBean.getCode().endsWith(".")){//event事件类型，A.无value情况，此时跳过选择value层级
+            if (attributesBean.getCode().endsWith(".")) {//event事件类型，A.无value情况，此时跳过选择value层级
                 if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
                     conditionItem.setSourceDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
                 } else if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
@@ -977,7 +977,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     @SuppressLint("NewApi")
     @Override
     public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
-        this.fromPos =pos;
+        this.fromPos = pos;
 
     }
 
@@ -987,18 +987,36 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @Override
     public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-       // Collections.swap(mRuleEngineBean.getActions(),fromPos,pos);
+        // Collections.swap(mRuleEngineBean.getActions(),fromPos,pos);
         try {
             BaseSceneBean.Action action = mRuleEngineBean.getActions().get(fromPos);
             mRuleEngineBean.getActions().remove(fromPos);
-            mRuleEngineBean.getActions().add(pos,action);
-        }catch (Exception e){
+            mRuleEngineBean.getActions().add(pos, action);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceRemoved(OneKeyRulerBean event) {
+        if (event.getOnekeyBean() instanceof BaseSceneBean) {
+            BaseSceneBean mOneKeyRuleBean = event.getOnekeyBean();
+            BaseSceneBean.AddOneKeyRuleList action = new BaseSceneBean.AddOneKeyRuleList();
+            action.setFunctionName(mOneKeyRuleBean.getRuleName());
+            action.setLeftValue(mOneKeyRuleBean.getRuleId() + "");
+            action.setRightValue(mOneKeyRuleBean.getRuleId() + "");
+            action.setOperator("==");
+            action.setRightValueType(0);
+            action.setTargetDeviceId(mOneKeyRuleBean.getRuleId() + "");
+            action.setTargetDeviceType(7);
+            action.setIconpath(mOneKeyRuleBean.getIconPath());
+            mRuleEngineBean.getActions().add(action);
+            List<SceneSettingActionItemAdapter.ActionItem> actionItems = new ArrayList<>();
+            for (BaseSceneBean.Action mOnekeyAction : mRuleEngineBean.getActions()) {
+                actionItems.add(new SceneSettingActionItemAdapter.ActionItem(mOnekeyAction));
+            }
+            mActionAdapter.setNewData(actionItems);
+        }
     }
 
 }

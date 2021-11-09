@@ -201,6 +201,9 @@ public class SceneSettingPresenter extends BasePresenter<SceneSettingView> {
                                         }
                                     }
                                 }
+                            }else {
+                                String rulename = MyApplication.getInstance().getmOneKeyRelueName(actionItem.getTargetDeviceId());
+                                actionItem.setValueName(String.format("%s",rulename));
                             }
                         }
                         for (BaseSceneBean.DeviceCondition conditionItem : conditionItems) {

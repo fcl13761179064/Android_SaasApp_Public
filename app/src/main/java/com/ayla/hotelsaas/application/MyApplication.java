@@ -185,9 +185,27 @@ public class MyApplication extends AApplication {
      * 避免列表被破坏，需要重新组装一个list返回出去。
      *
      * @return
+     * @param
      */
     public List<BaseSceneBean> getmOneKeyRelueBean() {
         return new ArrayList(mOneKeyDate);
+    }
+   /**
+     * 避免列表被破坏，需要重新组装一个list返回出去。
+     *
+     * @return
+    * @param
+    * @param targetDeviceId
+    */
+    public String getmOneKeyRelueName(String targetDeviceId) {
+        for (BaseSceneBean s :mOneKeyDate) {
+            if (s.getRuleId()==Long.getLong(targetDeviceId)){
+                String ruleName = s.getRuleName();
+                return ruleName;
+            }
+
+        }
+        return null;
     }
 
 

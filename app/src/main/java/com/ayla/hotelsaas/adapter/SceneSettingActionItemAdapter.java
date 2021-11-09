@@ -49,7 +49,7 @@ public class SceneSettingActionItemAdapter extends BaseItemDraggableAdapter<Scen
         addItemType(ActionItem.item_device_removed, R.layout.item_scene_setting_action_device_removed);
         addItemType(ActionItem.item_device_wait_add, R.layout.item_scene_setting_action_device_wait_add);
         addItemType(ActionItem.item_delay, R.layout.item_scene_setting_action_delay);
-        addItemType(ActionItem.item_welcome, R.layout.item_scene_setting_action_welcome);
+        addItemType(ActionItem.item_one_key_rule, R.layout.item_onekey_rule_action);
     }
 
 
@@ -123,6 +123,10 @@ public class SceneSettingActionItemAdapter extends BaseItemDraggableAdapter<Scen
             String _second = second < 10 ? "0" + second : String.valueOf(second);
 
             helper.setText(R.id.tv_name, String.format("%s分%s秒", _minute, _second));
+        }else if (item.getItemType() == ActionItem.item_one_key_rule) {
+                ImageLoader.loadImg(helper.getView(R.id.left_iv), "", R.drawable.ic_empty_device, R.drawable.ic_empty_device);
+                helper.setText(R.id.tv_function_name, String.format("%s", "一键执行"));
+                helper.setText(R.id.tv_name, TextUtils.isEmpty(action.getFunctionName()) ? "未知" : action.getFunctionName());
         }
         helper.addOnClickListener(R.id.iv_delete);
     }
@@ -133,6 +137,7 @@ public class SceneSettingActionItemAdapter extends BaseItemDraggableAdapter<Scen
         private static final int item_device_wait_add = 2;
         private static final int item_delay = 3;
         private static final int item_welcome = 4;
+        private static final int item_one_key_rule = 5;
 
         public BaseSceneBean.Action action;
 
@@ -142,7 +147,9 @@ public class SceneSettingActionItemAdapter extends BaseItemDraggableAdapter<Scen
 
         @Override
         public int getItemType() {
-            if (action instanceof BaseSceneBean.DeviceAction) {
+            if (action.getTargetDeviceType()==7 ||  action instanceof BaseSceneBean.AddOneKeyRuleList) {
+                return item_one_key_rule;
+            } else  if (action instanceof BaseSceneBean.DeviceAction) {
                 DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(action.getTargetDeviceId());
                 if (devicesBean != null) {
                     if (devicesBean.getBindType() == 0) {
