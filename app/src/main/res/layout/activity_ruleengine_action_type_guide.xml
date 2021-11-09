@@ -155,7 +155,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="26dp"
             android:maxLines="1"
-            android:text="一键执行"
+            android:text="选择已有一键执行场景"
             android:textColor="#ff333333"
             android:textSize="17sp" />
 

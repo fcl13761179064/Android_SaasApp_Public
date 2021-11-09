@@ -24,6 +24,8 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.data.net.SelfMsgException;
+import com.ayla.hotelsaas.events.DeviceAddEvent;
+import com.ayla.hotelsaas.events.OneKeyRulerBean;
 import com.ayla.hotelsaas.events.SceneChangedEvent;
 import com.ayla.hotelsaas.events.SceneItemEvent;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
@@ -99,6 +101,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     private boolean forceOneKey;
     private int fromPos;
+    private int siteType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +114,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             syncSourceAndAdapter2();
         } else {
             long scopeId = getIntent().getLongExtra("scopeId", 0);
-            int siteType = getIntent().getIntExtra("siteType", 0);
+            siteType = getIntent().getIntExtra("siteType", 0);
             if (siteType == BaseSceneBean.SITE_TYPE.LOCAL) {
                 mRuleEngineBean = new LocalSceneBean();
                 String targetGateway = getIntent().getStringExtra("targetGateway");
@@ -135,7 +138,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         int iconIndex = getIconIndexByPath(mRuleEngineBean.getIconPath());
         mIconImageView.setImageResource(getIconResByIndex(iconIndex));
         refreshJoinTypeShow();
-        if (mRuleEngineBean instanceof LocalSceneBean) {
+        if (mRuleEngineBean instanceof LocalSceneBean) {//本地联动
             String targetGateway = ((LocalSceneBean) mRuleEngineBean).getTargetGateway();
             for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
                 if (devicesBean.getDeviceId().equals(targetGateway)) {
@@ -143,7 +146,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     break;
                 }
             }
-        } else {
+        } else {//云端联动
             mSiteTextView.setText("云端");
         }
         tv_ill_state.setVisibility((mRuleEngineBean.getStatus() == 0 || mRuleEngineBean.getStatus() == 1) ? View.GONE : View.VISIBLE);
@@ -314,7 +317,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
         itemTouchHelper.attachToRecyclerView(mActionRecyclerView);
 
-// 开启拖拽
+        // 开启拖拽
         mActionAdapter.enableDragItem(itemTouchHelper);
         mActionAdapter.setOnItemDragListener(this);
     }
@@ -652,6 +655,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
             mainActivity.putExtra("data", mRuleEngineBean);
             mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
+            mainActivity.putExtra("siteType", siteType);
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
         }
     }
@@ -992,4 +996,9 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             e.printStackTrace();
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleDeviceRemoved(OneKeyRulerBean event) {
+    }
+
 }

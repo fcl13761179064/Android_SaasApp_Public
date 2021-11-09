@@ -70,6 +70,7 @@
         <activity
             android:name=".ui.SceneSettingActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".ui.SceneSettingEnableTimeActivity"

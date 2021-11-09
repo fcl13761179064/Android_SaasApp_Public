@@ -111,6 +111,7 @@ public class OneKeyFragment extends BaseMvpFragment<OneKeyView, OneKeyPresenter>
     }
 
     public void showData(List<BaseSceneBean> data) {
+        MyApplication.getInstance().SaveOneKeyRuler(data);
         mAdapter.setNewData(data);
     }
 
