@@ -118,13 +118,14 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
                 final DeviceListBean.DevicesBean devicesBean = mAdapter.getData().get(position).getDevicesBean();
                 if (devicesBean.getBindType() == 0) {
                     Intent intent;
-                    if (devicesBean.isHasH5()) {
+                    if (devicesBean.isHasH5()) {//判断是否是h5页面
                         intent = new Intent(getContext(), DeviceDetailH5Activity.class);
-                    } else {
+                    } else {//更多页面
                         intent = new Intent(getContext(), DeviceMoreActivity.class);
                     }
                     intent.putExtra("deviceId", devicesBean.getDeviceId());
                     intent.putExtra("scopeId", mRoomId);
+                    intent.putExtra("domainUrl", devicesBean.getDomain());
                     startActivity(intent);
                 } else {//待绑定的设备
                     if (devicesBean.getDeviceUseType() == 1) {//如果是用途设备，跳过

@@ -7,4 +7,15 @@
     <dimen name="tab_textsize">10sp</dimen>
     <dimen name="dp_16">16dp</dimen>
     <dimen name="text_middle_size">18sp</dimen>
+
+    <dimen name="seekbar_thumb_arrows_width">9dp</dimen>
+    <dimen name="seekbar_thumb_arrows_height">16dp</dimen>
+    <dimen name="seekbar_thumb_arrows_bottom">24dp</dimen>
+    <dimen name="seekbar_thumb_arrows_right">18dp</dimen>
+    <dimen name="seekbar_thumb_arrows_top">24dp</dimen>
+    <dimen name="seekbar_thumb_arrows_left">18dp</dimen>
+
+    <dimen name="seekbar_thumb_width">30dp</dimen>
+    <dimen name="seekbar_thumb_height">30dp</dimen>
+    <dimen name="seekbar_thumb_stroke_width">6dp</dimen>
 </resources>
