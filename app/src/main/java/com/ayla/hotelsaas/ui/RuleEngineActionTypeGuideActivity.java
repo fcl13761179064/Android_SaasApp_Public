@@ -60,10 +60,17 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
 
     }
 
-    @OnClick(R.id.rl_device_changed)
+    @OnClick({R.id.rl_device_changed})
     public void jumpDeviceSelect() {
         setResult(RESULT_OK, new Intent().putExtra("type", 0));
         finish();
+    }
+
+    @OnClick({R.id.rl_rule_scene})
+    public void jumpOneKeyRulePage() {
+     /*   Intent intent = new Intent(this, OnekeylinkageListActivity.class);
+        startActivity(intent);*/
+
     }
 
     @OnClick(R.id.rl_type_delay)

@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
-import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.ApNetworkPresenter;
@@ -22,9 +21,10 @@ import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.utils.WifiUtil;
 import com.ayla.hotelsaas.widget.FastClickUtils;
+import com.bumptech.glide.Glide;
+
 import butterknife.BindView;
 import butterknife.OnClick;
-import static com.ayla.hotelsaas.application.MyApplication.getContext;
 
 /**
  * 设备添加处理页面
@@ -180,7 +180,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
     private void refreshBindShow() {
         switch (bindProgress) {
             case 0:
-                GlideApp.with(mImageView).load(R.drawable.ic_device_bind_loading).into(mImageView);
+                Glide.with(mImageView).load(R.drawable.ic_device_bind_loading).into(mImageView);
                 mLoadingTextView.setVisibility(View.VISIBLE);
                 mProgressTextView.setText("最长可能需要1分钟，请耐心等待");
                 mProgressView.setVisibility(View.VISIBLE);
@@ -242,7 +242,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
 
     @Override
     public void bindFailed(Throwable throwable) {
-        CustomToast.makeText(getContext(), throwable.getMessage(), R.drawable.ic_toast_warming);
+        CustomToast.makeText(this, throwable.getMessage(), R.drawable.ic_toast_warming);
         Log.d(TAG, "zigBeeDeviceBindFailed: " + throwable);
         switch (bindProgress) {
             case 0:
@@ -266,7 +266,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
 
     @Override
     public void bindSuccess(DeviceListBean.DevicesBean devicesBean) {
-        String ap_choose = SharePreferenceUtils.getString(getContext(), Constance.AP_NET_SELECT, null);
+        String ap_choose = SharePreferenceUtils.getString(this, Constance.AP_NET_SELECT, null);
         startActivityForResult(new Intent(this, DeviceAddSuccessActivity.class)
                         .putExtra("device", devicesBean).putExtra("is_ap_normal", ap_choose),
                 REQUEST_CODE_ADD_SUCCESS);
@@ -318,7 +318,7 @@ public class ApDeviceAddActivity extends BaseMvpActivity<ApDeviceAddView, ApNetw
 
     @Override
     public void onFailed(Throwable throwable) {
-        CustomToast.makeText(getContext(), throwable.getMessage(), R.drawable.ic_toast_warming);
+        CustomToast.makeText(this, throwable.getMessage(), R.drawable.ic_toast_warming);
     }
 
 }
