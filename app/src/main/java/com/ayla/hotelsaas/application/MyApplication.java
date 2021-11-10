@@ -199,7 +199,7 @@ public class MyApplication extends AApplication {
     */
     public String getmOneKeyRelueName(String targetDeviceId) {
         for (BaseSceneBean s :mOneKeyDate) {
-            if (s.getRuleId()==Long.getLong(targetDeviceId)){
+            if (String.valueOf(s.getRuleId()).equals(targetDeviceId)){
                 String ruleName = s.getRuleName();
                 return ruleName;
             }

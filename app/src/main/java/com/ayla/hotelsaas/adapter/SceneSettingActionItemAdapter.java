@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.adapter;
 
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.ViewGroup;
@@ -126,7 +127,15 @@ public class SceneSettingActionItemAdapter extends BaseItemDraggableAdapter<Scen
         }else if (item.getItemType() == ActionItem.item_one_key_rule) {
                 ImageLoader.loadImg(helper.getView(R.id.left_iv), "", R.drawable.ic_empty_device, R.drawable.ic_empty_device);
                 helper.setText(R.id.tv_function_name, String.format("%s", "一键执行"));
-                helper.setText(R.id.tv_name, TextUtils.isEmpty(action.getFunctionName()) ? "未知" : action.getFunctionName());
+            String valueName = action.getValueName();
+            if ("null".equalsIgnoreCase(valueName) ||TextUtils.isEmpty(valueName)){
+                helper.setText(R.id.tv_name, "一键执行已被删除");
+                helper.setTextColor(R.id.tv_name, Color.parseColor("#D73B4B"));
+            }else {
+                helper.setText(R.id.tv_name,action.getValueName());
+                helper.setTextColor(R.id.tv_name, Color.parseColor("#ff91909a" +
+                        ""));
+            }
         }
         helper.addOnClickListener(R.id.iv_delete);
     }

@@ -24,7 +24,6 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.data.net.SelfMsgException;
-import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.OneKeyRulerBean;
 import com.ayla.hotelsaas.events.SceneChangedEvent;
 import com.ayla.hotelsaas.events.SceneItemEvent;
@@ -38,6 +37,7 @@ import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.CustomSheet;
 import com.ayla.hotelsaas.widget.HomeItemDragAndSwipeCallback;
+import com.ayla.hotelsaas.widget.ThreeStringEques;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -51,7 +51,6 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -500,14 +499,18 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         }
         for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
             if (action instanceof BaseSceneBean.DeviceAction) {
-                DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(((BaseSceneBean.DeviceAction) action).getTargetDeviceId());
-                if (devicesBean == null) {
-                    CustomToast.makeText(getBaseContext(), "如想激活此联动，请先删除已移除的设备", R.drawable.ic_toast_warming);
-                    return;
+                if (ThreeStringEques.mIsEques(action)) {
+                    continue;
                 } else {
-                    if (devicesBean.getBindType() == 1) {
-                        CustomToast.makeText(getBaseContext(), "请先绑定待添加的设备", R.drawable.ic_toast_warming);
+                    DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(((BaseSceneBean.DeviceAction) action).getTargetDeviceId());
+                    if (devicesBean == null) {
+                        CustomToast.makeText(getBaseContext(), "如想激活此联动，请先删除已移除的设备", R.drawable.ic_toast_warming);
                         return;
+                    } else {
+                        if (devicesBean.getBindType() == 1) {
+                            CustomToast.makeText(getBaseContext(), "请先绑定待添加的设备", R.drawable.ic_toast_warming);
+                            return;
+                        }
                     }
                 }
             }
@@ -558,7 +561,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
         List<SceneSettingActionItemAdapter.ActionItem> actionItems = new ArrayList<>();
         for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
-                actionItems.add(new SceneSettingActionItemAdapter.ActionItem(action));
+            actionItems.add(new SceneSettingActionItemAdapter.ActionItem(action));
         }
         mActionAdapter.setNewData(actionItems);
     }
@@ -1002,7 +1005,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         if (event.getOnekeyBean() instanceof BaseSceneBean) {
             BaseSceneBean mOneKeyRuleBean = event.getOnekeyBean();
             BaseSceneBean.AddOneKeyRuleList action = new BaseSceneBean.AddOneKeyRuleList();
-            action.setFunctionName(mOneKeyRuleBean.getRuleName());
+            action.setValueName(mOneKeyRuleBean.getRuleName());
             action.setLeftValue(mOneKeyRuleBean.getRuleId() + "");
             action.setRightValue(mOneKeyRuleBean.getRuleId() + "");
             action.setOperator("==");
