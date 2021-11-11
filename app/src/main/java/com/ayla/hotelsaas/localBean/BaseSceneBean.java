@@ -10,7 +10,7 @@ public abstract class BaseSceneBean implements Serializable {
 
     protected long scopeId;
 
-    protected String ruleName;
+    protected String ruleName;//一键执行或者自动化规则的名字
 
     protected String ruleDescription;
 
@@ -238,7 +238,7 @@ public abstract class BaseSceneBean implements Serializable {
         }
     }
 
-    public abstract static class Action implements Serializable {
+    public static class Action implements Serializable {
         private int targetDeviceType;
 
         private String targetDeviceId;
@@ -253,6 +253,15 @@ public abstract class BaseSceneBean implements Serializable {
 
         private String functionName;//显示的功能名称
         private String valueName;//显示的值名称
+        private String iconpath;//在自动化联动里面设置一键执行icon
+
+        public String getIconpath() {
+            return iconpath;
+        }
+
+        public void setIconpath(String iconpath) {
+            this.iconpath = iconpath;
+        }
 
         public String getFunctionName() {
             return functionName;
@@ -343,6 +352,17 @@ public abstract class BaseSceneBean implements Serializable {
             setTargetDeviceId("assistantService");
             setTargetDeviceType(DeviceType.XIAODU_SERVER);
             setRightValue("aylaHotelRoomId");
+        }
+    }
+
+    /**
+     * 酒店欢迎语动作
+     */
+    public static class AddOneKeyRuleList extends Action {
+        public AddOneKeyRuleList() {
+            setOperator("==");
+            setRightValueType(0);
+            setTargetDeviceType(7);
         }
     }
 

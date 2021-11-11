@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
@@ -10,6 +11,7 @@ import com.ayla.hotelsaas.mvp.present.RuleEngineActionTypeGuidePresenter;
 import com.ayla.hotelsaas.mvp.view.RuleEngineActionTypeGuideView;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -21,6 +23,10 @@ import butterknife.OnClick;
  * type 0：设备动作 1：延时动作 2：欢迎语动作
  */
 public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngineActionTypeGuideView, RuleEngineActionTypeGuidePresenter> implements RuleEngineActionTypeGuideView {
+
+
+    @BindView(R.id.rl_rule_scene)
+    RelativeLayout rl_rule_scene;
 
     private BaseSceneBean mRuleEngineBean;
     private long scopeId;
@@ -38,6 +44,7 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
 
     @Override
     protected void initView() {
+        int siteType = getIntent().getIntExtra("siteType", 0);
         mRuleEngineBean = (BaseSceneBean) getIntent().getSerializableExtra("data");
         scopeId = getIntent().getLongExtra("scopeId", 0);
         for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
@@ -53,6 +60,12 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
         } else {
             welcomeView.setVisibility(View.GONE);
         }
+
+        if (siteType==BaseSceneBean.SITE_TYPE.LOCAL || mRuleEngineBean.getRuleType() == BaseSceneBean.RULE_TYPE.ONE_KEY){
+            rl_rule_scene.setVisibility(View.GONE);
+        }else {
+            rl_rule_scene.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -60,10 +73,17 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
 
     }
 
-    @OnClick(R.id.rl_device_changed)
+    @OnClick({R.id.rl_device_changed})
     public void jumpDeviceSelect() {
         setResult(RESULT_OK, new Intent().putExtra("type", 0));
         finish();
+    }
+
+    @OnClick({R.id.rl_rule_scene})
+    public void jumpOneKeyRulePage() {
+     Intent intent = new Intent(this, OnekeylinkageListActivity.class);
+        startActivity(intent);
+
     }
 
     @OnClick(R.id.rl_type_delay)

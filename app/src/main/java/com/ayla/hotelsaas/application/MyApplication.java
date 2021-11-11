@@ -10,6 +10,7 @@ import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.aliyun.iot.aep.sdk.framework.config.GlobalConfig;
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.ProcessUtils;
 import com.tencent.smtt.export.external.TbsCoreSettings;
@@ -25,8 +26,9 @@ public class MyApplication extends AApplication {
 
     private final String TAG = this.getClass().getSimpleName();
     private List<DeviceListBean.DevicesBean> mDevicesBean = new ArrayList<>();
-    private static MyApplication mInstance = null;
+    private List<BaseSceneBean> mOneKeyDate = new ArrayList();
 
+    private static MyApplication mInstance = null;
     public static MyApplication getInstance() {
         return mInstance;
     }
@@ -55,6 +57,7 @@ public class MyApplication extends AApplication {
             }
         });
     }
+
 
     @Override
     public void onCreate() {
@@ -176,6 +179,38 @@ public class MyApplication extends AApplication {
 
     public void setDevicesBean(List<DeviceListBean.DevicesBean> devicesBean) {
         mDevicesBean = devicesBean;
+    }
+
+    /**
+     * 避免列表被破坏，需要重新组装一个list返回出去。
+     *
+     * @return
+     * @param
+     */
+    public List<BaseSceneBean> getmOneKeyRelueBean() {
+        return new ArrayList(mOneKeyDate);
+    }
+   /**
+     * 避免列表被破坏，需要重新组装一个list返回出去。
+     *
+     * @return
+    * @param
+    * @param targetDeviceId
+    */
+    public String getmOneKeyRelueName(String targetDeviceId) {
+        for (BaseSceneBean s :mOneKeyDate) {
+            if (String.valueOf(s.getRuleId()).equals(targetDeviceId)){
+                String ruleName = s.getRuleName();
+                return ruleName;
+            }
+
+        }
+        return null;
+    }
+
+
+    public void SaveOneKeyRuler(List<BaseSceneBean> data) {
+        mOneKeyDate=data;
     }
 
 }

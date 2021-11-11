@@ -24,6 +24,7 @@ import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.data.net.SelfMsgException;
+import com.ayla.hotelsaas.events.OneKeyRulerBean;
 import com.ayla.hotelsaas.events.SceneChangedEvent;
 import com.ayla.hotelsaas.events.SceneItemEvent;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
@@ -36,6 +37,7 @@ import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.CustomSheet;
 import com.ayla.hotelsaas.widget.HomeItemDragAndSwipeCallback;
+import com.ayla.hotelsaas.widget.ThreeStringEques;
 import com.ayla.hotelsaas.widget.ValueChangeDialog;
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -49,7 +51,6 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -99,6 +100,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     private boolean forceOneKey;
     private int fromPos;
+    private int siteType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +113,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             syncSourceAndAdapter2();
         } else {
             long scopeId = getIntent().getLongExtra("scopeId", 0);
-            int siteType = getIntent().getIntExtra("siteType", 0);
+            siteType = getIntent().getIntExtra("siteType", 0);
             if (siteType == BaseSceneBean.SITE_TYPE.LOCAL) {
                 mRuleEngineBean = new LocalSceneBean();
                 String targetGateway = getIntent().getStringExtra("targetGateway");
@@ -135,7 +137,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         int iconIndex = getIconIndexByPath(mRuleEngineBean.getIconPath());
         mIconImageView.setImageResource(getIconResByIndex(iconIndex));
         refreshJoinTypeShow();
-        if (mRuleEngineBean instanceof LocalSceneBean) {
+        if (mRuleEngineBean instanceof LocalSceneBean) {//本地联动
             String targetGateway = ((LocalSceneBean) mRuleEngineBean).getTargetGateway();
             for (DeviceListBean.DevicesBean devicesBean : MyApplication.getInstance().getDevicesBean()) {
                 if (devicesBean.getDeviceId().equals(targetGateway)) {
@@ -143,7 +145,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     break;
                 }
             }
-        } else {
+        } else {//云端联动
             mSiteTextView.setText("云端");
         }
         tv_ill_state.setVisibility((mRuleEngineBean.getStatus() == 0 || mRuleEngineBean.getStatus() == 1) ? View.GONE : View.VISIBLE);
@@ -314,7 +316,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
         itemTouchHelper.attachToRecyclerView(mActionRecyclerView);
 
-// 开启拖拽
+        // 开启拖拽
         mActionAdapter.enableDragItem(itemTouchHelper);
         mActionAdapter.setOnItemDragListener(this);
     }
@@ -497,14 +499,18 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         }
         for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
             if (action instanceof BaseSceneBean.DeviceAction) {
-                DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(((BaseSceneBean.DeviceAction) action).getTargetDeviceId());
-                if (devicesBean == null) {
-                    CustomToast.makeText(getBaseContext(), "如想激活此联动，请先删除已移除的设备", R.drawable.ic_toast_warming);
-                    return;
+                if (ThreeStringEques.mIsEques(action)) {
+                    continue;
                 } else {
-                    if (devicesBean.getBindType() == 1) {
-                        CustomToast.makeText(getBaseContext(), "请先绑定待添加的设备", R.drawable.ic_toast_warming);
+                    DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(((BaseSceneBean.DeviceAction) action).getTargetDeviceId());
+                    if (devicesBean == null) {
+                        CustomToast.makeText(getBaseContext(), "如想激活此联动，请先删除已移除的设备", R.drawable.ic_toast_warming);
                         return;
+                    } else {
+                        if (devicesBean.getBindType() == 1) {
+                            CustomToast.makeText(getBaseContext(), "请先绑定待添加的设备", R.drawable.ic_toast_warming);
+                            return;
+                        }
                     }
                 }
             }
@@ -652,6 +658,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
             Intent mainActivity = new Intent(this, RuleEngineActionTypeGuideActivity.class);
             mainActivity.putExtra("data", mRuleEngineBean);
             mainActivity.putExtra("scopeId", mRuleEngineBean.getScopeId());
+            mainActivity.putExtra("siteType", siteType);
             startActivityForResult(mainActivity, REQUEST_CODE_SELECT_ACTION_TYPE);
         }
     }
@@ -783,7 +790,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
         if (datumBean instanceof ISceneSettingFunctionDatumSet.EventCallBackBean) {
             conditionItem.setSourceDeviceId(deviceBean.getDeviceId());
-            if(attributesBean.getCode().endsWith(".")){//event事件类型，A.无value情况，此时跳过选择value层级
+            if (attributesBean.getCode().endsWith(".")) {//event事件类型，A.无value情况，此时跳过选择value层级
                 if (TempUtils.isSWITCH_PURPOSE_SUB_DEVICE(deviceBean)) {
                     conditionItem.setSourceDeviceType(DeviceType.SWITCH_PURPOSE_SUB_DEVICE);
                 } else if (TempUtils.isINFRARED_VIRTUAL_SUB_DEVICE(deviceBean)) {
@@ -973,7 +980,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
     @SuppressLint("NewApi")
     @Override
     public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
-        this.fromPos =pos;
+        this.fromPos = pos;
 
     }
 
@@ -983,13 +990,36 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
 
     @Override
     public void onItemDragEnd(RecyclerView.ViewHolder viewHolder, int pos) {
-       // Collections.swap(mRuleEngineBean.getActions(),fromPos,pos);
+        // Collections.swap(mRuleEngineBean.getActions(),fromPos,pos);
         try {
             BaseSceneBean.Action action = mRuleEngineBean.getActions().get(fromPos);
             mRuleEngineBean.getActions().remove(fromPos);
-            mRuleEngineBean.getActions().add(pos,action);
-        }catch (Exception e){
+            mRuleEngineBean.getActions().add(pos, action);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleDeviceRemoved(OneKeyRulerBean event) {
+        if (event.getOnekeyBean() instanceof BaseSceneBean) {
+            BaseSceneBean mOneKeyRuleBean = event.getOnekeyBean();
+            BaseSceneBean.AddOneKeyRuleList action = new BaseSceneBean.AddOneKeyRuleList();
+            action.setValueName(mOneKeyRuleBean.getRuleName());
+            action.setLeftValue(mOneKeyRuleBean.getRuleId() + "");
+            action.setRightValue(mOneKeyRuleBean.getRuleId() + "");
+            action.setOperator("==");
+            action.setRightValueType(0);
+            action.setTargetDeviceId(mOneKeyRuleBean.getRuleId() + "");
+            action.setTargetDeviceType(7);
+            action.setIconpath(mOneKeyRuleBean.getIconPath());
+            mRuleEngineBean.getActions().add(action);
+            List<SceneSettingActionItemAdapter.ActionItem> actionItems = new ArrayList<>();
+            for (BaseSceneBean.Action mOnekeyAction : mRuleEngineBean.getActions()) {
+                actionItems.add(new SceneSettingActionItemAdapter.ActionItem(mOnekeyAction));
+            }
+            mActionAdapter.setNewData(actionItems);
+        }
+    }
+
 }
