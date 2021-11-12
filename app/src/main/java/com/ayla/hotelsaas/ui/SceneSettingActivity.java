@@ -500,6 +500,10 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
             if (action instanceof BaseSceneBean.DeviceAction) {
                 if (ThreeStringEques.mIsEques(action)) {
+                    if (mRuleEngineBean.getConditions().size()==1 && TextUtils.isEmpty( mRuleEngineBean.getConditions().get(0).getFunctionName())) {
+                        CustomToast.makeText(getBaseContext(), "一键执行不能同时作为条件和动作", R.drawable.ic_toast_warming);
+                        return;
+                    }
                     continue;
                 } else {
                     DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(((BaseSceneBean.DeviceAction) action).getTargetDeviceId());
