@@ -50,6 +50,7 @@ public class SceneSettingActionItemAdapter extends BaseItemDraggableAdapter<Scen
         addItemType(ActionItem.item_device_removed, R.layout.item_scene_setting_action_device_removed);
         addItemType(ActionItem.item_device_wait_add, R.layout.item_scene_setting_action_device_wait_add);
         addItemType(ActionItem.item_delay, R.layout.item_scene_setting_action_delay);
+        addItemType(ActionItem.item_welcome, R.layout.item_scene_setting_action_welcome);
         addItemType(ActionItem.item_one_key_rule, R.layout.item_onekey_rule_action);
     }
 
@@ -133,8 +134,7 @@ public class SceneSettingActionItemAdapter extends BaseItemDraggableAdapter<Scen
                 helper.setTextColor(R.id.tv_name, Color.parseColor("#D73B4B"));
             }else {
                 helper.setText(R.id.tv_name,action.getValueName());
-                helper.setTextColor(R.id.tv_name, Color.parseColor("#ff91909a" +
-                        ""));
+                helper.setTextColor(R.id.tv_name, Color.parseColor("#ff91909a"));
             }
         }
         helper.addOnClickListener(R.id.iv_delete);
