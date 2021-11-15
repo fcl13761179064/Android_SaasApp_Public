@@ -141,6 +141,7 @@
         android:background="#FFFFFF"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
+        android:visibility="gone"
         >
 
         <ImageView
