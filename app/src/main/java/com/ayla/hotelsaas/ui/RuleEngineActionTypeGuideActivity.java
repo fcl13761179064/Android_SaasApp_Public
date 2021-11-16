@@ -64,7 +64,7 @@ public class RuleEngineActionTypeGuideActivity extends BaseMvpActivity<RuleEngin
         if (siteType==BaseSceneBean.SITE_TYPE.LOCAL || mRuleEngineBean.getRuleType() == BaseSceneBean.RULE_TYPE.ONE_KEY){
             rl_rule_scene.setVisibility(View.GONE);
         }else {
-            rl_rule_scene.setVisibility(View.GONE);
+            rl_rule_scene.setVisibility(View.VISIBLE);
         }
     }
 

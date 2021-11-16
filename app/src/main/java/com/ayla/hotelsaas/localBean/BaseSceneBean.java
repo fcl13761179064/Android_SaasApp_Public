@@ -430,7 +430,7 @@ public abstract class BaseSceneBean implements Serializable {
     }
 
     public interface RULE_TYPE {
-        int AUTO = 1, ONE_KEY = 2, SCENE_KEY = 4;
+        int AUTO = 1, ONE_KEY = 2, ACTION_ONE_RULE=3,SCENE_KEY = 4;
 
     }
 
