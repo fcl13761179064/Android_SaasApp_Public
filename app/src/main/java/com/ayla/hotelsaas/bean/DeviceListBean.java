@@ -88,7 +88,16 @@ public class DeviceListBean {
         private String purposeName;//用途名称  et:吸顶灯 、吊灯
         private String pointName;
         private long regionId;
-        private String domain;
+        private String domain;//跳转到单控页面h5时用，这个是域名
+        private String h5Url;//跳转到单控页面h5时用，这个是url
+
+        public String getH5Url() {
+            return h5Url;
+        }
+
+        public void setH5Url(String h5Url) {
+            this.h5Url = h5Url;
+        }
 
         public String getDomain() {
             return domain;

@@ -107,6 +107,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         super.onCreate(savedInstanceState);
         Serializable sceneBean = getIntent().getSerializableExtra("sceneBean");
         if (sceneBean instanceof BaseSceneBean) {
+            siteType = ((BaseSceneBean) sceneBean).getSiteType();
             mRuleEngineBean = (BaseSceneBean) sceneBean;
             mSceneNameTextView.setText(mRuleEngineBean.getRuleName());
             mDeleteView.setVisibility(View.VISIBLE);

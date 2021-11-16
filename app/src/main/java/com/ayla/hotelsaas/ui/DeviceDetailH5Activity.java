@@ -82,8 +82,9 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         Random random = new Random();
         int num = random.nextInt(10000);
         String domainUrl = getIntent().getStringExtra("domainUrl");
-        if (!TextUtils.isEmpty(domainUrl)) {
-            mWebView.loadUrl(domainUrl + "#/" + num);
+        String h5url = getIntent().getStringExtra("h5url");
+        if (!TextUtils.isEmpty(domainUrl) && !TextUtils.isEmpty(h5url)) {
+            mWebView.loadUrl("https://" + domainUrl + h5url);
         } else {
             mWebView.loadUrl(Constance.getDeviceControlBaseUrl() + "#/" + num);
         }
