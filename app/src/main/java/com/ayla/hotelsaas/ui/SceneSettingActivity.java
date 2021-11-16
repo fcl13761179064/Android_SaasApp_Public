@@ -497,11 +497,19 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                 }
             }
         }
+
         for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
+            if (mRuleEngineBean.getConditions().size() == 1 && TextUtils.isEmpty(mRuleEngineBean.getConditions().get(0).getFunctionName())) {
+                if (ThreeStringEques.mIsEques(action)) {
+                    CustomToast.makeText(getBaseContext(), "一键执行不能同时作为条件和动作", R.drawable.ic_toast_warming);
+                    return;
+                }
+            }
+
             if (action instanceof BaseSceneBean.DeviceAction) {
                 DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(((BaseSceneBean.DeviceAction) action).getTargetDeviceId());
                 if (devicesBean == null) {
-                    if (!ThreeStringEques.mIsEques(action)){
+                    if (!ThreeStringEques.mIsEques(action)) {
                         CustomToast.makeText(getBaseContext(), "如想激活此联动，请先删除已移除的设备", R.drawable.ic_toast_warming);
                         return;
                     }
@@ -512,17 +520,7 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
                     }
                 }
             }
-            if (action instanceof BaseSceneBean.AddOneKeyRuleList) {
-                if (mRuleEngineBean.getConditions().size() == 1 && TextUtils.isEmpty(mRuleEngineBean.getConditions().get(0).getFunctionName())) {
-                    CustomToast.makeText(getBaseContext(), "一键执行不能同时作为条件和动作", R.drawable.ic_toast_warming);
-                    return;
-                }
-            }
 
-
-            if (action instanceof BaseSceneBean.AddOneKeyRuleList) {
-                mRuleEngineBean.setRuleType(BaseSceneBean.RULE_TYPE.ACTION_ONE_RULE);
-            }
         }
 
         if (mRuleEngineBean.getRuleType() == 2) {//一键执行
@@ -530,8 +528,14 @@ public class SceneSettingActivity extends BaseMvpActivity<SceneSettingView, Scen
         } else if (mRuleEngineBean.getRuleType() == 1 || mRuleEngineBean.getRuleType() == 3) {//自动化
             if (mRuleEngineBean.getStatus() == 2) {//如果是异常状态，就要更改为 不可用的正常状态
                 mRuleEngineBean.setStatus(0);
-            }else {
+            } else {
                 mRuleEngineBean.setStatus(1);
+            }
+            mRuleEngineBean.setRuleType(BaseSceneBean.RULE_TYPE.AUTO);
+            for (BaseSceneBean.Action action : mRuleEngineBean.getActions()) {
+                if (ThreeStringEques.mIsEques(action)) {
+                    mRuleEngineBean.setRuleType(BaseSceneBean.RULE_TYPE.ACTION_ONE_RULE);
+                }
             }
         }
         mPresenter.saveOrUpdateRuleEngine(mRuleEngineBean);
