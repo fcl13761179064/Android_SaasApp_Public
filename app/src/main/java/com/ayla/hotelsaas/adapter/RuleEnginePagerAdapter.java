@@ -30,7 +30,7 @@ public class RuleEnginePagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0)
-            return "一键联动";
+            return "一键执行";
         if (position == 1)
             return "自动化";
         return super.getPageTitle(position);

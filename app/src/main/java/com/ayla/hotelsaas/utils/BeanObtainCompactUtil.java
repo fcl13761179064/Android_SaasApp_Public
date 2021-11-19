@@ -198,7 +198,7 @@ public class BeanObtainCompactUtil {
                 }
             }
 
-            if (baseSceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//如果是自动化场景，就把生效时间段传进去
+            if (baseSceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO || baseSceneBean.getRuleType() == BaseSceneBean.RULE_TYPE.ACTION_ONE_RULE ) {//如果是自动化场景,或者是动作里有一键执行作为动作，就把生效时间段传进去
                 BaseSceneBean.EnableTime enableTime = baseSceneBean.getEnableTime();
                 String cronExpression = calculateCronExpression(enableTime);
                 RuleEngineBean.Condition.ConditionItem conditionItem = new RuleEngineBean.Condition.ConditionItem();

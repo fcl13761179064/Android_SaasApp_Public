@@ -356,7 +356,7 @@ public abstract class BaseSceneBean implements Serializable {
     }
 
     /**
-     * 酒店欢迎语动作
+     * 一键执行添加到自动化里面
      */
     public static class AddOneKeyRuleList extends Action {
         public AddOneKeyRuleList() {
@@ -430,7 +430,7 @@ public abstract class BaseSceneBean implements Serializable {
     }
 
     public interface RULE_TYPE {
-        int AUTO = 1, ONE_KEY = 2, SCENE_KEY = 4;
+        int AUTO = 1, ONE_KEY = 2, ACTION_ONE_RULE=3,SCENE_KEY = 4;
 
     }
 

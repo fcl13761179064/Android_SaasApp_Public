@@ -187,7 +187,7 @@ public class RuleEngineFragment extends BaseMvpFragment<RuleEngineView, RuleEngi
             if (ruleEngineBean.getRuleType() == BaseSceneBean.RULE_TYPE.ONE_KEY) {//一键执行
                 oneKeys.add(ruleEngineBean);
             }
-            if (ruleEngineBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO) {//自动化
+            if (ruleEngineBean.getRuleType() == BaseSceneBean.RULE_TYPE.AUTO || ruleEngineBean.getRuleType() == BaseSceneBean.RULE_TYPE.ACTION_ONE_RULE) {//自动化
                 autoRuns.add(ruleEngineBean);
             }
         }
