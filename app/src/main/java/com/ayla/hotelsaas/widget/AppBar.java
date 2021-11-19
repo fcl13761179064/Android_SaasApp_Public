@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
@@ -38,7 +40,8 @@ public class AppBar extends FrameLayout {
     private LinearLayout leftLinearLayout;
     private View bottom_line;
     private Boolean isSHowHidden = false;
-    private Button btn_all, btn_bufen;
+    private RadioGroup rg_tab_group;
+    private RadioButton rd_select, rd_select_two;
 
     public AppBar(@NonNull Context context) {
         this(context, null);
@@ -70,9 +73,10 @@ public class AppBar extends FrameLayout {
         titleTextView = findViewById(R.id.tv_title);
         leftLinearLayout = findViewById(R.id.left_ll);
         bottom_line = findViewById(R.id.bottom_line);
-        btn_all = findViewById(R.id.btn_all);
-        btn_bufen = findViewById(R.id.btn_bufen);
         ll_tab = findViewById(R.id.ll_tab);
+        rg_tab_group = findViewById(R.id.rg_tab_group);
+        rd_select = findViewById(R.id.rd_select);
+        rd_select_two = findViewById(R.id.rd_select_two);
 
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AppBar, defStyleAttr, 0);
         left_iv = ta.getResourceId(R.styleable.AppBar_left_iv, 0);
@@ -160,14 +164,14 @@ public class AppBar extends FrameLayout {
             titleTextView.setText(center_tv);
         }
 
-      /*  if (isSHowHidden) {
+      if (isSHowHidden) {
             ll_tab.setVisibility(VISIBLE);
             titleTextView.setVisibility(GONE);
         } else {
             titleTextView.setVisibility(VISIBLE);
             titleTextView.setText(center_tv);
             ll_tab.setVisibility(GONE);
-        }*/
+        }
     }
 
     public void setLeftText(String text) {
@@ -193,17 +197,7 @@ public class AppBar extends FrameLayout {
 
     public void setShowHiddenCenterTitle(Boolean b) {
         isSHowHidden = b;
+        adjustContent();
     }
-
-
-    public Button getAllBtn() {
-        return btn_all;
-    }
-
-    public Button getBufenBtn() {
-        return btn_bufen;
-    }
-
-
 }
 

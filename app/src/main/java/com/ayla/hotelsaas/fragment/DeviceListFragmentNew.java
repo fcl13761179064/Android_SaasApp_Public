@@ -18,7 +18,10 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.databinding.FragmentDeviceListNewBinding;
+import com.ayla.hotelsaas.events.AllAddDeviceEvent;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.events.TobeAddDeviceEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.ui.CustomToast;
@@ -64,7 +67,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
         mRoomId = b.getLong("mRoomId", 0);
         mRegionId = b.getLong("mRegionId", 0);
         mDevices = (List<DeviceListBean.DevicesBean>) b.getSerializable("mDevices");
-        mPosition = b.getInt("mPosition",0);
+        mPosition = b.getInt("mPosition", 0);
     }
 
     @Override
@@ -188,5 +191,34 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         deviceCategoryHandler.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void AllAddDeviceEvent(AllAddDeviceEvent event) {
+        if (mDevices != null && mPosition == 0) {
+            List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
+            for (DeviceListBean.DevicesBean devicesBean : mDevices) {
+                DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
+                deviceItems.add(deviceItem);
+            }
+            mAdapter.setNewData(deviceItems);
+        }
+
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void TobeAddDeviceEvent(TobeAddDeviceEvent event) {
+        if (mDevices != null && mPosition == 0) {
+            List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
+            for (DeviceListBean.DevicesBean devicesBean : mDevices) {
+                if (devicesBean.getBindType() == 1) {
+                    DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
+                    deviceItems.add(deviceItem);
+                }
+            }
+            mAdapter.setNewData(deviceItems);
+        }
     }
 }

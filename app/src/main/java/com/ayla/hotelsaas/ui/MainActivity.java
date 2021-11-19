@@ -19,9 +19,9 @@ import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
+import com.ayla.hotelsaas.events.AllAddDeviceEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
-import com.ayla.hotelsaas.events.MoveAllDataEvent;
-import com.ayla.hotelsaas.events.MoveBufenDataEvent;
+import com.ayla.hotelsaas.events.TobeAddDeviceEvent;
 import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
 import com.ayla.hotelsaas.fragment.RuleEngineFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
@@ -58,6 +58,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     RadioButton main_likeage;
     @BindView(R.id.rb_main_fragment_test)
     RadioButton main_test;
+
 
     private long mRoom_ID;
     private BaseMvpFragment currentFragment;
@@ -115,36 +116,8 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         intent.putExtras(getIntent());
         startActivityForResult(intent, REQUEST_CODE_TO_MORE);
     }
-/*
-    @Override
-    protected void appBarAllDataClicked(View v) {
-        super.appBarAllDataClicked(v);
-        allBtn = (Button) v;
-        if (bufenBtn != null) {
-            bufenBtn.setSelected(false);
-        }
-        allBtn.setSelected(true);
-        if (allBtn.isSelected()) {
-            EventBus.getDefault().post(new MoveAllDataEvent());
-        }
-
-    }
 
 
-    @Override
-    protected void appBarBufenDataClicked(View v) {
-        super.appBarBufenDataClicked(v);
-        bufenBtn = (Button) v;
-
-        if (allBtn != null) {
-            allBtn.setSelected(false);
-        }
-        bufenBtn.setSelected(true);
-        if (bufenBtn.isSelected()) {
-            EventBus.getDefault().post(new MoveBufenDataEvent());
-        }
-
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -194,17 +167,18 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
                         appBar.setRightText("更多");
                     }
 
-                    appBar.setCenterText(mRoom_name);
-                    appBar.setShowHiddenCenterTitle(false);
+                    appBar.setLeftText(mRoom_name);
+                    appBar.setShowHiddenCenterTitle(true);
                     changeState(main_device);
                     showBaseFragment("main", type);
                     break;
                 }
                 case GO_SECOND_TYPE: {
-                    appBar.setCenterText(mRoom_name);
                     changeState(main_likeage);
                     appBar.setRightText("");
                     showBaseFragment("linkage", type);
+                    appBar.setCenterText(mRoom_name);
+                    appBar.setLeftText("");
                     appBar.setShowHiddenCenterTitle(false);
                     break;
                 }
@@ -213,6 +187,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
                     appBar.setRightText("");
                     showBaseFragment("test", type);
                     appBar.setCenterText("WiFi 信号测试");
+                    appBar.setLeftText("");
                     appBar.setShowHiddenCenterTitle(false);
                     break;
                 }
@@ -292,5 +267,19 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+
+    @Override
+    protected void rb_bufen_data() {
+        super.rb_bufen_data();
+        EventBus.getDefault().post(new TobeAddDeviceEvent());
+
+    }
+
+    @Override
+    protected void rb_all_data() {
+        super.rb_all_data();
+        EventBus.getDefault().post(new AllAddDeviceEvent());
     }
 }
