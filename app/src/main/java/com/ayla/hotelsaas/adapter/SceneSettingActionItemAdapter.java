@@ -1,7 +1,10 @@
 package com.ayla.hotelsaas.adapter;
 
 import android.graphics.Color;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -98,7 +101,13 @@ public class SceneSettingActionItemAdapter extends BaseItemDraggableAdapter<Scen
             DeviceListBean.DevicesBean devicesBean = MyApplication.getInstance().getDevicesBean(action.getTargetDeviceId());
             if (devicesBean != null) {
                 ImageLoader.loadImg(helper.getView(R.id.left_iv), devicesBean.getIconUrl(), R.drawable.ic_empty_device, R.drawable.ic_empty_device);
-                helper.setText(R.id.tv_function_name, String.format("%s:%s", action.getFunctionName(), action.getValueName()));
+                if (!TextUtils.isEmpty(action.getValueName())){
+                    helper.setText(R.id.tv_function_name, String.format("%s:%s", action.getFunctionName(),action.getValueName()));
+                }else {
+                    SpannableStringBuilder    span= new SpannableStringBuilder( String.format("%s:%s", action.getFunctionName(), "对应按钮已删除"));
+                    span.setSpan( new ForegroundColorSpan(Color.parseColor("#D73B4B")), action.getFunctionName().length(), action.getFunctionName().length()+8, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                    helper.setText(R.id.tv_function_name, span);
+                }
                 helper.setText(R.id.tv_name, TextUtils.isEmpty(devicesBean.getNickname()) ? devicesBean.getDeviceId() : devicesBean.getNickname());
             }
         } else if (item.getItemType() == ActionItem.item_device_wait_add) {
