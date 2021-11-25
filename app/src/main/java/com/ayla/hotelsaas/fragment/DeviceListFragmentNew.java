@@ -196,7 +196,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void AllAddDeviceEvent(AllAddDeviceEvent event) {
-        if (mDevices != null && mPosition == 0) {
+        if (mDevices != null) {
             List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
             for (DeviceListBean.DevicesBean devicesBean : mDevices) {
                 DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
@@ -210,7 +210,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void TobeAddDeviceEvent(TobeAddDeviceEvent event) {
-        if (mDevices != null && mPosition == 0) {
+        if (mDevices != null) {
             List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
             for (DeviceListBean.DevicesBean devicesBean : mDevices) {
                 if (devicesBean.getBindType() == 1) {
