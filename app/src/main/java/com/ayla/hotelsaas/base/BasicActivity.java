@@ -115,6 +115,8 @@ public abstract class BasicActivity extends AppCompatActivity {
                             case R.id.rd_select: {
                                 if (!rd_select_two.isChecked()) {
                                     rd_select.setSelected(true);
+                                    rd_select.setTextColor(getResources().getColor(R.color.white,getTheme()));
+                                    rd_select_two.setTextColor(getResources().getColor(R.color.color_333333,getTheme()));
                                     rd_select_two.setSelected(false);
                                     rb_all_data();
                                 }
@@ -124,6 +126,8 @@ public abstract class BasicActivity extends AppCompatActivity {
                                 if (!rd_select.isChecked()) {
                                     rd_select.setSelected(false);
                                     rd_select_two.setSelected(true);
+                                    rd_select_two.setTextColor(getResources().getColor(R.color.white));
+                                    rd_select.setTextColor(getResources().getColor(R.color.color_333333));
                                     rb_bufen_data();
                                     break;
                                 }

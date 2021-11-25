@@ -73,7 +73,7 @@
             android:layout_marginRight="80dp"
             android:layout_centerVertical="true"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <RadioGroup
                 android:id="@+id/rg_tab_group"
