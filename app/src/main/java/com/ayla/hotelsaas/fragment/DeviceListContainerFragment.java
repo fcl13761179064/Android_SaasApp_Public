@@ -228,8 +228,6 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         commonNavigator.setAdapter(adapter);
         deviceListContainerBinding.homeTabLayout.setNavigator(commonNavigator);
         ViewPagerHelper.bind(deviceListContainerBinding.homeTabLayout, deviceListContainerBinding.viewPager);
-        deviceListContainerBinding.viewPager.setCurrentItem(0, false);
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
