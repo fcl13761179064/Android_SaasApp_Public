@@ -23,6 +23,7 @@ import com.ayla.hotelsaas.events.AllAddDeviceEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.events.TobeAddDeviceEvent;
 import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
+import com.ayla.hotelsaas.fragment.DeviceListFragmentNew;
 import com.ayla.hotelsaas.fragment.RuleEngineFragment;
 import com.ayla.hotelsaas.fragment.TestFragment;
 import com.ayla.hotelsaas.mvp.present.MainPresenter;
@@ -267,6 +268,7 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        DeviceListFragmentNew.isAllData=true;
     }
 
 
@@ -282,4 +284,6 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         super.rb_all_data();
         EventBus.getDefault().post(new AllAddDeviceEvent());
     }
+
+
 }

@@ -55,7 +55,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
     private int mPosition;
     private long mRegionId;
     private List<DeviceListAdapter.DeviceItem> deviceItems;
-    private static boolean isAllData = true;
+    public static boolean isAllData = true;
 
     public DeviceListFragmentNew() {
     }
