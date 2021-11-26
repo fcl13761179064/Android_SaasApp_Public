@@ -51,7 +51,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
     FragmentDeviceContainerBinding binding;
     ViewStubDeviceListContainerBinding deviceListContainerBinding;
-    FragmentPagerAdapter mAdapter;
+    FragmentStatePagerAdapter mAdapter;
     private List<DeviceLocationBean> LocationBeans=new ArrayList<>();
     private long room_id;
 
@@ -143,7 +143,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     @Override
     protected void initData() {
 
-        mAdapter = new FragmentPagerAdapter(getChildFragmentManager()) {
+        mAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
             public int getItemPosition(@NonNull Object object) {
                 return POSITION_NONE;
@@ -208,7 +208,6 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
             deviceListContainerBinding.viewPager.setVisibility(View.VISIBLE);
         }
         deviceListContainerBinding.tlTabs.setVisibility(View.GONE);
-
         mAdapter.notifyDataSetChanged();
     }
 
@@ -228,6 +227,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
         commonNavigator.setAdapter(adapter);
         deviceListContainerBinding.homeTabLayout.setNavigator(commonNavigator);
         ViewPagerHelper.bind(deviceListContainerBinding.homeTabLayout, deviceListContainerBinding.viewPager);
+        deviceListContainerBinding.viewPager.setCurrentItem(0, false);
     }
 
     @Override
@@ -247,6 +247,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceRemoved(DeviceRemovedEvent event) {
+
         loadData();
     }
 
@@ -262,6 +263,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
 
 /*
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getAllData(MoveAllDataEvent event) {
         loadData();
