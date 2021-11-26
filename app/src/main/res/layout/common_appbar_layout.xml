@@ -32,6 +32,7 @@
                 android:layout_gravity="center"
                 android:ellipsize="end"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:lines="1"
                 android:maxWidth="100dp"
                 android:text="left1111111111111111111"
@@ -68,12 +69,12 @@
             android:id="@+id/ll_tab"
             android:layout_width="122dp"
             android:layout_height="34dp"
-            android:background="@drawable/round_gray_bg"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="80dp"
             android:layout_centerVertical="true"
+            android:layout_marginRight="80dp"
+            android:background="@drawable/round_gray_bg"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <RadioGroup
                 android:id="@+id/rg_tab_group"
@@ -88,26 +89,27 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:button="@null"
-                    android:checked="true"
                     android:background="@drawable/bar_move_wall_selector"
+                    android:button="@null"
                     android:gravity="center"
                     android:text="全部"
-                    android:textColor="@color/color_333333"
-                    android:textSize="13sp" />
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
                 <RadioButton
                     android:id="@+id/rd_select_two"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:checked="false"
-                    android:text="待添加"
                     android:background="@drawable/bar_move_wall_selector"
+                    android:button="@null"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:text="待添加"
                     android:textColor="@color/color_333333"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
             </RadioGroup>
         </LinearLayout>
 
@@ -116,8 +118,8 @@
             android:layout_width="104dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:gravity="right"
             android:layout_marginRight="14dp"
+            android:gravity="right"
             android:orientation="horizontal">
 
             <TextView
@@ -129,6 +131,7 @@
                 android:gravity="center"
                 android:lines="1"
                 android:text="left"
+                android:textStyle="bold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/color_333333"
                 android:textSize="14sp" />
