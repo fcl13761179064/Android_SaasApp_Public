@@ -86,9 +86,7 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                                         break;
                                     }
                                 }
-                                if (result.size() == 2) {
-                                    break;
-                                }
+
                             }
                         } else {
                             for (DeviceTemplateBean.AttributesBean attributesBean : attributesBeans) {
