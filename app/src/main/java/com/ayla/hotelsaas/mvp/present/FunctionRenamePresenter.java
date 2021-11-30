@@ -29,7 +29,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
 
-    public void getRenameAbleFunctions(int cuId, String pid, String deviceId, String deviceCategory) {
+    public void getRenameAbleFunctions(int cuId, String pid, String deviceId) {
         Disposable subscribe = RequestModel.getInstance()
                 .getDeviceCategoryDetail(pid)//首先查询出改设备的品类支持功能详情。
                 .flatMap(new Function<DeviceCategoryDetailBean, ObservableSource<List<DeviceTemplateBean.AttributesBean>>>() {
@@ -67,7 +67,7 @@ public class FunctionRenamePresenter extends BasePresenter<FunctionRenameView> {
                     @Override
                     public List<Map<String, String>> apply(List<DeviceTemplateBean.AttributesBean> attributesBeans, List<PropertyNicknameBean> touchPanelDataBeans) throws Exception {
                         List<Map<String, String>> result = new ArrayList<>();
-                        if (Constance.is_double_four_curtain(deviceCategory)) {//假如这个是2路和4路窗帘开关，重命名这里需要做处理
+                        if (Constance.is_double_four_curtain(pid)) {//假如这个是2路和4路窗帘开关，重命名这里需要做处理
                             for (int x = 0; x < attributesBeans.size(); x++) {
                                 Map<String, String> bean = new HashMap<>();
                                 result.add(bean);

@@ -18,7 +18,10 @@ import com.ayla.hotelsaas.bean.DeviceCategoryBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.databinding.FragmentDeviceListNewBinding;
+import com.ayla.hotelsaas.events.AllAddDeviceEvent;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
+import com.ayla.hotelsaas.events.DeviceRemovedEvent;
+import com.ayla.hotelsaas.events.TobeAddDeviceEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListView;
 import com.ayla.hotelsaas.ui.CustomToast;
@@ -51,6 +54,8 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
     private long mRoomId;
     private int mPosition;
     private long mRegionId;
+    private List<DeviceListAdapter.DeviceItem> deviceItems;
+    public static boolean isAllData = true;
 
     public DeviceListFragmentNew() {
     }
@@ -64,7 +69,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
         mRoomId = b.getLong("mRoomId", 0);
         mRegionId = b.getLong("mRegionId", 0);
         mDevices = (List<DeviceListBean.DevicesBean>) b.getSerializable("mDevices");
-        mPosition = b.getInt("mPosition",0);
+        mPosition = b.getInt("mPosition", 0);
     }
 
     @Override
@@ -143,8 +148,15 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
         if (mDevices != null && mPosition == 0) {
             List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
             for (DeviceListBean.DevicesBean devicesBean : mDevices) {
-                DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
-                deviceItems.add(deviceItem);
+                if (isAllData) {
+                    DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
+                    deviceItems.add(deviceItem);
+                } else {
+                    if (devicesBean.getBindType() == 1) {
+                        DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
+                        deviceItems.add(deviceItem);
+                    }
+                }
             }
             mAdapter.setNewData(deviceItems);
         } else {
@@ -171,10 +183,16 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
 
     @Override
     public void loadDeviceDataSuccess(DeviceListBean data) {
-        List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
+        deviceItems = new ArrayList<>();
         for (DeviceListBean.DevicesBean devicesBean : data.getDevices()) {
             DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
-            deviceItems.add(deviceItem);
+            if (isAllData) {
+                deviceItems.add(deviceItem);
+            } else {
+                if (devicesBean.getBindType() == 1) {
+                    deviceItems.add(deviceItem);
+                }
+            }
         }
         mAdapter.setNewData(deviceItems);
     }
@@ -188,5 +206,38 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         deviceCategoryHandler.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void AllAddDeviceEvent(AllAddDeviceEvent event) {
+        isAllData = true;
+        if (mDevices != null) {
+            List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
+            for (DeviceListBean.DevicesBean devicesBean : mDevices) {
+                if (devicesBean.getRegionId() == mRegionId || mRegionId == -1) {
+                    DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
+                    deviceItems.add(deviceItem);
+                }
+            }
+            mAdapter.setNewData(deviceItems);
+        }
+
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void TobeAddDeviceEvent(TobeAddDeviceEvent event) {
+        isAllData = false;
+        if (mDevices != null) {
+            List<DeviceListAdapter.DeviceItem> deviceItems = new ArrayList<>();
+            for (DeviceListBean.DevicesBean devicesBean : mDevices) {
+                if (devicesBean.getBindType() == 1 && (devicesBean.getRegionId() == mRegionId || mRegionId == -1)) {
+                    DeviceListAdapter.DeviceItem deviceItem = new DeviceListAdapter.DeviceItem(devicesBean);
+                    deviceItems.add(deviceItem);
+                }
+            }
+            mAdapter.setNewData(deviceItems);
+        }
     }
 }

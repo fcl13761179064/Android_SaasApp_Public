@@ -5,13 +5,13 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.widget.AppBar;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 
@@ -102,36 +102,50 @@ public abstract class BasicActivity extends AppCompatActivity {
                 });
             }
 
-/*
-            Button btn_all = appbarRoot.findViewById(R.id.btn_all);
-            if (btn_all != null && !btn_all.hasOnClickListeners()) {
-                btn_all.setOnClickListener(new View.OnClickListener() {
+            RadioGroup rg_tab_group = appbarRoot.findViewById(R.id.rg_tab_group);
+            RadioButton rd_select = appbarRoot.findViewById(R.id.rd_select);
+            RadioButton rd_select_two = appbarRoot.findViewById(R.id.rd_select_two);
+            rg_tab_group.check(R.id.rd_select);
+            rd_select.setSelected(true);
+            if (rg_tab_group != null && !rg_tab_group.hasOnClickListeners()) {
+                rg_tab_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
-                    public void onClick(View v) {
-                        appBarAllDataClicked(v);
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        switch (checkedId) {
+                            case R.id.rd_select: {
+                                if (!rd_select_two.isChecked()) {
+                                    rd_select.setSelected(true);
+                                    rd_select.setTextColor(getResources().getColor(R.color.white,getTheme()));
+                                    rd_select_two.setTextColor(getResources().getColor(R.color.color_333333,getTheme()));
+                                    rd_select_two.setSelected(false);
+                                    rb_all_data();
+                                }
+                                break;
+                            }
+                            case R.id.rd_select_two: {
+                                if (!rd_select.isChecked()) {
+                                    rd_select.setSelected(false);
+                                    rd_select_two.setSelected(true);
+                                    rd_select_two.setTextColor(getResources().getColor(R.color.white));
+                                    rd_select.setTextColor(getResources().getColor(R.color.color_333333));
+                                    rb_bufen_data();
+                                    break;
+                                }
+                            }
+                        }
                     }
                 });
             }
-
-            Button btn_bufen = appbarRoot.findViewById(R.id.btn_bufen);
-            if (btn_bufen != null && !btn_bufen.hasOnClickListeners()) {
-                btn_bufen.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        appBarBufenDataClicked(v);
-                    }
-                });
-            }*/
         }
     }
 
-    protected void appBarBufenDataClicked(View v) {
+    protected void rb_all_data() {
+
     }
 
+    protected void rb_bufen_data() {
 
-    protected void appBarAllDataClicked(View v) {
     }
-
 
     /**
      * appbar左侧图标点击事件

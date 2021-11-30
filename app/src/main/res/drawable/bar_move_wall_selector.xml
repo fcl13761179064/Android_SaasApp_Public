@@ -3,5 +3,6 @@
 
     <!-- 选中 -->
     <item android:drawable="@drawable/select_bg_move_wall_title" android:state_selected="true"></item>
+    <item android:drawable="@drawable/unselect_bg_move_wall_title" android:state_selected="false"></item>
 
 </selector>

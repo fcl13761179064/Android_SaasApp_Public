@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.webkit.JavascriptInterface;
 
 import androidx.annotation.Nullable;
 
+import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
@@ -84,7 +86,12 @@ public class DeviceDetailH5Activity extends BaseWebViewActivity {
         String domainUrl = getIntent().getStringExtra("domainUrl");
         String h5url = getIntent().getStringExtra("h5url");
         if (!TextUtils.isEmpty(domainUrl) && !TextUtils.isEmpty(h5url)) {
-            mWebView.loadUrl("https://" + domainUrl + h5url);
+            if ("canary".equalsIgnoreCase(BuildConfig.FLAVOR)) {
+                mWebView.loadUrl("https://miya-h5-canary.ayla.com.cn" + h5url);
+            } else {
+                mWebView.loadUrl("https://" + domainUrl + h5url);
+            }
+
         } else {
             mWebView.loadUrl(Constance.getDeviceControlBaseUrl() + "#/" + num);
         }

@@ -7,7 +7,12 @@ import android.view.View;
 import android.view.ViewStub;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.ayla.hotelsaas.adapter.FragmentAdapter;
 import com.ayla.hotelsaas.adapter.ScaleTabAdapter;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
@@ -16,6 +21,7 @@ import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.databinding.FragmentDeviceContainerBinding;
 import com.ayla.hotelsaas.databinding.ViewStubDeviceListContainerBinding;
 import com.ayla.hotelsaas.databinding.WidgetEmptyViewBinding;
+import com.ayla.hotelsaas.events.AllAddDeviceEvent;
 import com.ayla.hotelsaas.events.DeviceAddEvent;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.events.MoveAllDataEvent;
@@ -24,6 +30,7 @@ import com.ayla.hotelsaas.events.RegionChangeEvent;
 import com.ayla.hotelsaas.mvp.present.DeviceListContainerPresenter;
 import com.ayla.hotelsaas.mvp.view.DeviceListContainerView;
 import com.ayla.hotelsaas.ui.DeviceAddCategoryActivity;
+import com.ayla.hotelsaas.ui.MainActivity;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -32,6 +39,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -44,7 +52,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
     FragmentDeviceContainerBinding binding;
     ViewStubDeviceListContainerBinding deviceListContainerBinding;
     FragmentStatePagerAdapter mAdapter;
-    private List<DeviceLocationBean> LocationBeans;
+    private List<DeviceLocationBean> LocationBeans=new ArrayList<>();
     private long room_id;
 
     @Override
@@ -151,6 +159,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
                 bundle.putSerializable("mDevices", (Serializable) deviceListBean.getDevices());
                 bundle.putLong("mRegionId", LocationBeans.get(position).getRegionId());
                 bundle.putInt("mPosition", position);
+                bundle.putString("name", LocationBeans.get(position).getRegionName());
                 //调用Fragment的setArguments方法，传入Bundle对象
                 deviceListFragmentNew.setArguments(bundle);
 
@@ -171,6 +180,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
                 return LocationBeans.get(position).getRegionName();
             }
         };
+
     }
 
     private DeviceListBean deviceListBean;
@@ -198,22 +208,22 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
             deviceListContainerBinding.viewPager.setVisibility(View.VISIBLE);
         }
         deviceListContainerBinding.tlTabs.setVisibility(View.GONE);
-
         mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void loadDeviceLocationSuccess(List<DeviceLocationBean> data) {
-        LocationBeans = data;
+        LocationBeans.clear();
         DeviceLocationBean deviceLocationBean = new DeviceLocationBean();
         deviceLocationBean.setRegionName("全部");
         deviceLocationBean.setRegionId(-1l);
         LocationBeans.add(0, deviceLocationBean);
+        LocationBeans.addAll(data);
         deviceListContainerBinding.viewPager.setAdapter(mAdapter);
         binding.loadingViewStub.setVisibility(View.GONE);
         CommonNavigator commonNavigator = new CommonNavigator(getActivity());
         commonNavigator.setAdjustMode(false);
-        ScaleTabAdapter adapter = new ScaleTabAdapter(data, deviceListContainerBinding.viewPager, deviceListContainerBinding.homeTabLayout);
+        ScaleTabAdapter adapter = new ScaleTabAdapter(LocationBeans, deviceListContainerBinding.viewPager, deviceListContainerBinding.homeTabLayout);
         commonNavigator.setAdapter(adapter);
         deviceListContainerBinding.homeTabLayout.setNavigator(commonNavigator);
         ViewPagerHelper.bind(deviceListContainerBinding.homeTabLayout, deviceListContainerBinding.viewPager);
@@ -237,6 +247,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleDeviceRemoved(DeviceRemovedEvent event) {
+
         loadData();
     }
 
@@ -252,6 +263,7 @@ public class DeviceListContainerFragment extends BaseMvpFragment<DeviceListConta
 
 
 /*
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getAllData(MoveAllDataEvent event) {
         loadData();

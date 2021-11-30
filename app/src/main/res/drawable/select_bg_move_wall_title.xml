@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="#648C1A" />
-    <corners android:radius="17dp" />
+
+    <path
+        android:pathData="M0 0V32H63V0"
+        />
+    <gradient
+        android:type="linear"
+        android:startColor="#8BBA34"
+        android:endColor="#648C1A"
+        android:startX="15.75"
+        android:startY="16"
+        android:endX="47.25"
+        android:endY="16"/>
+    <corners android:radius="30dp" />
 </shape>

@@ -32,12 +32,13 @@
                 android:layout_gravity="center"
                 android:ellipsize="end"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:lines="1"
-                android:maxWidth="100dp"
-                android:text="left"
+                android:maxWidth="120dp"
+                android:text="left1111111111111111111"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/color_333333"
-                android:textSize="14sp" />
+                android:textSize="17sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -58,7 +59,7 @@
                 android:lines="1"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:text="title"
+                android:text=""
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/color_333333"
                 android:textSize="17sp" />
@@ -67,36 +68,49 @@
         <LinearLayout
             android:id="@+id/ll_tab"
             android:layout_width="122dp"
-            android:layout_height="32dp"
-            android:layout_centerInParent="true"
-            android:layout_toStartOf="@id/common_right_ll"
-            android:layout_toEndOf="@id/left_ll"
+            android:layout_height="34dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="80dp"
             android:background="@drawable/round_gray_bg"
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <Button
-                android:id="@+id/btn_all"
-                android:layout_width="0dp"
+            <RadioGroup
+                android:id="@+id/rg_tab_group"
+                android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1"
                 android:background="@drawable/bar_move_wall_selector"
-                android:gravity="center"
-                android:text="全部"
-                android:textColor="@color/color_333333"
-                android:textSize="13sp" />
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_bufen"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bar_move_wall_selector"
-                android:gravity="center"
-                android:text="待添加"
-                android:textColor="@color/color_333333"
-                android:textSize="13sp" />
+                <RadioButton
+                    android:id="@+id/rd_select"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/bar_move_wall_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="全部"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rd_select_two"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/bar_move_wall_selector"
+                    android:button="@null"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:text="待添加"
+                    android:textColor="@color/color_333333"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </RadioGroup>
         </LinearLayout>
 
         <LinearLayout
@@ -117,6 +131,7 @@
                 android:gravity="center"
                 android:lines="1"
                 android:text="left"
+                android:textStyle="bold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/color_333333"
                 android:textSize="14sp" />
