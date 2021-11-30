@@ -107,7 +107,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
                                         }
                                         mAdapter.notifyItemChanged(position);
                                         is_curtain_switch = false;
-                                        if (Constance.is_double_four_curtain(mDevicesBean.getDeviceCategory())) {
+                                        if (Constance.is_double_four_curtain(mDevicesBean.getPid())) {
                                             is_curtain_switch = true;
                                         }
                                         mPresenter.renameFunction(mDevicesBean.getCuId(), mDevicesBean.getDeviceId(),
@@ -143,7 +143,7 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     @Override
     public void renameSuccess() {
         CustomToast.makeText(this, "修改成功", R.drawable.ic_success);
-        if (Constance.is_double_four_curtain(mDevicesBean.getDeviceCategory())) {
+        if (Constance.is_double_four_curtain(mDevicesBean.getPid())) {
             EventBus.getDefault().post(new SwitchRenameEvent());
         }
         loadData();
@@ -155,6 +155,6 @@ public class FunctionRenameActivity extends BaseMvpActivity<FunctionRenameView, 
     }
 
     private void loadData() {
-        mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getPid(), mDevicesBean.getDeviceId(),mDevicesBean.getDeviceCategory());
+        mPresenter.getRenameAbleFunctions(mDevicesBean.getCuId(), mDevicesBean.getPid(), mDevicesBean.getDeviceId());
     }
 }

@@ -158,8 +158,8 @@ public class Constance {
         return sb.toString();
     }
 
-    public static boolean is_double_four_curtain(String deviceCategory) {
-        if ("ZB-NODE-WC4-001".equals(deviceCategory) || "ZB-NODE-WC2-001".equals(deviceCategory)) {
+    public static boolean is_double_four_curtain(String pid) {//前面是双路窗帘面板开关，后面是4路窗帘面板开关
+        if ("ZBSCN-A000010".equals(pid) || "ZBSW0-A000021".equals(pid)) {
             return true;
         } else {
             return false;
