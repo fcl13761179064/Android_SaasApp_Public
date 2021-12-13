@@ -32,4 +32,17 @@
 
         <attr name="maskProgressStyle" format="reference" />
 
+
+    <declare-styleable name="StateLayout">
+        <attr name="state_errorView" format="reference" />
+        <attr name="state_loadingView" format="reference" />
+        <attr name="state_emptyView" format="reference" />
+        <attr name="state_viewState" format="enum">
+            <enum name="content" value="0" />
+            <enum name="error" value="1" />
+            <enum name="empty" value="2" />
+            <enum name="loading" value="3" />
+        </attr>
+        <attr name="state_animateViewChanges" format="boolean" />
+    </declare-styleable>
 </resources>
