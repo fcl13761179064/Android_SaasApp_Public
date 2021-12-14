@@ -23,10 +23,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 设备添加处理页面
+ * 设备添加处理页面,网关绑定，以及设备绑定页面
  * 进入时必须带入:
  * {@link Bundle addInfo} include:
- * must {@link int networkType} 1、鸿雁-插网线网关配网2、顺舟-插网线网关配网3、艾拉节点 4、鸿雁节点 5、艾拉wifi设备
+ * must {@link int networkType} 1、鸿雁-插网线网关配网 2、顺舟-插网线网关配网 3、艾拉节点 4、鸿雁节点 5、艾拉wifi设备
  * must {@link int cuId}
  * must {@link long scopeId}
  * must {@link String pid}

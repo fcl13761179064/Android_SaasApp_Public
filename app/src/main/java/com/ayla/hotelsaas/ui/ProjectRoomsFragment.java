@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
 import com.ayla.hotelsaas.bean.TreeListBean;
@@ -23,10 +23,8 @@ import com.ayla.hotelsaas.mvp.present.ProjectRoomsPresenter;
 import com.ayla.hotelsaas.mvp.view.ProjectRoomsView;
 import com.ayla.hotelsaas.utils.DateUtils;
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.internal.$Gson$Preconditions;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;

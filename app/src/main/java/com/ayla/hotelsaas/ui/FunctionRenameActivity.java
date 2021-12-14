@@ -12,12 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.FunctionRenameListAdapter;
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.events.DeviceAddEvent;
-import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.events.SwitchRenameEvent;
 import com.ayla.hotelsaas.mvp.present.FunctionRenamePresenter;
 import com.ayla.hotelsaas.mvp.view.FunctionRenameView;

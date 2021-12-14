@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@drawable/bg_bt_gateway_add_start_next"
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="38dp"
+        android:paddingEnd="38dp"
+        android:textSize="@dimen/text_middle_size"
+        android:textColor="@color/color_3C3C3C"
+        android:gravity="center_vertical"
+        tools:text="Ayla-8923hirf"
+        android:id="@+id/tv_name">
+    </TextView>
+</FrameLayout>

@@ -2,7 +2,7 @@ package com.ayla.hotelsaas.mvp.present;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.mvp.view.APwifiToGateWayView;
 import com.ayla.hotelsaas.widget.DisposableObservable;

@@ -109,7 +109,7 @@ public class DeviceCategoryHandler {
         if (subBeans.length == 1) {
             DeviceCategoryBean.SubBean.NodeBean nodeBean = subBeans[0];
             boolean is_has_A2 = loadGateway(aylaGateways);
-            if (is_has_A2 && nodeBean.getOemModel().size() > 1) {
+            if (is_has_A2 && nodeBean.getOemModel().size() > 1) {//A2网关
                 Bundle addInfo = generateA2AddInfoBundle(nodeBean);
                 Intent mainActivity = new Intent(fromContext, A2GatewaySelectActivity.class);
                 mainActivity.putExtra("addInfo", addInfo);
@@ -132,7 +132,6 @@ public class DeviceCategoryHandler {
                 } else if (networkType == 3) {//跳转艾拉节点
                     if (aylaGateways.size() == 0) {//没有艾拉网关
                         CustomToast.makeText(fromContext, "请先绑定网关", R.drawable.ic_toast_warming);
-//                handleShouldExit();
                     } else if (aylaGateways.size() == 1) {//一个艾拉网关
                         DeviceListBean.DevicesBean gateway = aylaGateways.get(0);
                         if (TempUtils.isDeviceOnline(gateway)) {//网关在线
@@ -142,7 +141,6 @@ public class DeviceCategoryHandler {
                             startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                         } else {
                             CustomToast.makeText(fromContext, "当前网关离线", R.drawable.ic_toast_warming);
-//                    handleShouldExit();
                         }
                     } else {//多个网关
                         Intent mainActivity = new Intent(fromContext, GatewaySelectActivity.class);
@@ -161,7 +159,6 @@ public class DeviceCategoryHandler {
                 } else if (networkType == 4) {//跳转鸿雁节点
                     if (hyGateways.size() == 0) {//没有鸿雁网关
                         CustomToast.makeText(fromContext, "请先绑定网关", R.drawable.ic_toast_warming);
-//                handleShouldExit();
                     } else if (hyGateways.size() == 1) {//一个网关
                         DeviceListBean.DevicesBean gateway = hyGateways.get(0);
                         if (TempUtils.isDeviceOnline(gateway)) {//网关在线
@@ -171,7 +168,6 @@ public class DeviceCategoryHandler {
                             startActivityForResult(mainActivity, REQUEST_CODE_ADD_DEVICE);
                         } else {
                             CustomToast.makeText(fromContext, "当前网关离线", R.drawable.ic_toast_warming);
-//                    handleShouldExit();
                         }
                     } else {//多个网关
                         Intent mainActivity = new Intent(fromContext, GatewaySelectActivity.class);
@@ -200,7 +196,6 @@ public class DeviceCategoryHandler {
                 if (aylaNodeBean != null && hyNodeBean != null) {//一个icon 表示 两种 节点设备，一个鸿雁、一个艾拉。
                     if (aylaGateways.size() == 0 && hyGateways.size() == 0) {//没有绑定过任何网关
                         CustomToast.makeText(fromContext, "请先绑定网关", R.drawable.ic_toast_warming);
-//                        handleShouldExit();
                     } else if (aylaGateways.size() + hyGateways.size() > 1) {//当前存在多个网关 ,跳转到网关选择页面
                         Intent mainActivity = new Intent(fromContext, GatewaySelectActivity.class);
                         ArrayList<DeviceCategoryBean.SubBean.NodeBean> nodeBeans = new ArrayList<>();

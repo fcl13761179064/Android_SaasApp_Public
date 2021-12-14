@@ -6,7 +6,7 @@ import android.view.View;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -14,7 +14,6 @@ import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.databinding.ActivityPointAndRegionBinding;
 import com.ayla.hotelsaas.events.DeviceChangedEvent;
 import com.ayla.hotelsaas.events.RegionChangeEvent;
-import com.ayla.hotelsaas.events.SceneChangedEvent;
 import com.ayla.hotelsaas.mvp.present.PointAndRegionPresenter;
 import com.ayla.hotelsaas.mvp.view.PointAndRegionView;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;

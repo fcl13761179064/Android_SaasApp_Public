@@ -1,6 +1,6 @@
 package com.ayla.hotelsaas.utils;
 
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.data.net.SelfMsgException;
 import com.ayla.hotelsaas.data.net.ServerBadException;

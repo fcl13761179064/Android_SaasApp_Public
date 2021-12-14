@@ -1,4 +1,4 @@
-package com.ayla.hotelsaas.application;
+package com.ayla.hotelsaas.common;
 
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
@@ -82,7 +82,7 @@ public class Constance {
             case "qa":
             case "dev":
                 url = "https://miya-h5-test.ayla.com.cn";
-               // url = "http://192.168.1.10:8080";
+                // url = "http://192.168.1.10:8080";
                 break;
             case "canary":
                 url = "https://miya-h5-canary.ayla.com.cn";//canary环境;
@@ -165,4 +165,8 @@ public class Constance {
             return false;
         }
     }
+
+    //A2网关PID
+    public static String A2_GATEWAY_PID="ZBGW0-A000002";
+
 }

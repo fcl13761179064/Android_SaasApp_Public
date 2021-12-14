@@ -12,8 +12,8 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.UpgradeDownloadService;
-import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.widget.CustomAlarmDialog;
 import com.ayla.hotelsaas.widget.LoadingDialog;

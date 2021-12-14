@@ -17,7 +17,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.RuleEnginePagerAdapter;
-import com.ayla.hotelsaas.application.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
 import com.ayla.hotelsaas.bean.DeviceListBean;
@@ -29,9 +28,7 @@ import com.ayla.hotelsaas.mvp.present.RuleEnginePresenter;
 import com.ayla.hotelsaas.mvp.view.RuleEngineView;
 import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.GatewaySelectActivity;
-import com.ayla.hotelsaas.ui.MainActivity;
 import com.ayla.hotelsaas.ui.SceneSettingActivity;
-import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.ayla.hotelsaas.utils.TempUtils;
 import com.ayla.hotelsaas.widget.CustomSheet;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

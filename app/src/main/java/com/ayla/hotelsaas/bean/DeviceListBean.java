@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.bean;
 
+import com.ayla.hotelsaas.common.Constance;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -228,6 +230,14 @@ public class DeviceListBean {
 
         public int getIsNeedGateway() {
             return isNeedGateway;
+        }
+
+        //判断是否是ayla智能网关
+        /**
+         * 判断是否是艾拉智能网关
+         */
+        public boolean isAylaSmartGateway() {
+            return  Constance.A2_GATEWAY_PID.equals(pid);
         }
     }
 }
