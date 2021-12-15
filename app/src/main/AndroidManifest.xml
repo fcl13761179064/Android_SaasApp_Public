@@ -134,10 +134,6 @@
             android:name=".ui.H5BaseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.DeviceAddGuideActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/WhiteBgAppTheme" />
-        <activity
             android:name=".ui.PersonCenterActivity"
             android:screenOrientation="portrait" />
         <activity
