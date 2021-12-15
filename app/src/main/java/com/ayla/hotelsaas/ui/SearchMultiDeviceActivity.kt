@@ -163,7 +163,6 @@ class SearchMultiDeviceActivity : BasicActivity() {
     private fun doFindDeviceStart() {
         runOnUiThread {
             mdf_iv_loading.setVisible(true)
-            mdf_tv_countdown.setVisible(false)
             countDown.cancel()
             mdf_tv_loading.text = "设备搜索中"
             multiDeviceFoundAdapter.setNewData(null)
@@ -215,12 +214,10 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
         @SuppressLint("SetTextI18n")
         override fun onTick(millisUntilFinished: Long) {
-            mdf_tv_countdown.setVisible(true)
-            mdf_tv_countdown.text = "${millisUntilFinished / 1000}s"
+            mdf_iv_retry_or_remain_time.text = "${millisUntilFinished / 1000}s 后重试"
         }
 
         override fun onFinish() {
-            mdf_tv_countdown.setVisible(false)
             mdf_btn_next.isEnabled = false
         }
     }

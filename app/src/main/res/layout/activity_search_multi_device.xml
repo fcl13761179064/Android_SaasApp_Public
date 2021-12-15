@@ -64,25 +64,6 @@
         app:layout_constraintBottom_toTopOf="@id/mdf_btn_next"
         tools:listitem="@layout/item_multi_device_found"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/mdf_tv_countdown"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.6"
-        android:paddingTop="20dp"
-        android:paddingBottom="15dp"
-        android:background="@drawable/room_num_shape"
-        android:drawableTop="@drawable/search_progress_loading"
-        android:textColor="@color/color_333333"
-        android:textSize="12sp"
-        android:gravity="center"
-        android:text="30s"
-        android:visibility="gone"
-        />
 
     <Button
         android:id="@+id/mdf_btn_next"
