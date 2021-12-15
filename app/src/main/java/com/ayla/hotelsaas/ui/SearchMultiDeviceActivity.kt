@@ -73,6 +73,7 @@ class SearchMultiDeviceActivity :BasicActivity(){
                 3,
                 R.color.all_bg_color
             ))
+        multiDeviceFoundAdapter.bindToRecyclerView(mdf_rv_content)
         mdf_rv_content.adapter = multiDeviceFoundAdapter
         multiDeviceFoundAdapter.setEmptyView(R.layout.empty_scene_page)
         val progressDrawable = ProgressDrawable()
@@ -83,11 +84,11 @@ class SearchMultiDeviceActivity :BasicActivity(){
                 startFindDevice()
             }
         }
+        //开始发现设备
         startFindDevice()
     }
 
     override fun initListener() {
-        TODO("Not yet implemented")
     }
 
     @FlowPreview

@@ -16,11 +16,13 @@ import butterknife.OnClick
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.view.View
 import android.view.animation.CycleInterpolator
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatCheckBox
 import com.ayla.hotelsaas.utils.ImageLoader
+import kotlinx.android.synthetic.main.activity_device_add_guide.*
 
 /**
  * wifi设备、节点设备 配网引导页面
@@ -30,27 +32,6 @@ import com.ayla.hotelsaas.utils.ImageLoader
 class DeviceAddGuideActivity : BaseMvpActivity<DeviceAddGuideView?, DeviceAddGuidePresenter?>(),
     DeviceAddGuideView {
     private val REQUEST_CODE_GET_WIFI_SSID_PWD = 0X10
-
-    @JvmField
-    @BindView(R.id.iv)
-    var imageView: ImageView? = null
-
-    @JvmField
-    @BindView(R.id.tv_content)
-    var textView: TextView? = null
-
-    @JvmField
-    @BindView(R.id.cb)
-    var checkBox: AppCompatCheckBox? = null
-
-    @JvmField
-    @BindView(R.id.bt)
-    var button: Button? = null
-
-    @JvmField
-    @BindView(R.id.appBar)
-    var appBar: AppBar? = null
-
     private var addInfo: Bundle? = null
     private var deviceId:String? = null
 
@@ -71,7 +52,15 @@ class DeviceAddGuideActivity : BaseMvpActivity<DeviceAddGuideView?, DeviceAddGui
     }
 
     override fun initView() {}
-    override fun initListener() {}
+    override fun initListener() {
+      bt.setOnClickListener(View.OnClickListener {
+          if (cb!!.isChecked) {
+              handleJump()
+          } else {
+              shakeButton()
+          }
+      })
+    }
     private fun handleJump() {
         val networkType = addInfo!!.getInt("networkType")
         val devicesBean = MyApplication.getInstance().devicesBean
@@ -104,8 +93,8 @@ class DeviceAddGuideActivity : BaseMvpActivity<DeviceAddGuideView?, DeviceAddGui
         if (o != null) {
             val guidePic = o.networkGuidePic
             val guideDesc = o.networkGuideDesc
-            ImageLoader.loadImg(imageView, guidePic, 0, 0)
-            textView!!.text = guideDesc
+            ImageLoader.loadImg(iv, guidePic, 0, 0)
+            tv_content.text = guideDesc
         }
     }
 
@@ -117,19 +106,10 @@ class DeviceAddGuideActivity : BaseMvpActivity<DeviceAddGuideView?, DeviceAddGui
         )
     }
 
-    @OnClick(R.id.bt)
-    fun onClicked() {
-        if (checkBox!!.isChecked) {
-            handleJump()
-        } else {
-            shakeButton()
-        }
-    }
-
     @SuppressLint("ObjectAnimatorBinding")
     private fun shakeButton() {
         val animSet = AnimatorSet()
-        val animX = ObjectAnimator.ofFloat(button, "translationX", 0f, 10f, 0f, -10f)
+        val animX = ObjectAnimator.ofFloat(bt, "translationX", 0f, 10f, 0f, -10f)
         animX.interpolator = CycleInterpolator(5F)
         animSet.duration = 200
         animSet.play(animX)
