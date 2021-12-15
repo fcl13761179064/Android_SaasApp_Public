@@ -66,8 +66,8 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/mdf_tv_countdown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -76,7 +76,7 @@
         android:paddingTop="20dp"
         android:paddingBottom="15dp"
         android:background="@drawable/room_num_shape"
-        android:drawableTop="@drawable/ic_progress_dot_loading_nu"
+        android:drawableTop="@drawable/search_progress_loading"
         android:textColor="@color/color_333333"
         android:textSize="12sp"
         android:gravity="center"

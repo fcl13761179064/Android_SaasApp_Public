@@ -1,6 +1,7 @@
 package com.ayla.hotelsaas.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ayla.base.ext.setVisible
 import com.ayla.hotelsaas.R
 import com.ayla.hotelsaas.adapter.MultiDeviceFoundAdapter
 import com.ayla.hotelsaas.api.CoroutineApiService
@@ -25,12 +27,9 @@ import com.google.gson.JsonObject
 import com.scwang.smart.drawable.ProgressDrawable
 import io.reactivex.internal.operators.flowable.FlowableTimeInterval
 import kotlinx.android.synthetic.main.activity_search_multi_device.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -40,15 +39,14 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     private val api = RetrofitHelper.getRetrofit().create(CoroutineApiService::class.java)
     private val multiDeviceFoundAdapter = MultiDeviceFoundAdapter()
+    private lateinit var pollJob: Job
     private val addinfo by lazy {
         intent.getBundleExtra("addInfo")
     }
-
-    private val countDown by lazy {
-        CountDown(COUNT_DOWN_MILLS, 1000L)//这个是倒计3秒然后开始搜索
-    }
+    private val countDown = CountDown(COUNT_DOWN_MILLS, 1000L)//这个是倒计3秒然后开始搜索
+    private val remain120countDown = Count120Down(POLL_REQUEST_TIME_OUT_MILLS, 1000L)//这个是倒计120秒,120秒就停止搜索
     private val gatewayDeviceId by lazy {
-        addinfo?.getString("deviceId")?:""
+        addinfo?.getString("deviceId") ?: ""
 
     }
 
@@ -94,7 +92,9 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     @FlowPreview
     private fun startFindDevice() {
-        lifecycleScope.launch {
+        remain120countDown.cancel()
+        remain120countDown.start()
+        pollJob = lifecycleScope.launch {
             flow {
                 emit(api.updateProperty(gatewayDeviceId, createGatewayParam("100")))
             }.map {
@@ -116,9 +116,10 @@ class SearchMultiDeviceActivity : BasicActivity() {
                                 )
                             }
                             emit(nodes)
-                        } catch (ignore: Exception) {
+                            } catch (ignore: Exception) {
                         }
                         delay(3000L)
+
                     }
                 }
             }.onStart {
@@ -161,9 +162,8 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     private fun doFindDeviceStart() {
         runOnUiThread {
-            mdf_iv_retry_or_remain_time.visibility == 0
-            mdf_iv_loading.visibility == 1
-            mdf_tv_countdown.visibility == 0
+            mdf_iv_loading.setVisible(true)
+            mdf_tv_countdown.setVisible(false)
             countDown.cancel()
             mdf_tv_loading.text = "设备搜索中"
             multiDeviceFoundAdapter.setNewData(null)
@@ -174,9 +174,9 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     private fun doFindDeviceEnd() {
         runOnUiThread {
-            // (mdf_iv_loading.drawable as? ProgressDrawable)?.stop()
-            mdf_iv_loading.visibility == 1
-            mdf_iv_retry_or_remain_time.visibility == 0
+            (mdf_iv_loading.drawable as? ProgressDrawable)?.stop()
+            mdf_iv_loading.setVisible(false)
+            mdf_iv_retry_or_remain_time.setText("重新搜索")
             if (multiDeviceFoundAdapter.data.isNullOrEmpty()) {
                 mdf_tv_loading.text = "未搜索到设备"
             }
@@ -207,24 +207,54 @@ class SearchMultiDeviceActivity : BasicActivity() {
     fun String.toReqBody(): RequestBody {
         return this.toRequestBody("application/json; charset=UTF-8".toMediaType())
     }
-}
 
-class CountDown(millisInFuture: Long, countDownInterval: Long) : CountDownTimer(
-    millisInFuture, countDownInterval
-) {
-    /**
-     * Callback fired on regular interval.
-     * @param millisUntilFinished The amount of time until finished.
-     */
-    override fun onTick(millisUntilFinished: Long) {
+    inner class CountDown(millisInFuture: Long, countDownInterval: Long) : CountDownTimer(
+        millisInFuture,
+        countDownInterval
+    ) {
 
+        @SuppressLint("SetTextI18n")
+        override fun onTick(millisUntilFinished: Long) {
+            mdf_tv_countdown.setVisible(true)
+            mdf_tv_countdown.text = "${millisUntilFinished / 1000}s"
+        }
+
+        override fun onFinish() {
+            mdf_tv_countdown.setVisible(false)
+            mdf_btn_next.isEnabled = false
+        }
     }
 
-    /**
-     * Callback fired when the time is up.
-     */
-    override fun onFinish() {
+    inner class Count120Down(millisInFuture: Long, countDownInterval: Long) : CountDownTimer(
+        millisInFuture,
+        countDownInterval
+    ) {
 
+        @SuppressLint("SetTextI18n")
+        override fun onTick(millisUntilFinished: Long) {
+            mdf_iv_retry_or_remain_time.setText("${(millisUntilFinished)/1000}s")
+        }
+
+        override fun onFinish() {
+        }
     }
 
+    @FlowPreview
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        startFindDevice()
+    }
+
+    override fun onDestroy() {
+        try {
+            (mdf_iv_loading.drawable as? ProgressDrawable)?.stop()
+            if (!pollJob.isCancelled) pollJob.cancel()
+        } catch (ignore: Exception) {
+        }
+        super.onDestroy()
+    }
 }
+
+
+
+
