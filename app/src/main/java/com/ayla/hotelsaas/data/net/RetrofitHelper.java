@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.adapter.StringNullAdapter;
+import com.ayla.hotelsaas.api.ApiService;
 import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.User;
@@ -53,6 +54,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitHelper {
     private static ApiService apiService;
+    private static Retrofit retrofit;
     private static Gson gson;
 
     private RetrofitHelper() {
@@ -69,6 +71,18 @@ public class RetrofitHelper {
             apiService = retrofit.create(ApiService.class);
         }
         return apiService;
+    }
+
+    public static Retrofit getRetrofit() {
+        if (retrofit == null) {
+             retrofit = new Retrofit.Builder()
+                    .client(getOkHttpClient())
+                    .addConverterFactory(GsonConverterFactory.create(buildGson()))
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .baseUrl(Constance.getBaseUrl())
+                    .build();
+        }
+        return retrofit;
     }
 
     /*

@@ -1,4 +1,4 @@
-package com.ayla.hotelsaas.data.net;
+package com.ayla.hotelsaas.api;
 
 import com.ayla.hotelsaas.bean.A2BindInfoBean;
 import com.ayla.hotelsaas.bean.BaseResult;

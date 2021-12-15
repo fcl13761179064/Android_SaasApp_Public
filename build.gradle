@@ -6,6 +6,9 @@ buildscript {
     ext.anko_version = '0.10.8'
     // SVGA player
     ext.svga_version = '2.5.15'
+    ext.rx_lifecycle_version = '1.0'
+    ext.lifecycle_version = "2.3.1"
+    ext.ok_http_version = '4.9.0'
     repositories {
         //修改成国内阿里云的maven地址，否则某些地方下载不下来
         maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
