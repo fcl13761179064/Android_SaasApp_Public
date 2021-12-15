@@ -144,7 +144,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
         val foundDevices = data?.toMutableList() ?: mutableListOf()
         var suffixTip = ""
         val result = if (foundDevices.size > MAX_DEVICE_COUNT_LIMIT) {
-            suffixTip = "（已达设备上限）"
+            suffixTip = "（设备搜索中...已达设备上限）"
             foundDevices.subList(0, MAX_DEVICE_COUNT_LIMIT)
         } else {
             suffixTip = ""
@@ -154,7 +154,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
         if (result.isNullOrEmpty()) {
             mdf_tv_loading.text = "设备搜索中"
         } else {
-            mdf_tv_loading.text = "已找到${result.size}个设备$suffixTip"
+            mdf_tv_loading.text = "搜索到${result.size}个设备$suffixTip"
         }
         mdf_btn_next.isEnabled = result.isNotEmpty()
     }
