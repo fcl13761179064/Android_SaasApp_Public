@@ -124,6 +124,7 @@ public interface ApiService {
     @POST("api/v1/build/device/bind/replace")
     Observable<BaseResult<DeviceListBean.DevicesBean>> bindReplaceDeviceWithDSN(@Body RequestBody body);
 
+    //获取候选节点
     @GET("api/v1/build/device/{deviceId}/candidates/{deviceCategory}")
     Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(@Path("deviceId") String deviceId, @Path("deviceCategory") String deviceCategory);
 

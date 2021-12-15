@@ -36,18 +36,21 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.lang.RuntimeException
 
-class SearchMultiDeviceActivity :BasicActivity(){
+class SearchMultiDeviceActivity : BasicActivity() {
 
     private val api = RetrofitHelper.getRetrofit().create(CoroutineApiService::class.java)
     private val multiDeviceFoundAdapter = MultiDeviceFoundAdapter()
     private val addinfo by lazy {
-       intent.getSerializableExtra("addInfo") as Bundle}
+        intent.getBundleExtra("addInfo")
+    }
 
-    private  val countDown by lazy {
-        CountDown(COUNT_DOWN_MILLS,1000L)//这个是倒计3秒然后开始搜索
+    private val countDown by lazy {
+        CountDown(COUNT_DOWN_MILLS, 1000L)//这个是倒计3秒然后开始搜索
     }
     private val gatewayDeviceId by lazy {
-        intent.getStringExtra("deviceId")?:""}
+        addinfo?.getString("deviceId")?:""
+
+    }
 
     companion object {
         private const val POLL_REQUEST_TIME_OUT_MILLS = 120000L
@@ -68,18 +71,16 @@ class SearchMultiDeviceActivity :BasicActivity(){
         mdf_rv_content.layoutManager = LinearLayoutManager(this)
         mdf_rv_content.addItemDecoration(
             RecycleViewDivider(
-               this,
+                this,
                 LinearLayoutManager.VERTICAL,
                 3,
                 R.color.all_bg_color
-            ))
+            )
+        )
         multiDeviceFoundAdapter.bindToRecyclerView(mdf_rv_content)
         mdf_rv_content.adapter = multiDeviceFoundAdapter
         multiDeviceFoundAdapter.setEmptyView(R.layout.empty_scene_page)
-        val progressDrawable = ProgressDrawable()
-        mdf_iv_loading.setImageDrawable(progressDrawable)
-        mdf_iv_loading.post { progressDrawable.start() }
-        mdf_iv_retry.setOnClickListener() {
+        mdf_iv_retry_or_remain_time.setOnClickListener() {
             ClickUtils.applySingleDebouncing(it, 500) {
                 startFindDevice()
             }
@@ -97,34 +98,41 @@ class SearchMultiDeviceActivity :BasicActivity(){
             flow {
                 emit(api.updateProperty(gatewayDeviceId, createGatewayParam("100")))
             }.map {
-                if(it?.code != ResultCode.SUCCESS){
+                if (it?.code != ResultCode.SUCCESS) {
                     throw RuntimeException("网关进入配网模式失败")
-                }else{
+                } else {
                     System.currentTimeMillis()
                 }
             }.flatMapConcat { startTime ->
                 flow {
                     while (multiDeviceFoundAdapter.data.size <= MAX_DEVICE_COUNT_LIMIT
-                        && System.currentTimeMillis() - startTime < POLL_REQUEST_TIME_OUT_MILLS) {
+                        && System.currentTimeMillis() - startTime < POLL_REQUEST_TIME_OUT_MILLS
+                    ) {
                         try {
                             val nodes = gatewayDeviceId?.let {
                                 api.fetchCandidateNodes(
                                     it,
-                                    addinfo.getString("deviceCategory") ?: "")
+                                    addinfo?.getString("deviceCategory") ?: ""
+                                )
                             }
                             emit(nodes)
-                        } catch (ignore: Exception) { }
+                        } catch (ignore: Exception) {
+                        }
                         delay(3000L)
                     }
                 }
             }.onStart {
                 doFindDeviceStart()
             }.catch {
-                CustomToast.makeText(this@SearchMultiDeviceActivity,"服务异常，请稍后重试",Toast.LENGTH_LONG)
+                CustomToast.makeText(
+                    this@SearchMultiDeviceActivity,
+                    "服务异常，请稍后重试",
+                    Toast.LENGTH_LONG
+                )
             }.onCompletion {
                 doFindDeviceEnd()
             }.flowOn(Dispatchers.IO).collect {
-                showFoundDevice(it.data)
+                showFoundDevice(it?.data)
             }
         }
     }
@@ -134,17 +142,17 @@ class SearchMultiDeviceActivity :BasicActivity(){
     private fun showFoundDevice(data: List<DeviceListBean.DevicesBean>?) {
         val foundDevices = data?.toMutableList() ?: mutableListOf()
         var suffixTip = ""
-        val result = if(foundDevices.size > MAX_DEVICE_COUNT_LIMIT){
+        val result = if (foundDevices.size > MAX_DEVICE_COUNT_LIMIT) {
             suffixTip = "（已达设备上限）"
-            foundDevices.subList(0,MAX_DEVICE_COUNT_LIMIT)
-        }else{
+            foundDevices.subList(0, MAX_DEVICE_COUNT_LIMIT)
+        } else {
             suffixTip = ""
             foundDevices
         }
         multiDeviceFoundAdapter.setNewData(result)
-        if(result.isNullOrEmpty()){
+        if (result.isNullOrEmpty()) {
             mdf_tv_loading.text = "设备搜索中"
-        }else{
+        } else {
             mdf_tv_loading.text = "已找到${result.size}个设备$suffixTip"
         }
         mdf_btn_next.isEnabled = result.isNotEmpty()
@@ -153,9 +161,9 @@ class SearchMultiDeviceActivity :BasicActivity(){
 
     private fun doFindDeviceStart() {
         runOnUiThread {
-            mdf_iv_retry.visibility==0
-            mdf_iv_loading.visibility==1
-            mdf_tv_countdown.visibility==0
+            mdf_iv_retry_or_remain_time.visibility == 0
+            mdf_iv_loading.visibility == 1
+            mdf_tv_countdown.visibility == 0
             countDown.cancel()
             mdf_tv_loading.text = "设备搜索中"
             multiDeviceFoundAdapter.setNewData(null)
@@ -166,14 +174,14 @@ class SearchMultiDeviceActivity :BasicActivity(){
 
     private fun doFindDeviceEnd() {
         runOnUiThread {
-            (mdf_iv_loading.drawable as? ProgressDrawable)?.stop()
-            mdf_iv_loading.visibility==1
-            mdf_iv_retry.visibility==0
-            if(multiDeviceFoundAdapter.data.isNullOrEmpty()){
+            // (mdf_iv_loading.drawable as? ProgressDrawable)?.stop()
+            mdf_iv_loading.visibility == 1
+            mdf_iv_retry_or_remain_time.visibility == 0
+            if (multiDeviceFoundAdapter.data.isNullOrEmpty()) {
                 mdf_tv_loading.text = "未搜索到设备"
             }
         }
-        if(!multiDeviceFoundAdapter.data.isNullOrEmpty()){
+        if (!multiDeviceFoundAdapter.data.isNullOrEmpty()) {
             countDown.start()
         }
         exitGatewayJoinMode()
@@ -181,11 +189,11 @@ class SearchMultiDeviceActivity :BasicActivity(){
 
     private fun exitGatewayJoinMode() {
         lifecycleScope.launch {
-            api.updateProperty(gatewayDeviceId,createGatewayParam("0"))
+            api.updateProperty(gatewayDeviceId, createGatewayParam("0"))
         }
     }
 
-    private fun createGatewayParam(time:String): RequestBody {
+    private fun createGatewayParam(time: String): RequestBody {
         val jsonBody = JsonObject()
         jsonBody.addProperty("propertyCode", "zb_join_enable")
         jsonBody.addProperty("propertyValue", time)
@@ -197,12 +205,13 @@ class SearchMultiDeviceActivity :BasicActivity(){
      * string转requestBody
      */
     fun String.toReqBody(): RequestBody {
-        return toRequestBody("application/json; charset=UTF-8".toMediaType())
+        return this.toRequestBody("application/json; charset=UTF-8".toMediaType())
     }
 }
 
-class  CountDown( millisInFuture:Long ,  countDownInterval:Long) :CountDownTimer(millisInFuture,countDownInterval
-)  {
+class CountDown(millisInFuture: Long, countDownInterval: Long) : CountDownTimer(
+    millisInFuture, countDownInterval
+) {
     /**
      * Callback fired on regular interval.
      * @param millisUntilFinished The amount of time until finished.
