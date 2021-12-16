@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.onStart
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.jetbrains.anko.startActivity
 import java.lang.RuntimeException
 
 class SearchMultiDeviceActivity : BasicActivity() {
@@ -41,7 +42,8 @@ class SearchMultiDeviceActivity : BasicActivity() {
         intent.getBundleExtra("addInfo")
     }
     private val countDown = CountDown(COUNT_DOWN_MILLS, 1000L)//这个是倒计3秒然后开始搜索
-    private val remain120countDown = Count120Down(POLL_REQUEST_TIME_OUT_MILLS, 1000L)//这个是倒计120秒,120秒就停止搜索
+    private val remain120countDown =
+        Count120Down(POLL_REQUEST_TIME_OUT_MILLS, 1000L)//这个是倒计120秒,120秒就停止搜索
     private val gatewayDeviceId by lazy {
         addinfo?.getString("deviceId") ?: ""
 
@@ -87,9 +89,12 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
 
     private fun toBindPage() {
-        if(!pollJob.isCancelled) pollJob.cancel()
-        val deviceIdList = multiDeviceFoundAdapter.data.map { it.deviceId }
-        startActivity<DistributionActivity>(intent)
+        if (!pollJob.isCancelled) pollJob.cancel()
+        val deviceIdList = multiDeviceFoundAdapter.data.map { it.deviceId } as Array<String>
+        val activity = Intent(this, DeviceAddActivity::class.java)
+        addinfo?.putSerializable("multi_device_list", deviceIdList)
+        activity.putExtra("addInfo", addinfo)
+        startActivity(activity)
     }
 
     override fun initListener() {
@@ -121,7 +126,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
                                 )
                             }
                             emit(nodes)
-                            } catch (ignore: Exception) {
+                        } catch (ignore: Exception) {
                         }
                         delay(3000L)
 
@@ -236,7 +241,14 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
         @SuppressLint("SetTextI18n")
         override fun onTick(millisUntilFinished: Long) {
-            mdf_iv_retry_or_remain_time.setText("搜索剩余 ${(TimeUtils.millis2String(millisUntilFinished,"m:ss"))}s")
+            mdf_iv_retry_or_remain_time.setText(
+                "搜索剩余 ${
+                    (TimeUtils.millis2String(
+                        millisUntilFinished,
+                        "m:ss"
+                    ))
+                }s"
+            )
         }
 
         override fun onFinish() {
