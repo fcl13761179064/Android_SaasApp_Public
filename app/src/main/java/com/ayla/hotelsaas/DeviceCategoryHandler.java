@@ -239,17 +239,19 @@ public class DeviceCategoryHandler {
         addInfo.putInt("cuId", subBean.getSource());
         addInfo.putLong("scopeId", scopeId);
         addInfo.putString("pid", subBean.getPid());
+        addInfo.putString("productName", subBean.getProductName());
+        addInfo.putString("deviceUrl", subBean.getActualIcon());
         if (subBean.getSource() == 0) {
             addInfo.putString("deviceCategory", subBean.getOemModel().get("0"));
         } else {
             addInfo.putString("deviceCategory", subBean.getOemModel().get("1"));
         }
         addInfo.putString("productName", subBean.getProductName());
-        if (addForWaitBundle != null) {
+        if (addForWaitBundle != null) {//带绑定设备
             addInfo.putString("waitBindDeviceId", addForWaitBundle.getString("waitBindDeviceId"));
             addInfo.putString("nickname", addForWaitBundle.getString("nickname"));
         }
-        if (replaceInfoBundle != null) {
+        if (replaceInfoBundle != null) {//替换设备
             addInfo.putString("replaceDeviceId", replaceInfoBundle.getString("replaceDeviceId"));
             addInfo.putString("nickname", replaceInfoBundle.getString("replaceDeviceNickname"));
             addInfo.putString("targetGatewayDeviceId", replaceInfoBundle.getString("targetGatewayDeviceId"));
@@ -262,6 +264,7 @@ public class DeviceCategoryHandler {
         addInfo.putLong("scopeId", scopeId);
         addInfo.putString("pid", subBean.getPid());
         addInfo.putString("productName", subBean.getProductName());
+        addInfo.putString("deviceUrl", subBean.getActualIcon());
         if (addForWaitBundle != null) {
             addInfo.putString("waitBindDeviceId", addForWaitBundle.getString("waitBindDeviceId"));
             addInfo.putString("nickname", addForWaitBundle.getString("nickname"));

@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:center_tv="设备搜索"
+        app:left_iv="@mipmap/icon_back_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,10 +47,10 @@
         android:layout_height="30dp"
         android:layout_marginEnd="20dp"
         android:gravity="center_vertical"
-        android:text="重新搜索"
+        android:text="搜索剩余2:00"
         android:textColor="@color/serch_multi_device_yellow"
         android:textSize="13sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/mdf_tv_loading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/mdf_tv_loading" />
@@ -65,7 +66,7 @@
     <LinearLayout
         android:id="@+id/ll_next_layout"
         android:layout_width="match_parent"
-        android:layout_height="96dp"
+        android:layout_height="118dp"
         android:background="#F2F2F2"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
