@@ -148,6 +148,10 @@
         <activity
             android:name=".ui.CreateProjectActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.DeviceAddGuideActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ProjectListActivity"
             android:launchMode="singleTask"

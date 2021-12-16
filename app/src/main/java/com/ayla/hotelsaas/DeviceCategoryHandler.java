@@ -16,6 +16,7 @@ import com.ayla.hotelsaas.ui.A2GatewayAddGuideActivity;
 import com.ayla.hotelsaas.ui.A2GatewaySelectActivity;
 import com.ayla.hotelsaas.ui.AylaGatewayAddGuideActivity;
 import com.ayla.hotelsaas.ui.CustomToast;
+import com.ayla.hotelsaas.ui.DeviceAddGuideActivity;
 import com.ayla.hotelsaas.ui.GatewaySelectActivity;
 import com.ayla.hotelsaas.ui.HongyanGatewayAddGuideActivity;
 import com.ayla.hotelsaas.utils.TempUtils;
