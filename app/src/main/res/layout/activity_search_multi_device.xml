@@ -37,7 +37,7 @@
         app:layout_goneMarginStart="20dp"
         android:layout_marginStart="5dp"
         android:textSize="13sp"
-        android:textColor="@color/color_3C3C3C"
+        android:textColor="@color/search_page_seach_text"
         android:text="设备搜索中..."
         />
 

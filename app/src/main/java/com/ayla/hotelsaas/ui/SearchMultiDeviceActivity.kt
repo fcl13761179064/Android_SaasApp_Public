@@ -22,6 +22,7 @@ import com.ayla.hotelsaas.common.ResultCode
 import com.ayla.hotelsaas.data.net.RetrofitHelper
 import com.ayla.hotelsaas.utils.RecycleViewDivider
 import com.blankj.utilcode.util.ClickUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.google.gson.JsonObject
 import com.scwang.smart.drawable.ProgressDrawable
@@ -229,7 +230,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
         @SuppressLint("SetTextI18n")
         override fun onTick(millisUntilFinished: Long) {
-            mdf_iv_retry_or_remain_time.setText("${(millisUntilFinished)/1000}s")
+            mdf_iv_retry_or_remain_time.setText("搜索剩余 ${(TimeUtils.millis2String(millisUntilFinished,"m:ss"))}s")
         }
 
         override fun onFinish() {

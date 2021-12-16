@@ -39,6 +39,7 @@
 
     <!--dialog的颜色-->
     <color name="custome_dialog">#333333</color>
+    <color name="search_page_seach_text">#993C3C43</color>
 
     <color name="gray_3">#333333</color>
     <color name="gray_6">#666666</color>
