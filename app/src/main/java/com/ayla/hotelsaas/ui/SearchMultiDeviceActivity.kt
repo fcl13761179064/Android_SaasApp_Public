@@ -14,7 +14,6 @@ import com.ayla.hotelsaas.adapter.MultiDeviceFoundAdapter
 import com.ayla.hotelsaas.api.CoroutineApiService
 import com.ayla.hotelsaas.base.BasicActivity
 import com.ayla.hotelsaas.bean.DeviceListBean
-import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.common.ResultCode
 import com.ayla.hotelsaas.data.net.RetrofitHelper
 import com.ayla.hotelsaas.page.ext.singleClick
@@ -30,7 +29,6 @@ import kotlinx.coroutines.flow.onStart
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.jetbrains.anko.startActivity
 import java.lang.RuntimeException
 
 class SearchMultiDeviceActivity : BasicActivity() {
