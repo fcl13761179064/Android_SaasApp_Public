@@ -2,12 +2,9 @@ package com.ayla.hotelsaas.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayla.base.ext.setInvisible
@@ -16,18 +13,16 @@ import com.ayla.hotelsaas.R
 import com.ayla.hotelsaas.adapter.MultiDeviceFoundAdapter
 import com.ayla.hotelsaas.api.CoroutineApiService
 import com.ayla.hotelsaas.base.BasicActivity
-import com.ayla.hotelsaas.bean.DeviceCategoryBean
-import com.ayla.hotelsaas.bean.DeviceCategoryBean.SubBean.NodeBean
 import com.ayla.hotelsaas.bean.DeviceListBean
+import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.common.ResultCode
 import com.ayla.hotelsaas.data.net.RetrofitHelper
+import com.ayla.hotelsaas.page.ext.singleClick
 import com.ayla.hotelsaas.utils.RecycleViewDivider
 import com.blankj.utilcode.util.ClickUtils
 import com.blankj.utilcode.util.TimeUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.google.gson.JsonObject
 import com.scwang.smart.drawable.ProgressDrawable
-import io.reactivex.internal.operators.flowable.FlowableTimeInterval
 import kotlinx.android.synthetic.main.activity_search_multi_device.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -80,7 +75,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
         multiDeviceFoundAdapter.bindToRecyclerView(mdf_rv_content)
         mdf_rv_content.adapter = multiDeviceFoundAdapter
         multiDeviceFoundAdapter.setEmptyView(R.layout.new_empty_page_status_layout)
-
+        mdf_btn_next.singleClick { toBindPage() }
         mdf_iv_retry_or_remain_time.setOnClickListener() {
             ClickUtils.applySingleDebouncing(it, 500) {
                 startFindDevice()
@@ -88,6 +83,13 @@ class SearchMultiDeviceActivity : BasicActivity() {
         }
         //开始发现设备
         startFindDevice()
+    }
+
+
+    private fun toBindPage() {
+        if(!pollJob.isCancelled) pollJob.cancel()
+        val deviceIdList = multiDeviceFoundAdapter.data.map { it.deviceId }
+        startActivity<DistributionActivity>(intent)
     }
 
     override fun initListener() {
