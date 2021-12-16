@@ -10,6 +10,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ayla.base.ext.setInvisible
 import com.ayla.base.ext.setVisible
 import com.ayla.hotelsaas.R
 import com.ayla.hotelsaas.adapter.MultiDeviceFoundAdapter
@@ -78,7 +79,8 @@ class SearchMultiDeviceActivity : BasicActivity() {
         )
         multiDeviceFoundAdapter.bindToRecyclerView(mdf_rv_content)
         mdf_rv_content.adapter = multiDeviceFoundAdapter
-        multiDeviceFoundAdapter.setEmptyView(R.layout.empty_scene_page)
+        multiDeviceFoundAdapter.setEmptyView(R.layout.new_empty_page_status_layout)
+
         mdf_iv_retry_or_remain_time.setOnClickListener() {
             ClickUtils.applySingleDebouncing(it, 500) {
                 startFindDevice()
@@ -178,10 +180,12 @@ class SearchMultiDeviceActivity : BasicActivity() {
             mdf_iv_loading.setVisible(false)
             mdf_iv_retry_or_remain_time.setText("重新搜索")
             if (multiDeviceFoundAdapter.data.isNullOrEmpty()) {
-                mdf_tv_loading.text = "未搜索到设备"
+                mdf_tv_loading.setVisible(false)
+                mdf_iv_retry_or_remain_time.setInvisible(false)
             }
         }
         if (!multiDeviceFoundAdapter.data.isNullOrEmpty()) {
+            mdf_iv_retry_or_remain_time.setVisible(true)
             countDown.start()
         }
         exitGatewayJoinMode()

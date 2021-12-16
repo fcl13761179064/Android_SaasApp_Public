@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.api
 
 import com.ayla.base.data.protocol.BaseResp
 import com.ayla.hotelsaas.bean.BaseResult
+import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean
 import com.ayla.hotelsaas.bean.DeviceListBean
 import com.ayla.hotelsaas.bean.DeviceListBean.DevicesBean
 import okhttp3.RequestBody
@@ -39,4 +40,14 @@ interface CoroutineApiService {
         @Path("deviceId") deviceId: String,
         @Path("deviceCategory") deviceCategory: String
     ): BaseResp<List<DeviceListBean.DevicesBean>>
+
+
+    /**
+     * 获取各种设备的详情通过deviceId
+     *
+     * @param deviceId      网关dsn
+     * @return
+     */
+    @GET("api/v1/build/device/{deviceId}")
+    fun fetchDeviceDetail(@Path("deviceId") deviceId: String?):BaseResp<DeviceFirmwareVersionBean>
 }

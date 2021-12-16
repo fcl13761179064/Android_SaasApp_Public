@@ -14,6 +14,6 @@ import kotlinx.android.synthetic.main.item_multi_device_found.view.*
 class MultiDeviceFoundAdapter : BaseCardListAdapter<DeviceListBean.DevicesBean, BaseViewHolder>(R.layout.item_multi_device_found){
     override fun convert(holder: BaseViewHolder, item: DeviceListBean.DevicesBean) {
         super.convert(holder, item)
-        holder.itemView.tv_name.text = item.deviceId
+        holder.itemView.tv_device_name.text = item.deviceId
     }
 }
