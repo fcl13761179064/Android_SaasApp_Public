@@ -25,12 +25,15 @@ import com.scwang.smart.drawable.ProgressDrawable
 import kotlinx.android.synthetic.main.activity_search_multi_device.*
 import kotlinx.android.synthetic.main.activity_search_multi_device.mdf_btn_next
 import kotlinx.android.synthetic.main.new_empty_page_status_layout.*
+import kotlinx.android.synthetic.main.new_empty_page_status_layout.view.*
+import kotlinx.android.synthetic.main.test_wifi_fragment.view.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.onStart
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.jetbrains.anko.startActivity
 import java.lang.RuntimeException
 
 class SearchMultiDeviceActivity : BasicActivity() {
@@ -56,6 +59,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
         addinfo?.getString("deviceUrl") ?: ""
 
     }
+
     companion object {
         private const val POLL_REQUEST_TIME_OUT_MILLS = 10000L
         private const val COUNT_DOWN_MILLS = 10000L
@@ -84,16 +88,11 @@ class SearchMultiDeviceActivity : BasicActivity() {
         multiDeviceFoundAdapter.bindToRecyclerView(mdf_rv_content)
         mdf_rv_content.adapter = multiDeviceFoundAdapter
         multiDeviceFoundAdapter.setEmptyView(R.layout.new_empty_page_status_layout)
-        mdf_btn_next.singleClick {
-            if (mdf_btn_next.text.equals("重新搜索")) {
-                ClickUtils.applySingleDebouncing(mdf_btn_next, 500) {
-                    startFindDevice()
-                    mdf_btn_next.setText("下一步")
-                }
-            } else {
-                toBindPage()
-            }
-
+        multiDeviceFoundAdapter.getEmptyView().bt_resert_search.singleClick {
+            startFindDevice()
+        }
+        multiDeviceFoundAdapter.getEmptyView().log_out.singleClick {
+          startActivity<MainActivity>()
         }
         //开始发现设备
         startFindDevice()
@@ -110,6 +109,17 @@ class SearchMultiDeviceActivity : BasicActivity() {
     }
 
     override fun initListener() {
+        mdf_btn_next.singleClick {
+            if (mdf_btn_next.text.equals("重新搜索")) {
+                ClickUtils.applySingleDebouncing(mdf_btn_next, 500) {
+                    startFindDevice()
+                    mdf_btn_next.setText("下一步")
+                }
+            } else {
+                toBindPage()
+            }
+
+        }
     }
 
 
@@ -171,9 +181,9 @@ class SearchMultiDeviceActivity : BasicActivity() {
             suffixTip = ""
             foundDevices
         }
-        for (index in  0 until  result.size){
-            result.get(index).iconUrl=NodeDeviceUrl
-            result.get(index).deviceName=NodeDeviceName
+        for (index in 0 until result.size) {
+            result.get(index).iconUrl = NodeDeviceUrl
+            result.get(index).deviceName = NodeDeviceName
         }
         multiDeviceFoundAdapter.setNewData(result)
         if (result.isNullOrEmpty()) {
@@ -187,7 +197,11 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     private fun doFindDeviceStart() {
         runOnUiThread {
+            multiDeviceFoundAdapter.getEmptyView().cl_layout.setVisible(false)
             mdf_iv_loading.setVisible(true)
+            mdf_iv_retry_or_remain_time.setVisible(true)
+            mdf_tv_loading.setVisible(true)
+            ll_next_layout.setVisible(true)
             remain120countDown.cancel()
             remain120countDown.start()
             countDown.cancel()
@@ -205,12 +219,12 @@ class SearchMultiDeviceActivity : BasicActivity() {
             mdf_iv_loading.setVisible(false)
             if (multiDeviceFoundAdapter.data.isNullOrEmpty()) {
                 mdf_tv_loading.setVisible(false)
-                cl_layout.setVisible(true)
                 mdf_iv_retry_or_remain_time.setInvisible(false)
+                ll_next_layout.setVisible(false)
+                multiDeviceFoundAdapter.getEmptyView().cl_layout.setVisible(true)
             }
         }
         if (!multiDeviceFoundAdapter.data.isNullOrEmpty()) {
-            mdf_iv_retry_or_remain_time.setVisible(true)
             countDown.start()
         }
         exitGatewayJoinMode()
