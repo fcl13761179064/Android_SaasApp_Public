@@ -225,6 +225,13 @@
             android:name=".ui.SearchMultiDeviceActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.MultiDeviceDistributionNetActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.MultiDeviceSettingNameSiteActivity"
+            android:screenOrientation="portrait" />
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
             android:label="dexopt"

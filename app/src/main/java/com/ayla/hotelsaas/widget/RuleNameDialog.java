@@ -1,4 +1,4 @@
-package com.ayla.hotelsaas.ui;
+package com.ayla.hotelsaas.widget;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.ui.SceneIconSelectActivity;
 
 public class RuleNameDialog extends DialogFragment {
 

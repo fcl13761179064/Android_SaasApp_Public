@@ -15,8 +15,8 @@ import com.chad.library.adapter.base.BaseViewHolder
 class SelectRoomAdapter(private val isMultiSelect:Boolean = false) : BaseQuickAdapter<SelectBean<RoomBean>, BaseViewHolder>(
     R.layout.item_multi_device_found){
     override fun convert(holder: BaseViewHolder, item: SelectBean<RoomBean>) {
-        holder.itemView.iv_select.isSelected = item.isSelected
-        holder.itemView.tv_name.text = item.data.roomName
+        /*holder.itemView.iv_select.isSelected = item.isSelected
+        holder.itemView.tv_name.text = item.data.roomName*/
         holder.itemView.setOnClickListener {
             if(isMultiSelect){
                 item.isSelected = !item.isSelected
