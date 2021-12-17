@@ -12,6 +12,7 @@ import com.ayla.hotelsaas.adapter.MultiDeviceFoundAdapter
 import com.ayla.hotelsaas.api.CoroutineApiService
 import com.ayla.hotelsaas.base.BasicActivity
 import com.ayla.hotelsaas.bean.DeviceListBean
+import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.common.ResultCode
 import com.ayla.hotelsaas.data.net.RetrofitHelper
 import com.ayla.hotelsaas.page.ext.setInvisible
@@ -60,6 +61,11 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     }
 
+    private val cloudOemModel by lazy {
+        addinfo?.getString("deviceCategory") ?: ""
+
+    }
+
     companion object {
         private const val POLL_REQUEST_TIME_OUT_MILLS = 10000L
         private const val COUNT_DOWN_MILLS = 10000L
@@ -100,12 +106,13 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
 
     private fun toBindPage() {
-        if (!pollJob.isCancelled) pollJob.cancel()
-        val deviceIdList = multiDeviceFoundAdapter.data.map { it.deviceId } as Array<String>
-        val activity = Intent(this, DeviceAddActivity::class.java)
-        addinfo?.putSerializable("multi_device_list", deviceIdList)
-        activity.putExtra("addInfo", addinfo)
-        startActivity(activity)
+        if(!pollJob.isCancelled) pollJob.cancel()
+        val deviceIdList = multiDeviceFoundAdapter.data.map { it.deviceId }
+        startActivity<MultiDeviceDistributionNetActivity>(
+            Keys.ID to gatewayDeviceId,
+            Keys.DATA to addinfo,
+            Keys.OEMMODEL to  cloudOemModel,
+            Keys.MULTI_DEVICE_IDS to deviceIdList)
     }
 
     override fun initListener() {
@@ -143,7 +150,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
                             val nodes = gatewayDeviceId?.let {
                                 api.fetchCandidateNodes(
                                     it,
-                                    addinfo?.getString("deviceCategory") ?: ""
+                                    cloudOemModel
                                 )
                             }
                             emit(nodes)

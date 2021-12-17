@@ -1,13 +1,23 @@
 package com.ayla.hotelsaas.ui
 
 import android.animation.ValueAnimator
+import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.RotateAnimation
+import carlwu.top.lib_device_add.NodeHelper
 import com.ayla.hotelsaas.R
+import com.ayla.hotelsaas.application.MyApplication
 import com.ayla.hotelsaas.base.BaseMvpActivity
 import com.ayla.hotelsaas.bean.DeviceListBean
+import com.ayla.hotelsaas.common.Constance
+import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.mvp.present.MultiDeviceAddPresenter
 import com.ayla.hotelsaas.mvp.view.MultiDeviceAddView
+import com.ayla.hotelsaas.protocol.MultiBindResultBean
+import com.ayla.hotelsaas.utils.SharePreferenceUtils
+import com.blankj.utilcode.util.ToastUtils
+import kotlinx.android.synthetic.main.activity_multi_device_bind.*
 
 
 /**
@@ -15,13 +25,27 @@ import com.ayla.hotelsaas.mvp.view.MultiDeviceAddView
  */
 class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, MultiDeviceAddPresenter>(), MultiDeviceAddView {
 
+    private var gatewayDeviceId = ""
+    private var cloudModel = ""
+    private lateinit var subNodeBean: Bundle
+
     override fun getLayoutId(): Int {
-        return R.layout.activity_multi_device
+        return R.layout.activity_multi_device_bind
     }
 
     override fun initView() {
-
-
+        gatewayDeviceId = intent.getStringExtra(Keys.ID) ?: ""
+        cloudModel = intent.getStringExtra(Keys.OEMMODEL) ?: ""
+        subNodeBean = intent.getBundleExtra(Keys.DATA) ?: Bundle()
+        Keys.RoomId=subNodeBean.getString("scopeId")?:""
+        val multiDeviceIds = intent.getStringArrayListExtra(Keys.MULTI_DEVICE_IDS)
+        val gatewayCuId = MyApplication.getInstance().devicesBean?.find { it.deviceId == gatewayDeviceId }?.cuId ?: 0
+        multiDeviceIds?.let {
+            mPresenter.multiBindNodeDevice(gatewayCuId,cloudModel,subNodeBean,
+                it
+            )
+        }
+        startRotate(iv_01)
     }
 
     /**
@@ -49,49 +73,26 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
       return  MultiDeviceAddPresenter()
     }
 
-    /**
-     * 节点绑定流程结束
-     */
-    override fun bindSuccess(devicesBean: DeviceListBean.DevicesBean?) {
-
-    }
 
     /**
-     * 节点绑定流程失败
+     * 5.节点绑定流程失败
      *
-     * @param throwable
      */
-    override fun bindFailed(throwable: Throwable?) {
+    override fun multiBindSuccess(data: MutableList<MultiBindResultBean>?) {
+        //startActivity (Keys.DATA to data)
 
     }
 
     /**
-     * 5.绑定节点成功
+     * 4.绑定节点成功
      */
-    override fun step3Finish() {
+    override fun multiBindFailure(errorMsg: String?) {
 
     }
-
-    /**
-     * 5.开始绑定节点
-     */
-    override fun step3Start() {
-
+    private fun toBindFailPage(reason: String = "") {
+        startActivityForResult<DeviceAddFailActivity>(
+            Code.BIND_DEVICE_FAIL_REQUEST_CODE,
+            Keys.NAME to reason
+        )
     }
-
-    /**
-     * 4.候选节点查找成功
-     */
-    override fun step2Finish() {
-        TODO("Not yet implemented")
-    }
-
-    /**
-     * 3.开始查找候选节点
-     */
-    override fun step2Start() {
-
-    }
-
-
 }

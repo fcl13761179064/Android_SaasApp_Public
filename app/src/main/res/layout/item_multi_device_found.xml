@@ -48,4 +48,14 @@
             android:textColor="#ff91909a"
             android:textSize="12sp" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_arrow"
+        android:layout_width="8dp"
+        android:layout_height="14dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="30dp"
+        android:visibility="gone"
+        android:src="@drawable/ic_menu_item_arrow_right" />
 </RelativeLayout>
