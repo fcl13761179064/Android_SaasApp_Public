@@ -18,6 +18,7 @@ import com.ayla.hotelsaas.protocol.MultiBindResultBean
 import com.ayla.hotelsaas.utils.SharePreferenceUtils
 import com.blankj.utilcode.util.ToastUtils
 import kotlinx.android.synthetic.main.activity_multi_device_bind.*
+import org.jetbrains.anko.startActivity
 
 
 /**
@@ -79,7 +80,7 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
      *
      */
     override fun multiBindSuccess(data: MutableList<MultiBindResultBean>?) {
-        //startActivity (Keys.DATA to data)
+      startActivity<MultiDeviceSettingNameSiteActivity> ()
 
     }
 
@@ -90,9 +91,6 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
 
     }
     private fun toBindFailPage(reason: String = "") {
-        startActivityForResult<DeviceAddFailActivity>(
-            Code.BIND_DEVICE_FAIL_REQUEST_CODE,
-            Keys.NAME to reason
-        )
+
     }
 }
