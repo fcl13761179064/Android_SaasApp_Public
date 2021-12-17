@@ -11,6 +11,7 @@ import com.ayla.hotelsaas.adapter.SelectRoomAdapter
 import com.ayla.hotelsaas.api.CommonApi
 import com.ayla.hotelsaas.base.BasicActivity
 import com.ayla.hotelsaas.bean.DeviceListBean
+import com.ayla.hotelsaas.bean.DeviceLocationBean
 import com.ayla.hotelsaas.bean.PurposeCategoryBean
 import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.data.net.RetrofitHelper
@@ -37,7 +38,7 @@ class MultiDeviceSettingNameSiteActivity : BasicActivity() {
     private val adapter = SelectRoomAdapter()
     private val api = RetrofitHelper.getRetrofit().create(CommonApi::class.java)
     private var deviceId = ""
-
+    private var deviceListBean: List<DeviceLocationBean>? = null
     override fun onResume() {
         super.onResume()
         getRoomData()
@@ -50,7 +51,7 @@ class MultiDeviceSettingNameSiteActivity : BasicActivity() {
 
     override fun initView() {
         deviceId = intent.getStringExtra(Keys.ID) ?: ""
-        // deviceSubBean = intent.getParcelableExtra(Keys.DATA)!!
+        deviceListBean = intent.getParcelableExtra(Keys.DATA) as List<DeviceLocationBean>?
         mdf_rv_content.layoutManager = LinearLayoutManager(this)
         mdf_rv_content.adapter = adapter
         adapter.setEmptyView(R.layout.new_empty_page_status_layout)
@@ -85,7 +86,7 @@ class MultiDeviceSettingNameSiteActivity : BasicActivity() {
                     override fun onPositionDone() {
                         MultiDevicePisiteDialog.newInstance()
                             .setTitle("控制设备")
-                            .setData(List<String>())
+                            .setData(null)
                             .setDefaultIndex(1)
                             .setCallback(object :
                                 MultiDevicePisiteDialog.Callback<PurposeCategoryBean> {
