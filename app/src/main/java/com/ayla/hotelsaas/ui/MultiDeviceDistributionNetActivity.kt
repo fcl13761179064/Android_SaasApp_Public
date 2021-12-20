@@ -84,6 +84,7 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
      *
      */
     override fun multiBindSuccess(data: MultiBindResp) {
+        Log.d("2323232",data.toString())
         startActivity<MultiDeviceSettingNameSiteActivity>(Keys.NODEDATA to data,Keys.DATA to subNodeBean)
     }
 
@@ -92,7 +93,7 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
      *
      */
     override fun multiBindFailure(errorMsg: String?) {
-       // toBindFailPage()
+      toBindFailPage()
     }
     private fun toBindFailPage() {
         startActivity<MultiDeviceDistributionFailActivity>()
