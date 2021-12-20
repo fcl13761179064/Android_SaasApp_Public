@@ -1,7 +1,7 @@
 package com.ayla.hotelsaas.page.ext
 
 import android.view.View
-import com.ayla.base.data.protocol.BaseResp
+import com.ayla.hotelsaas.protocol.BaseResp
 import com.blankj.utilcode.util.*
 
 

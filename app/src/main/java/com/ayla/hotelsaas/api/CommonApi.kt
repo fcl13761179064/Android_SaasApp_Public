@@ -1,9 +1,8 @@
 package com.ayla.hotelsaas.api
 
 
-import com.ayla.base.data.protocol.BaseResp
 import com.ayla.hotelsaas.bean.RoomBean
-import com.ayla.hotelsaas.common.Keys
+import com.ayla.hotelsaas.protocol.BaseResp
 import com.ayla.hotelsaas.protocol.MultiBindResp
 import okhttp3.RequestBody
 import retrofit2.http.*

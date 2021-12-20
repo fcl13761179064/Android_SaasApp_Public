@@ -1,9 +1,9 @@
 package com.ayla.hotelsaas.rx
 
-import com.ayla.base.data.protocol.BaseResp
 import com.ayla.base.rx.BaseException
 import com.ayla.hotelsaas.common.ResultCode
 import com.ayla.hotelsaas.page.ext.isLoginExpire
+import com.ayla.hotelsaas.protocol.BaseResp
 import rx.Observable
 import rx.functions.Func1
 

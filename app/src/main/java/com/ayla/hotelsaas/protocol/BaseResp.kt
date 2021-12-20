@@ -1,4 +1,4 @@
-package com.ayla.base.data.protocol
+package com.ayla.hotelsaas.protocol
 
 /*
     基础响应对象
