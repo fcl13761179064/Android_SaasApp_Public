@@ -26,12 +26,12 @@ interface CommonApi {
      * 获取房间列表
      */
     @GET("/api/v1/build/device/transfer/roomlist")
-    fun getExistRoom(@Path("homeId") homeId: String = Keys.RoomId): Observable<BaseResp<ArrayList<RoomBean>>>
+    fun getExistRoom(@Path("homeId") homeId: String): Observable<BaseResp<ArrayList<RoomBean>>>
 
     /**
-     * 添加设备到房间
+     * 批量添加设备到区域位置里
      */
-    @POST("/api/v1/miya/room/addRoomDevice")
+    @PUT("/api/v1/build/device/info/batch")
     fun addDevicesForRoom(@Body body: RequestBody): Observable<BaseResp<Any>>
 
 }

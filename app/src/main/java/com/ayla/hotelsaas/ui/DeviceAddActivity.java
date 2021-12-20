@@ -145,7 +145,7 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
                     addInfo.getString("HYdeviceName"),
                     waitBindDeviceId,
                     replaceDeviceId);
-        } else if (networkType == 2) {//顺舟网关
+        } else if (networkType == 2) {//顺舟网关bindSuccess
             mPresenter.bindAylaGateway(
                     addInfo.getString("deviceId"),
                     cuId,

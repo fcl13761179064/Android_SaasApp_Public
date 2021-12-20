@@ -14,6 +14,7 @@ import com.ayla.hotelsaas.common.Constance
 import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.mvp.present.MultiDeviceAddPresenter
 import com.ayla.hotelsaas.mvp.view.MultiDeviceAddView
+import com.ayla.hotelsaas.protocol.MultiBindResp
 import com.ayla.hotelsaas.protocol.MultiBindResultBean
 import com.ayla.hotelsaas.utils.SharePreferenceUtils
 import com.blankj.utilcode.util.ToastUtils
@@ -79,9 +80,8 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
      * 5.节点绑定流程失败
      *
      */
-    override fun multiBindSuccess(data: MutableList<MultiBindResultBean>?) {
+    override fun multiBindSuccess(data: MultiBindResp) {
       startActivity<MultiDeviceSettingNameSiteActivity> ()
-
     }
 
     /**

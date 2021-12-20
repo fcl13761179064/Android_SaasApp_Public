@@ -21,7 +21,6 @@
         android:id="@+id/mdf_rv_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/ll_next_layout"
         app:layout_constraintTop_toBottomOf="@id/appbar"
         tools:listitem="@layout/item_multi_device_found" />
 
@@ -31,7 +30,6 @@
         android:layout_height="118dp"
         android:background="@color/white"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mdf_rv_content">
@@ -47,6 +45,7 @@
             android:layout_marginRight="13dp"
             android:enabled="true"
             android:text="@string/common_next"
+            android:layout_gravity="bottom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
     </LinearLayout>

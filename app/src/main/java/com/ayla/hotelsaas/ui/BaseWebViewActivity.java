@@ -43,7 +43,6 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
                 Log.d(TAG, "onReceivedError1: " + errorCode + description);
-                hasError = true;
             }
 
             @Override
@@ -51,7 +50,6 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onReceivedError(view, request, error);
                 int errorCode = error.getErrorCode();
                 Log.d(TAG, "onReceivedError2: " + errorCode + error.getDescription());
-                hasError = true;
             }
 
             @Override

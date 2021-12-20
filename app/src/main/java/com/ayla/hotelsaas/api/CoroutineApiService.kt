@@ -5,11 +5,11 @@ import com.ayla.hotelsaas.bean.BaseResult
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean
 import com.ayla.hotelsaas.bean.DeviceListBean
 import com.ayla.hotelsaas.bean.DeviceListBean.DevicesBean
-import com.ayla.hotelsaas.bean.RoomBean
-import com.ayla.hotelsaas.common.Keys
-import com.ayla.hotelsaas.protocol.MultiBindResp
 import okhttp3.RequestBody
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.PUT
+import retrofit2.http.Path
 import rx.Observable
 
 /**
@@ -41,4 +41,13 @@ interface CoroutineApiService {
         @Path("deviceCategory") deviceCategory: String
     ): BaseResp<List<DeviceListBean.DevicesBean>>
 
+
+    /**
+     * 获取各种设备的详情通过deviceId
+     *
+     * @param deviceId      网关dsn
+     * @return
+     */
+    @GET("api/v1/build/device/{deviceId}")
+    fun fetchDeviceDetail(@Path("deviceId") deviceId: String?):BaseResp<DeviceFirmwareVersionBean>
 }

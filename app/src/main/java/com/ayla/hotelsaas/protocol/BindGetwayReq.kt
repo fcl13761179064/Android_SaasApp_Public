@@ -6,7 +6,7 @@ package com.ayla.hotelsaas.protocol
 data class BindGetwayReq(
     val deviceId: String,
     val cuId: Int,
-    val scopeId: String,
+    val scopeId: Long,
     val scopeType: Int,
     val deviceCategory: String,
     val deviceName: String,
