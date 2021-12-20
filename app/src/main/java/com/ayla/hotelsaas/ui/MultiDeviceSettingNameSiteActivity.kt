@@ -2,7 +2,6 @@ package com.ayla.hotelsaas.ui
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
@@ -11,20 +10,23 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.ayla.hotelsaas.R
 import com.ayla.hotelsaas.adapter.SelectRoomAdapter
-import com.ayla.hotelsaas.api.CommonApi
-import com.ayla.hotelsaas.base.BasicActivity
+import com.ayla.hotelsaas.base.BaseMvpActivity
 import com.ayla.hotelsaas.bean.DeviceListBean
 import com.ayla.hotelsaas.bean.DeviceLocationBean
 import com.ayla.hotelsaas.bean.PurposeCategoryBean
 import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.data.net.RetrofitHelper
-import com.ayla.hotelsaas.protocol.MultiBindResp
+import com.ayla.hotelsaas.mvp.present.DeviceAddSuccessPresenter
+import com.ayla.hotelsaas.mvp.present.MultiSignleRenamePresenter
+import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView
+import com.ayla.hotelsaas.mvp.view.MultiSinaleRenameView
 import com.ayla.hotelsaas.widget.MultiDevicePisiteDialog
 import com.ayla.hotelsaas.widget.MultiDeviceRenameOrPositeMethodDialog
 import com.ayla.hotelsaas.widget.RuleNameDialog
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import kotlinx.android.synthetic.main.activity_device_setting.*
+import org.jetbrains.anko.startActivity
 
 /**
  * @ClassName:  DeviceSettingActivity
@@ -32,11 +34,13 @@ import kotlinx.android.synthetic.main.activity_device_setting.*
  * @Author: vi1zen
  * @CreateDate: 2020/10/9 10:25
  */
-class MultiDeviceSettingNameSiteActivity : BasicActivity() {
+class MultiDeviceSettingNameSiteActivity :
+    BaseMvpActivity<MultiSinaleRenameView, MultiSignleRenamePresenter>(), MultiSinaleRenameView {
 
     private val adapter = SelectRoomAdapter()
-    private val api = RetrofitHelper.getRetrofit().create(CommonApi::class.java)
-    private var deviceListBean: MultiBindResp? = null
+    private val api = RetrofitHelper.getApiService()
+    private var deviceListBean: List<DeviceListBean.DevicesBean>? = null
+    private var scopeId: Long = -1L
     private lateinit var subNodeBean: Bundle
     override fun onResume() {
         super.onResume()
@@ -49,8 +53,10 @@ class MultiDeviceSettingNameSiteActivity : BasicActivity() {
 
 
     override fun initView() {
-        deviceListBean = intent.getParcelableExtra<MultiBindResp>(Keys.NODEDATA)
+        deviceListBean =
+            intent.getSerializableExtra(Keys.NODEDATA) as List<DeviceListBean.DevicesBean>
         subNodeBean = intent.getBundleExtra(Keys.DATA) ?: Bundle()
+        scopeId = (subNodeBean.get("scopeId") ?: -1L) as Long
         mdf_rv_content.layoutManager = LinearLayoutManager(this)
         mdf_rv_content.adapter = adapter
         adapter.bindToRecyclerView(mdf_rv_content)
@@ -69,66 +75,78 @@ class MultiDeviceSettingNameSiteActivity : BasicActivity() {
             }
         })
         adapter.setEmptyView(R.layout.new_empty_page_status_layout)
-        deviceListBean?.success?.let { adapter.addData(it) }
-        mdf_btn_next.setOnClickListener { setNameOrPosition() }
-        adapter.setOnItemChildClickListener(object : BaseQuickAdapter.OnItemChildClickListener {
-            override fun onItemChildClick(
-                adapter: BaseQuickAdapter<*, *>,
-                view: View?,
-                position: Int
-            ) {
+        deviceListBean?.let { adapter.addData(it) }
+
+    }
+
+
+    override fun initListener() {
+        adapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
+
+            override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View?, position: Int) {
                 val devicesBean = adapter.getItem(position) as (DeviceListBean.DevicesBean)
                 MultiDeviceRenameOrPositeMethodDialog.newInstance(object :
                     MultiDeviceRenameOrPositeMethodDialog.DoneCallback {
-                    override fun onNameDone() {
-                        RuleNameDialog.newInstance(object :
-                            RuleNameDialog.DoneCallback {
+                    override fun onNameDone(name: String) {
+                        RuleNameDialog.newInstance(object : RuleNameDialog.DoneCallback {
                             override fun onDone(
                                 dialog: DialogFragment?,
-                                txt: String?,
-                                empty_notice: TextView?
-                            ) {
-
+                                txt: String,
+                                empty_notice: TextView?) {
+                                mPresenter.deviceRenameMethod(deviceListBean?.get(position)?.deviceId ,txt
+                                )
                             }
+                             override fun onCancel(dialog: DialogFragment?) {
 
-                            override fun onCancel(dialog: DialogFragment?) {
                             }
 
                         }).setEditValue(devicesBean.deviceName).setTitle("填写名称")
                             .show(supportFragmentManager, "setting_name")
                     }
 
-                    override fun onPositionDone() {
-                        MultiDevicePisiteDialog.newInstance()
-                            .setTitle("控制设备")
-                            .setData(null)
-                            .setDefaultIndex(1)
-                            .setCallback(object :
-                                MultiDevicePisiteDialog.Callback<PurposeCategoryBean> {
-                                override fun onCallback(s: PurposeCategoryBean) {
-
-                                }
-
-                            }).show(supportFragmentManager, "positionDialog")
+                    override fun onPositionDone(s: String) {
+                        mPresenter.getAllDeviceLocation(scopeId)
                     }
 
-                }).show(supportFragmentManager, "setting_name_position")
-
+                }).setTitle(deviceListBean?.get(position)?.deviceName).setPositionSite(deviceListBean?.get(position)?.pointName).show(supportFragmentManager, "setting_name_position")
             }
 
         })
-    }
 
-    private fun setNameOrPosition() {
-
-    }
-
-    override fun initListener() {
+        mdf_btn_next.setOnClickListener(View.OnClickListener {
+            startActivity<MainActivity>()
+        })
 
     }
 
 
     private fun getRoomData() {
 
+    }
+
+    override fun initPresenter(): MultiSignleRenamePresenter {
+        return MultiSignleRenamePresenter()
+    }
+
+    override fun renameSuccess(nickName: String?) {
+        CustomToast.makeText(this, "重命名成功", R.drawable.ic_success)
+    }
+
+    override fun renameFailed(throwable: Throwable?) {
+        CustomToast.makeText(this, "重命名失败", R.drawable.ic_success)
+    }
+
+    override fun loadDeviceLocationSuccess(deviceListBean: MutableList<DeviceLocationBean>?) {//位置
+        MultiDevicePisiteDialog.newInstance()
+            .setTitle("控制设备")
+            .setData(deviceListBean)
+            .setDefaultIndex(1)
+            .setCallback(object :
+                MultiDevicePisiteDialog.Callback<PurposeCategoryBean> {
+                override fun onCallback(s: PurposeCategoryBean) {
+
+                }
+
+            }).show(supportFragmentManager, "positionDialog")
     }
 }

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.CheckableSupport;
+import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.databinding.DialogMultiDevicePositeSetBinding;
 import com.ayla.hotelsaas.databinding.LayoutItemPickDialogBinding;
 import com.blankj.utilcode.util.SizeUtils;
@@ -68,7 +69,19 @@ public class MultiDevicePisiteDialog extends DialogFragment {
             }
             supports.add(support);
         }
-        esss adapter = new esss(R.layout.activity_multi_device_bind, supports);
+        binding.rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int size = SizeUtils.dp2px(10);
+                int position = parent.getChildAdapterPosition(view);
+
+                outRect.set(0, (position == 0) ? size : 0, 0, size);
+            }
+        });
+        esss adapter = new esss(R.layout.dialog_multi_device_select_rename_method, supports);
+        adapter.bindToRecyclerView(binding.rv);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -78,7 +91,9 @@ public class MultiDevicePisiteDialog extends DialogFragment {
                 }
             }
         });
+
         binding.rv.setAdapter(adapter);
+        adapter.setEmptyView(R.layout.empty_hongyan_device);
         binding.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -131,7 +146,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
 
         @Override
         protected void convert(BaseViewHolder helper, CheckableSupport item) {
-            helper.setText(R.id.tv, item.getData().toString());
+            helper.setText(R.id.tv, ((DeviceLocationBean) item.getData()).getRegionName());
             helper.setVisible(R.id.iv, item.isChecked());
         }
     }

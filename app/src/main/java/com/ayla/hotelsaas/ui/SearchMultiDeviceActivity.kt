@@ -98,7 +98,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
             startFindDevice()
         }
         multiDeviceFoundAdapter.getEmptyView().log_out.singleClick {
-          startActivity<MainActivity>()
+            startActivity<MainActivity>()
         }
         //开始发现设备
         startFindDevice()
@@ -106,22 +106,21 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
 
     private fun toBindPage() {
-        if(!pollJob.isCancelled) pollJob.cancel()
+        if (!pollJob.isCancelled) pollJob.cancel()
         val deviceIdList = multiDeviceFoundAdapter.data.map { it.deviceId }
         startActivity<MultiDeviceDistributionNetActivity>(
             Keys.ID to gatewayDeviceId,
             Keys.DATA to addinfo,
-            Keys.OEMMODEL to  cloudOemModel,
-            Keys.MULTI_DEVICE_IDS to deviceIdList)
+            Keys.OEMMODEL to cloudOemModel,
+            Keys.MULTI_DEVICE_IDS to deviceIdList
+        )
     }
 
     override fun initListener() {
         mdf_btn_next.singleClick {
             if (mdf_btn_next.text.equals("重新搜索")) {
-                ClickUtils.applySingleDebouncing(mdf_btn_next, 500) {
-                    startFindDevice()
-                    mdf_btn_next.setText("下一步")
-                }
+                startFindDevice()
+                mdf_btn_next.setText("下一步")
             } else {
                 toBindPage()
             }

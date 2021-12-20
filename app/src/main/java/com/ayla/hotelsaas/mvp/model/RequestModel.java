@@ -648,6 +648,35 @@ public class RequestModel {
     }
 
     /**
+     * 设置重新命名
+     *
+     * @return
+     */
+    public Observable<Boolean> deviceSigleRename(String deviceId, String nickName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("nickName", nickName);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().deviceRename(deviceId, body111)
+                .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                });
+    }
+
+    /**
+     * 设置设备位置
+     * @return
+     */
+    public Observable<Boolean> devicePositionSite(String deviceId, String pointName, long regionId, String regionName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("pointName", pointName);
+        jsonObject.addProperty("regionId", regionId);
+        jsonObject.addProperty("regionName", regionName);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().deviceRename(deviceId, body111)
+                .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                });
+    }
+
+    /**
      * 设置设备属性的别名
      *
      * @param nickNameId

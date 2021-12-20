@@ -105,6 +105,7 @@ public class RuleNameDialog extends DialogFragment {
                 String msg = editText.getText().toString();
                 if (doneCallback != null) {
                     doneCallback.onDone(RuleNameDialog.this, msg, empty_notice);
+                    dismissAllowingStateLoss();
                 }
             }
         });

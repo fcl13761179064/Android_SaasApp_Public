@@ -3,15 +3,12 @@ package com.ayla.hotelsaas.widget;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,10 +28,15 @@ public class MultiDeviceRenameOrPositeMethodDialog extends DialogFragment {
     }
 
 
-    private String title;
+    private String positionSite;
+    private String tv_rename_name;
 
-    public MultiDeviceRenameOrPositeMethodDialog setTitle(String title) {
-        this.title = title;
+    public MultiDeviceRenameOrPositeMethodDialog setPositionSite(String positionSite) {
+        this.positionSite = positionSite;
+        return this;
+    }
+    public MultiDeviceRenameOrPositeMethodDialog setTitle(String tv_rename_name) {
+        this.tv_rename_name = tv_rename_name;
         return this;
     }
 
@@ -62,12 +64,16 @@ public class MultiDeviceRenameOrPositeMethodDialog extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+       TextView tv_name= view.findViewById(R.id.tv_rename_name);
+       TextView tv_position= view.findViewById(R.id.tv_position_name);
+       tv_name.setText(tv_rename_name);
+        tv_position.setText(positionSite);
 
         view.findViewById(R.id.rl_name).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (doneCallback != null) {
-                    doneCallback.onNameDone();
+                    doneCallback.onNameDone(tv_name.getText().toString());
                     dismissAllowingStateLoss();
                 }
             }
@@ -77,7 +83,7 @@ public class MultiDeviceRenameOrPositeMethodDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (doneCallback != null) {
-                    doneCallback.onNameDone();
+                    doneCallback.onPositionDone(tv_position.getText().toString());
                     dismissAllowingStateLoss();
                 }
             }
@@ -91,7 +97,7 @@ public class MultiDeviceRenameOrPositeMethodDialog extends DialogFragment {
     }
 
     public interface DoneCallback {
-        void onNameDone();
-        void onPositionDone();
+        void onNameDone(String name);
+        void onPositionDone(String postion);
     }
 }

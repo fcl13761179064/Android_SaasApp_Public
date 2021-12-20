@@ -23,6 +23,8 @@ import com.blankj.utilcode.util.ToastUtils
 import kotlinx.android.synthetic.main.activity_multi_device_bind.*
 import kotlinx.android.synthetic.main.new_empty_page_status_layout.view.*
 import org.jetbrains.anko.startActivity
+import kotlin.collections.MutableList as MutableList1
+import kotlin.collections.mutableListOf as mutableListOf1
 
 
 /**
@@ -84,7 +86,16 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
      *
      */
     override fun multiBindSuccess(data: MultiBindResp) {
-        startActivity<MultiDeviceSettingNameSiteActivity>(Keys.NODEDATA to data,Keys.DATA to subNodeBean)
+     val deviceList = ArrayList<DeviceListBean.DevicesBean>()
+        for ((index,e) in data.success.withIndex()){
+            val devicesBean = DeviceListBean.DevicesBean()
+            devicesBean.deviceId=e
+            devicesBean.iconUrl=(subNodeBean.get("deviceUrl") ?: "") as String
+            devicesBean.deviceName= (subNodeBean.get("productName") ?: "") as String
+            deviceList.add(devicesBean)
+        }
+
+        startActivity<MultiDeviceSettingNameSiteActivity>(Keys.NODEDATA to deviceList,Keys.DATA to subNodeBean)
     }
 
     /**
