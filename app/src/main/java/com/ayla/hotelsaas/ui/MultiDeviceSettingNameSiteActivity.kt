@@ -49,8 +49,8 @@ class MultiDeviceSettingNameSiteActivity : BasicActivity() {
 
 
     override fun initView() {
-        deviceListBean = intent.getParcelableArrayExtra(Keys.DATA) as MultiBindResp?
-        subNodeBean = intent.getBundleExtra(Keys.ADDINFO) ?: Bundle()
+        deviceListBean = intent.getParcelableArrayExtra(Keys.NODEDATA) as MultiBindResp?
+        subNodeBean = intent.getBundleExtra(Keys.DATA) ?: Bundle()
         mdf_rv_content.layoutManager = LinearLayoutManager(this)
         mdf_rv_content.adapter = adapter
         adapter.bindToRecyclerView(mdf_rv_content)
