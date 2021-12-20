@@ -80,7 +80,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
                 outRect.set(0, (position == 0) ? size : 0, 0, size);
             }
         });
-        esss adapter = new esss(R.layout.dialog_multi_device_select_rename_method, supports);
+        esss adapter = new esss(R.layout.item_scene_setting_function_datum_set, supports);
         adapter.bindToRecyclerView(binding.rv);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -146,8 +146,8 @@ public class MultiDevicePisiteDialog extends DialogFragment {
 
         @Override
         protected void convert(BaseViewHolder helper, CheckableSupport item) {
-            helper.setText(R.id.tv, ((DeviceLocationBean) item.getData()).getRegionName());
-            helper.setVisible(R.id.iv, item.isChecked());
+            helper.setText(R.id.tv_function_name, ((DeviceLocationBean) item.getData()).getRegionName());
+            helper.setVisible(R.id.cb_function_checked, item.isChecked());
         }
     }
 
