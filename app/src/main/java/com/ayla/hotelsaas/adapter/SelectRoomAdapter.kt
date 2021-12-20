@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.item_multi_device_found.view.*
 class SelectRoomAdapter(private val isMultiSelect:Boolean = false) : BaseQuickAdapter<DeviceListBean.DevicesBean, BaseViewHolder>(
     R.layout.item_multi_device_found){
     override fun convert(holder: BaseViewHolder, item: DeviceListBean.DevicesBean) {
+        holder.itemView.cb_function_checked.setVisible(false)
         holder.itemView.iv_arrow.setVisible(true)
         holder.itemView.tv_device_name.text = item.deviceName
         holder.itemView.tv_device_id.text = item.deviceId

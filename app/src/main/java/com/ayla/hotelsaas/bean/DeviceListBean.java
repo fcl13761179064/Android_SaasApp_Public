@@ -92,6 +92,15 @@ public class DeviceListBean {
         private long regionId;
         private String domain;//跳转到单控页面h5时用，这个是域名
         private String h5Url;//跳转到单控页面h5时用，这个是url
+        private boolean isSelectDevice;//是否选中设备
+
+        public boolean isSelectDevice() {
+            return isSelectDevice;
+        }
+
+        public void setSelectDevice(boolean selectDevice) {
+            isSelectDevice = selectDevice;
+        }
 
         public String getH5Url() {
             return h5Url;

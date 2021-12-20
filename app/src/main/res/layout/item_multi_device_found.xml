@@ -25,6 +25,7 @@
         android:layout_marginLeft="@dimen/dp_16"
         android:layout_toRightOf="@+id/device_left_iv"
         android:orientation="vertical"
+        android:layout_toLeftOf="@+id/cb_function_checked"
         android:visibility="visible">
 
         <TextView
@@ -58,4 +59,17 @@
         android:layout_marginRight="30dp"
         android:visibility="gone"
         android:src="@drawable/ic_menu_item_arrow_right" />
+
+    <CheckBox
+        android:id="@+id/cb_function_checked"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="30dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/scene_signle_model_seletor"
+        android:button="@null"
+        android:layout_marginRight="15dp"
+        android:checked="true"
+        android:drawable="@null" />
 </RelativeLayout>

@@ -92,6 +92,7 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
             devicesBean.deviceId=e
             devicesBean.iconUrl=(subNodeBean.get("deviceUrl") ?: "") as String
             devicesBean.deviceName= (subNodeBean.get("productName") ?: "") as String
+            devicesBean.isSelectDevice=true
             deviceList.add(devicesBean)
         }
 

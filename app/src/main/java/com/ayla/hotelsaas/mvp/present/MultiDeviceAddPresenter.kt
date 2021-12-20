@@ -56,8 +56,6 @@ class MultiDeviceAddPresenter : BasePresenter<MultiDeviceAddView?>() {
                     return@flatMap Observable.just(bindResult)
                 }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { mView!!.showProgress() }
-                .doFinally { mView!!.hideProgress() }
                 .subscribe({ a2BindInfoBean -> mView?.multiBindSuccess(a2BindInfoBean.data) }
                 ) { throwable -> mView?.multiBindFailure(throwable.message) }
         addSubscrebe(subscribe)

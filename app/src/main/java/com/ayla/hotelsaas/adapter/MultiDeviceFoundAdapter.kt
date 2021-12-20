@@ -23,5 +23,6 @@ class MultiDeviceFoundAdapter : BaseCardListAdapter<DeviceListBean.DevicesBean, 
         )
         holder.itemView.tv_device_name.text = item.deviceName
         holder.itemView.tv_device_id.text = item.deviceId
+        holder.itemView.cb_function_checked.isChecked = item.isSelectDevice
     }
 }

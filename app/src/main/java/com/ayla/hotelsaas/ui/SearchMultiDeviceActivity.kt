@@ -21,6 +21,7 @@ import com.ayla.hotelsaas.page.ext.singleClick
 import com.ayla.hotelsaas.utils.RecycleViewDivider
 import com.blankj.utilcode.util.ClickUtils
 import com.blankj.utilcode.util.TimeUtils
+import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.gson.JsonObject
 import com.scwang.smart.drawable.ProgressDrawable
 import kotlinx.android.synthetic.main.activity_search_multi_device.*
@@ -116,6 +117,11 @@ class SearchMultiDeviceActivity : BasicActivity() {
     }
 
     override fun initListener() {
+        multiDeviceFoundAdapter.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener{adapter, view, position ->
+         val deviceBean = adapter.data.get(position) as DeviceListBean.DevicesBean
+           deviceBean.isSelectDevice =!deviceBean.isSelectDevice
+            multiDeviceFoundAdapter.notifyItemChanged(position)
+        })
         mdf_btn_next.singleClick {
             if (mdf_btn_next.text.equals("重新搜索")) {
                 startFindDevice()
@@ -189,6 +195,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
         for (index in 0 until result.size) {
             result.get(index).iconUrl = NodeDeviceUrl
             result.get(index).deviceName = NodeDeviceName
+            result.get(index).isSelectDevice = true
         }
         multiDeviceFoundAdapter.setNewData(result)
         if (result.isNullOrEmpty()) {
