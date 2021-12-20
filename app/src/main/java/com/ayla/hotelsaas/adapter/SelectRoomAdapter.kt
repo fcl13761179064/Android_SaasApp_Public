@@ -3,6 +3,7 @@ package com.ayla.hotelsaas.adapter
 import com.ayla.hotelsaas.R
 import com.ayla.hotelsaas.bean.RoomBean
 import com.ayla.hotelsaas.bean.SelectBean
+import com.ayla.hotelsaas.protocol.MultiBindResp
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 
@@ -12,9 +13,9 @@ import com.chad.library.adapter.base.BaseViewHolder
  * @Author: vi1zen
  * @CreateDate: 2020/10/13 14:41
  */
-class SelectRoomAdapter(private val isMultiSelect:Boolean = false) : BaseQuickAdapter<SelectBean<RoomBean>, BaseViewHolder>(
+class SelectRoomAdapter(private val isMultiSelect:Boolean = false) : BaseQuickAdapter<MultiBindResp, BaseViewHolder>(
     R.layout.item_multi_device_found){
-    override fun convert(holder: BaseViewHolder, item: SelectBean<RoomBean>) {
+    override fun convert(holder: BaseViewHolder, item: MultiBindResp) {
         /*holder.itemView.iv_select.isSelected = item.isSelected
         holder.itemView.tv_name.text = item.data.roomName*/
         holder.itemView.setOnClickListener {

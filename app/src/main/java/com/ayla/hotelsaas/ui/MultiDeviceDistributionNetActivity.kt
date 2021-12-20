@@ -84,7 +84,6 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
      *
      */
     override fun multiBindSuccess(data: MultiBindResp) {
-        Log.d("2323232",data.toString())
         startActivity<MultiDeviceSettingNameSiteActivity>(Keys.NODEDATA to data,Keys.DATA to subNodeBean)
     }
 
