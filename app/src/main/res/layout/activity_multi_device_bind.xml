@@ -9,71 +9,65 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:center_tv="添加设备"
-        app:left_iv="@mipmap/icon_back_black"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        app:left_iv="@mipmap/icon_back_black" />
+
 
     <FrameLayout
         android:id="@+id/fl_anim_loading"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        app:layout_constraintTop_toBottomOf="@id/appBar"
+        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toTopOf="@id/tv_bind_progress"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
         app:layout_constraintVertical_bias="0.15"
-        android:backgroundTint="@color/white">
+        app:layout_constraintVertical_chainStyle="packed">
 
-    <ImageView
-        android:id="@+id/iv_01"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_centerHorizontal="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@mipmap/multi_node_device_rota_img"
-        app:layout_constraintTop_toBottomOf="@+id/appBar"/>
+        <ImageView
+            android:id="@+id/iv_01"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/multi_node_device_rota_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBar" />
 
-    <TextView
-        android:id="@+id/tv_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/iv_01"
-        android:layout_alignBottom="@id/iv_01"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:text="配网中"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBar"/>
+        <TextView
+            android:id="@+id/tv_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_01"
+            android:layout_alignBottom="@id/iv_01"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="配网中"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBar" />
     </FrameLayout>
 
     <TextView
         android:id="@+id/tv_bind_progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fl_anim_loading"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_gravity="center"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
         android:gravity="center"
         android:lineSpacingExtra="5dp"
         android:text="设备配置网络中，请稍候…"
         android:textColor="#000000"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fl_anim_loading" />
 
-    <include
-        android:id="@+id/empty_pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        layout="@layout/new_empty_page_status_layout"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

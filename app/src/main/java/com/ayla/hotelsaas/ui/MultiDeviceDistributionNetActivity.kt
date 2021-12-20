@@ -80,28 +80,21 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
 
 
     /**
-     * 5.节点绑定流程失败
+     * 4.绑定节点成功
      *
      */
     override fun multiBindSuccess(data: MultiBindResp) {
-        startActivity<MultiDeviceSettingNameSiteActivity>(Keys.DATA to data,Keys.ADDINFO to subNodeBean)
+        startActivity<MultiDeviceSettingNameSiteActivity>()
     }
 
     /**
-     * 4.绑定节点成功
+     *  5.节点绑定流程失败
+     *
      */
     override fun multiBindFailure(errorMsg: String?) {
         toBindFailPage()
     }
     private fun toBindFailPage() {
-        empty_pager.setVisible(true)
-        empty_pager.cl_layout.setVisible(true)
-        empty_pager.bt_resert_search.setOnClickListener(View.OnClickListener {
-          startActivity<DeviceAddGuideActivity>()
-        })
-
-        empty_pager.log_out.setOnClickListener(View.OnClickListener {
-            startActivity<MainActivity>()
-        })
+        startActivity<MultiDeviceDistributionFailActivity>()
     }
 }

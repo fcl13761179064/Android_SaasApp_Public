@@ -151,6 +151,7 @@
 
         <activity
             android:name=".ui.DeviceAddGuideActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ProjectListActivity"
@@ -227,6 +228,10 @@
 
         <activity
             android:name=".ui.MultiDeviceDistributionNetActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.MultiDeviceDistributionFailActivity"
             android:screenOrientation="portrait" />
 
         <activity
