@@ -106,7 +106,6 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
 
     private fun toBindPage() {
-        if (!pollJob.isCancelled) pollJob.cancel()
         val deviceIdList = multiDeviceFoundAdapter.data.map { it.deviceId }
         startActivity<MultiDeviceDistributionNetActivity>(
             Keys.ID to gatewayDeviceId,
