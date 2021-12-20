@@ -2,38 +2,39 @@ package com.ayla.hotelsaas.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ayla.base.ext.setVisible
 import com.ayla.hotelsaas.R
 import com.ayla.hotelsaas.adapter.MultiDeviceFoundAdapter
 import com.ayla.hotelsaas.api.CoroutineApiService
 import com.ayla.hotelsaas.base.BasicActivity
-import com.ayla.hotelsaas.bean.DeviceCategoryBean
-import com.ayla.hotelsaas.bean.DeviceCategoryBean.SubBean.NodeBean
 import com.ayla.hotelsaas.bean.DeviceListBean
+import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.common.ResultCode
 import com.ayla.hotelsaas.data.net.RetrofitHelper
+import com.ayla.hotelsaas.page.ext.setInvisible
+import com.ayla.hotelsaas.page.ext.setVisible
+import com.ayla.hotelsaas.page.ext.singleClick
 import com.ayla.hotelsaas.utils.RecycleViewDivider
 import com.blankj.utilcode.util.ClickUtils
 import com.blankj.utilcode.util.TimeUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.google.gson.JsonObject
 import com.scwang.smart.drawable.ProgressDrawable
-import io.reactivex.internal.operators.flowable.FlowableTimeInterval
 import kotlinx.android.synthetic.main.activity_search_multi_device.*
+import kotlinx.android.synthetic.main.activity_search_multi_device.mdf_btn_next
+import kotlinx.android.synthetic.main.new_empty_page_status_layout.*
+import kotlinx.android.synthetic.main.new_empty_page_status_layout.view.*
+import kotlinx.android.synthetic.main.test_wifi_fragment.view.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.onStart
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.jetbrains.anko.startActivity
 import java.lang.RuntimeException
 
 class SearchMultiDeviceActivity : BasicActivity() {
@@ -44,15 +45,29 @@ class SearchMultiDeviceActivity : BasicActivity() {
     private val addinfo by lazy {
         intent.getBundleExtra("addInfo")
     }
-    private val countDown = CountDown(COUNT_DOWN_MILLS, 1000L)//这个是倒计3秒然后开始搜索
-    private val remain120countDown = Count120Down(POLL_REQUEST_TIME_OUT_MILLS, 1000L)//这个是倒计120秒,120秒就停止搜索
+    private val countDown = CountDown(COUNT_DOWN_MILLS, 1500L)//这个是倒计3秒然后开始搜索
+    private val remain120countDown =
+        Count120Down(POLL_REQUEST_TIME_OUT_MILLS, 1000L)//这个是倒计120秒,120秒就停止搜索
     private val gatewayDeviceId by lazy {
         addinfo?.getString("deviceId") ?: ""
 
     }
+    private val NodeDeviceName by lazy {
+        addinfo?.getString("productName") ?: ""
+
+    }
+    private val NodeDeviceUrl by lazy {
+        addinfo?.getString("deviceUrl") ?: ""
+
+    }
+
+    private val cloudOemModel by lazy {
+        addinfo?.getString("deviceCategory") ?: ""
+
+    }
 
     companion object {
-        private const val POLL_REQUEST_TIME_OUT_MILLS = 120000L
+        private const val POLL_REQUEST_TIME_OUT_MILLS = 12000L
         private const val COUNT_DOWN_MILLS = 30000L
         private const val MAX_DEVICE_COUNT_LIMIT = 20
     }
@@ -78,26 +93,48 @@ class SearchMultiDeviceActivity : BasicActivity() {
         )
         multiDeviceFoundAdapter.bindToRecyclerView(mdf_rv_content)
         mdf_rv_content.adapter = multiDeviceFoundAdapter
-        multiDeviceFoundAdapter.setEmptyView(R.layout.empty_scene_page)
-        mdf_iv_retry_or_remain_time.setOnClickListener() {
-            ClickUtils.applySingleDebouncing(it, 500) {
-                startFindDevice()
-            }
+        multiDeviceFoundAdapter.setEmptyView(R.layout.new_empty_page_status_layout)
+        multiDeviceFoundAdapter.getEmptyView().bt_resert_search.singleClick {
+            startFindDevice()
+        }
+        multiDeviceFoundAdapter.getEmptyView().log_out.singleClick {
+          startActivity<MainActivity>()
         }
         //开始发现设备
         startFindDevice()
     }
 
-    override fun initListener() {
+
+    private fun toBindPage() {
+        if(!pollJob.isCancelled) pollJob.cancel()
+        val deviceIdList = multiDeviceFoundAdapter.data.map { it.deviceId }
+        startActivity<MultiDeviceDistributionNetActivity>(
+            Keys.ID to gatewayDeviceId,
+            Keys.DATA to addinfo,
+            Keys.OEMMODEL to  cloudOemModel,
+            Keys.MULTI_DEVICE_IDS to deviceIdList)
     }
+
+    override fun initListener() {
+        mdf_btn_next.singleClick {
+            if (mdf_btn_next.text.equals("重新搜索")) {
+                ClickUtils.applySingleDebouncing(mdf_btn_next, 500) {
+                    startFindDevice()
+                    mdf_btn_next.setText("下一步")
+                }
+            } else {
+                toBindPage()
+            }
+
+        }
+    }
+
 
     @FlowPreview
     private fun startFindDevice() {
-        remain120countDown.cancel()
-        remain120countDown.start()
         pollJob = lifecycleScope.launch {
             flow {
-                emit(api.updateProperty(gatewayDeviceId, createGatewayParam("100")))
+                emit(api.updateProperty(gatewayDeviceId, createGatewayParam("120")))
             }.map {
                 if (it?.code != ResultCode.SUCCESS) {
                     throw RuntimeException("网关进入配网模式失败")
@@ -113,11 +150,11 @@ class SearchMultiDeviceActivity : BasicActivity() {
                             val nodes = gatewayDeviceId?.let {
                                 api.fetchCandidateNodes(
                                     it,
-                                    addinfo?.getString("deviceCategory") ?: ""
+                                    cloudOemModel
                                 )
                             }
                             emit(nodes)
-                            } catch (ignore: Exception) {
+                        } catch (ignore: Exception) {
                         }
                         delay(3000L)
 
@@ -151,6 +188,10 @@ class SearchMultiDeviceActivity : BasicActivity() {
             suffixTip = ""
             foundDevices
         }
+        for (index in 0 until result.size) {
+            result.get(index).iconUrl = NodeDeviceUrl
+            result.get(index).deviceName = NodeDeviceName
+        }
         multiDeviceFoundAdapter.setNewData(result)
         if (result.isNullOrEmpty()) {
             mdf_tv_loading.text = "设备搜索中"
@@ -163,7 +204,13 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     private fun doFindDeviceStart() {
         runOnUiThread {
+            multiDeviceFoundAdapter.getEmptyView().cl_layout.setVisible(false)
             mdf_iv_loading.setVisible(true)
+            mdf_iv_retry_or_remain_time.setVisible(true)
+            mdf_tv_loading.setVisible(true)
+            ll_next_layout.setVisible(true)
+            remain120countDown.cancel()
+            remain120countDown.start()
             countDown.cancel()
             mdf_tv_loading.text = "设备搜索中"
             multiDeviceFoundAdapter.setNewData(null)
@@ -174,16 +221,17 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     private fun doFindDeviceEnd() {
         runOnUiThread {
+            remain120countDown.cancel()
             (mdf_iv_loading.drawable as? ProgressDrawable)?.stop()
             mdf_iv_loading.setVisible(false)
-            mdf_iv_retry_or_remain_time.setText("重新搜索")
             if (multiDeviceFoundAdapter.data.isNullOrEmpty()) {
                 mdf_tv_loading.setVisible(false)
-                mdf_iv_retry_or_remain_time.setVisible(false)
+                mdf_iv_retry_or_remain_time.setInvisible(false)
+                ll_next_layout.setVisible(false)
+                multiDeviceFoundAdapter.getEmptyView().cl_layout.setVisible(true)
             }
         }
         if (!multiDeviceFoundAdapter.data.isNullOrEmpty()) {
-            mdf_iv_retry_or_remain_time.setVisible(true)
             countDown.start()
         }
         exitGatewayJoinMode()
@@ -221,7 +269,8 @@ class SearchMultiDeviceActivity : BasicActivity() {
         }
 
         override fun onFinish() {
-            mdf_btn_next.isEnabled = false
+            mdf_iv_retry_or_remain_time.setVisible(false)
+            mdf_btn_next.setText("重新搜索")
         }
     }
 
@@ -232,7 +281,14 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
         @SuppressLint("SetTextI18n")
         override fun onTick(millisUntilFinished: Long) {
-            mdf_iv_retry_or_remain_time.setText("搜索剩余 ${(TimeUtils.millis2String(millisUntilFinished,"m:ss"))}s")
+            mdf_iv_retry_or_remain_time.setText(
+                "搜索剩余 ${
+                    (TimeUtils.millis2String(
+                        millisUntilFinished,
+                        "m:ss"
+                    ))
+                }s"
+            )
         }
 
         override fun onFinish() {
