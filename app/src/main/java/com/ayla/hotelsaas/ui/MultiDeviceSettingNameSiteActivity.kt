@@ -1,11 +1,14 @@
 package com.ayla.hotelsaas.ui
 
+import android.graphics.Rect
+import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ayla.base.ext.request
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.ayla.hotelsaas.R
 import com.ayla.hotelsaas.adapter.SelectRoomAdapter
 import com.ayla.hotelsaas.api.CommonApi
@@ -15,17 +18,13 @@ import com.ayla.hotelsaas.bean.DeviceLocationBean
 import com.ayla.hotelsaas.bean.PurposeCategoryBean
 import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.data.net.RetrofitHelper
-import com.ayla.hotelsaas.events.RegionChangeEvent
-import com.ayla.hotelsaas.widget.ItemPickerDialog
+import com.ayla.hotelsaas.protocol.MultiBindResp
 import com.ayla.hotelsaas.widget.MultiDevicePisiteDialog
 import com.ayla.hotelsaas.widget.MultiDeviceRenameOrPositeMethodDialog
 import com.ayla.hotelsaas.widget.RuleNameDialog
+import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import kotlinx.android.synthetic.main.activity_device_setting.*
-import org.greenrobot.eventbus.EventBus
-import org.jetbrains.anko.startActivity
-import rx.Observable
-import rx.functions.Func2
 
 /**
  * @ClassName:  DeviceSettingActivity
@@ -37,8 +36,8 @@ class MultiDeviceSettingNameSiteActivity : BasicActivity() {
 
     private val adapter = SelectRoomAdapter()
     private val api = RetrofitHelper.getRetrofit().create(CommonApi::class.java)
-    private var deviceId = ""
-    private var deviceListBean: List<DeviceLocationBean>? = null
+    private var deviceListBean: MultiBindResp? = null
+    private lateinit var subNodeBean: Bundle
     override fun onResume() {
         super.onResume()
         getRoomData()
@@ -50,10 +49,25 @@ class MultiDeviceSettingNameSiteActivity : BasicActivity() {
 
 
     override fun initView() {
-        deviceId = intent.getStringExtra(Keys.ID) ?: ""
-        deviceListBean = intent.getParcelableExtra(Keys.DATA) as List<DeviceLocationBean>?
+        deviceListBean = intent.getParcelableArrayExtra(Keys.DATA) as MultiBindResp?
+        subNodeBean = intent.getBundleExtra(Keys.ADDINFO) ?: Bundle()
         mdf_rv_content.layoutManager = LinearLayoutManager(this)
         mdf_rv_content.adapter = adapter
+        adapter.bindToRecyclerView(mdf_rv_content)
+        mdf_rv_content.setLayoutManager(LinearLayoutManager(this))
+        mdf_rv_content.addItemDecoration(object : ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                super.getItemOffsets(outRect, view, parent, state)
+                val size = SizeUtils.dp2px(10f)
+                val position = parent.getChildAdapterPosition(view)
+                outRect[0, if (position == 0) size else 0, 0] = size
+            }
+        })
         adapter.setEmptyView(R.layout.new_empty_page_status_layout)
         mdf_btn_next.setOnClickListener { setNameOrPosition() }
         adapter.setOnItemChildClickListener(object : BaseQuickAdapter.OnItemChildClickListener {

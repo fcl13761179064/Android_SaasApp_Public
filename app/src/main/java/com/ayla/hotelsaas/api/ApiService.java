@@ -1,6 +1,5 @@
 package com.ayla.hotelsaas.api;
 
-import com.ayla.base.data.protocol.BaseResp;
 import com.ayla.hotelsaas.bean.A2BindInfoBean;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceCategoryBean;
@@ -8,7 +7,6 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
-import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
@@ -28,11 +26,10 @@ import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
+import com.ayla.hotelsaas.protocol.BaseResp;
 import com.ayla.hotelsaas.protocol.MultiBindResp;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -347,4 +344,10 @@ public interface ApiService {
 
     @POST("api/v1/build/content/linkroom")
     Observable<BaseResult> getRelationXiaodu(@Body RequestBody body);
+
+    /**
+     * 批量绑定设备
+     */
+    @POST("/api/v1/build/device/bind/batch")
+    Observable<BaseResp<MultiBindResp>>  multiBindDevice(@Body  RequestBody body);
 }

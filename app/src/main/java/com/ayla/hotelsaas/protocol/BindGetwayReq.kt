@@ -1,6 +1,5 @@
 package com.ayla.hotelsaas.protocol
 
-import com.google.gson.JsonObject
 
 /*
     品类和绑定注入实体

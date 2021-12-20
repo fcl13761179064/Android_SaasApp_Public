@@ -6,6 +6,7 @@ object Keys {
     const val ID = "id"
     const val DATA = "data"
      var RoomId = "roomId"
+     var ADDINFO = "addinfo"
     const val MULTI_DEVICE_IDS = "multi_device_ids"
     const val OEMMODEL = "cloud_model"
 }

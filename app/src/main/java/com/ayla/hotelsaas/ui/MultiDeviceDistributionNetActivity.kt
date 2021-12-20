@@ -12,13 +12,16 @@ import com.ayla.hotelsaas.base.BaseMvpActivity
 import com.ayla.hotelsaas.bean.DeviceListBean
 import com.ayla.hotelsaas.common.Constance
 import com.ayla.hotelsaas.common.Keys
+import com.ayla.hotelsaas.data.net.RetrofitHelper
 import com.ayla.hotelsaas.mvp.present.MultiDeviceAddPresenter
 import com.ayla.hotelsaas.mvp.view.MultiDeviceAddView
+import com.ayla.hotelsaas.page.ext.setVisible
 import com.ayla.hotelsaas.protocol.MultiBindResp
 import com.ayla.hotelsaas.protocol.MultiBindResultBean
 import com.ayla.hotelsaas.utils.SharePreferenceUtils
 import com.blankj.utilcode.util.ToastUtils
 import kotlinx.android.synthetic.main.activity_multi_device_bind.*
+import kotlinx.android.synthetic.main.new_empty_page_status_layout.view.*
 import org.jetbrains.anko.startActivity
 
 
@@ -81,16 +84,24 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
      *
      */
     override fun multiBindSuccess(data: MultiBindResp) {
-      startActivity<MultiDeviceSettingNameSiteActivity> ()
+        startActivity<MultiDeviceSettingNameSiteActivity>(Keys.DATA to data,Keys.ADDINFO to subNodeBean)
     }
 
     /**
      * 4.绑定节点成功
      */
     override fun multiBindFailure(errorMsg: String?) {
-
+        toBindFailPage()
     }
-    private fun toBindFailPage(reason: String = "") {
+    private fun toBindFailPage() {
+        empty_pager.setVisible(true)
+        empty_pager.cl_layout.setVisible(true)
+        empty_pager.bt_resert_search.setOnClickListener(View.OnClickListener {
+          startActivity<DeviceAddGuideActivity>()
+        })
 
+        empty_pager.log_out.setOnClickListener(View.OnClickListener {
+            startActivity<MainActivity>()
+        })
     }
 }

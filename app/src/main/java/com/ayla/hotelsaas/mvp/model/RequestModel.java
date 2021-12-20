@@ -34,11 +34,15 @@ import com.ayla.hotelsaas.api.ApiService;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.data.net.ServerBadException;
+import com.ayla.hotelsaas.protocol.BindGetwayReq;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
+import com.blankj.utilcode.util.GsonUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
