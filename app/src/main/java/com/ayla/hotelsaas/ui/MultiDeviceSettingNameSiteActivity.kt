@@ -87,6 +87,9 @@ class MultiDeviceSettingNameSiteActivity :
 
     override fun initListener() {
         adapter.getEmptyView().cl_layout.setVisible(true)
+        if (adapter.data.isEmpty()){
+            ll_next_layout.setVisible(false)
+        }
         adapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
 
             override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View?, position: Int) {
@@ -124,9 +127,11 @@ class MultiDeviceSettingNameSiteActivity :
         })
         adapter.getEmptyView().log_out.singleClick {
             startActivity<MainActivity>()
+            finish()
         }
         adapter.getEmptyView().bt_resert_search.singleClick {
             startActivity<DeviceAddGuideActivity>()
+            finish()
         }
     }
 

@@ -39,7 +39,7 @@ class DeviceAddGuideActivity : BaseMvpActivity<DeviceAddGuideView?, DeviceAddGui
         super.onCreate(savedInstanceState)
         addInfo = intent.getBundleExtra("addInfo")
         deviceId = addInfo?.get("deviceId") as String?
-        val pid = addInfo!!.getString("pid")
+        val pid = addInfo?.getString("pid")
         mPresenter!!.getNetworkConfigGuide(pid)
     }
 
