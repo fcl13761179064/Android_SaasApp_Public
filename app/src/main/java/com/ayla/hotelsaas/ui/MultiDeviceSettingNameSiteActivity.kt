@@ -69,6 +69,7 @@ class MultiDeviceSettingNameSiteActivity : BasicActivity() {
             }
         })
         adapter.setEmptyView(R.layout.new_empty_page_status_layout)
+        deviceListBean?.success?.let { adapter.addData(it) }
         mdf_btn_next.setOnClickListener { setNameOrPosition() }
         adapter.setOnItemChildClickListener(object : BaseQuickAdapter.OnItemChildClickListener {
             override fun onItemChildClick(
