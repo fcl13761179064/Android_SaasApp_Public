@@ -27,7 +27,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".ui.SPlashActivity"
+            android:name=".ui.MultiDeviceSettingNameSiteActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashActivityTheme">
             <intent-filter>
@@ -234,9 +234,9 @@
             android:name=".ui.MultiDeviceDistributionFailActivity"
             android:screenOrientation="portrait" />
 
-        <activity
+      <!--  <activity
             android:name=".ui.MultiDeviceSettingNameSiteActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" />-->
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
             android:label="dexopt"

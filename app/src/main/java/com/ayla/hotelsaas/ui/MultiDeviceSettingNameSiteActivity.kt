@@ -20,12 +20,15 @@ import com.ayla.hotelsaas.mvp.present.DeviceAddSuccessPresenter
 import com.ayla.hotelsaas.mvp.present.MultiSignleRenamePresenter
 import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView
 import com.ayla.hotelsaas.mvp.view.MultiSinaleRenameView
+import com.ayla.hotelsaas.page.ext.setVisible
+import com.ayla.hotelsaas.page.ext.singleClick
 import com.ayla.hotelsaas.widget.MultiDevicePisiteDialog
 import com.ayla.hotelsaas.widget.MultiDeviceRenameOrPositeMethodDialog
 import com.ayla.hotelsaas.widget.RuleNameDialog
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import kotlinx.android.synthetic.main.activity_device_setting.*
+import kotlinx.android.synthetic.main.new_empty_page_status_layout.view.*
 import org.jetbrains.anko.startActivity
 
 /**
@@ -54,7 +57,9 @@ class MultiDeviceSettingNameSiteActivity :
 
     override fun initView() {
         deviceListBean =
-            intent.getSerializableExtra(Keys.NODEDATA) as List<DeviceListBean.DevicesBean>
+            intent.getSerializableExtra(Keys.NODEDATA)?.let{
+               it as List<DeviceListBean.DevicesBean>
+            }
         subNodeBean = intent.getBundleExtra(Keys.DATA) ?: Bundle()
         scopeId = (subNodeBean.get("scopeId") ?: -1L) as Long
         mdf_rv_content.layoutManager = LinearLayoutManager(this)
@@ -81,6 +86,7 @@ class MultiDeviceSettingNameSiteActivity :
 
 
     override fun initListener() {
+        adapter.getEmptyView().cl_layout.setVisible(true)
         adapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
 
             override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View?, position: Int) {
@@ -116,7 +122,12 @@ class MultiDeviceSettingNameSiteActivity :
         mdf_btn_next.setOnClickListener(View.OnClickListener {
             startActivity<MainActivity>()
         })
-
+        adapter.getEmptyView().log_out.singleClick {
+            startActivity<MainActivity>()
+        }
+        adapter.getEmptyView().bt_resert_search.singleClick {
+            startActivity<DeviceAddGuideActivity>()
+        }
     }
 
 

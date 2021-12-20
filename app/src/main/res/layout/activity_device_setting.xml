@@ -20,10 +20,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mdf_rv_content"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar"
+        app:layout_constraintBottom_toTopOf="@+id/ll_next_layout"
         tools:listitem="@layout/item_multi_device_found" />
 
     <LinearLayout
