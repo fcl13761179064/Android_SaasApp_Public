@@ -136,6 +136,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     @FlowPreview
     private fun startFindDevice() {
+
         pollJob = lifecycleScope.launch {
             flow {
                 emit(api.updateProperty(gatewayDeviceId, createGatewayParam("120")))
@@ -160,7 +161,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
                             emit(nodes)
                         } catch (ignore: Exception) {
                         }
-                        delay(3000L)
+                        delay(2000L)
 
                     }
                 }

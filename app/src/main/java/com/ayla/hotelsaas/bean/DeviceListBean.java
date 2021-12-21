@@ -93,7 +93,7 @@ public class DeviceListBean {
         private String domain;//跳转到单控页面h5时用，这个是域名
         private String h5Url;//跳转到单控页面h5时用，这个是url
         private boolean isSelectDevice;//是否选中设备
-
+        private String regionName;
         public boolean isSelectDevice() {
             return isSelectDevice;
         }
@@ -121,8 +121,6 @@ public class DeviceListBean {
         public void setRegionId(long regionId) {
             this.regionId = regionId;
         }
-
-        private String regionName;
 
         public void setRegionName(String regionName) {
             this.regionName = regionName;

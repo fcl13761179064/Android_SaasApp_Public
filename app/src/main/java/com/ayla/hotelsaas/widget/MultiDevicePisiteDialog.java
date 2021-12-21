@@ -87,15 +87,13 @@ public class MultiDevicePisiteDialog extends DialogFragment {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (callback != null) {
                     checkableSupport = supports.get(position);
-                    checkableSupport.setChecked(!checkableSupport.isChecked());
                     defaultIndex = position;
                     for (int i = 0; i < supports.size(); i++) {
                         supports.get(i).setChecked(false);
-                        if (i == defaultIndex) {
-                            supports.get(i).setChecked(true);
-                        }
                     }
-                    adapter.notifyItemChanged(position);
+                    checkableSupport.setChecked(true);
+                    checkableSupport.setChecked(checkableSupport.isChecked());
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
@@ -105,6 +103,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
                 if (callback != null && checkableSupport != null && checkableSupport.getData() != null) {
                     DeviceLocationBean data = (DeviceLocationBean) checkableSupport.getData();
                     callback.doConfire(data);
+                    dismissAllowingStateLoss();
                 }
 
             }

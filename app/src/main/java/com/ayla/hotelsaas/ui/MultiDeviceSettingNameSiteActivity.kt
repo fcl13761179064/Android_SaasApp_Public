@@ -61,6 +61,7 @@ class MultiDeviceSettingNameSiteActivity :
 
 
     override fun initView() {
+        mPresenter.getAllDeviceLocation(scopeId)
         deviceListBean =
             intent.getSerializableExtra(Keys.NODEDATA)?.let {
                 it as List<DeviceListBean.DevicesBean>
@@ -123,11 +124,11 @@ class MultiDeviceSettingNameSiteActivity :
                     }
 
                     override fun onPositionDone(s: String) {
-                        mPresenter.getAllDeviceLocation(scopeId)
+
                     }
 
                 }).setTitle(deviceListBean?.get(position)?.deviceName)
-                    .setPositionSite(deviceListBean?.get(position)?.pointName)
+                    .setPositionSite(deviceListBean?.get(position)?.regionName)
                     .show(supportFragmentManager, "setting_name_position")
             }
 
@@ -167,7 +168,7 @@ class MultiDeviceSettingNameSiteActivity :
         var deviceId = (subNodeBean.get("deviceId")?:"") as String
         val mDevicesBean = MyApplication.getInstance().getDevicesBean(deviceId)
         var defIndex = 0
-        val purposeName = mDevicesBean.purposeName
+        val purposeName = mDevicesBean.regionName
         for (i in deviceListBean.indices) {
             if (TextUtils.equals(deviceListBean.get(i).regionName, purposeName)) {
                 defIndex = i
@@ -179,6 +180,7 @@ class MultiDeviceSettingNameSiteActivity :
             .setData(deviceListBean)
             .setDefaultIndex(defIndex)
             .setCallback {
+                deviceListBean?.get(defIndex)?.regionName=it.regionName
                 mPresenter.updatePurpose(deviceId, it.regionId)
             } .show(supportFragmentManager, "positionDialog")
     }
