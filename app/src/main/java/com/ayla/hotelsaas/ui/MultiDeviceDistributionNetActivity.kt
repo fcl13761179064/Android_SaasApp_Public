@@ -108,6 +108,6 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
       toBindFailPage()
     }
     private fun toBindFailPage() {
-        startActivity<MultiDeviceDistributionFailActivity>()
+        startActivity<MultiDeviceDistributionFailActivity>(Keys.MULTIDISTRIBUREFAIL to "配网失败")
     }
 }

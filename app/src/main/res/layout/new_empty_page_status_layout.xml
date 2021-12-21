@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:center_tv="批量配网"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:left_iv="@mipmap/icon_back_black" />
 

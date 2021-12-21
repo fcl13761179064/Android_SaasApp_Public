@@ -10,4 +10,5 @@ object Keys {
      var RoomId = "roomId"
     const val MULTI_DEVICE_IDS = "multi_device_ids"
     const val OEMMODEL = "cloud_model"
+    const val MULTIDISTRIBUREFAIL = "multi_distribute_fail"
 }
