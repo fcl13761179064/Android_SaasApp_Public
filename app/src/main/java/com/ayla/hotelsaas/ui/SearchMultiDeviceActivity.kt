@@ -107,7 +107,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
 
     private fun toBindPage() {
-        val deviceIdList =   multiDeviceFoundAdapter.data.filter{ it.isSelectDevice==true }.map {  it.isSelectDevice }
+        val deviceIdList =   multiDeviceFoundAdapter.data.filter{ it.isSelectDevice==true }.map {  it.deviceId }
         startActivity<MultiDeviceDistributionNetActivity>(
             Keys.ID to gatewayDeviceId,
             Keys.DATA to addinfo,

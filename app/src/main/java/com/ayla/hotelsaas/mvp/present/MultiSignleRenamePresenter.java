@@ -68,4 +68,34 @@ public class MultiSignleRenamePresenter extends BasePresenter<MultiSinaleRenameV
                 });
         addSubscrebe(subscribe);
     }
+
+    public void updatePurpose(String deviceId, Long purposeCategory) {
+        Disposable subscribe = RequestModel.getInstance().MultiupdatePosition(deviceId, purposeCategory)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showProgress();
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mView.hideProgress();
+                    }
+                })
+                .subscribe(new Consumer() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        mView.updatePurposeSuccess();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        mView.renameFailed(throwable);
+                    }
+                });
+        addSubscrebe(subscribe);
+    }
 }

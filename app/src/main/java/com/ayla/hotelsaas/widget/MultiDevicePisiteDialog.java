@@ -33,13 +33,13 @@ public class MultiDevicePisiteDialog extends DialogFragment {
 
     List data = new ArrayList<>();
 
-    private int defaultIndex = -1;//默认选中的下标
+    private int defaultIndex = 0;//默认选中的下标
 
     private Callback callback;
 
 
-
     private String title;
+    private CheckableSupport checkableSupport;
 
     public static MultiDevicePisiteDialog newInstance() {
 
@@ -85,13 +85,37 @@ public class MultiDevicePisiteDialog extends DialogFragment {
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                dismissAllowingStateLoss();
                 if (callback != null) {
-                    callback.onCallback(data.get(position));
+                    checkableSupport = supports.get(position);
+                    checkableSupport.setChecked(!checkableSupport.isChecked());
+                    defaultIndex = position;
+                    for (int i = 0; i < supports.size(); i++) {
+                        supports.get(i).setChecked(false);
+                        if (i == defaultIndex) {
+                            supports.get(i).setChecked(true);
+                        }
+                    }
+                    adapter.notifyItemChanged(position);
                 }
             }
         });
+        binding.vDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null && checkableSupport != null && checkableSupport.getData() != null) {
+                    DeviceLocationBean data = (DeviceLocationBean) checkableSupport.getData();
+                    callback.doConfire(data);
+                }
 
+            }
+        });
+
+        binding.vCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+             dismissAllowingStateLoss();
+            }
+        });
         binding.rv.setAdapter(adapter);
         adapter.setEmptyView(R.layout.empty_hongyan_device);
         binding.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -151,7 +175,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
         }
     }
 
-    public interface Callback<T> {
-        void onCallback(T object);
+    public interface Callback {
+        void doConfire(DeviceLocationBean object);
     }
 }

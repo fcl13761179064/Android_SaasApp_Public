@@ -906,6 +906,16 @@ public class RequestModel {
         return getApiService().updatePurpose(body111);
     }
 
+
+    public Observable MultiupdatePosition(String deviceId, Long purposeCategory) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("deviceId", deviceId);
+        jsonObject.addProperty("purposeCategory", purposeCategory);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().updatePurpose(body111);
+    }
+
     /**
      * 根据设置的功能别名，篡改物模板里面的displayname。
      *

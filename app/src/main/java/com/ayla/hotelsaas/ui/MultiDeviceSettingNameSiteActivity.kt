@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.ui
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
@@ -9,9 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.ayla.hotelsaas.R
+import com.ayla.hotelsaas.adapter.CheckableSupport
 import com.ayla.hotelsaas.adapter.SelectRoomAdapter
+import com.ayla.hotelsaas.application.MyApplication
 import com.ayla.hotelsaas.base.BaseMvpActivity
 import com.ayla.hotelsaas.bean.DeviceListBean
+import com.ayla.hotelsaas.bean.DeviceListBean.DevicesBean
 import com.ayla.hotelsaas.bean.DeviceLocationBean
 import com.ayla.hotelsaas.bean.PurposeCategoryBean
 import com.ayla.hotelsaas.common.Keys
@@ -58,8 +62,8 @@ class MultiDeviceSettingNameSiteActivity :
 
     override fun initView() {
         deviceListBean =
-            intent.getSerializableExtra(Keys.NODEDATA)?.let{
-               it as List<DeviceListBean.DevicesBean>
+            intent.getSerializableExtra(Keys.NODEDATA)?.let {
+                it as List<DeviceListBean.DevicesBean>
             }
         subNodeBean = intent.getBundleExtra(Keys.DATA) ?: Bundle()
         scopeId = (subNodeBean.get("scopeId") ?: -1L) as Long
@@ -88,7 +92,7 @@ class MultiDeviceSettingNameSiteActivity :
 
     override fun initListener() {
         adapter.getEmptyView().cl_layout.setVisible(true)
-        if (adapter.data.isEmpty()){
+        if (adapter.data.isEmpty()) {
             ll_next_layout.setVisible(false)
         }
         adapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
@@ -102,12 +106,15 @@ class MultiDeviceSettingNameSiteActivity :
                             override fun onDone(
                                 dialog: DialogFragment?,
                                 txt: String,
-                                empty_notice: TextView?) {
-                                devicesBean.deviceName=txt
-                                mPresenter.deviceRenameMethod(deviceListBean?.get(position)?.deviceId ,txt
+                                empty_notice: TextView?
+                            ) {
+                                devicesBean.deviceName = txt
+                                mPresenter.deviceRenameMethod(
+                                    deviceListBean?.get(position)?.deviceId, txt
                                 )
                             }
-                             override fun onCancel(dialog: DialogFragment?) {
+
+                            override fun onCancel(dialog: DialogFragment?) {
 
                             }
 
@@ -119,7 +126,9 @@ class MultiDeviceSettingNameSiteActivity :
                         mPresenter.getAllDeviceLocation(scopeId)
                     }
 
-                }).setTitle(deviceListBean?.get(position)?.deviceName).setPositionSite(deviceListBean?.get(position)?.pointName).show(supportFragmentManager, "setting_name_position")
+                }).setTitle(deviceListBean?.get(position)?.deviceName)
+                    .setPositionSite(deviceListBean?.get(position)?.pointName)
+                    .show(supportFragmentManager, "setting_name_position")
             }
 
         })
@@ -154,17 +163,27 @@ class MultiDeviceSettingNameSiteActivity :
         CustomToast.makeText(this, "重命名失败", R.drawable.ic_success)
     }
 
-    override fun loadDeviceLocationSuccess(deviceListBean: MutableList<DeviceLocationBean>?) {//位置
+    override fun loadDeviceLocationSuccess(deviceListBean: MutableList<DeviceLocationBean>) {//位置
+        var deviceId = (subNodeBean.get("deviceId")?:"") as String
+        val mDevicesBean = MyApplication.getInstance().getDevicesBean(deviceId)
+        var defIndex = 0
+        val purposeName = mDevicesBean.purposeName
+        for (i in deviceListBean.indices) {
+            if (TextUtils.equals(deviceListBean.get(i).regionName, purposeName)) {
+                defIndex = i
+                break
+            }
+        }
         MultiDevicePisiteDialog.newInstance()
-            .setTitle("控制设备")
+            .setTitle("设置位置")
             .setData(deviceListBean)
-            .setDefaultIndex(1)
-            .setCallback(object :
-                MultiDevicePisiteDialog.Callback<PurposeCategoryBean> {
-                override fun onCallback(s: PurposeCategoryBean) {
+            .setDefaultIndex(defIndex)
+            .setCallback {
+                mPresenter.updatePurpose(deviceId, it.regionId)
+            } .show(supportFragmentManager, "positionDialog")
+    }
 
-                }
-
-            }).show(supportFragmentManager, "positionDialog")
+    override fun updatePurposeSuccess() {
+        CustomToast.makeText(this, "设置成功", R.drawable.ic_success)
     }
 }
