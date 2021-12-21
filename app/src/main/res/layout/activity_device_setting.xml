@@ -37,7 +37,7 @@
         android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar"
+        app:layout_constraintTop_toBottomOf="@id/show_success_or_fail"
         app:layout_constraintBottom_toTopOf="@+id/ll_next_layout"
         tools:listitem="@layout/item_multi_device_found" />
 

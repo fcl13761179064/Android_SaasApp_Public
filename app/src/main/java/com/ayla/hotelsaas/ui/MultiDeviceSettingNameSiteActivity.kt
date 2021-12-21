@@ -10,19 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.ayla.hotelsaas.R
-import com.ayla.hotelsaas.adapter.CheckableSupport
 import com.ayla.hotelsaas.adapter.SelectRoomAdapter
-import com.ayla.hotelsaas.application.MyApplication
 import com.ayla.hotelsaas.base.BaseMvpActivity
 import com.ayla.hotelsaas.bean.DeviceListBean
-import com.ayla.hotelsaas.bean.DeviceListBean.DevicesBean
 import com.ayla.hotelsaas.bean.DeviceLocationBean
-import com.ayla.hotelsaas.bean.PurposeCategoryBean
 import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.data.net.RetrofitHelper
-import com.ayla.hotelsaas.mvp.present.DeviceAddSuccessPresenter
 import com.ayla.hotelsaas.mvp.present.MultiSignleRenamePresenter
-import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView
 import com.ayla.hotelsaas.mvp.view.MultiSinaleRenameView
 import com.ayla.hotelsaas.page.ext.setInvisible
 import com.ayla.hotelsaas.page.ext.setVisible
@@ -33,7 +27,6 @@ import com.ayla.hotelsaas.widget.RuleNameDialog
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import kotlinx.android.synthetic.main.activity_device_setting.*
-import kotlinx.android.synthetic.main.item_device_add.*
 import kotlinx.android.synthetic.main.new_empty_page_status_layout.view.*
 import org.jetbrains.anko.startActivity
 
@@ -48,7 +41,7 @@ class MultiDeviceSettingNameSiteActivity :
 
     private val adapter = SelectRoomAdapter()
     private val api = RetrofitHelper.getApiService()
-    private var deviceListBean: List<DeviceListBean.DevicesBean>? = null
+    private var deviceSuccessListBean: List<DeviceListBean.DevicesBean>? = null
     private var deviceFailListBean: List<DeviceListBean.DevicesBean>? = null
     private var scopeId: Long = -1L
     private lateinit var subNodeBean: Bundle
@@ -63,7 +56,7 @@ class MultiDeviceSettingNameSiteActivity :
 
 
     override fun initView() {
-        deviceListBean =  intent.getSerializableExtra(Keys.NODEDATA)?.let {
+        deviceSuccessListBean =  intent.getSerializableExtra(Keys.NODEDATA)?.let {
             it as List<DeviceListBean.DevicesBean>
         }
         deviceFailListBean =
@@ -76,7 +69,7 @@ class MultiDeviceSettingNameSiteActivity :
         adapter.bindToRecyclerView(mdf_rv_content)
         mdf_rv_content.adapter = adapter
         adapter.setEmptyView(R.layout.new_empty_page_status_layout)
-        show_success_or_fail.setText("添加成功 ${deviceListBean?.size}，失败 ${deviceFailListBean?.size} 设备。失败设备可稍后进行单独添加")
+        show_success_or_fail.setText("添加成功 ${deviceSuccessListBean?.size}，失败 ${deviceFailListBean?.size} 设备。失败设备可稍后进行单独添加")
         mdf_rv_content.setLayoutManager(LinearLayoutManager(this))
         mdf_rv_content.addItemDecoration(object : ItemDecoration() {
             override fun getItemOffsets(
@@ -91,7 +84,7 @@ class MultiDeviceSettingNameSiteActivity :
                 outRect[0, if (position == 0) size else 0, 0] = size
             }
         })
-        deviceListBean?.let { adapter.addData(it) }
+        deviceSuccessListBean?.let { adapter.addData(it) }
 
     }
 
@@ -117,7 +110,7 @@ class MultiDeviceSettingNameSiteActivity :
                             ) {
                                 devicesBean.deviceName = txt
                                 mPresenter.deviceRenameMethod(
-                                    deviceListBean?.get(position)?.deviceId, txt
+                                    deviceSuccessListBean?.get(position)?.deviceId, txt
                                 )
                             }
 
@@ -129,12 +122,12 @@ class MultiDeviceSettingNameSiteActivity :
                             .show(supportFragmentManager, "setting_name")
                     }
 
-                    override fun onPositionDone(s: String) {
-                        mPresenter.getAllDeviceLocation(scopeId)
+                    override fun onPositionDone(positionSite: DeviceListBean.DevicesBean) {
+                        mPresenter.getAllDeviceLocation(scopeId, positionSite)
                     }
 
-                }).setTitle(deviceListBean?.get(position)?.deviceName)
-                    .setPositionSite(deviceListBean?.get(position)?.regionName)
+                }).setTitle(deviceSuccessListBean?.get(position)?.deviceName)
+                    .setPositionSite(deviceSuccessListBean?.get(position))
                     .show(supportFragmentManager, "setting_name_position")
             }
 
@@ -170,13 +163,14 @@ class MultiDeviceSettingNameSiteActivity :
         CustomToast.makeText(this, "重命名失败", R.drawable.ic_success)
     }
 
-    override fun loadDeviceLocationSuccess(deviceListBean: MutableList<DeviceLocationBean>) {//位置
+    override fun loadDeviceLocationSuccess(
+        deviceListBean: MutableList<DeviceLocationBean>,
+        deviceBean: DeviceListBean.DevicesBean
+    ) {//位置
         var deviceId = (subNodeBean.get("deviceId")?:"") as String
-        val mDevicesBean = MyApplication.getInstance().getDevicesBean(deviceId)
         var defIndex = 0
-        val purposeName = mDevicesBean.regionName
         for (i in deviceListBean.indices) {
-            if (TextUtils.equals(deviceListBean.get(i).regionName, purposeName)) {
+            if (TextUtils.equals(deviceListBean.get(i).regionName, deviceBean.regionName)) {
                 defIndex = i
                 break
             }
@@ -186,7 +180,7 @@ class MultiDeviceSettingNameSiteActivity :
             .setData(deviceListBean)
             .setDefaultIndex(defIndex)
             .setCallback {
-                deviceListBean?.get(defIndex)?.regionName=it.regionName
+                deviceBean.regionName=it.regionName
                 mPresenter.updatePurpose(deviceId, it.regionId)
             } .show(supportFragmentManager, "positionDialog")
     }

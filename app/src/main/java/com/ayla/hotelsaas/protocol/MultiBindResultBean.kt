@@ -9,7 +9,13 @@ import kotlinx.android.parcel.Parcelize
 data class BindSuccessReq(val deviceId: String)
 
 @Parcelize
-data class MultiBindResp(val failed:List<String>, val success:List<String>): Parcelable
+data class MultiBindResp(val failed:List<String>, val success:List<MultiPositionSite>): Parcelable
+
+@Parcelize
+data class MultiPositionSite(val deviceId:String,
+                             var regionId:Long,
+                             val regionName:String,
+                             var pointName:String):Parcelable
 
 @Parcelize
 data class MultiBindResultBean(val deviceId:String,

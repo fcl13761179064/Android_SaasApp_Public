@@ -24,7 +24,7 @@ class SelectRoomAdapter(private val isMultiSelect:Boolean = false) : BaseQuickAd
         holder.itemView.cb_function_checked.setVisible(false)
         holder.itemView.iv_arrow.setVisible(true)
         holder.itemView.tv_device_name.text = item.deviceName
-        holder.itemView.tv_device_id.text = item.deviceId
+        holder.itemView.tv_device_id.text = item.regionName
         ImageLoader.loadImg(  holder.itemView.device_left_iv, item.iconUrl, R.drawable.ic_empty_device, R.drawable.ic_empty_device)
     }
 }

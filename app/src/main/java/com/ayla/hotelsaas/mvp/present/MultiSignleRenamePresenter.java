@@ -1,9 +1,9 @@
 package com.ayla.hotelsaas.mvp.present;
 
 import com.ayla.hotelsaas.base.BasePresenter;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
-import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView;
 import com.ayla.hotelsaas.mvp.view.MultiSinaleRenameView;
 
 import java.util.List;
@@ -49,8 +49,9 @@ public class MultiSignleRenamePresenter extends BasePresenter<MultiSinaleRenameV
      * 加载区域位置
      *
      * @param
+     * @param devicesBean
      */
-    public void getAllDeviceLocation(Long roomId) {
+    public void getAllDeviceLocation(Long roomId, DeviceListBean.DevicesBean devicesBean) {
         Disposable subscribe = RequestModel.getInstance()
                 .getAllDeviceLocation(roomId)
                 .subscribeOn(Schedulers.io())
@@ -58,7 +59,7 @@ public class MultiSignleRenamePresenter extends BasePresenter<MultiSinaleRenameV
                 .subscribe(new Consumer<List<DeviceLocationBean>>() {
                     @Override
                     public void accept(List<DeviceLocationBean> deviceListBean) throws Exception {
-                        mView.loadDeviceLocationSuccess(deviceListBean);
+                        mView.loadDeviceLocationSuccess(deviceListBean,devicesBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

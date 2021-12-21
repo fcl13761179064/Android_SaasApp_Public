@@ -89,7 +89,10 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
         val deviceList = ArrayList<DeviceListBean.DevicesBean>()
             for ((index,e) in data.success.withIndex()){
                 val devicesBean = DeviceListBean.DevicesBean()
-                devicesBean.deviceId=e
+                devicesBean.deviceId=e.deviceId
+                devicesBean.regionName=e.regionName
+                devicesBean.regionId=e.regionId
+                devicesBean.pointName=e.pointName
                 devicesBean.iconUrl=(subNodeBean.get("deviceUrl") ?: "") as String
                 devicesBean.deviceName= (subNodeBean.get("productName") ?: "") as String
                 deviceList.add(devicesBean)

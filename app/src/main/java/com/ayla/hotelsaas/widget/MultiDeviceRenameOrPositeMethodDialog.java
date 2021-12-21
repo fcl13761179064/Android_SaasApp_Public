@@ -16,9 +16,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.bean.DeviceListBean;
 
 public class MultiDeviceRenameOrPositeMethodDialog extends DialogFragment {
     private DoneCallback doneCallback;
+    private DeviceListBean.DevicesBean mDeviceBean;
+
     public static MultiDeviceRenameOrPositeMethodDialog newInstance(DoneCallback doneCallback) {
         Bundle args = new Bundle();
         MultiDeviceRenameOrPositeMethodDialog fragment = new MultiDeviceRenameOrPositeMethodDialog();
@@ -28,11 +31,10 @@ public class MultiDeviceRenameOrPositeMethodDialog extends DialogFragment {
     }
 
 
-    private String positionSite;
     private String tv_rename_name;
 
-    public MultiDeviceRenameOrPositeMethodDialog setPositionSite(String positionSite) {
-        this.positionSite = positionSite;
+    public MultiDeviceRenameOrPositeMethodDialog setPositionSite(DeviceListBean.DevicesBean devicesBean) {
+        this.mDeviceBean= devicesBean;
         return this;
     }
     public MultiDeviceRenameOrPositeMethodDialog setTitle(String tv_rename_name) {
@@ -67,7 +69,7 @@ public class MultiDeviceRenameOrPositeMethodDialog extends DialogFragment {
        TextView tv_name= view.findViewById(R.id.tv_rename_name);
        TextView tv_position= view.findViewById(R.id.tv_position_name);
        tv_name.setText(tv_rename_name);
-        tv_position.setText(positionSite);
+        tv_position.setText(mDeviceBean.getRegionName());
 
         view.findViewById(R.id.rl_name).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +85,7 @@ public class MultiDeviceRenameOrPositeMethodDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (doneCallback != null) {
-                    doneCallback.onPositionDone(tv_position.getText().toString());
+                    doneCallback.onPositionDone(mDeviceBean);
                     dismissAllowingStateLoss();
                 }
             }
@@ -98,6 +100,6 @@ public class MultiDeviceRenameOrPositeMethodDialog extends DialogFragment {
 
     public interface DoneCallback {
         void onNameDone(String name);
-        void onPositionDone(String postion);
+        void onPositionDone(DeviceListBean.DevicesBean devicesBean);
     }
 }
