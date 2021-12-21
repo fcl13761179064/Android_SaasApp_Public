@@ -8,10 +8,10 @@
 
     <ImageView
         android:id="@+id/iv_right_arrow"
-        android:layout_width="12dp"
-        android:layout_height="20dp"
+        android:layout_width="8dp"
+        android:layout_height="15dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="30dp"
         android:src="@drawable/ic_menu_item_arrow_right" />
 </RelativeLayout>

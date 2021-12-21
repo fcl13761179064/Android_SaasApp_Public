@@ -24,6 +24,7 @@ import com.ayla.hotelsaas.mvp.present.DeviceAddSuccessPresenter
 import com.ayla.hotelsaas.mvp.present.MultiSignleRenamePresenter
 import com.ayla.hotelsaas.mvp.view.DeviceAddSuccessView
 import com.ayla.hotelsaas.mvp.view.MultiSinaleRenameView
+import com.ayla.hotelsaas.page.ext.setInvisible
 import com.ayla.hotelsaas.page.ext.setVisible
 import com.ayla.hotelsaas.page.ext.singleClick
 import com.ayla.hotelsaas.widget.MultiDevicePisiteDialog
@@ -48,6 +49,7 @@ class MultiDeviceSettingNameSiteActivity :
     private val adapter = SelectRoomAdapter()
     private val api = RetrofitHelper.getApiService()
     private var deviceListBean: List<DeviceListBean.DevicesBean>? = null
+    private var deviceFailListBean: List<DeviceListBean.DevicesBean>? = null
     private var scopeId: Long = -1L
     private lateinit var subNodeBean: Bundle
     override fun onResume() {
@@ -61,16 +63,20 @@ class MultiDeviceSettingNameSiteActivity :
 
 
     override fun initView() {
-        mPresenter.getAllDeviceLocation(scopeId)
-        deviceListBean =
-            intent.getSerializableExtra(Keys.NODEDATA)?.let {
+        deviceListBean =  intent.getSerializableExtra(Keys.NODEDATA)?.let {
+            it as List<DeviceListBean.DevicesBean>
+        }
+        deviceFailListBean =
+            intent.getSerializableExtra(Keys.NODEFailDATA)?.let {
                 it as List<DeviceListBean.DevicesBean>
             }
         subNodeBean = intent.getBundleExtra(Keys.DATA) ?: Bundle()
         scopeId = (subNodeBean.get("scopeId") ?: -1L) as Long
         mdf_rv_content.layoutManager = LinearLayoutManager(this)
-        mdf_rv_content.adapter = adapter
         adapter.bindToRecyclerView(mdf_rv_content)
+        mdf_rv_content.adapter = adapter
+        adapter.setEmptyView(R.layout.new_empty_page_status_layout)
+        show_success_or_fail.setText("添加成功 ${deviceListBean?.size}，失败 ${deviceFailListBean?.size} 设备。失败设备可稍后进行单独添加")
         mdf_rv_content.setLayoutManager(LinearLayoutManager(this))
         mdf_rv_content.addItemDecoration(object : ItemDecoration() {
             override fun getItemOffsets(
@@ -85,7 +91,6 @@ class MultiDeviceSettingNameSiteActivity :
                 outRect[0, if (position == 0) size else 0, 0] = size
             }
         })
-        adapter.setEmptyView(R.layout.new_empty_page_status_layout)
         deviceListBean?.let { adapter.addData(it) }
 
     }
@@ -95,6 +100,7 @@ class MultiDeviceSettingNameSiteActivity :
         adapter.getEmptyView().cl_layout.setVisible(true)
         if (adapter.data.isEmpty()) {
             ll_next_layout.setVisible(false)
+            show_success_or_fail.setInvisible(false)
         }
         adapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
 
@@ -124,7 +130,7 @@ class MultiDeviceSettingNameSiteActivity :
                     }
 
                     override fun onPositionDone(s: String) {
-
+                        mPresenter.getAllDeviceLocation(scopeId)
                     }
 
                 }).setTitle(deviceListBean?.get(position)?.deviceName)

@@ -87,16 +87,14 @@ class MultiDeviceDistributionNetActivity : BaseMvpActivity<MultiDeviceAddView, M
      */
     override fun multiBindSuccess(data: MultiBindResp) {
         val deviceList = ArrayList<DeviceListBean.DevicesBean>()
-        if (!data.success.isEmpty()){
             for ((index,e) in data.success.withIndex()){
                 val devicesBean = DeviceListBean.DevicesBean()
                 devicesBean.deviceId=e
                 devicesBean.iconUrl=(subNodeBean.get("deviceUrl") ?: "") as String
                 devicesBean.deviceName= (subNodeBean.get("productName") ?: "") as String
                 deviceList.add(devicesBean)
-            }
         }
-        startActivity<MultiDeviceSettingNameSiteActivity>(Keys.NODEDATA to deviceList,Keys.DATA to subNodeBean)
+        startActivity<MultiDeviceSettingNameSiteActivity>(Keys.NODEDATA to deviceList,Keys.NODEFailDATA to data.failed,Keys.DATA to subNodeBean)
     }
 
     /**

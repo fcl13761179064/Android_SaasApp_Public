@@ -107,7 +107,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
 
     private fun toBindPage() {
-        val deviceIdList =   multiDeviceFoundAdapter.data.filter{ it.isSelectDevice==true }.map {  it.deviceId }
+        val deviceIdList =   multiDeviceFoundAdapter.data.map {  it.deviceId }
         startActivity<MultiDeviceDistributionNetActivity>(
             Keys.ID to gatewayDeviceId,
             Keys.DATA to addinfo,
@@ -117,11 +117,6 @@ class SearchMultiDeviceActivity : BasicActivity() {
     }
 
     override fun initListener() {
-        multiDeviceFoundAdapter.setOnItemClickListener(BaseQuickAdapter.OnItemClickListener{adapter, view, position ->
-         val deviceBean = adapter.data.get(position) as DeviceListBean.DevicesBean
-           deviceBean.isSelectDevice =!deviceBean.isSelectDevice
-            multiDeviceFoundAdapter.notifyItemChanged(position)
-        })
         mdf_btn_next.singleClick {
             if (mdf_btn_next.text.equals("重新搜索")) {
                 startFindDevice()
@@ -136,7 +131,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     @FlowPreview
     private fun startFindDevice() {
-
+        multiDeviceFoundAdapter.getEmptyView().tv_title.setText("正在搜索设备中")
         pollJob = lifecycleScope.launch {
             flow {
                 emit(api.updateProperty(gatewayDeviceId, createGatewayParam("120")))
@@ -196,7 +191,6 @@ class SearchMultiDeviceActivity : BasicActivity() {
         for (index in 0 until result.size) {
             result.get(index).iconUrl = NodeDeviceUrl
             result.get(index).deviceName = NodeDeviceName
-            result.get(index).isSelectDevice = true
         }
         multiDeviceFoundAdapter.setNewData(result)
         if (result.isNullOrEmpty()) {
@@ -231,6 +225,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
             (mdf_iv_loading.drawable as? ProgressDrawable)?.stop()
             mdf_iv_loading.setVisible(false)
             if (multiDeviceFoundAdapter.data.isNullOrEmpty()) {
+                multiDeviceFoundAdapter.getEmptyView().tv_title.setText("未搜索到设备，请排查以下问题")
                 mdf_tv_loading.setVisible(false)
                 mdf_iv_retry_or_remain_time.setInvisible(false)
                 ll_next_layout.setVisible(false)

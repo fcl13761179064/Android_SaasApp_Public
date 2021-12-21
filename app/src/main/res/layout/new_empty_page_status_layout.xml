@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="82dp"
-        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_10"
         android:layout_marginRight="82dp"
         android:text="① 网关是否处于在线状态"
         android:textSize="13sp"

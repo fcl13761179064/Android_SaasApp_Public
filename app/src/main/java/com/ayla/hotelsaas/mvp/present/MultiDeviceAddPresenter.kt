@@ -50,6 +50,7 @@ class MultiDeviceAddPresenter : BasePresenter<MultiDeviceAddView?>() {
             apiService.multiBindDevice(GsonUtils.toJson(MultiBindRequest(bindReqList)).toReqBody())
                 .flatMap { bindResult ->
                     val successDeviceIds = bindResult.data.success
+                    val failDeviceIds = bindResult.data.failed
                     if (successDeviceIds.isNullOrEmpty()) {
                         return@flatMap Observable.error(Exception())
                     }
