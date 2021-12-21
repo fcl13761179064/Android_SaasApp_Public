@@ -47,7 +47,6 @@
         android:text="重新搜索"
         android:textColor="@color/serch_multi_device_yellow"
         android:textSize="12sp"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/mdf_tv_loading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/mdf_tv_loading" />

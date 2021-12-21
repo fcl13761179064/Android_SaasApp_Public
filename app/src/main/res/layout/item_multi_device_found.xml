@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="84dp"
     android:layout_marginLeft="10dp"
-    android:layout_marginTop="@dimen/dp_10"
     android:layout_marginRight="10dp"
     android:background="@drawable/bg_device_item"
-    android:layout_margin="16dp">
+    android:layout_marginEnd="@dimen/dp_16"
+    android:layout_marginStart="@dimen/dp_16"
+    android:layout_marginTop="12dp">
 
     <ImageView
         android:id="@+id/device_left_iv"

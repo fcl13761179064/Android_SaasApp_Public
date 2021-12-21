@@ -68,7 +68,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
     }
 
     companion object {
-        private const val POLL_REQUEST_TIME_OUT_MILLS = 120000L
+        private const val POLL_REQUEST_TIME_OUT_MILLS = 1000L
         private const val COUNT_DOWN_MILLS = 30000L
         private const val MAX_DEVICE_COUNT_LIMIT = 20
     }

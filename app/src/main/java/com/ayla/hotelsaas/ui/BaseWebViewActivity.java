@@ -22,8 +22,6 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
 
     private DWebView mWebView;
 
-    private boolean hasError, hasLoaded;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,13 +48,17 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onReceivedError(view, request, error);
                 int errorCode = error.getErrorCode();
                 Log.d(TAG, "onReceivedError2: " + errorCode + error.getDescription());
+                if (request!=null){
+                    if (request.isForMainFrame()) {//如果是主框架加载失败，就显示自定义空 页面
+                        emptyView.setVisibility(View.VISIBLE);
+                    }
+                }
             }
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 Log.d(TAG, "onPageStarted: ");
-                hasError = false;
                 showProgress();
                 emptyView.setVisibility(View.INVISIBLE);
                 mWebView.setVisibility(View.INVISIBLE);
@@ -67,16 +69,7 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onPageFinished(view, url);
                 Log.d(TAG, "onPageFinished: ");
                 hideProgress();
-                if (!hasLoaded) {
-                    if (hasError) {
-                        mWebView.setVisibility(View.INVISIBLE);
-                        emptyView.setVisibility(View.VISIBLE);
-                    } else {
-                        hasLoaded = true;
-                        mWebView.setVisibility(View.VISIBLE);
-                        emptyView.setVisibility(View.INVISIBLE);
-                    }
-                }
+                mWebView.setVisibility(View.VISIBLE);
             }
         });
         IX5WebViewExtension x5WebViewExtension = mWebView.getX5WebViewExtension();
