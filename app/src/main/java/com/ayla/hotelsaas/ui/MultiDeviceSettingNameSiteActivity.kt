@@ -28,6 +28,7 @@ import com.ayla.hotelsaas.widget.RuleNameDialog
 import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import kotlinx.android.synthetic.main.activity_device_setting.*
+import kotlinx.android.synthetic.main.item_device_add.*
 import kotlinx.android.synthetic.main.new_empty_page_status_layout.view.*
 import org.jetbrains.anko.startActivity
 
@@ -102,6 +103,7 @@ class MultiDeviceSettingNameSiteActivity :
                                 dialog: DialogFragment?,
                                 txt: String,
                                 empty_notice: TextView?) {
+                                devicesBean.deviceName=txt
                                 mPresenter.deviceRenameMethod(deviceListBean?.get(position)?.deviceId ,txt
                                 )
                             }
