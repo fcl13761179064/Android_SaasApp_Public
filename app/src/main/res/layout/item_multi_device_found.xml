@@ -7,7 +7,7 @@
     android:background="@drawable/bg_device_item"
     android:layout_marginEnd="@dimen/dp_16"
     android:layout_marginStart="@dimen/dp_16"
-    android:layout_marginTop="12dp">
+    android:layout_marginBottom="12dp">
 
     <ImageView
         android:id="@+id/device_left_iv"
