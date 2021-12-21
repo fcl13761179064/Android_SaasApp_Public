@@ -16,6 +16,9 @@ import com.ayla.hotelsaas.bean.DeviceListBean
 import com.ayla.hotelsaas.bean.DeviceLocationBean
 import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.data.net.RetrofitHelper
+import com.ayla.hotelsaas.events.AllAddDeviceEvent
+import com.ayla.hotelsaas.events.DeviceAddEvent
+import com.ayla.hotelsaas.events.DeviceChangedEvent
 import com.ayla.hotelsaas.mvp.present.MultiSignleRenamePresenter
 import com.ayla.hotelsaas.mvp.view.MultiSinaleRenameView
 import com.ayla.hotelsaas.page.ext.setInvisible
@@ -28,6 +31,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import kotlinx.android.synthetic.main.activity_device_setting.*
 import kotlinx.android.synthetic.main.new_empty_page_status_layout.view.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 /**
@@ -53,7 +57,6 @@ class MultiDeviceSettingNameSiteActivity :
     override fun getLayoutId(): Int = R.layout.activity_device_setting
 
     override fun getLayoutView(): View? = null
-
 
     override fun initView() {
         deviceSuccessListBean =  intent.getSerializableExtra(Keys.NODEDATA)?.let {
@@ -135,9 +138,13 @@ class MultiDeviceSettingNameSiteActivity :
 
         mdf_btn_next.setOnClickListener(View.OnClickListener {
             startActivity<MainActivity>()
+            EventBus.getDefault().post(DeviceAddEvent())
+            finish()
+
         })
         adapter.getEmptyView().log_out.singleClick {
             startActivity<MainActivity>()
+            EventBus.getDefault().post(DeviceAddEvent())
             finish()
         }
         adapter.getEmptyView().bt_resert_search.singleClick {

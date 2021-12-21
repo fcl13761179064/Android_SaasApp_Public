@@ -283,6 +283,4 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         super.rb_all_data();
         EventBus.getDefault().post(new AllAddDeviceEvent());
     }
-
-
 }
