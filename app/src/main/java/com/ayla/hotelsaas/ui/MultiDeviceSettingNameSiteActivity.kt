@@ -175,7 +175,6 @@ class MultiDeviceSettingNameSiteActivity :
         deviceListBean: MutableList<DeviceLocationBean>,
         deviceBean: DeviceListBean.DevicesBean
     ) {//位置
-        var deviceId = (subNodeBean.get("deviceId")?:"") as String
         var defIndex = 0
         for (i in deviceListBean.indices) {
             if (TextUtils.equals(deviceListBean.get(i).regionName, deviceBean.regionName)) {
@@ -189,7 +188,7 @@ class MultiDeviceSettingNameSiteActivity :
             .setDefaultIndex(defIndex)
             .setCallback {
                 deviceBean.regionName=it.regionName
-                mPresenter.updatePurpose(deviceId, it.regionId)
+                mPresenter.updateDevicePositionSite(deviceBean.deviceId, it.regionId,it.regionName)
             } .show(supportFragmentManager, "positionDialog")
     }
 

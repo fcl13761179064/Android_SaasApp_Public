@@ -16,11 +16,13 @@ import butterknife.OnClick
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.text.TextUtils
 import android.view.View
 import android.view.animation.CycleInterpolator
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatCheckBox
+import com.ayla.hotelsaas.application.Constance
 import com.ayla.hotelsaas.utils.ImageLoader
 import kotlinx.android.synthetic.main.activity_device_add_guide.*
 
@@ -34,12 +36,16 @@ class DeviceAddGuideActivity : BaseMvpActivity<DeviceAddGuideView?, DeviceAddGui
     private val REQUEST_CODE_GET_WIFI_SSID_PWD = 0X10
     private var addInfo: Bundle? = null
     private var deviceId:String? = null
+    private var replaceDeviceId:String? = null
+    private var waitBindDeviceId:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addInfo = intent.getBundleExtra("addInfo")
         deviceId = (addInfo?.get("deviceId") ?:"") as String
         val pid = (addInfo?.get("pid") ?:"") as String
+        replaceDeviceId = (addInfo?.get("replaceDeviceId") ?:"") as String
+        waitBindDeviceId = (addInfo?.get("waitBindDeviceId") ?:"") as String
         mPresenter!!.getNetworkConfigGuide(pid)
     }
 
@@ -67,12 +73,12 @@ class DeviceAddGuideActivity : BaseMvpActivity<DeviceAddGuideView?, DeviceAddGui
         if (networkType == 5) { //艾拉WiFi设备配网
             val mainActivity = Intent(this, AylaWiFiAddInputActivity::class.java)
             startActivityForResult(mainActivity, REQUEST_CODE_GET_WIFI_SSID_PWD)
-        } else if (devicesBean?.find { it.deviceId == deviceId && it.bindType==0}?.isAylaSmartGateway == true) {//这是yala智能网关，支持批量配网
+        } else if (devicesBean?.find {  it.deviceId == deviceId }?.isAylaSmartGateway == true &&TextUtils.isEmpty(waitBindDeviceId) && TextUtils.isEmpty(replaceDeviceId) ) {//这是yala智能网关，支持批量配网
             // networkType == 3 艾拉节点设备配网  networkType == 4 鸿雁节点设备配网
             val searchMultiDeviceActivity = Intent(this, SearchMultiDeviceActivity::class.java)
             searchMultiDeviceActivity.putExtras(intent)
             startActivity(searchMultiDeviceActivity)
-        } else {//这里是鸿雁网关节点设备配网，不支持批量配网  带绑定设备也走这里
+        } else {//这里是鸿雁网关节点设备配网，不支持批量配网
             val mainActivity = Intent(this, DeviceAddActivity::class.java)
             mainActivity.putExtra("addInfo", addInfo)
             startActivity(mainActivity)

@@ -665,9 +665,8 @@ public class RequestModel {
      * 设置设备位置
      * @return
      */
-    public Observable<Boolean> devicePositionSite(String deviceId, String pointName, long regionId, String regionName) {
+    public Observable<Boolean> devicePositionSite(String deviceId, long regionId, String regionName) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("pointName", pointName);
         jsonObject.addProperty("regionId", regionId);
         jsonObject.addProperty("regionName", regionName);
         RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());

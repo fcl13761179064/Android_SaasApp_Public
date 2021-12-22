@@ -70,8 +70,8 @@ public class MultiSignleRenamePresenter extends BasePresenter<MultiSinaleRenameV
         addSubscrebe(subscribe);
     }
 
-    public void updatePurpose(String deviceId, Long purposeCategory) {
-        Disposable subscribe = RequestModel.getInstance().MultiupdatePosition(deviceId, purposeCategory)
+    public void updateDevicePositionSite(String deviceId, Long regionId,String regionName) {
+        Disposable subscribe = RequestModel.getInstance().devicePositionSite( deviceId, regionId,regionName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {

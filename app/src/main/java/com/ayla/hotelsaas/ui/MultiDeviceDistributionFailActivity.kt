@@ -5,8 +5,10 @@ import android.view.View
 import com.ayla.hotelsaas.R
 import com.ayla.hotelsaas.base.BasicActivity
 import com.ayla.hotelsaas.common.Keys
+import com.ayla.hotelsaas.events.DeviceAddEvent
 import com.ayla.hotelsaas.page.ext.setVisible
 import kotlinx.android.synthetic.main.new_empty_page_status_layout.*
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 
 class MultiDeviceDistributionFailActivity : BasicActivity() {
@@ -35,6 +37,7 @@ class MultiDeviceDistributionFailActivity : BasicActivity() {
         })
 
         log_out.setOnClickListener(View.OnClickListener {
+            EventBus.getDefault().post(DeviceAddEvent())
             startActivity<MainActivity>()
         })
     }

@@ -240,10 +240,12 @@ public class DeviceListBean {
         }
 
         /**
-         * 判断是否是艾拉智能网关
+         * 判断是否是艾拉智能网关并且是否是bindtype==0
          */
         public boolean isAylaSmartGateway() {
             return  Constance.A2_GATEWAY_PID.equals(pid);
         }
+
+
     }
 }
