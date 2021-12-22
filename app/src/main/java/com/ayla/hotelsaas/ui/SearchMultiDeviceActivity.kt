@@ -130,6 +130,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
     @FlowPreview
     private fun startFindDevice() {
         multiDeviceFoundAdapter.getEmptyView().tv_loading_search.setText("正在搜索设备中")
+        tv_desc.setText("请勾选需要配网的设备，后点击“下一步”")
         pollJob = lifecycleScope.launch {
             flow {
                 emit(api.updateProperty(gatewayDeviceId, createGatewayParam("120")))
@@ -271,6 +272,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
             countDown.cancel()
             mdf_iv_retry_or_remain_time.setVisible(false)
             mdf_btn_next.setText("重新搜索")
+            tv_desc.setText("搜索超时，请重新搜索")
         }
     }
 
@@ -293,12 +295,6 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
         override fun onFinish() {
         }
-    }
-
-    @FlowPreview
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        startFindDevice()
     }
 
     override fun onDestroy() {
