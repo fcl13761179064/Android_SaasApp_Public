@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:center_tv="设备搜索"
+        app:left_iv="@mipmap/icon_back_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -84,7 +85,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="11dp"
             android:gravity="center"
-            android:text="请勾选需要配网的设备，后点击“下一步”"
+            android:text=""
             app:layout_constraintBottom_toTopOf="@id/mdf_btn_next" />
 
         <Button

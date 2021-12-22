@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         app:center_tv="添加设备"
         app:layout_constraintTop_toTopOf="parent"
-        app:left_iv="@mipmap/icon_back_black" />
+       />
 
 
     <FrameLayout

@@ -46,7 +46,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
     private val addinfo by lazy {
         intent.getBundleExtra("addInfo")
     }
-    private val countDown = CountDown(COUNT_DOWN_MILLS, 1500L)//这个是倒计3秒然后开始搜索
+    private val countDown = CountDown(COUNT_DOWN_MILLS, 1000L)//这个是倒计3秒然后开始搜索
     private val remain120countDown =
         Count120Down(POLL_REQUEST_TIME_OUT_MILLS, 1000L)//这个是倒计120秒,120秒就停止搜索
     private val gatewayDeviceId by lazy {
@@ -133,7 +133,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
     @FlowPreview
     private fun startFindDevice() {
         multiDeviceFoundAdapter.getEmptyView().tv_loading_search.setText("正在搜索设备中")
-        tv_desc.setText("请勾选需要配网的设备，后点击“下一步”")
+        tv_desc.setVisible(false)
         pollJob = lifecycleScope.launch {
             flow {
                 emit(api.updateProperty(gatewayDeviceId, createGatewayParam("120")))
@@ -275,6 +275,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
             countDown.cancel()
             mdf_iv_retry_or_remain_time.setVisible(false)
             mdf_btn_next.setText("重新搜索")
+            tv_desc.setVisible(true)
             tv_desc.setText("搜索超时，请重新搜索")
         }
     }

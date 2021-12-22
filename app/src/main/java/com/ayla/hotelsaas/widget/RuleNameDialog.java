@@ -98,7 +98,7 @@ public class RuleNameDialog extends DialogFragment {
         TextView titleTextView = view.findViewById(R.id.tv_title);
         TextView empty_notice = view.findViewById(R.id.empty_notice);
         titleTextView.setText(title);
-        view.findViewById(R.id.v_done).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.rl_confire).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -109,7 +109,7 @@ public class RuleNameDialog extends DialogFragment {
                 }
             }
         });
-        view.findViewById(R.id.v_cancel).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.rl_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (doneCallback != null) {

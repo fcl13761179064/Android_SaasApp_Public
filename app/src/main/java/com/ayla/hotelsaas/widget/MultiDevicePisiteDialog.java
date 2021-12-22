@@ -123,7 +123,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
             }
         });
 
-        binding.vCancel.setOnClickListener(new View.OnClickListener() {
+        binding.rlCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
              dismissAllowingStateLoss();
