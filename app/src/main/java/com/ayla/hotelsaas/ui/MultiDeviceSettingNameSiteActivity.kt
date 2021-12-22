@@ -163,6 +163,7 @@ class MultiDeviceSettingNameSiteActivity :
     }
 
     override fun renameSuccess(nickName: String?) {
+        adapter.notifyDataSetChanged()
         CustomToast.makeText(this, "重命名成功", R.drawable.ic_success)
     }
 
@@ -194,5 +195,10 @@ class MultiDeviceSettingNameSiteActivity :
 
     override fun updatePurposeSuccess() {
         CustomToast.makeText(this, "设置成功", R.drawable.ic_success)
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun updatePurposeFail(throwable: Throwable?) {
+        CustomToast.makeText(this, "设置失败", R.drawable.ic_success)
     }
 }

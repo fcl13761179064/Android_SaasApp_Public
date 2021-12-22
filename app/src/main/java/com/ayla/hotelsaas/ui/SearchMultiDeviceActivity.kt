@@ -19,9 +19,7 @@ import com.ayla.hotelsaas.page.ext.setInvisible
 import com.ayla.hotelsaas.page.ext.setVisible
 import com.ayla.hotelsaas.page.ext.singleClick
 import com.ayla.hotelsaas.utils.RecycleViewDivider
-import com.blankj.utilcode.util.ClickUtils
 import com.blankj.utilcode.util.TimeUtils
-import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.gson.JsonObject
 import com.scwang.smart.drawable.ProgressDrawable
 import kotlinx.android.synthetic.main.activity_search_multi_device.*

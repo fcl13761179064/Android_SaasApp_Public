@@ -67,12 +67,12 @@ class DeviceAddGuideActivity : BaseMvpActivity<DeviceAddGuideView?, DeviceAddGui
         if (networkType == 5) { //艾拉WiFi设备配网
             val mainActivity = Intent(this, AylaWiFiAddInputActivity::class.java)
             startActivityForResult(mainActivity, REQUEST_CODE_GET_WIFI_SSID_PWD)
-        } else if (devicesBean?.find { it.deviceId == deviceId }?.isAylaSmartGateway == true) {//这是yala智能网关，支持批量配网
+        } else if (devicesBean?.find { it.deviceId == deviceId && it.bindType==0}?.isAylaSmartGateway == true) {//这是yala智能网关，支持批量配网
             // networkType == 3 艾拉节点设备配网  networkType == 4 鸿雁节点设备配网
             val searchMultiDeviceActivity = Intent(this, SearchMultiDeviceActivity::class.java)
             searchMultiDeviceActivity.putExtras(intent)
             startActivity(searchMultiDeviceActivity)
-        } else {//这里是鸿雁网关节点设备配网，不支持批量配网
+        } else {//这里是鸿雁网关节点设备配网，不支持批量配网  带绑定设备也走这里
             val mainActivity = Intent(this, DeviceAddActivity::class.java)
             mainActivity.putExtra("addInfo", addInfo)
             startActivity(mainActivity)

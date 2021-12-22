@@ -14,4 +14,6 @@ public interface MultiSinaleRenameView extends BaseView {
     void loadDeviceLocationSuccess(List<DeviceLocationBean> deviceListBean, DeviceListBean.DevicesBean positionSite);
 
     void updatePurposeSuccess();
+
+    void updatePurposeFail(Throwable throwable);
 }

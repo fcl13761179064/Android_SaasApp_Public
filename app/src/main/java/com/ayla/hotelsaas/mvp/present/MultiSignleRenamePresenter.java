@@ -94,7 +94,7 @@ public class MultiSignleRenamePresenter extends BasePresenter<MultiSinaleRenameV
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mView.renameFailed(throwable);
+                        mView.updatePurposeFail(throwable);
                     }
                 });
         addSubscrebe(subscribe);
