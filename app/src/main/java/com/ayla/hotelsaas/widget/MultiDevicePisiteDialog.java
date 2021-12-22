@@ -38,7 +38,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
     private Callback callback;
 
 
-    private String title;
+    private  String title;
     private CheckableSupport checkableSupport;
 
     public static MultiDevicePisiteDialog newInstance() {
@@ -82,6 +82,8 @@ public class MultiDevicePisiteDialog extends DialogFragment {
         });
         esss adapter = new esss(R.layout.item_scene_setting_function_datum_set, supports);
         adapter.bindToRecyclerView(binding.rv);
+        binding.rv.setAdapter(adapter);
+        adapter.setEmptyView(R.layout.empty_hongyan_device);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -104,6 +106,18 @@ public class MultiDevicePisiteDialog extends DialogFragment {
                     DeviceLocationBean data = (DeviceLocationBean) checkableSupport.getData();
                     callback.doConfire(data);
                     dismissAllowingStateLoss();
+                }else {
+                    if (supports.size()>0){
+                        DeviceLocationBean data = (DeviceLocationBean)supports.get(0).getData();
+                        callback.doConfire(data);
+                        dismissAllowingStateLoss();
+                    }else {
+                        DeviceLocationBean data = new DeviceLocationBean();
+                                data.setRegionName("阳台");
+                                data.setRegionId(1379984424178946048L);
+                        callback.doConfire(data);
+                        dismissAllowingStateLoss();
+                    }
                 }
 
             }
@@ -115,18 +129,8 @@ public class MultiDevicePisiteDialog extends DialogFragment {
              dismissAllowingStateLoss();
             }
         });
-        binding.rv.setAdapter(adapter);
-        adapter.setEmptyView(R.layout.empty_hongyan_device);
-        binding.rv.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-                int size = SizeUtils.dp2px(10);
-                int position = parent.getChildAdapterPosition(view);
 
-                outRect.set(0, (position == 0) ? size : 0, 0, size);
-            }
-        });
+        binding.tvName.setText(title);
     }
 
     @Override

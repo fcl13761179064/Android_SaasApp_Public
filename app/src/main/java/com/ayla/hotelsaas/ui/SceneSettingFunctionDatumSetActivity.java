@@ -51,7 +51,7 @@ public class SceneSettingFunctionDatumSetActivity extends BaseMvpActivity<SceneS
 
     @Override
     protected int getLayoutId() {
-        return R.layout.dialog_multi_device_posite_set;
+        return R.layout.activity_scene_function_datum_set;
     }
 
     @Override

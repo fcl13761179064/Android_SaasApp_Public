@@ -13,7 +13,7 @@
         android:layout_marginTop="19dp"
         android:layout_marginBottom="19dp"
         android:gravity="center"
-        android:text="12221212"
+        android:text="设备位置"
         android:textColor="@color/color_333333"
         android:textSize="18dp" />
 
@@ -61,6 +61,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:enabled="true"
             android:text="确定"
             android:textColor="#648C1A"
             android:textSize="17sp" />

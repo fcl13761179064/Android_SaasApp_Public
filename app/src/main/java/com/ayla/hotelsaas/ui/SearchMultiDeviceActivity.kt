@@ -15,6 +15,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean
 import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.common.ResultCode
 import com.ayla.hotelsaas.data.net.RetrofitHelper
+import com.ayla.hotelsaas.events.DeviceAddEvent
 import com.ayla.hotelsaas.page.ext.setInvisible
 import com.ayla.hotelsaas.page.ext.setVisible
 import com.ayla.hotelsaas.page.ext.singleClick
@@ -33,6 +34,7 @@ import kotlinx.coroutines.flow.onStart
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.startActivity
 import java.lang.RuntimeException
 
@@ -97,6 +99,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
             startFindDevice()
         }
         multiDeviceFoundAdapter.getEmptyView().log_out.singleClick {
+            EventBus.getDefault().post(DeviceAddEvent())
             startActivity<MainActivity>()
         }
         //开始发现设备
