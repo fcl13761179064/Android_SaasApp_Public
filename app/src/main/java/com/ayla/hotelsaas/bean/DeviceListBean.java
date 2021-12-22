@@ -239,7 +239,6 @@ public class DeviceListBean {
             return isNeedGateway;
         }
 
-        //判断是否是ayla智能网关
         /**
          * 判断是否是艾拉智能网关
          */

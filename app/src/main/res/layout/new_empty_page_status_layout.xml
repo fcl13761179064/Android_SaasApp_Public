@@ -24,9 +24,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <!-- 暂无设备 -->
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/tv_loading_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -55,7 +56,7 @@
         android:textColor="#993C3C43"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_loading_search" />
 
     <TextView
         android:id="@+id/tv_two"

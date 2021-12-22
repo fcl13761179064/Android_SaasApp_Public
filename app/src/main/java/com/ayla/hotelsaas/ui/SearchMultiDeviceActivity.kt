@@ -131,7 +131,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     @FlowPreview
     private fun startFindDevice() {
-        multiDeviceFoundAdapter.getEmptyView().tv_title.setText("正在搜索设备中")
+        multiDeviceFoundAdapter.getEmptyView().tv_loading_search.setText("正在搜索设备中")
         pollJob = lifecycleScope.launch {
             flow {
                 emit(api.updateProperty(gatewayDeviceId, createGatewayParam("120")))
@@ -225,9 +225,9 @@ class SearchMultiDeviceActivity : BasicActivity() {
             (mdf_iv_loading.drawable as? ProgressDrawable)?.stop()
             mdf_iv_loading.setVisible(false)
             if (multiDeviceFoundAdapter.data.isNullOrEmpty()) {
-                multiDeviceFoundAdapter.getEmptyView().tv_title.setText("未搜索到设备，请排查以下问题")
                 mdf_tv_loading.setVisible(false)
                 mdf_iv_retry_or_remain_time.setInvisible(false)
+                multiDeviceFoundAdapter.getEmptyView().tv_loading_search.setText("未搜索到设备，请排查以下问题")
                 ll_next_layout.setVisible(false)
                 multiDeviceFoundAdapter.getEmptyView().cl_layout.setVisible(true)
             }
@@ -270,6 +270,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
         }
 
         override fun onFinish() {
+            countDown.cancel()
             mdf_iv_retry_or_remain_time.setVisible(false)
             mdf_btn_next.setText("重新搜索")
         }
