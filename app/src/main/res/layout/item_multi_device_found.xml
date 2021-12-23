@@ -4,7 +4,7 @@
     android:layout_height="84dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:background="@drawable/bg_device_item"
+    android:background="@color/white"
     android:layout_marginEnd="@dimen/dp_16"
     android:layout_marginStart="@dimen/dp_16"
     android:layout_marginBottom="12dp">
