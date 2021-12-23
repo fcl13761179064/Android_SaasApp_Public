@@ -50,7 +50,10 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 Log.d(TAG, "onReceivedError2: " + errorCode + error.getDescription());
                 if (request!=null){
                     if (request.isForMainFrame()) {//如果是主框架加载失败，就显示自定义空 页面
-                        emptyView.setVisibility(View.VISIBLE);
+                        if (emptyView!=null){
+                            emptyView.setVisibility(View.INVISIBLE);
+
+                        }
                     }
                 }
             }
@@ -60,7 +63,9 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onPageStarted(view, url, favicon);
                 Log.d(TAG, "onPageStarted: ");
                 showProgress();
-                emptyView.setVisibility(View.INVISIBLE);
+                if (emptyView!=null ){
+                    emptyView.setVisibility(View.INVISIBLE);
+                }
                 mWebView.setVisibility(View.INVISIBLE);
             }
 

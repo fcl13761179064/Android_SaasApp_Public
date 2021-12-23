@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayla.hotelsaas.R
 import com.ayla.hotelsaas.adapter.MultiDeviceFoundAdapter
 import com.ayla.hotelsaas.api.CoroutineApiService
+import com.ayla.hotelsaas.application.MyApplication
 import com.ayla.hotelsaas.base.BasicActivity
 import com.ayla.hotelsaas.bean.DeviceListBean
 import com.ayla.hotelsaas.common.Keys
@@ -20,6 +21,7 @@ import com.ayla.hotelsaas.page.ext.setInvisible
 import com.ayla.hotelsaas.page.ext.setVisible
 import com.ayla.hotelsaas.page.ext.singleClick
 import com.ayla.hotelsaas.utils.RecycleViewDivider
+import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.google.gson.JsonObject
 import com.scwang.smart.drawable.ProgressDrawable

@@ -80,7 +80,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
                 outRect.set(0, (position == 0) ? size : 0, 0, size);
             }
         });
-        esss adapter = new esss(R.layout.item_scene_setting_function_datum_set, supports);
+        esss adapter = new esss(R.layout.dialog_multi_device_select_position, supports);
         adapter.bindToRecyclerView(binding.rv);
         binding.rv.setAdapter(adapter);
         adapter.setEmptyView(R.layout.empty_hongyan_device);
