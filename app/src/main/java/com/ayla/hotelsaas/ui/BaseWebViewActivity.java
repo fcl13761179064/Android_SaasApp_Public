@@ -21,7 +21,6 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
     private final String TAG = this.getClass().getSimpleName();
 
     private DWebView mWebView;
-    private boolean hasError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,6 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
                 Log.d(TAG, "onReceivedError1: " + errorCode + description);
-                hasError = true;
             }
 
             @Override
@@ -50,9 +48,11 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onReceivedError(view, request, error);
                 int errorCode = error.getErrorCode();
                 Log.d(TAG, "onReceivedError2: " + errorCode + error.getDescription());
-                if (request != null) {
+                if (request!=null){
                     if (request.isForMainFrame()) {//如果是主框架加载失败，就显示自定义空 页面
-                        hasError = true;
+                        if (emptyView!=null){
+                            emptyView.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             }
@@ -62,11 +62,10 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onPageStarted(view, url, favicon);
                 Log.d(TAG, "onPageStarted: ");
                 showProgress();
-                hasError = false;
-                if (emptyView != null) {
+                if (emptyView!=null ){
                     emptyView.setVisibility(View.INVISIBLE);
                 }
-                mWebView.setVisibility(View.INVISIBLE);
+                mWebView.setAlpha(0);
             }
 
             @Override
@@ -74,17 +73,8 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onPageFinished(view, url);
                 Log.d(TAG, "onPageFinished: ");
                 hideProgress();
-                if (hasError) {
-                    if (emptyView != null) {
-                        mWebView.setVisibility(View.INVISIBLE);
-                        emptyView.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    if (emptyView != null) {
-                        mWebView.setVisibility(View.VISIBLE);
-                        emptyView.setVisibility(View.INVISIBLE);
-                    }
-                }
+                mWebView.setVisibility(View.VISIBLE);
+                mWebView.setAlpha(1);
             }
         });
         IX5WebViewExtension x5WebViewExtension = mWebView.getX5WebViewExtension();
