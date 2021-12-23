@@ -99,7 +99,6 @@ class MultiDeviceSettingNameSiteActivity :
             show_success_or_fail.setInvisible(false)
         }
         adapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
-
             override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View?, position: Int) {
                 val devicesBean = adapter.getItem(position) as (DeviceListBean.DevicesBean)
                 MultiDeviceRenameOrPositeMethodDialog.newInstance(object :

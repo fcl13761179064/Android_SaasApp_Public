@@ -108,7 +108,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
 
     private fun toBindPage() {
-        val deviceIdList =   multiDeviceFoundAdapter.data.map {  it.deviceId }
+        val deviceIdList = multiDeviceFoundAdapter.data.map { it.deviceId }
         startActivity<MultiDeviceDistributionNetActivity>(
             Keys.ID to gatewayDeviceId,
             Keys.DATA to addinfo,
@@ -132,8 +132,6 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     @FlowPreview
     private fun startFindDevice() {
-        multiDeviceFoundAdapter.getEmptyView().tv_loading_search.setText("正在搜索设备中")
-        tv_desc.setVisible(false)
         pollJob = lifecycleScope.launch {
             flow {
                 emit(api.updateProperty(gatewayDeviceId, createGatewayParam("120")))
@@ -198,7 +196,11 @@ class SearchMultiDeviceActivity : BasicActivity() {
         if (result.isNullOrEmpty()) {
             mdf_tv_loading.text = "设备搜索中"
         } else {
-            mdf_tv_loading.text = "搜索到${result.size}个设备$suffixTip"
+            if (result.size > 20) {
+                mdf_tv_loading.text = "$suffixTip"
+            } else {
+                mdf_tv_loading.text = "搜索到${result.size}个设备"
+            }
         }
         mdf_btn_next.isEnabled = result.isNotEmpty()
     }
@@ -206,6 +208,8 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     private fun doFindDeviceStart() {
         runOnUiThread {
+            multiDeviceFoundAdapter.getEmptyView().tv_loading_search.setText("正在搜索设备中")
+            tv_desc.setVisible(false)
             multiDeviceFoundAdapter.getEmptyView().cl_layout.setVisible(false)
             mdf_iv_loading.setVisible(true)
             mdf_iv_retry_or_remain_time.setVisible(true)
@@ -268,6 +272,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
         @SuppressLint("SetTextI18n")
         override fun onTick(millisUntilFinished: Long) {
+            mdf_iv_retry_or_remain_time.setTextColor(resources.getColor(R.color.serch_retry))
             mdf_iv_retry_or_remain_time.text = "${millisUntilFinished / 1000}s 后重试"
         }
 
@@ -287,6 +292,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
         @SuppressLint("SetTextI18n")
         override fun onTick(millisUntilFinished: Long) {
+            mdf_iv_retry_or_remain_time.setTextColor(resources.getColor(R.color.serch_multi_device_yellow))
             mdf_iv_retry_or_remain_time.setText(
                 "搜索剩余 ${
                     (TimeUtils.millis2String(

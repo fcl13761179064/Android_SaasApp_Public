@@ -94,7 +94,6 @@ public class MultiDevicePisiteDialog extends DialogFragment {
                         supports.get(i).setChecked(false);
                     }
                     checkableSupport.setChecked(true);
-                    checkableSupport.setChecked(checkableSupport.isChecked());
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -174,7 +173,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
         @Override
         protected void convert(BaseViewHolder helper, CheckableSupport item) {
             helper.setText(R.id.tv_function_name, ((DeviceLocationBean) item.getData()).getRegionName());
-            helper.setVisible(R.id.cb_function_checked, item.isChecked());
+            helper.setChecked(R.id.cb_function_checked, item.isChecked());
         }
     }
 
