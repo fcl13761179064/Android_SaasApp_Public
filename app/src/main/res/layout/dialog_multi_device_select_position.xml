@@ -7,7 +7,7 @@
     android:layout_marginTop="@dimen/dp_10"
     android:background="@drawable/bg_item_scene_attrite">
 
-    <CheckBox
+    <ImageView
         android:id="@+id/cb_function_checked"
         android:layout_width="22dp"
         android:layout_height="22dp"
@@ -15,7 +15,6 @@
         android:layout_marginLeft="30dp"
         android:background="@drawable/scene_signle_model_seletor"
         android:button="@null"
-        android:enabled="false"
         android:drawable="@null" />
 
     <TextView

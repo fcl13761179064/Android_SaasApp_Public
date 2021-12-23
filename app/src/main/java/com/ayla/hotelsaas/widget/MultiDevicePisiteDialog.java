@@ -98,6 +98,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
                 }
             }
         });
+
         binding.vDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,7 +176,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
         @Override
         protected void convert(BaseViewHolder helper, CheckableSupport item) {
             helper.setText(R.id.tv_function_name, ((DeviceLocationBean) item.getData()).getRegionName());
-            helper.setChecked(R.id.cb_function_checked, item.isChecked());
+            helper.getView(R.id.cb_function_checked).setSelected(item.isChecked());
         }
     }
 
