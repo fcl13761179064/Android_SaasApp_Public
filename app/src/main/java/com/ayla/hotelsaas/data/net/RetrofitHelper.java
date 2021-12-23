@@ -21,10 +21,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
+import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -75,7 +77,7 @@ public class RetrofitHelper {
 
     public static Retrofit getRetrofit() {
         if (retrofit == null) {
-             retrofit = new Retrofit.Builder()
+            retrofit = new Retrofit.Builder()
                     .client(getOkHttpClient())
                     .addConverterFactory(GsonConverterFactory.create(buildGson()))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -102,24 +104,33 @@ public class RetrofitHelper {
      * 获取 OkHttpClient * * @return OkHttpClient
      */
     private static OkHttpClient getOkHttpClient() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        OkHttpClient.Builder builder = null;
+        try {
+            builder = new OkHttpClient.Builder();
+            builder.connectTimeout(6000, TimeUnit.MILLISECONDS)
+                    .readTimeout(6000, TimeUnit.MILLISECONDS)
+                    .writeTimeout(6000, TimeUnit.SECONDS)//写入超时时间
+                    .connectionPool(new ConnectionPool(32, 5, TimeUnit.MINUTES))//连接池
+                    .build();
+            builder.addInterceptor(CommonParameterInterceptor);//添加请求头
+            builder.addInterceptor(ReloginInterceptor);//登录失败 重新登录
+            LogUtils.getConfig().setLog2FileSwitch(false).setBorderSwitch(false).setLogHeadSwitch(false);
+            builder.addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+                @Override
+                public void log(String message) {
+                    LogUtils.dTag("okhttp", message);
+                }
+            }).setLevel(Constance.isOpenLog() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE));
+            builder.retryOnConnectionFailure(true);
 
-        builder.addInterceptor(CommonParameterInterceptor);//添加请求头
-        builder.addInterceptor(ReloginInterceptor);//登录失败 重新登录
-        LogUtils.getConfig().setLog2FileSwitch(false).setBorderSwitch(false).setLogHeadSwitch(false);
-        builder.addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(String message) {
-                LogUtils.dTag("okhttp", message);
+            if (Constance.isOpenLog()) {
+                builder.sslSocketFactory(SSLUtil.getSslSocketFactory().sSLSocketFactory, SSLUtil.getSslSocketFactory().trustManager)
+                        .hostnameVerifier(SSLUtil.UnSafeHostnameVerifier);
             }
-        }).setLevel(Constance.isOpenLog() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE));
-        builder.retryOnConnectionFailure(true);
 
-        if (Constance.isOpenLog()) {
-            builder.sslSocketFactory(SSLUtil.getSslSocketFactory().sSLSocketFactory, SSLUtil.getSslSocketFactory().trustManager)
-                    .hostnameVerifier(SSLUtil.UnSafeHostnameVerifier);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         return builder.build();
     }
 
