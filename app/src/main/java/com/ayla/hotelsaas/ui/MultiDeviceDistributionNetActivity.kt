@@ -19,6 +19,7 @@ import com.ayla.hotelsaas.page.ext.setVisible
 import com.ayla.hotelsaas.protocol.MultiBindResp
 import com.ayla.hotelsaas.protocol.MultiBindResultBean
 import com.ayla.hotelsaas.utils.SharePreferenceUtils
+import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ToastUtils
 import kotlinx.android.synthetic.main.activity_multi_device_bind.*
 import kotlinx.android.synthetic.main.new_empty_page_status_layout.view.*

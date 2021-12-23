@@ -121,10 +121,12 @@ public class MultiDevicePisiteDialog extends DialogFragment {
 
             }
         });
-
         binding.rlCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (callback!=null){
+                    callback.cancelButton();
+                }
              dismissAllowingStateLoss();
             }
         });
@@ -179,5 +181,6 @@ public class MultiDevicePisiteDialog extends DialogFragment {
 
     public interface Callback {
         void doConfire(DeviceLocationBean object);
+        void cancelButton();
     }
 }

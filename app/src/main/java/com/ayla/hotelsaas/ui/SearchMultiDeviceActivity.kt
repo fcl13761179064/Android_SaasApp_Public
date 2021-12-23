@@ -1,7 +1,11 @@
 package com.ayla.hotelsaas.ui
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.Toast
@@ -21,6 +25,8 @@ import com.ayla.hotelsaas.page.ext.setInvisible
 import com.ayla.hotelsaas.page.ext.setVisible
 import com.ayla.hotelsaas.page.ext.singleClick
 import com.ayla.hotelsaas.utils.RecycleViewDivider
+import com.ayla.hotelsaas.utils.WifiUtil
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.google.gson.JsonObject
@@ -85,15 +91,14 @@ class SearchMultiDeviceActivity : BasicActivity() {
     }
 
     override fun initView() {
+        if (!NetworkUtils.isConnected()) {
+            CustomToast.makeText(this, "网络异常", R.drawable.ic_toast_warming)
+            return
+        }
+        val intentRecevier = IntentRecevier() // intentRecevier定义为全局变量
+        var filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        this.registerReceiver(intentRecevier, filter)
         mdf_rv_content.layoutManager = LinearLayoutManager(this)
-        mdf_rv_content.addItemDecoration(
-            RecycleViewDivider(
-                this,
-                LinearLayoutManager.VERTICAL,
-                3,
-                R.color.all_bg_color
-            )
-        )
         multiDeviceFoundAdapter.bindToRecyclerView(mdf_rv_content)
         mdf_rv_content.adapter = multiDeviceFoundAdapter
         multiDeviceFoundAdapter.setEmptyView(R.layout.new_empty_page_status_layout)
@@ -121,6 +126,10 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     override fun initListener() {
         mdf_btn_next.singleClick {
+            if (!NetworkUtils.isConnected()) {
+                CustomToast.makeText(this, "网络异常", R.drawable.ic_toast_warming)
+                return@singleClick
+            }
             if (mdf_btn_next.text.equals("重新搜索")) {
                 startFindDevice()
                 mdf_btn_next.setText("下一步")
@@ -157,9 +166,9 @@ class SearchMultiDeviceActivity : BasicActivity() {
                             }
                             emit(nodes)
                         } catch (ignore: Exception) {
+                            ignore.printStackTrace()
                         }
                         delay(2000L)
-
                     }
                 }
             }.onStart {
@@ -181,11 +190,20 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun showFoundDevice(data: List<DeviceListBean.DevicesBean>?) {
+     /*  val mutableListOf = mutableListOf<DeviceListBean.DevicesBean>()
+          for (index in 0 until 100) {
+              val devicesBean = DeviceListBean.DevicesBean()
+              devicesBean.deviceId = "111111111"
+              mutableListOf.add(devicesBean)
+          }*/
         val foundDevices = data?.toMutableList() ?: mutableListOf()
         var suffixTip = ""
         val result = if (foundDevices.size > MAX_DEVICE_COUNT_LIMIT) {
-            suffixTip = "（设备搜索中...已达设备上限）"
+            suffixTip = "设备搜索中...已达设备上限"
             foundDevices.subList(0, MAX_DEVICE_COUNT_LIMIT)
+        } else if (foundDevices.size < MAX_DEVICE_COUNT_LIMIT && foundDevices.size > 0) {
+            suffixTip = "搜索到${foundDevices.size}个设备"
+            foundDevices
         } else {
             suffixTip = ""
             foundDevices
@@ -198,11 +216,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
         if (result.isNullOrEmpty()) {
             mdf_tv_loading.text = "设备搜索中"
         } else {
-            if (result.size > 20) {
-                mdf_tv_loading.text = "$suffixTip"
-            } else {
-                mdf_tv_loading.text = "搜索到${result.size}个设备"
-            }
+            mdf_tv_loading.text = "$suffixTip"
         }
         mdf_btn_next.isEnabled = result.isNotEmpty()
     }
@@ -218,8 +232,8 @@ class SearchMultiDeviceActivity : BasicActivity() {
             mdf_tv_loading.setVisible(true)
             ll_next_layout.setVisible(true)
             remain120countDown.cancel()
-            remain120countDown.start()
             countDown.cancel()
+            remain120countDown.start()
             mdf_tv_loading.text = "设备搜索中"
             multiDeviceFoundAdapter.setNewData(null)
             mdf_btn_next.isEnabled = false
@@ -227,9 +241,8 @@ class SearchMultiDeviceActivity : BasicActivity() {
         }
     }
 
-    private fun doFindDeviceEnd() {
+    private suspend fun doFindDeviceEnd() {
         runOnUiThread {
-            remain120countDown.cancel()
             (mdf_iv_loading.drawable as? ProgressDrawable)?.stop()
             mdf_iv_loading.setVisible(false)
             if (multiDeviceFoundAdapter.data.isNullOrEmpty()) {
@@ -242,13 +255,17 @@ class SearchMultiDeviceActivity : BasicActivity() {
         }
         if (!multiDeviceFoundAdapter.data.isNullOrEmpty()) {
             countDown.start()
+        } else {
+            remain120countDown.cancel()
         }
         exitGatewayJoinMode()
     }
 
-    private fun exitGatewayJoinMode() {
-        lifecycleScope.launch {
+    private suspend fun exitGatewayJoinMode() {
+        try {
             api.updateProperty(gatewayDeviceId, createGatewayParam("0"))
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -276,14 +293,15 @@ class SearchMultiDeviceActivity : BasicActivity() {
         override fun onTick(millisUntilFinished: Long) {
             mdf_iv_retry_or_remain_time.setTextColor(resources.getColor(R.color.serch_retry))
             mdf_iv_retry_or_remain_time.text = "${millisUntilFinished / 1000}s 后重试"
+            LogUtils.d("Multi", 1)
         }
 
         override fun onFinish() {
-            countDown.cancel()
             mdf_iv_retry_or_remain_time.setVisible(false)
             mdf_btn_next.setText("重新搜索")
             tv_desc.setVisible(true)
             tv_desc.setText("搜索超时，请重新搜索")
+            LogUtils.d("Multi", 11)
         }
     }
 
@@ -294,6 +312,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
         @SuppressLint("SetTextI18n")
         override fun onTick(millisUntilFinished: Long) {
+            LogUtils.d("Multi", 111)
             mdf_iv_retry_or_remain_time.setTextColor(resources.getColor(R.color.serch_multi_device_yellow))
             mdf_iv_retry_or_remain_time.setText(
                 "搜索剩余 ${
@@ -306,6 +325,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
         }
 
         override fun onFinish() {
+
         }
     }
 
@@ -314,9 +334,29 @@ class SearchMultiDeviceActivity : BasicActivity() {
             (mdf_iv_loading.drawable as? ProgressDrawable)?.stop()
             if (!pollJob.isCancelled) pollJob.cancel()
         } catch (ignore: Exception) {
+            ignore.printStackTrace()
         }
         super.onDestroy()
     }
+
+
+    class IntentRecevier() : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val manager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkInfo = manager.activeNetworkInfo
+
+            // 判断网络情况
+            if (networkInfo != null && networkInfo.isAvailable) {
+                // 网络可用时的执行内容
+            } else {
+                // 网络不可用时的执行内容
+                CustomToast.makeText(context, "网络异常", R.drawable.ic_toast_warming)
+            }
+        }
+
+    }
+
 }
 
 

@@ -15,6 +15,7 @@
         android:layout_marginLeft="30dp"
         android:background="@drawable/scene_signle_model_seletor"
         android:button="@null"
+        android:enabled="false"
         android:drawable="@null" />
 
     <TextView

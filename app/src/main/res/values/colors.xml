@@ -56,4 +56,6 @@
     <color name="seekbar_left">#FF436CFF</color>
     <color name="seekbar_sat_left">#c4c4c4</color>
     <color name="seekbar_sat_end">#648C1A</color>
+    <color name="complate_distribute_button">#699937</color>
+    <color name="multi_next_gry_color">#D6DADC</color>
 </resources>

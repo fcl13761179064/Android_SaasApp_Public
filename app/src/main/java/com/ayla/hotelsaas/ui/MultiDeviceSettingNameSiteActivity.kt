@@ -16,9 +16,7 @@ import com.ayla.hotelsaas.bean.DeviceListBean
 import com.ayla.hotelsaas.bean.DeviceLocationBean
 import com.ayla.hotelsaas.common.Keys
 import com.ayla.hotelsaas.data.net.RetrofitHelper
-import com.ayla.hotelsaas.events.AllAddDeviceEvent
 import com.ayla.hotelsaas.events.DeviceAddEvent
-import com.ayla.hotelsaas.events.DeviceChangedEvent
 import com.ayla.hotelsaas.mvp.present.MultiSignleRenamePresenter
 import com.ayla.hotelsaas.mvp.view.MultiSinaleRenameView
 import com.ayla.hotelsaas.page.ext.setInvisible
@@ -48,6 +46,8 @@ class MultiDeviceSettingNameSiteActivity :
     private var deviceSuccessListBean: List<DeviceListBean.DevicesBean>? = null
     private var deviceFailListBean: List<DeviceListBean.DevicesBean>? = null
     private var scopeId: Long = -1L
+    private var devicesBean :DeviceListBean.DevicesBean?=null
+    private var firstDialog :MultiDeviceRenameOrPositeMethodDialog?=null
     private lateinit var subNodeBean: Bundle
     override fun onResume() {
         super.onResume()
@@ -100,28 +100,11 @@ class MultiDeviceSettingNameSiteActivity :
         }
         adapter.setOnItemClickListener(object : BaseQuickAdapter.OnItemClickListener {
             override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View?, position: Int) {
-                val devicesBean = adapter.getItem(position) as (DeviceListBean.DevicesBean)
-                MultiDeviceRenameOrPositeMethodDialog.newInstance(object :
+                 devicesBean = adapter.getItem(position) as (DeviceListBean.DevicesBean)
+               firstDialog =MultiDeviceRenameOrPositeMethodDialog.newInstance(object :
                     MultiDeviceRenameOrPositeMethodDialog.DoneCallback {
                     override fun onNameDone(name: String) {
-                        RuleNameDialog.newInstance(object : RuleNameDialog.DoneCallback {
-                            override fun onDone(
-                                dialog: DialogFragment?,
-                                txt: String,
-                                empty_notice: TextView?
-                            ) {
-                                devicesBean.deviceName = txt
-                                mPresenter.deviceRenameMethod(
-                                    deviceSuccessListBean?.get(position)?.deviceId, txt
-                                )
-                            }
-
-                            override fun onCancel(dialog: DialogFragment?) {
-
-                            }
-
-                        }).setEditValue(devicesBean.deviceName).setTitle("填写名称")
-                            .show(supportFragmentManager, "setting_name")
+                        renameDialog(position)
                     }
 
                     override fun onPositionDone(positionSite: DeviceListBean.DevicesBean) {
@@ -130,7 +113,7 @@ class MultiDeviceSettingNameSiteActivity :
 
                 }).setTitle(deviceSuccessListBean?.get(position)?.deviceName)
                     .setPositionSite(deviceSuccessListBean?.get(position))
-                    .show(supportFragmentManager, "setting_name_position")
+                    firstDialog?.show(supportFragmentManager, "fitstDialog")
             }
 
         })
@@ -152,7 +135,26 @@ class MultiDeviceSettingNameSiteActivity :
         }
     }
 
+  private fun renameDialog(position: Int) {
+      RuleNameDialog.newInstance(object : RuleNameDialog.DoneCallback {
+          override fun onDone(
+              dialog: DialogFragment?,
+              txt: String,
+              empty_notice: TextView?
+          ) {
+              devicesBean?.deviceName = txt
+              mPresenter.deviceRenameMethod(
+                  deviceSuccessListBean?.get(position)?.deviceId, txt
+              )
+          }
 
+          override fun onCancel(dialog: DialogFragment?) {
+           firstDialog?.show(supportFragmentManager,"fitstDialog")
+          }
+
+      }).setEditValue(devicesBean?.deviceName).setTitle("填写名称")
+          .show(supportFragmentManager, "setting_name")
+  }
     private fun getRoomData() {
 
     }
@@ -185,10 +187,17 @@ class MultiDeviceSettingNameSiteActivity :
             .setTitle("设置位置")
             .setData(deviceListBean)
             .setDefaultIndex(defIndex)
-            .setCallback {
-                deviceBean.regionName=it.regionName
-                mPresenter.updateDevicePositionSite(deviceBean.deviceId, it.regionId,it.regionName)
-            } .show(supportFragmentManager, "positionDialog")
+            .setCallback(object :MultiDevicePisiteDialog.Callback{
+                override fun doConfire(it: DeviceLocationBean?) {
+                    deviceBean.regionName=it?.regionName
+                    mPresenter.updateDevicePositionSite(deviceBean.deviceId, it?.regionId,it?.regionName)
+                }
+
+                override fun cancelButton() {
+                    firstDialog?.show(supportFragmentManager,"fitstDialog")
+                }
+
+            }).show(supportFragmentManager,"second_dialog")
     }
 
     override fun updatePurposeSuccess() {

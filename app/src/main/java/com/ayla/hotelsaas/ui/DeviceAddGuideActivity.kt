@@ -24,6 +24,7 @@ import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatCheckBox
 import com.ayla.hotelsaas.application.Constance
 import com.ayla.hotelsaas.utils.ImageLoader
+import com.ayla.hotelsaas.widget.FastClickUtils
 import kotlinx.android.synthetic.main.activity_device_add_guide.*
 
 /**
@@ -68,20 +69,28 @@ class DeviceAddGuideActivity : BaseMvpActivity<DeviceAddGuideView?, DeviceAddGui
       })
     }
     private fun handleJump() {
+
         val networkType = addInfo!!.getInt("networkType")
         val devicesBean = MyApplication.getInstance().devicesBean
         if (networkType == 5) { //艾拉WiFi设备配网
-            val mainActivity = Intent(this, AylaWiFiAddInputActivity::class.java)
-            startActivityForResult(mainActivity, REQUEST_CODE_GET_WIFI_SSID_PWD)
+            if (!FastClickUtils.isDoubleClick()){
+                val mainActivity = Intent(this, AylaWiFiAddInputActivity::class.java)
+                startActivityForResult(mainActivity, REQUEST_CODE_GET_WIFI_SSID_PWD)
+            }
         } else if (devicesBean?.find {  it.deviceId == deviceId }?.isAylaSmartGateway == true &&TextUtils.isEmpty(waitBindDeviceId) && TextUtils.isEmpty(replaceDeviceId) ) {//这是yala智能网关，支持批量配网
             // networkType == 3 艾拉节点设备配网  networkType == 4 鸿雁节点设备配网
-            val searchMultiDeviceActivity = Intent(this, SearchMultiDeviceActivity::class.java)
-            searchMultiDeviceActivity.putExtras(intent)
-            startActivity(searchMultiDeviceActivity)
+                if (!FastClickUtils.isDoubleClick()){
+                    val searchMultiDeviceActivity = Intent(this, SearchMultiDeviceActivity::class.java)
+                    searchMultiDeviceActivity.putExtras(intent)
+                    startActivity(searchMultiDeviceActivity)
+                }
         } else {//这里是鸿雁网关节点设备配网，不支持批量配网
-            val mainActivity = Intent(this, DeviceAddActivity::class.java)
-            mainActivity.putExtra("addInfo", addInfo)
-            startActivity(mainActivity)
+            if (!FastClickUtils.isDoubleClick()){
+                val mainActivity = Intent(this, DeviceAddActivity::class.java)
+                mainActivity.putExtra("addInfo", addInfo)
+                startActivity(mainActivity)
+            }
+
         }
     }
 
