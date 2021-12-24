@@ -92,12 +92,9 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     override fun initView() {
         if (!NetworkUtils.isConnected()) {
-            CustomToast.makeText(this, "网络异常", R.drawable.ic_toast_warming)
+            CustomToast.makeOnlyHaseText(this, "网络异常")
             return
         }
-        val intentRecevier = IntentRecevier() // intentRecevier定义为全局变量
-        var filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        this.registerReceiver(intentRecevier, filter)
         mdf_rv_content.layoutManager = LinearLayoutManager(this)
         multiDeviceFoundAdapter.bindToRecyclerView(mdf_rv_content)
         mdf_rv_content.adapter = multiDeviceFoundAdapter
@@ -127,7 +124,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
     override fun initListener() {
         mdf_btn_next.singleClick {
             if (!NetworkUtils.isConnected()) {
-                CustomToast.makeText(this, "网络异常", R.drawable.ic_toast_warming)
+                CustomToast.makeOnlyHaseText(this, "网络异常")
                 return@singleClick
             }
             if (mdf_btn_next.text.equals("重新搜索")) {
@@ -174,11 +171,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
             }.onStart {
                 doFindDeviceStart()
             }.catch {
-                CustomToast.makeText(
-                    this@SearchMultiDeviceActivity,
-                    "服务异常，请稍后重试",
-                    Toast.LENGTH_LONG
-                )
+                CustomToast.makeOnlyHaseText(this@SearchMultiDeviceActivity, "服务异常，请稍后重试")
             }.onCompletion {
                 doFindDeviceEnd()
             }.flowOn(Dispatchers.IO).collect {
@@ -190,7 +183,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun showFoundDevice(data: List<DeviceListBean.DevicesBean>?) {
-     /*  val mutableListOf = mutableListOf<DeviceListBean.DevicesBean>()
+     /*val mutableListOf = mutableListOf<DeviceListBean.DevicesBean>()
           for (index in 0 until 100) {
               val devicesBean = DeviceListBean.DevicesBean()
               devicesBean.deviceId = "111111111"
@@ -340,22 +333,7 @@ class SearchMultiDeviceActivity : BasicActivity() {
     }
 
 
-    class IntentRecevier() : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val manager =
-                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val networkInfo = manager.activeNetworkInfo
 
-            // 判断网络情况
-            if (networkInfo != null && networkInfo.isAvailable) {
-                // 网络可用时的执行内容
-            } else {
-                // 网络不可用时的执行内容
-                CustomToast.makeText(context, "网络异常", R.drawable.ic_toast_warming)
-            }
-        }
-
-    }
 
 }
 

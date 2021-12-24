@@ -1,7 +1,9 @@
 package com.ayla.hotelsaas.application;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
+import com.ayla.hotelsaas.ui.NetWorkListenActivity;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.ProcessUtils;
 import com.tencent.smtt.export.external.TbsCoreSettings;
@@ -63,6 +66,7 @@ public class MyApplication extends AApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        NetWorkLister();
         Log.d(TAG, "version name: " + BuildConfig.VERSION_NAME + ", version code: " + BuildConfig.VERSION_CODE);
         mInstance = this;
         if (ProcessUtils.isMainProcess()) {
@@ -88,6 +92,11 @@ public class MyApplication extends AApplication {
             Log.d(TAG, "onResume: GlobalConfig.getInstance().getAuthCode():" + GlobalConfig.getInstance().getAuthCode());
             Log.d(TAG, "onResume: netDebug:" + Constance.isNetworkDebug());
         }
+    }
+    public void NetWorkLister(){//这个是网络监听
+        NetWorkListenActivity intentRecevier =new NetWorkListenActivity(); // intentRecevier定义为全局变量
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        this.registerReceiver(intentRecevier, filter);
     }
 
    /* private void initBugly() {

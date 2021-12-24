@@ -48,13 +48,13 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onReceivedError(view, request, error);
                 int errorCode = error.getErrorCode();
                 Log.d(TAG, "onReceivedError2: " + errorCode + error.getDescription());
-                if (request!=null){
+              /*  if (request!=null){
                     if (request.isForMainFrame()) {//如果是主框架加载失败，就显示自定义空 页面
                         if (emptyView!=null){
                             emptyView.setVisibility(View.VISIBLE);
                         }
                     }
-                }
+                }*/
             }
 
             @Override
@@ -73,8 +73,10 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onPageFinished(view, url);
                 Log.d(TAG, "onPageFinished: ");
                 hideProgress();
-                mWebView.setVisibility(View.VISIBLE);
-                mWebView.setAlpha(1);
+                if (mWebView!=null){
+                    mWebView.setVisibility(View.VISIBLE);
+                    mWebView.setAlpha(1);
+                }
             }
         });
         IX5WebViewExtension x5WebViewExtension = mWebView.getX5WebViewExtension();
