@@ -14,6 +14,7 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@null</item>
+        <item name="android:forceDarkAllowed" tools:ignore="NewApi">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">false</item>
     </style>
 

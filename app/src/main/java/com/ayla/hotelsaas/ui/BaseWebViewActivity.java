@@ -11,6 +11,7 @@ import com.tencent.smtt.export.external.extension.interfaces.IX5WebViewExtension
 import com.tencent.smtt.export.external.interfaces.WebResourceError;
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
 import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
@@ -43,18 +44,19 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 Log.d(TAG, "onReceivedError1: " + errorCode + description);
             }
 
+
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
                 int errorCode = error.getErrorCode();
                 Log.d(TAG, "onReceivedError2: " + errorCode + error.getDescription());
-              /*  if (request!=null){
+                if (request != null) {
                     if (request.isForMainFrame()) {//如果是主框架加载失败，就显示自定义空 页面
-                        if (emptyView!=null){
+                        if (emptyView != null) {
                             emptyView.setVisibility(View.VISIBLE);
                         }
                     }
-                }*/
+                }
             }
 
             @Override
@@ -62,7 +64,7 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onPageStarted(view, url, favicon);
                 Log.d(TAG, "onPageStarted: ");
                 showProgress();
-                if (emptyView!=null ){
+                if (emptyView != null) {
                     emptyView.setVisibility(View.INVISIBLE);
                 }
                 mWebView.setAlpha(0);
@@ -73,12 +75,13 @@ public abstract class BaseWebViewActivity extends BaseMvpActivity {
                 super.onPageFinished(view, url);
                 Log.d(TAG, "onPageFinished: ");
                 hideProgress();
-                if (mWebView!=null){
+                if (mWebView != null) {
                     mWebView.setVisibility(View.VISIBLE);
                     mWebView.setAlpha(1);
                 }
             }
         });
+
         IX5WebViewExtension x5WebViewExtension = mWebView.getX5WebViewExtension();
         Log.d(TAG, "onCreate: " + x5WebViewExtension);
         WebView.setWebContentsDebuggingEnabled(Constance.isOpenLog());
