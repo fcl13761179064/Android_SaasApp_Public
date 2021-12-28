@@ -25,6 +25,7 @@
         android:persistent="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
             android:name=".ui.SPlashActivity"
@@ -243,6 +244,7 @@
             android:process=":dexopt" />
 
         <service android:name=".UpgradeDownloadService" />
+
 
         <meta-data
             android:name="io.sentry.dsn"
