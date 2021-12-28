@@ -2,6 +2,7 @@ package com.ayla.hotelsaas.widget;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,14 +43,11 @@ public class MultiDevicePisiteDialog extends DialogFragment {
     private CheckableSupport checkableSupport;
 
     public static MultiDevicePisiteDialog newInstance() {
-
         Bundle args = new Bundle();
-
         MultiDevicePisiteDialog fragment = new MultiDevicePisiteDialog();
         fragment.setArguments(args);
         return fragment;
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,6 +55,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
         binding = DialogMultiDevicePositeSetBinding.inflate(inflater);
         return binding.getRoot();
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -142,6 +141,7 @@ public class MultiDevicePisiteDialog extends DialogFragment {
         getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         params.windowAnimations = R.style.main_menu_animstyle;
         params.width = getResources().getDisplayMetrics().widthPixels;
+        params.height = (int) (getResources().getDisplayMetrics().heightPixels*0.5);
         params.gravity = Gravity.BOTTOM;
         getDialog().getWindow().setAttributes(params);
     }
