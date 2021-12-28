@@ -4,15 +4,22 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.ayla.base.rx.BaseException;
 import com.ayla.hotelsaas.BuildConfig;
+import com.ayla.hotelsaas.R;
 import com.ayla.hotelsaas.adapter.StringNullAdapter;
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.api.ApiService;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
+import com.ayla.hotelsaas.ui.CustomToast;
 import com.ayla.hotelsaas.ui.LoginActivity;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
+import com.ayla.hotelsaas.utils.WifiUtil;
+import com.ayla.hotelsaas.widget.WifiUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.NetworkUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -20,10 +27,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
+import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -53,6 +62,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitHelper {
     private static ApiService apiService;
+    private static Retrofit retrofit;
     private static Gson gson;
 
     private RetrofitHelper() {
@@ -69,6 +79,18 @@ public class RetrofitHelper {
             apiService = retrofit.create(ApiService.class);
         }
         return apiService;
+    }
+
+    public static Retrofit getRetrofit() {
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .client(getOkHttpClient())
+                    .addConverterFactory(GsonConverterFactory.create(buildGson()))
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .baseUrl(Constance.getBaseUrl())
+                    .build();
+        }
+        return retrofit;
     }
 
     /*
@@ -88,24 +110,33 @@ public class RetrofitHelper {
      * 获取 OkHttpClient * * @return OkHttpClient
      */
     private static OkHttpClient getOkHttpClient() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        OkHttpClient.Builder builder = null;
+        try {
+            builder = new OkHttpClient.Builder();
+            builder.addInterceptor(CommonParameterInterceptor);//添加请求头
+            builder.addInterceptor(ReloginInterceptor);//登录失败 重新登录
+            builder.connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)//写入超时时间
+                    .connectionPool(new ConnectionPool(32, 5, TimeUnit.MINUTES))//连接池
+                    .build();
+            LogUtils.getConfig().setLog2FileSwitch(false).setBorderSwitch(false).setLogHeadSwitch(false);
+            builder.addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+                @Override
+                public void log(String message) {
+                    LogUtils.dTag("okhttp", message);
+                }
+            }).setLevel(Constance.isOpenLog() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE));
+            builder.retryOnConnectionFailure(true);
 
-        builder.addInterceptor(CommonParameterInterceptor);//添加请求头
-        builder.addInterceptor(ReloginInterceptor);//登录失败 重新登录
-        LogUtils.getConfig().setLog2FileSwitch(false).setBorderSwitch(false).setLogHeadSwitch(false);
-        builder.addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(String message) {
-                LogUtils.dTag("okhttp", message);
+            if (Constance.isOpenLog()) {
+                builder.sslSocketFactory(SSLUtil.getSslSocketFactory().sSLSocketFactory, SSLUtil.getSslSocketFactory().trustManager)
+                        .hostnameVerifier(SSLUtil.UnSafeHostnameVerifier);
             }
-        }).setLevel(Constance.isOpenLog() ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE));
-        builder.retryOnConnectionFailure(true);
 
-        if (Constance.isOpenLog()) {
-            builder.sslSocketFactory(SSLUtil.getSslSocketFactory().sSLSocketFactory, SSLUtil.getSslSocketFactory().trustManager)
-                    .hostnameVerifier(SSLUtil.UnSafeHostnameVerifier);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         return builder.build();
     }
 
@@ -138,70 +169,68 @@ public class RetrofitHelper {
     private static Interceptor ReloginInterceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
-            //原始接口请求
-            Request originalRequest = chain.request();
-            //原始接口结果
-            Response originalResponse = chain.proceed(originalRequest);
+                //原始接口请求
+                Request originalRequest = chain.request();
+                //原始接口结果
+                Response  originalResponse = chain.proceed(originalRequest);
+                MediaType mediaType = originalResponse.body().contentType();
+                String content = originalResponse.body().string();
+                if (originalResponse.isSuccessful()) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(content);
+                        int code = jsonObject.optInt("code");
 
-            MediaType mediaType = originalResponse.body().contentType();
-            String content = originalResponse.body().string();
-            originalResponse.body().close();
-            if (originalResponse.isSuccessful()) {
-                try {
-                    JSONObject jsonObject = new JSONObject(content);
-                    int code = jsonObject.optInt("code");
+                        if (code == 122001 || code == 121002) {
+                            synchronized (RetrofitHelper.class) {
+                                if (code == 122001) {//authToken过期
+                                    {
+                                        String authorization = originalRequest.header("Authorization");
+                                        String savedToken = SharePreferenceUtils.getString(MyApplication.getContext(), Constance.SP_Login_Token, null);
+                                        if (!TextUtils.isEmpty(savedToken) && !TextUtils.equals(authorization, savedToken)) {//如果本地的token不为空，并且和请求中的token不一致，说明有更新本地token
+                                            return CommonParameterInterceptor.intercept(chain);
+                                        }
+                                    }
 
-                    if (code == 122001 || code == 121002) {
-                        synchronized (RetrofitHelper.class) {
-                            if (code == 122001) {//authToken过期
-                                {
-                                    String authorization = originalRequest.header("Authorization");
-                                    String savedToken = SharePreferenceUtils.getString(MyApplication.getContext(), Constance.SP_Login_Token, null);
-                                    if (!TextUtils.isEmpty(savedToken) && !TextUtils.equals(authorization, savedToken)) {//如果本地的token不为空，并且和请求中的token不一致，说明有更新本地token
+                                    Future<String[]> tokenRefreshFuture;
+                                    String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
+                                    if (!TextUtils.isEmpty(refresh_token)) {
+                                        tokenRefreshFuture = RequestModel.getInstance()
+                                                .refreshToken(refresh_token)
+                                                .map(new Function<User, String[]>() {
+                                                    @Override
+                                                    public String[] apply(@NonNull User user) throws Exception {
+                                                        return new String[]{user.getAuthToken(), user.getRefreshToken()};
+                                                    }
+                                                })
+                                                .toFuture();
+                                    } else {
+                                        tokenRefreshFuture = Observable.just(new String[0]).toFuture();
+                                    }
+
+                                    String[] tokens = null;
+                                    try {
+                                        tokens = tokenRefreshFuture.get();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    if (tokens == null || tokens.length == 0) {//刷新token失败
+                                        jump2Main();
+                                    } else {//token刷新成功
+                                        SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, tokens[0]);
+                                        SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, tokens[1]);
                                         return CommonParameterInterceptor.intercept(chain);
                                     }
-                                }
-
-                                Future<String[]> tokenRefreshFuture;
-                                String refresh_token = SharePreferenceUtils.getString(MyApplication.getInstance(), Constance.SP_Refresh_Token, null);
-                                if (!TextUtils.isEmpty(refresh_token)) {
-                                    tokenRefreshFuture = RequestModel.getInstance()
-                                            .refreshToken(refresh_token)
-                                            .map(new Function<User, String[]>() {
-                                                @Override
-                                                public String[] apply(@NonNull User user) throws Exception {
-                                                    return new String[]{user.getAuthToken(), user.getRefreshToken()};
-                                                }
-                                            })
-                                            .toFuture();
-                                } else {
-                                    tokenRefreshFuture = Observable.just(new String[0]).toFuture();
-                                }
-
-                                String[] tokens = null;
-                                try {
-                                    tokens = tokenRefreshFuture.get();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                if (tokens == null || tokens.length == 0) {//刷新token失败
+                                } else if (code == 121002) {//authToken不正确
                                     jump2Main();
-                                } else {//token刷新成功
-                                    SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Login_Token, tokens[0]);
-                                    SharePreferenceUtils.saveString(MyApplication.getContext(), Constance.SP_Refresh_Token, tokens[1]);
-                                    return CommonParameterInterceptor.intercept(chain);
                                 }
-                            } else if (code == 121002) {//authToken不正确
-                                jump2Main();
                             }
                         }
+                    } catch (Exception e) {
+                        Log.e("token_refresh", "intercept: ", e);
                     }
-                } catch (Exception e) {
-                    Log.e("token_refresh", "intercept: ", e);
                 }
-            }
-            return originalResponse.newBuilder().body(ResponseBody.create(mediaType, content)).build();
+                return originalResponse.newBuilder().body(ResponseBody.create(mediaType, content)).build();
         }
     };
 

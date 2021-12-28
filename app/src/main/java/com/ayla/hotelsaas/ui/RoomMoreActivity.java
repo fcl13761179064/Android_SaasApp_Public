@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.events.DeviceRemovedEvent;

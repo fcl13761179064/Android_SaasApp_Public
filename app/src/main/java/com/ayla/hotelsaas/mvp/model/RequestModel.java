@@ -3,7 +3,7 @@ package com.ayla.hotelsaas.mvp.model;
 
 import android.text.TextUtils;
 
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.bean.A2BindInfoBean;
 import com.ayla.hotelsaas.bean.BaseResult;
@@ -12,7 +12,6 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
-import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
@@ -31,15 +30,19 @@ import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
-import com.ayla.hotelsaas.data.net.ApiService;
+import com.ayla.hotelsaas.api.ApiService;
 import com.ayla.hotelsaas.data.net.BaseResultTransformer;
 import com.ayla.hotelsaas.data.net.RetrofitHelper;
 import com.ayla.hotelsaas.data.net.ServerBadException;
+import com.ayla.hotelsaas.protocol.BindGetwayReq;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
+import com.blankj.utilcode.util.GsonUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -645,6 +648,34 @@ public class RequestModel {
     }
 
     /**
+     * 设置重新命名
+     *
+     * @return
+     */
+    public Observable<Boolean> deviceSigleRename(String deviceId, String nickName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("nickName", nickName);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().deviceRename(deviceId, body111)
+                .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                });
+    }
+
+    /**
+     * 设置设备位置
+     * @return
+     */
+    public Observable<Boolean> devicePositionSite(String deviceId, long regionId, String regionName) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("regionId", regionId);
+        jsonObject.addProperty("regionName", regionName);
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().deviceRename(deviceId, body111)
+                .compose(new BaseResultTransformer<BaseResult<Boolean>, Boolean>() {
+                });
+    }
+
+    /**
      * 设置设备属性的别名
      *
      * @param nickNameId
@@ -866,6 +897,16 @@ public class RequestModel {
     }
 
     public Observable updatePurpose(String deviceId, int purposeCategory) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("deviceId", deviceId);
+        jsonObject.addProperty("purposeCategory", purposeCategory);
+
+        RequestBody body111 = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=UTF-8"), jsonObject.toString());
+        return getApiService().updatePurpose(body111);
+    }
+
+
+    public Observable MultiupdatePosition(String deviceId, Long purposeCategory) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("deviceId", deviceId);
         jsonObject.addProperty("purposeCategory", purposeCategory);

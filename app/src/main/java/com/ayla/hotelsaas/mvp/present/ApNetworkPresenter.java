@@ -4,15 +4,11 @@ package com.ayla.hotelsaas.mvp.present;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.base.BasePresenter;
-import com.ayla.hotelsaas.bean.BaseResult;
 import com.ayla.hotelsaas.bean.DeviceListBean;
-import com.ayla.hotelsaas.data.net.ApiService;
-import com.ayla.hotelsaas.data.net.UnifiedErrorConsumer;
 import com.ayla.hotelsaas.mvp.model.RequestModel;
 import com.ayla.hotelsaas.mvp.view.ApDeviceAddView;
-import com.ayla.hotelsaas.mvp.view.RoomMoreView;
 import com.ayla.hotelsaas.widget.DisposableObservable;
 import com.ayla.hotelsaas.widget.DisposableObservableOnSubscribe;
 import com.ayla.ng.lib.bootstrap.AylaSetupDevice;
@@ -22,7 +18,6 @@ import com.ayla.ng.lib.bootstrap.common.AylaDisposable;
 import com.ayla.ng.lib.bootstrap.connectivity.AylaConnectivityManagerPreAndroid10Imp;
 import com.blankj.utilcode.util.LogUtils;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -34,9 +29,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.Subject;
 
 /**
  * @描述

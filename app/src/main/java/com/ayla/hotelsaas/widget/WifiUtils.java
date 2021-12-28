@@ -1,6 +1,8 @@
 package com.ayla.hotelsaas.widget;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -11,6 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class WifiUtils {
+
+    private static final String TAG = WifiUtils.class.getSimpleName();
     private WifiManager mWifiManager;
     private static WifiUtils mInstance;
 
@@ -120,4 +124,75 @@ public class WifiUtils {
     public boolean is5GHzWifi(int frequency) {
         return frequency > 4900 && frequency < 5900;
     }
+
+    /**
+     * 网络状态判断
+     *
+     * @param context
+     * @return
+     */
+    public static boolean hasNetwork(Context context) {
+        try {
+            if (null == context || null == context.getApplicationContext()) {
+                return false;
+            }
+            ConnectivityManager manager = (ConnectivityManager) context.getApplicationContext().getSystemService(
+                    Context.CONNECTIVITY_SERVICE);
+            if (manager == null) {
+                return false;
+            }
+            NetworkInfo networkinfo = manager.getActiveNetworkInfo();
+            if (networkinfo == null || !networkinfo.isAvailable()) {
+                return false;
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+            LogUtil.e(TAG, "hasNetwork e[" + e + "]");
+        }
+        return true;
+    }
+
+    /**
+     * 是否在wifi环境下
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isWifiActive(Context context) {
+        boolean result = false;
+        try {
+            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (null != manager) {
+                NetworkInfo networkinfo = manager.getActiveNetworkInfo();
+                if (networkinfo != null && (networkinfo.getType() == ConnectivityManager.TYPE_WIFI)) {
+                    result = true;
+                }
+            }
+        } catch (Exception e) {
+            LogUtil.e(TAG, "isWifiActive e[" + e + "]");
+        }
+        LogUtil.i(TAG, "isWifiActive result[" + result + "]");
+        return result;
+    }
+
+    /**
+     * 是否在移动环境下，且已连接
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isMobileActive(Context context) {
+        try {
+            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(
+                    Context.CONNECTIVITY_SERVICE);
+            NetworkInfo info = manager.getActiveNetworkInfo();
+            return info != null && (info.getType() == ConnectivityManager.TYPE_MOBILE)
+                    && info.isConnected();
+        } catch (Throwable e) {
+            e.printStackTrace();
+            LogUtil.e(TAG, "isMobileActive e[" + e + "]");
+        }
+        return false;
+    }
+
 }

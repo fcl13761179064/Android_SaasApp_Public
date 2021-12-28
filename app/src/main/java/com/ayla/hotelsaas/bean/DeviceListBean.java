@@ -1,5 +1,7 @@
 package com.ayla.hotelsaas.bean;
 
+import com.ayla.hotelsaas.common.Constance;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -90,6 +92,15 @@ public class DeviceListBean {
         private long regionId;
         private String domain;//跳转到单控页面h5时用，这个是域名
         private String h5Url;//跳转到单控页面h5时用，这个是url
+       // private boolean isSelectDevice;//是否选中设备
+        private String regionName;
+     /*   public boolean isSelectDevice() {
+            return isSelectDevice;
+        }
+
+        public void setSelectDevice(boolean selectDevice) {
+            isSelectDevice = selectDevice;
+        }*/
 
         public String getH5Url() {
             return h5Url;
@@ -110,8 +121,6 @@ public class DeviceListBean {
         public void setRegionId(long regionId) {
             this.regionId = regionId;
         }
-
-        private String regionName;
 
         public void setRegionName(String regionName) {
             this.regionName = regionName;
@@ -229,5 +238,14 @@ public class DeviceListBean {
         public int getIsNeedGateway() {
             return isNeedGateway;
         }
+
+        /**
+         * 判断是否是艾拉智能网关并且是否是bindtype==0
+         */
+        public boolean isAylaSmartGateway() {
+            return  Constance.A2_GATEWAY_PID.equals(pid);
+        }
+
+
     }
 }

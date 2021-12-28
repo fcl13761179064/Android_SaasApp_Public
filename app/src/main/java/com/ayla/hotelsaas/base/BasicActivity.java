@@ -1,7 +1,10 @@
 package com.ayla.hotelsaas.base;
 
 
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.ui.CustomToast;
+import com.ayla.hotelsaas.ui.NetWorkChangReceiver;
 import com.blankj.utilcode.util.BarUtils;
+import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 
 import butterknife.ButterKnife;
@@ -23,15 +29,15 @@ import butterknife.Unbinder;
  * BaseActivity
  * 基础Activity
  */
-public abstract class BasicActivity extends AppCompatActivity {
+public abstract class BasicActivity extends AppCompatActivity implements NetworkUtils.OnNetworkStatusChangedListener {
 
     protected final String TAG = getClass().getSimpleName();
-
     private Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        NetworkUtils.registerNetworkStatusChangedListener(this);
         int layoutId = getLayoutId();
         View layoutView = getLayoutView();
         if (layoutView != null) {
@@ -52,6 +58,7 @@ public abstract class BasicActivity extends AppCompatActivity {
             }
         }
     }
+
 
     @Deprecated
     protected abstract int getLayoutId();
@@ -170,6 +177,16 @@ public abstract class BasicActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+        NetworkUtils.unregisterNetworkStatusChangedListener(this);
+    }
+
+    @Override
+    public void onDisconnected() {
+        CustomToast.makeOnlyHaseText(this, "网络异常");
+    }
+
+    @Override
+    public void onConnected(NetworkUtils.NetworkType networkType) {
     }
 }
 

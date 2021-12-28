@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
@@ -16,11 +15,11 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.base.BaseMvpFragment;
+import com.ayla.hotelsaas.common.Keys;
 import com.ayla.hotelsaas.events.AllAddDeviceEvent;
-import com.ayla.hotelsaas.events.DeviceRemovedEvent;
 import com.ayla.hotelsaas.events.TobeAddDeviceEvent;
 import com.ayla.hotelsaas.fragment.DeviceListContainerFragment;
 import com.ayla.hotelsaas.fragment.DeviceListFragmentNew;
@@ -284,6 +283,4 @@ public class MainActivity extends BaseMvpActivity<MainView, MainPresenter> imple
         super.rb_all_data();
         EventBus.getDefault().post(new AllAddDeviceEvent());
     }
-
-
 }

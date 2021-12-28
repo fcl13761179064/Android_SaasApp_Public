@@ -1,7 +1,6 @@
 package com.ayla.hotelsaas.ui;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,7 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.application.MyApplication;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.bean.DeviceListBean;

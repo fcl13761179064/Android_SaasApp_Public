@@ -25,6 +25,7 @@
         android:persistent="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
             android:name=".ui.SPlashActivity"
@@ -134,10 +135,6 @@
             android:name=".ui.H5BaseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.DeviceAddGuideActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/WhiteBgAppTheme" />
-        <activity
             android:name=".ui.PersonCenterActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -152,6 +149,11 @@
         <activity
             android:name=".ui.CreateProjectActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.DeviceAddGuideActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ProjectListActivity"
             android:launchMode="singleTask"
@@ -163,6 +165,7 @@
         <activity
             android:name=".ui.RuleEngineActionHotelWelcomeActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.SwitchUsageSettingActivity"
             android:screenOrientation="portrait" />
@@ -220,12 +223,28 @@
             android:name=".ui.OnekeylinkageListActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.SearchMultiDeviceActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.MultiDeviceDistributionNetActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.MultiDeviceDistributionFailActivity"
+            android:screenOrientation="portrait" />
+
+       <activity
+            android:name=".ui.MultiDeviceSettingNameSiteActivity"
+            android:screenOrientation="portrait" />
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
             android:label="dexopt"
             android:process=":dexopt" />
 
         <service android:name=".UpgradeDownloadService" />
+
 
         <meta-data
             android:name="io.sentry.dsn"

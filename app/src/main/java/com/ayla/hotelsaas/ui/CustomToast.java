@@ -23,6 +23,7 @@ public class CustomToast {
     private static final String TAG = "CustomToast";
 
     private static WeakReference<Toast> mToastWeakReference;
+    private static WeakReference<Toast> mToastNoImgWeakReference;
 
     public static void makeText(Context context, CharSequence tex, @DrawableRes int dResId) {
         Log.d(TAG, "makeText: " + tex);
@@ -48,5 +49,25 @@ public class CustomToast {
 
     public static void makeText(Context context, @StringRes int resId, @DrawableRes int dResId) {
         makeText(context, StringUtils.getString(resId), dResId);
+    }
+
+    public static void makeOnlyHaseText(Context context, CharSequence tex) {
+        Log.d(TAG, "makeText: " + tex);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (mToastNoImgWeakReference == null || mToastNoImgWeakReference.get() == null) {
+                    Toast toast = Toast.makeText(context.getApplicationContext(), tex, Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    View view = LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.toast_no_img_custom, null);
+                    toast.setView(view);
+                    mToastNoImgWeakReference = new WeakReference<>(toast);
+                }
+                View view = mToastNoImgWeakReference.get().getView();
+                TextView textView = view.findViewById(R.id.tv);
+                textView.setText(tex);
+                mToastNoImgWeakReference.get().show();
+            }
+        });
     }
 }

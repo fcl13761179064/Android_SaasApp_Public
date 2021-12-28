@@ -39,7 +39,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
  * {@link Bundle addForWait} include:waitBindDeviceId、nickname、pid
  * 替换设备时，必须传入
  * {@link Bundle replaceInfo} include:replaceDeviceId、targetGatewayDeviceId、replaceDeviceNickname
- * @作者 吴友金
+ * @作者 chunlei.fan
  */
 public class DeviceAddCategoryActivity extends BaseMvpActivity<DeviceAddCategoryView, DeviceAddCategoryPresenter> implements DeviceAddCategoryView {
     @BindView(R.id.rv_left)

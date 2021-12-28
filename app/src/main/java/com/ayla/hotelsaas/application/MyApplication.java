@@ -1,5 +1,6 @@
 package com.ayla.hotelsaas.application;
 
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.aliyun.iot.aep.sdk.framework.config.GlobalConfig;
 import com.ayla.hotelsaas.BuildConfig;
 import com.ayla.hotelsaas.bean.DeviceListBean;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.localBean.BaseSceneBean;
 import com.ayla.hotelsaas.utils.SharePreferenceUtils;
 import com.blankj.utilcode.util.ProcessUtils;
@@ -29,6 +31,7 @@ public class MyApplication extends AApplication {
     private List<BaseSceneBean> mOneKeyDate = new ArrayList();
 
     private static MyApplication mInstance = null;
+
     public static MyApplication getInstance() {
         return mInstance;
     }

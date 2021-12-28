@@ -1,4 +1,4 @@
-package com.ayla.hotelsaas.data.net;
+package com.ayla.hotelsaas.api;
 
 import com.ayla.hotelsaas.bean.A2BindInfoBean;
 import com.ayla.hotelsaas.bean.BaseResult;
@@ -7,7 +7,6 @@ import com.ayla.hotelsaas.bean.DeviceCategoryDetailBean;
 import com.ayla.hotelsaas.bean.DeviceFirmwareVersionBean;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.bean.DeviceLocationBean;
-import com.ayla.hotelsaas.bean.DeviceNodeBean;
 import com.ayla.hotelsaas.bean.DeviceTemplateBean;
 import com.ayla.hotelsaas.bean.GatewayNodeBean;
 import com.ayla.hotelsaas.bean.HotelListBean;
@@ -17,6 +16,7 @@ import com.ayla.hotelsaas.bean.PersonCenter;
 import com.ayla.hotelsaas.bean.PropertyDataPointBean;
 import com.ayla.hotelsaas.bean.PropertyNicknameBean;
 import com.ayla.hotelsaas.bean.PurposeCategoryBean;
+import com.ayla.hotelsaas.bean.RoomBean;
 import com.ayla.hotelsaas.bean.RoomManageBean;
 import com.ayla.hotelsaas.bean.RoomOrderBean;
 import com.ayla.hotelsaas.bean.RoomTypeShowBean;
@@ -26,9 +26,10 @@ import com.ayla.hotelsaas.bean.TreeListBean;
 import com.ayla.hotelsaas.bean.User;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
 import com.ayla.hotelsaas.bean.WorkOrderBean;
+import com.ayla.hotelsaas.protocol.BaseResp;
+import com.ayla.hotelsaas.protocol.MultiBindResp;
 
 import java.util.List;
-
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -95,7 +96,8 @@ public interface ApiService {
     @GET("/api/v3/build/spark/devicetypes/product/")
     Observable<BaseResult<List<DeviceCategoryBean>>> fetchDeviceCategory();
 
-    @GET("/api/v3/build/spark/devicetypes/product/{pid}")//A2新添加的一个接口，
+    @GET("/api/v3/build/spark/devicetypes/product/{pid}")
+    //A2新添加的一个接口，
     Observable<BaseResult<DeviceCategoryBean.SubBean.NodeBean>> getDevicePid(@Path("pid") String pid);
 
     @POST("/api/v3/build/device/getDeviceActionOrCondition")
@@ -115,7 +117,8 @@ public interface ApiService {
     @GET("api/v1/build/billrooms")
     Observable<BaseResult<RoomOrderBean>> getRoomOrders(@Query("pageNo") int pageNO, @Query("pageSize") int pageSize, @Query("billId") String billId);
 
-    @POST("/api/v3/build/device/list")//获取所有设备列表
+    @POST("/api/v3/build/device/list")
+       //获取所有设备列表
     Observable<BaseResult<DeviceListBean>> getDeviceList(@Body RequestBody body);
 
     @POST("api/v1/build/device/bind")
@@ -124,6 +127,7 @@ public interface ApiService {
     @POST("api/v1/build/device/bind/replace")
     Observable<BaseResult<DeviceListBean.DevicesBean>> bindReplaceDeviceWithDSN(@Body RequestBody body);
 
+    //获取候选节点
     @GET("api/v1/build/device/{deviceId}/candidates/{deviceCategory}")
     Observable<BaseResult<List<DeviceListBean.DevicesBean>>> fetchCandidateNodes(@Path("deviceId") String deviceId, @Path("deviceCategory") String deviceCategory);
 
@@ -317,7 +321,8 @@ public interface ApiService {
     @POST("/api/v1/build/scene/getRuleListByUniqListFunction")
     Observable<BaseResult<List<RuleEngineBean>>> getRuleListByUniqListFunction(@Body RequestBody body);
 
-    @GET("/api/v1/build/billrooms/region/{roomId}")//获取设备位置
+    @GET("/api/v1/build/billrooms/region/{roomId}")
+//获取设备位置
     Observable<BaseResult<List<DeviceLocationBean>>> getAllDeviceLocation(@Path("roomId") long roomId);
 
 
@@ -325,7 +330,7 @@ public interface ApiService {
     Observable<BaseResult<A2BindInfoBean>> getA2BindInfo(@Path("deviceId") String pid);
 
     @GET("/api/v1/build/device/{deviceId}/connected")
-    Observable<BaseResult<Boolean>> ApNetwork(@Path("deviceId") String deviceId,@Query("cuId") long cuId, @Query("setupToken") String setupToken);
+    Observable<BaseResult<Boolean>> ApNetwork(@Path("deviceId") String deviceId, @Query("cuId") long cuId, @Query("setupToken") String setupToken);
 
 
     @GET("api/v1/build/constructbill")
@@ -339,4 +344,10 @@ public interface ApiService {
 
     @POST("api/v1/build/content/linkroom")
     Observable<BaseResult> getRelationXiaodu(@Body RequestBody body);
+
+    /**
+     * 批量绑定设备
+     */
+    @POST("/api/v1/build/device/bind/batch")
+    Observable<BaseResp<MultiBindResp>>  multiBindDevice(@Body  RequestBody body);
 }

@@ -1,11 +1,9 @@
 package com.ayla.hotelsaas.ui;
 
-import android.util.Log;
 import android.view.View;
-import android.webkit.JavascriptInterface;
 
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.Constance;
+import com.ayla.hotelsaas.common.Constance;
 import com.ayla.hotelsaas.base.BasePresenter;
 import com.ayla.hotelsaas.widget.AppBar;
 import com.tencent.smtt.sdk.WebView;

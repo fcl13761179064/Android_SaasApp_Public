@@ -120,6 +120,7 @@ public class DeviceCategoryBean {
             }
 
 
+
             public Map<String, String> getOemModel() {
                 return cloudModel;
             }

@@ -35,4 +35,5 @@
     <string name="helper">找不到要连接的路由器？</string>
     <string name="wifi_2.4g_notice">提示</string>
     <string name="common_next">下一步</string>
+    <string name="complete_distribute">完成配网</string>
 </resources>

@@ -209,6 +209,7 @@ public class DeviceListFragmentNew extends BaseMvpFragment<DeviceListView, Devic
     }
 
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void AllAddDeviceEvent(AllAddDeviceEvent event) {
         isAllData = true;

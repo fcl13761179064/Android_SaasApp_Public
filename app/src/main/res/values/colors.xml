@@ -39,6 +39,7 @@
 
     <!--dialog的颜色-->
     <color name="custome_dialog">#333333</color>
+    <color name="search_page_seach_text">#993C3C43</color>
 
     <color name="gray_3">#333333</color>
     <color name="gray_6">#666666</color>
@@ -46,6 +47,8 @@
     <color name="color_3C3C3C">#3C3C3C</color>
     <color name="color_yellow">#FACB3E</color>
     <color name="color_gray">#C8CCD8</color>
+    <color name="serch_multi_device_yellow">#699937</color>
+    <color name="serch_retry">#9EA6AD</color>
 
 
     <color name="seekbar_k_left">#64D0FF</color>
@@ -53,4 +56,6 @@
     <color name="seekbar_left">#FF436CFF</color>
     <color name="seekbar_sat_left">#c4c4c4</color>
     <color name="seekbar_sat_end">#648C1A</color>
+    <color name="complate_distribute_button">#699937</color>
+    <color name="multi_next_gry_color">#D6DADC</color>
 </resources>
