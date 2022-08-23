@@ -1,0 +1,5 @@
+include ':Android_AylaSDK'
+include ':app'
+include ':lib_ap_distribute'
+rootProject.name = 'Android_SaasApp_Public'
+include ':h5_dsbridge'

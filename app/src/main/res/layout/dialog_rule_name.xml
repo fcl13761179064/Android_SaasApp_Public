@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|center">
+
+    <LinearLayout
+        android:id="@+id/step_2_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/scene_rename_dialog_shape"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="19dp"
+            android:text="填写名称"
+            android:textStyle="bold"
+            android:textColor="#ff000000"
+            android:textSize="17sp" />
+
+        <EditText
+            android:id="@+id/et_dsn"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="29dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/scene_rule_name"
+            android:hint="请输入名称"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColorHint="#9EA6AD"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="#2D3134"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/empty_notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="30dp"
+            android:text="请填场景名称"
+            android:visibility="invisible"
+            android:textColor="@color/remove_device_color"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp">
+
+            <RelativeLayout
+                android:id="@+id/rl_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_scene_cancel">
+
+                <TextView
+                    android:id="@+id/v_cancel"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:text="返回"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:drawableStartCompat="@drawable/icon_back_white" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rl_confire"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_scene_confirm">
+
+                <TextView
+                    android:id="@+id/v_done"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="确定"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

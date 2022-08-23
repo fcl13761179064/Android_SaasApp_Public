@@ -1,0 +1,55 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext {
+        compileSdkVersion = 30
+        buildToolsVersion = "30.0.0"
+        minSdkVersion = 23
+        targetSdkVersion = 30
+        kotlin_version = '1.5.20'
+        anko_version = '0.10.8'
+        // SVGA player
+        svga_version = '2.5.15'
+        rx_lifecycle_version = '1.0'
+        lifecycle_version = "2.3.1"
+        ok_http_version = '4.9.0'
+    }
+
+
+    repositories {
+        //修改成国内阿里云的maven地址，否则某些地方下载不下来
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        google()
+        jcenter()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://developer.huawei.com/repo/' }
+        maven { url 'https://maven.google.com' }
+
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.0.2'
+        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        //自动寻找ID
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        //修改成国内阿里云的maven地址，否则某些地方下载不下来
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        google()
+        jcenter()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://developer.huawei.com/repo/' }
+        maven { url 'https://maven.google.com' }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

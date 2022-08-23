@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">艾拉工程</string>
+    <string name="action_settings">Settings</string>
+
+    <!--登录-->
+    <string name="login_username"> 登录名</string>
+    <string name="login_account_show"> 账号</string>
+    <string name="login_username_show"> 用户名</string>
+    <string name="login_youxiang_show"> 邮箱</string>
+    <string name="login_password">请输入你的密码</string>
+    <string name="login_password_show">密码</string>
+    <string name="login_btn">登录</string>
+    <string name="register_btn">注册</string>
+    <string name="phone_or_email">请输入您的施工账号</string>
+    <string name="account_error">请输入正确的手机号码</string>
+    <string name="account_forgit_password">请输入正确的手机号码</string>
+    <string name="take_out">退出登录</string>
+    <string name="remove_device">移除设备</string>
+    <string name="update_device">更新设备</string>
+    <string name="remove_room">移除房间</string>
+    <string name="login_tv_show">登录</string>
+    <string name="register_tv_show">注册新用户</string>
+    <string name="forgit_tv_show">忘记密码</string>
+    <string name="exit"></string>
+
+
+    <!-- 底部tab-->
+    <string name="title_style">Style</string>
+    <string name="title_example">Example</string>
+    <string name="title_practice">Practice</string>
+
+    <string name="cancel">取消</string>
+    <string name="sing_out">确定退出当前账号</string>
+    <string name="remove_device_title">确定是否移除</string>
+    <string name="remove_device_content">移除设备后将不可恢复，您是否移除该设备</string>
+    <string name="helper">找不到要连接的路由器？</string>
+    <string name="wifi_2.4g_notice">提示</string>
+    <string name="common_next">下一步</string>
+    <string name="hanyingyu">"当前艾拉工程不支持具体欢迎语文案的设置，请在施工&#x000A;结束后,前往酒店 SAAS 统一设置"</string>
+    <string name="common_baocun_setting">保存设置</string>
+    <string name="complete_distribute">完成配网</string>
+    <string name="group_info">编组信息</string>
+    <string name="group_name">名称</string>
+    <string name="group_location">位置</string>
+    <string name="group_device_count">设备数量</string>
+    <string name="group_delete">移除编组</string>
+    <string name="scene_huanyingyu">当前艾拉工程不支持具体欢迎语文案的设置，请在施工结束后，\n 前往酒店 SAAS 统一设置</string>
+</resources>

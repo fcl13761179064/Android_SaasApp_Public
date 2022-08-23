@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/bg_device_item"
+    android:gravity="center_vertical"
+    android:minHeight="100dp"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/device_left_iv"
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
+
+    <TextView
+        android:id="@+id/tv_device_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@id/device_left_iv"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:text="单路开关"
+        android:textColor="#ff333333"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_device_name"
+        android:layout_alignStart="@id/tv_device_name"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:id="@+id/ll_default"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <View
+            android:id="@+id/v_device_online_status_dot"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/ic_device_online" />
+
+        <TextView
+            android:id="@+id/tv_device_online_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="离线"
+            android:textColor="#ff91909a"
+            android:textSize="12sp" />
+    </LinearLayout>
+</RelativeLayout>

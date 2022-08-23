@@ -1,0 +1,134 @@
+image: aylacn/android-build:28-jdk8
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false" # 禁用 gradle 守护进程
+
+before_script:
+  - chmod +x gradlew
+  - chmod +x ./QARobot.sh
+  - export ANDROID_HOME=/Users/ayla/Library/Android/sdk
+  - export PATH="$ANDROID_HOME/build-tools/30.0.3:$PATH"
+  - export VERSION_NAME=`egrep '^[[:blank:]]+versionName[[:blank:]]'  app/build.gradle | awk '{print $2}' | sed s/\"//g`
+  - echo "App version name ${VERSION_NAME}"
+
+
+stages:
+  - lint
+  - signing_prepare
+  - assemble_qa
+  - assemble_stage
+  - assemble_prod
+  - publish
+
+job_lint:
+  stage: lint
+  script:
+    - echo "开始Lint"
+    - ./gradlew -Pci --console=plain :app:lintQaRelease -PbuildDir=lint
+    - echo "Lint结束"
+  tags:
+    - iOS
+  except:
+    refs:
+      - master
+      - Qa_publish
+      - Stage_publish
+      - Prod_publish
+
+job_signing_prepare:
+  stage: signing_prepare
+  script:
+    - echo "开始创建签名文件"
+    - echo $JKS_BASE64 | base64 -d > ayla_test.jks
+    - echo "storePassword=$storePassword" > signing.properties
+    - echo "keyPassword=$keyPassword" >> signing.properties
+    - echo "keyAlias=$keyAlias" >> signing.properties
+    - echo "创建签名文件结束"
+  only:
+    refs:
+      - Qa_publish
+      - Stage_publish
+      - Prod_publish
+    changes:
+      - CHANGELOG.MD
+  artifacts:
+    paths:
+      - ayla_test.jks
+      - signing.properties
+  tags:
+    - iOS
+
+job_assemble_qa:
+  stage: assemble_qa
+  only:
+    refs:
+      - Qa_publish
+    changes:
+      - CHANGELOG.MD
+  script:
+    - echo "开始打包"
+    - ./gradlew :app:cd_qa
+    - echo "打包结束"
+  artifacts:
+    paths:
+      - app/build/outputs/
+  tags:
+    - iOS
+
+job_assemble_stage:
+  stage: assemble_stage
+  only:
+    refs:
+      - Stage_publish
+    changes:
+      - CHANGELOG.MD
+  script:
+    - echo "开始打包"
+    - ./gradlew :app:cd_stage
+    - echo "打包结束"
+  artifacts:
+    paths:
+      - app/build/outputs/
+  tags:
+    - iOS
+
+job_assemble_prod:
+  stage: assemble_prod
+  only:
+    refs:
+      - Prod_publish
+    changes:
+      - CHANGELOG.MD
+  script:
+    - echo "开始打包"
+    - ./gradlew :app:cd_prod
+    - echo "打包结束"
+  artifacts:
+    paths:
+      - app/build/outputs/
+  tags:
+    - iOS
+
+job_publish:
+  stage: publish
+  only:
+    refs:
+      - Qa_publish
+      - Stage_publish
+      - Prod_publish
+    changes:
+      - CHANGELOG.MD
+  script:
+    - echo "开始上传APP到蒲公英"
+    - echo "pgyer_api_key=$pgyer_api_key"
+    - echo "uKey=$pgyer_uKey"
+    - buildUpdateDescription=$(cat CHANGELOG.MD | head -n 6)
+    - echo "buildUpdateDescription=$buildUpdateDescription"
+    - curl -F 'file=@app/build/outputs/apk/app.apk' -F "uKey=$pgyer_uKey" -F "_api_key=$pgyer_api_key" -F "buildUpdateDescription=$buildUpdateDescription"  https://www.pgyer.com/apiv2/app/upload
+    - echo "上传APP到蒲公英结束"
+    - echo "开始发布版本更新提示"
+    - echo "VERSION_NAME ${VERSION_NAME}"
+    - ./QARobot.sh "${VERSION_NAME}" //执行脚本并传参，格式为xx.sh+空格+参数，sh脚本通过$1,$2获取参数，以此类推
+    - echo "结束发布版本更新提示"
+  tags:
+    - iOS

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.ayla.hotelsaas">
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.REBOOT" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <application
+        android:name=".application.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:persistent="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup">
+        <activity
+            android:name=".ui.activities.SPlashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashActivityTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activities.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.DeviceAddCategoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.AylaGatewayAddGuideActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.GatewayAddDsnInputActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.DeviceAddActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.GatewaySelectActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.A2GatewaySelectActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.FunctionRenameActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".ui.activities.SceneSettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".ui.activities.SceneSettingEnableTimeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".ui.activities.set_scene.SceneSettingRepeatDataActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.set_scene.SceneSettingDeviceSelectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.SceneSettingDeviceSelectActivitys"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.set_scene.SceneSettingFunctionSelectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.SceneSettingFunctionDatumSetActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/dialogActivityTheme" />
+        <activity
+            android:name=".ui.activities.RuleEngineConditionTypeGuideActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.RuleEngineActionTypeGuideActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.DeviceMoreActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".ui.activities.SceneIconSelectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DefaultFullScreenDialogAnimation" />
+        <activity
+            android:name=".ui.activities.ScanActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.HongyanGatewayAddGuideActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.DeviceDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.RoomMoreActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.DistributionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.DistributionHotelSelectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.DistributionStructSelectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.ForgitPassWordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/WhiteBgAppTheme" />
+        <activity
+            android:name=".ui.activities.H5BaseActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.PersonCenterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.AylaWiFiAddInputActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.DeviceDetailH5Activity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.CreateProjectActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.DeviceAddGuideActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.ProjectListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.ProjectMainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.RuleEngineActionHotelWelcomeActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.SwitchUsageSettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.DeviceAddSuccessActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.PointAndRegionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.RoomPlanSettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.RoomPlanApplyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.DeviceReplaceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.SwitchDefaultListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.SwitchDefaultSettingActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.A2GatewayAddGuideActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.A2GatewayAddStatusActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.ApWifiDistributeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.ApDistributeGuideActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.ApWifiConnectToA2GagtewayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.ApDeviceAddActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.HelpCenterActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.MoveExhibitionWallScanActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.OnekeylinkageListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.set_scene.SceneLinkAddGuideActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.onekey.SceneAddOneKeyActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.SearchMultiDeviceActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.MultiDeviceDistributionNetActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.MultiDeviceDistributionFailActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.MultiDeviceSettingNameSiteActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activities.GroupMoreActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.GroupRegionActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.DeviceMarshallEntryActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+
+        <activity
+            android:name=".ui.activities.CheckMarshallSubsetActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.local_scene.LocalSceneSettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.set_scene.SetEffectiveTimeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.local_scene.LocalSceneGatewaySelectActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.SceneMoreActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.remote_scene.RemoteSceneSettingActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.ScanA6Activity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.ble_ap.BleApDeviceGuideActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.ble_ap.BleSearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.ble_ap.NetConfigActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.ble_ap.DeviceConfigActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.ble_ap.DeviceConnectNetActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.firmware.FirmwareUpdateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.ayla.hotelsaas.ui.activities.remote_scene.SelectA6GatewayActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.set_switch.SwitchKeyConfigActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <service
+            android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
+            android:label="dexopt"
+            android:process=":dexopt" />
+
+        <service android:name=".UpgradeDownloadService" />
+
+        <meta-data
+            android:name="io.sentry.environment"
+            android:value="${sentryEnvironment}" /><!-- 指定sentry的环境，区分 -->
+
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="https://a9f06123f84845e28e22cfb6852f73e5@o585236.ingest.sentry.io/5768919" />
+
+        <meta-data
+            android:name="design_width_in_dp"
+            android:value="375" />
+        <meta-data
+            android:name="design_height_in_dp"
+            android:value="812" />
+    </application>
+
+</manifest>

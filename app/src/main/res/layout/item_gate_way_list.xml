@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:background="@drawable/bg_device_item"
+    android:gravity="center_vertical"
+    android:minHeight="90dp"
+    android:padding="22dp">
+
+    <FrameLayout
+        android:id="@+id/layout_icon"
+        android:layout_width="46dp"
+        android:layout_height="46dp">
+
+        <ImageView
+            android:id="@+id/device_left_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/offline_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_offline"
+            android:gravity="center"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:text="离线"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/tv_device_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_toEndOf="@id/layout_icon"
+        android:ellipsize="end"
+        android:layout_toStartOf="@+id/icon_right_arrow"
+        android:singleLine="true"
+        android:text="开关"
+        android:textColor="@color/color_txt_title"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/room_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_device_name"
+        android:layout_alignStart="@+id/tv_device_name"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/color_txt_room_name"
+        android:textSize="12sp"
+        tools:text="客厅" />
+
+    <ImageView
+        android:id="@+id/icon_right_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/icon_right_arrow" />
+</RelativeLayout>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ create by cairurui on 1/8/19 8:44 PM.
+  ~ Copyright (c) 2019 SunseaIoT. All rights reserved.
+  -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/appbar_height">
+
+        <LinearLayout
+            android:id="@+id/change_left_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/change_iv_left"
+                android:layout_width="@dimen/appbar_height"
+                android:layout_height="@dimen/appbar_height"
+                android:padding="16dp"
+                android:src="@drawable/icon_back_normal" />
+
+            <TextView
+                android:id="@+id/change_tv_left"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="1"
+                android:maxWidth="100dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="left"
+                android:visibility="invisible"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/color_333333"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/change_center_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@id/change_right_ll"
+            android:layout_toEndOf="@id/change_left_ll"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="1"
+                android:paddingLeft="8dp"
+                android:paddingRight="3dp"
+                android:text="title"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/color_333333"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/function_change_pic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/change_right_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:gravity="end"
+            android:visibility="visible"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/change_tv_right"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="1"
+                android:maxWidth="100dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="left"
+                android:visibility="gone"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/color_333333"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/change_iv_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/dp_16"
+                android:src="@mipmap/qr_code"
+                 />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/bottom_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_gravity="bottom"
+        android:background="#d9d9d9" />
+</FrameLayout>

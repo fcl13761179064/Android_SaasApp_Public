@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|center">
+
+    <LinearLayout
+        android:id="@+id/step_2_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_device_item"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="填写名称"
+            android:textColor="#ff000000"
+            android:textSize="17sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginLeft="12dp"
+            android:background="@drawable/scene_rule_name"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="12dp">
+
+        <EditText
+            android:id="@+id/et_dsn"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:hint="请输入名称"
+            android:inputType="text"
+            android:maxLines="1"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:textColorHint="#9EA6AD"
+            android:paddingStart="16dp"
+            android:maxEms="20"
+            android:ellipsize="end"
+            android:layout_toLeftOf="@+id/delete_desc"
+            android:text="脑袋拿地佛教阿道ds说的是夫收到i卷发大地洒减肥的dcds"
+            android:textColor="#2D3134"
+            android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/delete_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/scene_rename_delete"/>
+
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dp_16"
+            android:background="#DFE4EB" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+
+            >
+
+            <TextView
+                android:id="@+id/rl_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="#ff000000"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:background="#DFE4EB" />
+
+            <TextView
+                android:id="@+id/rl_confire"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="确定"
+                android:textColor="#648C1A"
+                android:textSize="17sp" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

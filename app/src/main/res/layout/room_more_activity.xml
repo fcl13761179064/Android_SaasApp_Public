@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv="@string/exit"
+        app:left_iv="@drawable/icon_back_normal" />
+
+    <LinearLayout
+        android:id="@+id/ll_common_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appBar"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_room_rename"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:background="#FFFFFF"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/tv_function_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="房间名称"
+                android:textColor="#333333"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/tv_room_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@id/tv_arrow"
+                android:layout_toRightOf="@id/tv_function_name"
+                android:ellipsize="end"
+                android:gravity="right"
+                android:maxLines="1"
+                android:minWidth="200dp"
+                android:text="开关一"
+                android:textColor="#ff999999"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/tv_arrow"
+                android:layout_width="8dp"
+                android:layout_height="14dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_menu_item_arrow_right" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_room_plan"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:background="#FFFFFF"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="房间方案设置"
+                android:textColor="#333333"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="14dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_menu_item_arrow_right" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_room_distribution"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:background="#FFFFFF"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="分配"
+                android:textColor="#333333"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="14dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_menu_item_arrow_right" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/relation_xiaodu"
+            android:layout_width="160dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="107.5dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="62dp"
+            android:text="关联小度音箱"
+            android:visibility="gone"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:background="@drawable/green_btn_bg_small_corner"
+            />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_complete_shigong"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:background="#FFFFFF"
+        android:paddingLeft="16dp"
+        android:visibility="gone"
+        android:layout_below="@id/appBar"
+        android:paddingRight="16dp"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="完成施工"
+            android:layout_centerInParent="true"
+            android:textColor="@color/color_699937"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_remove_room"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/room_num_shape"
+        android:text="@string/remove_room"
+        android:textColor="@color/remove_device_color"
+        android:textSize="18sp" />
+
+</RelativeLayout>

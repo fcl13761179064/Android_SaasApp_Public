@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#FFFFFF"
+    android:orientation="horizontal"
+    >
+
+    <TextView
+        android:id="@+id/tv_function_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/dp_16"
+        android:text="开关一"
+        android:layout_gravity="center"
+        android:textColor="@color/color_000000"
+        android:textSize="17sp" />
+
+
+    <TextView
+        android:id="@+id/tv_value"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:hint="未设置"
+        android:gravity="right"
+        android:layout_gravity="center"
+        android:layout_alignParentRight="true"
+        android:textColor="#993C3C43"
+        android:textSize="17sp" />
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="8dp"
+        android:layout_height="14dp"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_16"
+        android:layout_toRightOf="@+id/tv_value"
+        android:layout_gravity="center"
+        android:src="@mipmap/scene_select_device_arrow" />
+</LinearLayout>

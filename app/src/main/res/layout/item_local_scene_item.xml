@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="16dp"
+    android:paddingBottom="9dp">
+
+    <ImageView
+        android:id="@+id/item_local_scene_drag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@mipmap/tuozhuai_img" />
+
+    <ImageView
+        android:id="@+id/item_local_scene_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/item_local_scene_drag"
+        tools:src="@drawable/ic_empty_device" />
+
+
+    <TextView
+        android:id="@+id/item_local_scene_function_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_toStartOf="@+id/item_local_scene_delete"
+        android:layout_toEndOf="@id/item_local_scene_icon"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="#ff333333"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="开关：开" />
+
+    <TextView
+        android:id="@+id/item_local_scene_delete_device_tips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_local_scene_function_name"
+        android:layout_alignStart="@id/item_local_scene_function_name"
+        android:layout_marginTop="5dp"
+        android:text="*需要删除该设备，场景才能正常使用"
+        android:textColor="#F55A4C"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/layout_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_local_scene_function_name"
+        android:layout_alignStart="@id/item_local_scene_function_name"
+        android:layout_marginTop="5dp"
+        android:layout_toStartOf="@+id/item_local_scene_delete"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/item_local_scene_wait_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_item_wait_add"
+            android:paddingStart="5dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="2dp"
+            android:text="待添加"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/item_local_scene_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="middle"
+            android:orientation="horizontal"
+            android:singleLine="true"
+            android:textColor="#ff91909a"
+            android:textSize="14sp"
+            tools:text="RGB智能灯" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/item_local_scene_add_device_tips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_name"
+        android:layout_alignStart="@id/item_local_scene_function_name"
+        android:layout_marginTop="5dp"
+        android:text="*需要添加该设备，场景才能正常使用"
+        android:textColor="#F55A4C"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/item_local_scene_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="4dp"
+        android:gravity="center"
+        android:padding="8dp"
+        android:src="@drawable/ic_scene_device_item_delete" />
+</RelativeLayout>

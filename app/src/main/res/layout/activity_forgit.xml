@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_root_view"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:appbar_bottom_line="false"
+        app:left_iv="@drawable/icon_back_normal"
+        app:left_tv="" />
+
+    <LinearLayout
+        android:id="@+id/ll_content_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="42dp"
+            android:text="@string/forgit_tv_show"
+            android:textColor="@color/loginLogoColor"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/ll_forgit_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:gravity="top"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="手机号"
+                android:textColor="@color/color_333333"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal">
+
+                <com.ayla.hotelsaas.utils.BiuEditTextUtils
+                    android:id="@+id/et_user_name"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center|left"
+                    android:hint="请输入手机号"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:textColor="@color/login_text_percent"
+                    android:textColorHint="@color/login_text_percent"
+                    android:textSize="14sp" />
+
+
+                <TextView
+                    android:id="@+id/tv_send_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center|left"
+                    android:singleLine="true"
+                    android:text="发送验证码"
+                    android:textColor="@color/loginLogoColor"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/ll_account_layout"
+                android:background="@color/login_deviding_line" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="验证码"
+                android:textColor="@color/color_333333"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+
+            <com.ayla.hotelsaas.utils.BiuEditTextUtils
+                android:id="@+id/rt_yanzhengma"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@null"
+                android:gravity="center|left"
+                android:hint="请输入验证码"
+                android:inputType="number"
+                android:maxLength="6"
+                android:singleLine="true"
+                android:textColor="@color/login_text_percent"
+                android:textColorHint="@color/login_text_percent"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/ll_account_layout"
+                android:background="@color/login_deviding_line" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_new_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:gravity="top"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="新密码"
+                android:textColor="@color/color_333333"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+
+            <com.ayla.hotelsaas.utils.BiuEditTextUtils
+                android:id="@+id/et_new_password"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@null"
+                android:gravity="center|left"
+                android:hint="请输入新密码"
+                android:singleLine="true"
+                android:textColor="@color/login_text_percent"
+                android:textColorHint="@color/login_text_percent"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/ll_account_layout"
+                android:background="@color/login_deviding_line" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_error_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="11111"
+            android:layout_marginLeft="40dp"
+            android:textColor="@color/login_error_show"
+            android:textSize="14sp"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/register_submitBtn"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/green_btn_bg_small_corner"
+            android:text="确定"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/room_num_shape"
+    android:gravity="center_vertical"
+    android:minHeight="60dp"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_room_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/cb"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="房间 4493"
+        android:textColor="#ff333333"
+        android:textSize="15sp" />
+
+    <CheckBox
+        android:id="@+id/cb"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/bg_checkbox_selector"
+        android:button="@null"
+        android:checked="true"
+        android:clickable="false"
+        android:drawable="@null" />
+</RelativeLayout>

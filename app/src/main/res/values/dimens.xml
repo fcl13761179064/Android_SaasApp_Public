@@ -1,0 +1,28 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="appbar_height">46dp</dimen>
+    <dimen name="appbar_width">36dp</dimen>
+
+    <dimen name="tab_height">60dp</dimen>
+    <dimen name="drawable_padding">-11dp</dimen>
+    <dimen name="tab_textsize">10sp</dimen>
+    <dimen name="dp_16">16dp</dimen>
+    <dimen name="sp_16">16sp</dimen>
+    <dimen name="sp_12">12sp</dimen>
+    <dimen name="text_middle_size">18sp</dimen>
+    <dimen name="normal_padding">12dp</dimen>
+    <dimen name="secondary_padding">14dp</dimen>
+    <dimen name="big_padding">16dp</dimen>
+
+    <dimen name="seekbar_thumb_arrows_width">9dp</dimen>
+    <dimen name="seekbar_thumb_arrows_height">16dp</dimen>
+    <dimen name="seekbar_thumb_arrows_bottom">24dp</dimen>
+    <dimen name="seekbar_thumb_arrows_right">18dp</dimen>
+    <dimen name="seekbar_thumb_arrows_top">24dp</dimen>
+    <dimen name="seekbar_thumb_arrows_left">18dp</dimen>
+
+    <dimen name="seekbar_thumb_width">30dp</dimen>
+    <dimen name="seekbar_thumb_height">30dp</dimen>
+    <dimen name="seekbar_thumb_stroke_width">6dp</dimen>
+
+</resources>

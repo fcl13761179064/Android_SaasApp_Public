@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ffffff</color>
+    <color name="colorPrimaryDark">#ffffff</color>
+    <color name="colorAccent">#648C1B</color>
+    <color name="bg_top_color">#1F62D8</color>
+    <color name="all_bg_color">#F5F6F9</color>
+
+    <color name="color_default">#4DC1AD</color>
+    <!--CustomProcessDialogxml文件的颜色值-->
+    <color name="white">#ffffffff</color>
+    <color name="remove_device_color">#D73B4B</color>
+    <!-- 背景颜色 -->
+    <color name="colorBackground">#F6F6F6</color>
+    <!-- 间隔线颜色 -->
+    <color name="colorDividerLine">#DFDFDF</color>
+    <!-- 字体颜色 -->
+    <color name="textDarkColor">#ff333333</color>
+    <color name="textGaryColor">#666666</color>
+    <color name="textLightColor">#999999</color>
+    <color name="loginLogoColor">#648C1A</color>
+    <color name="login_error_show">#D73B4B</color>
+
+
+    <!--登录的颜色值-->
+    <color name="gray">#6e6e6e</color>
+    <color name="login_text_percent">#666666</color>
+    <color name="login_deviding_line">#EEEEEE</color>
+    <color name="main_title_change">#08000000</color>
+
+    <!-- 配网过程提示loading步骤，提示文案颜色 -->
+    <color name="color_bind_logding_tips_failed">#D73B4B</color>
+
+    <!-- 固定色号 -->
+    <color name="color_333333">#333333</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_ffffff">#ffffff</color>
+    <color name="color_statusbar_compare_color">#80000000</color>
+    <color name="color_black">#000000</color>
+    <color name="color_divider">#0D000000</color>
+    <color name="color_danger">#F55A4C</color>
+    <!--dialog的颜色-->
+    <color name="custome_dialog">#333333</color>
+    <color name="search_page_seach_text">#993C3C43</color>
+
+    <color name="gray_3">#333333</color>
+    <color name="gray_6">#666666</color>
+    <color name="common_green">#00B648</color>
+    <color name="color_3C3C3C">#3C3C3C</color>
+    <color name="color_yellow">#FACB3E</color>
+    <color name="color_gray">#C8CCD8</color>
+    <color name="serch_multi_device_yellow">#699937</color>
+    <color name="serch_retry">#9EA6AD</color>
+
+
+    <color name="seekbar_k_left">#64D0FF</color>
+    <color name="seekbar_k_end">#FFCA43</color>
+    <color name="seekbar_left">#FF436CFF</color>
+    <color name="seekbar_sat_left">#c4c4c4</color>
+    <color name="seekbar_sat_end">#648C1A</color>
+    <color name="complate_distribute_button">#699937</color>
+    <color name="multi_next_gry_color">#D6DADC</color>
+    <color name="color_699937">#699937</color>
+    <color name="color_60_3C3C43">#993C3C43</color>
+    <color name="color_131B26">#131B26</color>
+    <color name="color_000000">#000000</color>
+    <color name="color_30_3C3C43">#4D3C3C43</color>
+    <color name="color_6_3C3C43">#0F3C3C43</color>
+    <color name="color_8BBA34">#8BBA34</color>
+    <color name="common_gray">#dddddd</color>
+    <color name="color_3C3C3E">#3C3C3E</color>
+    <color name="color_9A3C3C43">#9A3C3C43</color>
+    <color name="color_F7F7F7">#F7F7F7</color>
+    <color name="common_black">#000000</color>
+    <color name="common_theme_green">#47C986</color>
+</resources>

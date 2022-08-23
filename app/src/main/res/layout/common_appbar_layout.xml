@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ create by cairurui on 1/8/19 8:44 PM.
+  ~ Copyright (c) 2019 SunseaIoT. All rights reserved.
+  -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/appbar_root_rl_ff91090"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/appbar_height">
+
+        <LinearLayout
+            android:id="@+id/left_ll"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_left"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:src="@drawable/icon_back_normal" />
+
+            <TextView
+                android:id="@+id/tv_left"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="1"
+                android:text="我哎我家版本不过"
+                android:textColor="@color/color_333333"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/appbar_center_container"
+            android:layout_width="150dp"
+            android:layout_centerInParent="true"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="1"
+                android:text="标题"
+                android:textStyle="bold"
+                android:textColor="@color/color_333333"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_tab"
+            android:layout_width="122dp"
+            android:layout_height="34dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="90dp"
+            android:background="@drawable/round_gray_bg"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <RadioGroup
+                android:id="@+id/rg_tab_group"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bar_move_wall_selector"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rd_select"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@drawable/bar_move_wall_selector"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="全部"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/rd_select_two"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/bar_move_wall_selector"
+                    android:button="@null"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:text="待添加"
+                    android:textColor="@color/color_333333"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/common_right_ll"
+            android:layout_width="104dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/add_scene_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:layout_gravity="right"
+                android:src="@drawable/ic_more" />
+
+            <TextView
+                android:id="@+id/tv_right"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="1"
+                android:text="left"
+                android:paddingRight="5dp"
+                android:textColor="@color/color_333333"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/iv_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:src="@mipmap/function_change_pic" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/bottom_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_gravity="bottom"
+        android:background="#d9d9d9" />
+</FrameLayout>

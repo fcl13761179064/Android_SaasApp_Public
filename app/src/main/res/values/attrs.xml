@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GradientProgressBar">
+        <attr name="textSize" format="dimension"></attr>
+        <attr name="textColor" format="color" />
+        <attr name="bgColor" format="color" />
+        <attr name="startColor" format="color" />
+        <attr name="endColor" format="color" />
+        <attr name="rectRadius" format="dimension" />
+        <attr name="loadSpeed" format="integer" />
+        <attr name="lineWidth" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="RoundProgressBar">
+        <attr name="textSizeRound" format="dimension" />
+        <attr name="textColorRound" format="color" />
+        <attr name="bgColorRound" format="color" />
+        <attr name="currentColorRound" format="color" />
+        <attr name="circleWidthRound" format="dimension" />
+        <attr name="loadSpeedRound" format="integer" />
+    </declare-styleable>
+
+
+        <declare-styleable name="maskProgressBar">
+            <attr name="max" format="float" />
+            <attr name="progress" format="float" />
+            <attr name="start_angle" format="float" />
+            <attr name="progress_background" format="reference" />
+            <attr name="progress_content" format="reference" />
+            <attr name="progress_arrow" format="reference" />
+            <attr name="anim_time" format="float" />
+        </declare-styleable>
+
+        <attr name="maskProgressStyle" format="reference" />
+
+
+    <declare-styleable name="StateLayout">
+        <attr name="state_errorView" format="reference" />
+        <attr name="state_loadingView" format="reference" />
+        <attr name="state_emptyView" format="reference" />
+        <attr name="state_viewState" format="enum">
+            <enum name="content" value="0" />
+            <enum name="error" value="1" />
+            <enum name="empty" value="2" />
+            <enum name="loading" value="3" />
+        </attr>
+        <attr name="state_animateViewChanges" format="boolean" />
+    </declare-styleable>
+</resources>

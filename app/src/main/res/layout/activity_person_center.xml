@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv=""
+        app:left_iv="@drawable/icon_back_normal" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="36dp"
+        android:background="@mipmap/default_user_img" />
+
+    <TextView
+        android:id="@+id/tv_default_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:textColor="#282828"
+        android:textSize="17sp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_help_center"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/appBar"
+        android:layout_marginTop="69dp"
+        android:background="#FFFFFF"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/tv_function_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="帮助中心"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+
+        <ImageView
+            android:id="@+id/tv_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_menu_item_arrow_right" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_check_upgrade"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/appBar"
+        android:layout_marginTop="10dp"
+        android:background="#FFFFFF"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="更新版本"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/v_new_vesion"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:gravity="center"
+            android:text="有新版本可更新"
+            android:textColor="#999999"
+            android:textSize="17sp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_menu_item_arrow_right" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_log_out"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/appBar"
+        android:layout_marginTop="40dp"
+        android:background="#FFFFFF"
+        android:gravity="center"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="退出登录"
+            android:textColor="@color/login_error_show"
+            android:textSize="17sp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_version_code"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="bottom"
+        android:paddingBottom="40dp"
+        android:text="0.0.1"
+        android:textColor="#999999"
+        android:textSize="17sp" />
+</LinearLayout>

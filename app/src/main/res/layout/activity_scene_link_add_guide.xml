@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:center_tv="添加场景"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:left_iv="@drawable/icon_back_normal" />
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="164dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_white_corner_10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBar">
+
+        <ImageView
+            android:id="@+id/iv_one_key_img"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@mipmap/onekey_img"
+            android:layout_marginLeft="@dimen/sp_14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+          />
+
+        <TextView
+            android:id="@+id/tv_one_key_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="一键执行"
+            android:textStyle="bold"
+            android:textColor="#ff000000"
+            android:textSize="17sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="15dp"
+            app:layout_constraintStart_toEndOf="@+id/iv_one_key_img"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/tv_one_key_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="在 APP 中，一键控制多个智能设备"
+            android:textColor="#993c3c43"
+            android:textSize="14sp"
+            android:layout_marginLeft="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_one_key_img"
+            app:layout_constraintStart_toEndOf="@+id/iv_one_key_img"
+           />
+
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_16"
+            android:background="#0C000000"
+            app:layout_constraintTop_toBottomOf="@+id/iv_one_key_img"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="例如：设置离家模式，APP 一键关闭所有灯"
+            android:textColor="#993c3c43"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="21dp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout_two"
+        android:layout_width="0dp"
+        android:layout_height="164dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_white_corner_10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+        <ImageView
+            android:id="@+id/iv_auto_scene_img"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@mipmap/auto_scene_img"
+            android:layout_marginLeft="@dimen/sp_14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_auto_scene_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自动场景"
+            android:textColor="#ff000000"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="15dp"
+            app:layout_constraintStart_toEndOf="@+id/iv_auto_scene_img"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/tv_auto_scene_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="设置条件，满足条件后，自动执行动作"
+            android:textColor="#993c3c43"
+            android:textSize="14sp"
+            android:layout_marginLeft="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_auto_scene_img"
+            app:layout_constraintStart_toEndOf="@+id/iv_auto_scene_img"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_16"
+            android:background="#0C000000"
+            app:layout_constraintTop_toBottomOf="@+id/iv_auto_scene_img"
+            />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="例如：温度低于 18℃，将空调打开，设置 24℃"
+            android:textColor="#993c3c43"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="21dp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

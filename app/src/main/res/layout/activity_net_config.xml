@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_F7F7F7"
+    android:orientation="vertical">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv="网络配置"
+        app:left_iv="@drawable/icon_back_normal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="26dp"
+        android:text="当前设备只支持 2.4G Wi-Fi，请不要连接 5G 频段"
+        android:textColor="#ff000000"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/net_config_wifi_help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:padding="5dp"
+        android:text="找不到要连接的路由器？"
+        android:textColor="#ff648c1b"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="64dp"
+        android:background="@mipmap/notice_2g_5g_select" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_radius_6_content">
+
+
+        <TextView
+            android:id="@+id/net_config_change_wifi"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:padding="9dp"
+            android:text="切换网络"
+            android:textColor="@color/color_699937"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/net_config_wifi_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_toStartOf="@+id/net_config_change_wifi"
+            android:background="@null"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:hint="名称"
+            android:maxLines="1"
+            android:minHeight="40dp"
+            android:textColor="#ff000000"
+            android:textColorHint="@color/color_60_3C3C43"
+            android:textSize="17sp" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_radius_6_content">
+
+
+        <ImageView
+            android:id="@+id/net_config_pw_visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/selector_password_toggle" />
+
+        <com.ayla.hotelsaas.utils.BiuEditTextUtils
+            android:id="@+id/net_config_wifi_pw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_toStartOf="@id/net_config_pw_visible"
+            android:background="@null"
+            android:hint="密码"
+            android:inputType="textPassword"
+            android:minHeight="40dp"
+            android:textColor="#ff000000"
+            android:textColorHint="@color/color_60_3C3C43"
+            android:textSize="17sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="17dp"
+        android:text="若无密码，无需输入密码"
+        android:textColor="@color/color_60_3C3C43"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/net_config_next"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_main_next_button"
+        android:gravity="center"
+        android:text="下一步"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

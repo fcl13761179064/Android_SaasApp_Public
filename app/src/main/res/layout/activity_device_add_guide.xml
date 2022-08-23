@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ayla.hotelsaas.widget.AppBar
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:center_tv="添加设备"
+        app:left_iv="@drawable/icon_back_normal" />
+
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="match_parent"
+        android:layout_height="212dp"
+        android:layout_below="@id/appBar"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:src="#f8f8f8" />
+
+    <TextView
+        android:id="@+id/iv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="进入配网模式"
+        android:textColor="#ff333333"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/cb"
+        android:layout_below="@id/iv_title"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:scrollbars="vertical">
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ff999999"
+            android:textSize="14sp" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/bt"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/green_btn_bg_small_corner"
+        android:stateListAnimator="@null"
+        android:text="下一步"
+        android:textColor="#ffffff"
+        android:textSize="14sp" />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="6dp"
+        android:button="@null"
+        android:checked="false"
+        android:drawableLeft="@drawable/bg_checkbox_selector"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:text="已确认上述操作"
+        android:textColor="#ff999999"
+        android:textSize="14sp" />
+</RelativeLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/bg_radius_6_content"
+    android:orientation="horizontal"
+    android:paddingStart="15dp"
+    android:paddingTop="19dp"
+    android:paddingEnd="15dp"
+    android:paddingBottom="19dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_ble" />
+
+    <TextView
+        android:id="@+id/item_ble_search_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/color_black"
+        android:textSize="16sp"
+        android:layout_marginStart="12dp"
+        tools:text="蓝牙设备" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/icon_right_arrow" />
+
+
+</LinearLayout>
