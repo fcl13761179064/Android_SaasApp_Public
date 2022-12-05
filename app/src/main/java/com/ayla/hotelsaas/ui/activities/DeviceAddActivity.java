@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import com.aliyun.iot.aep.sdk.framework.AApplication;
 import com.ayla.hotelsaas.R;
-import com.ayla.hotelsaas.application.GlideApp;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.DeviceListBean;
 import com.ayla.hotelsaas.mvp.present.DeviceAddPresenter;
@@ -209,7 +208,7 @@ public class DeviceAddActivity extends BaseMvpActivity<DeviceAddView, DeviceAddP
     private void refreshBindShow() {
         switch (bindProgress) {
             case 0:
-                GlideApp.with(mImageView).load(R.drawable.ic_device_bind_loading).into(mImageView);
+              //  GlideApp.with(mImageView).load(R.drawable.ic_device_bind_loading).into(mImageView);
                 mLoadingTextView.setVisibility(View.VISIBLE);
                 mProgressTextView.setText("最长可能需要1分钟，请耐心等待");
                 mProgressView.setVisibility(View.VISIBLE);
