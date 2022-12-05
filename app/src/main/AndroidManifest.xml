@@ -319,6 +319,11 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".TestAutoServiceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
             android:label="dexopt"

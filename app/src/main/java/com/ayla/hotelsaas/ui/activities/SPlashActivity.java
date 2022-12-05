@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.ayla.hotelsaas.R;
+import com.ayla.hotelsaas.TestAutoServiceActivity;
 import com.ayla.hotelsaas.constant.ConstantValue;
 import com.ayla.hotelsaas.base.BaseMvpActivity;
 import com.ayla.hotelsaas.bean.VersionUpgradeBean;
@@ -17,7 +18,8 @@ public class SPlashActivity extends BaseMvpActivity<SplashView, SplashPresenter>
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter.fetchVersionUpdate();
+       Intent  intent = new Intent(SPlashActivity.this, TestAutoServiceActivity.class);
+      startActivity(intent);
     }
 
     @Override
