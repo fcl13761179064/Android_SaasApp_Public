@@ -15,8 +15,6 @@ class TestAutoServiceActivity : AppCompatActivity() {
         test.setOnClickListener{
           StartMoudleService.loadCycleModuleServices()?.getRemark("ddssdsds")
 
-
-          StartMoudleService.loadCycleModuleService()?.method("ddssdsds")
         }
     }
 }
